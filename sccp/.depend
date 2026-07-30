@@ -1,0 +1,65 @@
+obj/SccpAculabHandler.o : src/SccpAculabHandler.cc include/SccpAculabHandler.h \
+ include/SccpAculabApi.h /home/tayana/cvs/util/src//peg/include/PegApi.h \
+ /home/tayana/cvs/util/src//include/Types.h \
+ /home/tayana/cvs/util/src//trace/include/ctrace.h \
+ /home/tayana/cvs/util/src//include/TssConstDef.h \
+ /home/tayana/cvs/util/src//include/Types.h \
+ /home/tayana/cvs/util/src//include/TssLimits.h \
+ /home/tayana/cvs/util/src//include/TssLogCodes.h \
+ /home/tayana/cvs/util/src//configinfo/include/CfgRead.h \
+ /home/tayana/cvs/util/src//configinfo/include/ConfigInfo.h \
+ /home/tayana/cvs/util/src//log/include/LogApi.h \
+ /home/tayana/cvs/util/src//configinfo/include/ConfigInfo.h \
+ /home/tayana/cvs/util/src//msgq/include/MsgQueue.h \
+ /home/tayana/cvs/util/src//configinfo/include/CfgRead.tcc \
+ /home/tayana/cvs/util/src//configinfo/include/CfgRead.h \
+ /home/tayana/cvs/util/src//datastructures/include/HashTable.h \
+ /home/tayana/cvs/util/src//semaphore/include/Semaphore.h \
+ /home/tayana/cvs/util/src//datastructures/include/HashTable.tcc \
+ /home/mram/cvs/ss7/src/include/Ss7ConstDef.h \
+ /home/tayana/cvs/util/src//processlock/include/ProcessLock.h \
+ /home/tayana/cvs/util/src//strtok/include/StrTokenizer.h \
+ /home/mram/cvs/ss7/src/include/SS7LogCodes.h \
+ /home/mram/cvs/ss7/src/include/Ss7Structs.h \
+ /home/mram/cvs/ss7/src/include/Ss7ConstDef.h \
+ /home/mram/cvs/ss7/src/include/MsuStructs.h \
+ /home/mram/cvs/ss7/src/include/Ss7Structs.h \
+ /home/mram/cvs/ss7/src/ss7util/include/Ss7BerEncDec.h \
+ /home/mram/cvs/ss7/src/include/TcapStructs.h include/SccpAculabUtil.h \
+ include/SccpAculabConstDef.h \
+ /home/mram/cvs/ss7/src/include/SS7LogCodes.h \
+ /home/mram/cvs/Thirdparty//src/ACULAB/include/sccp_api.h \
+ /home/mram/cvs/Thirdparty//src/ACULAB/include/sccp_synch.h
+obj/SccpAculabHandlerMain.o : src/SccpAculabHandlerMain.cc \
+ include/SccpAculabHandler.h include/SccpAculabApi.h \
+ /home/tayana/cvs/util/src//peg/include/PegApi.h \
+ /home/tayana/cvs/util/src//include/Types.h \
+ /home/tayana/cvs/util/src//trace/include/ctrace.h \
+ /home/tayana/cvs/util/src//include/TssConstDef.h \
+ /home/tayana/cvs/util/src//include/Types.h \
+ /home/tayana/cvs/util/src//include/TssLimits.h \
+ /home/tayana/cvs/util/src//include/TssLogCodes.h \
+ /home/tayana/cvs/util/src//configinfo/include/CfgRead.h \
+ /home/tayana/cvs/util/src//configinfo/include/ConfigInfo.h \
+ /home/tayana/cvs/util/src//log/include/LogApi.h \
+ /home/tayana/cvs/util/src//configinfo/include/ConfigInfo.h \
+ /home/tayana/cvs/util/src//msgq/include/MsgQueue.h \
+ /home/tayana/cvs/util/src//configinfo/include/CfgRead.tcc \
+ /home/tayana/cvs/util/src//configinfo/include/CfgRead.h \
+ /home/tayana/cvs/util/src//datastructures/include/HashTable.h \
+ /home/tayana/cvs/util/src//semaphore/include/Semaphore.h \
+ /home/tayana/cvs/util/src//datastructures/include/HashTable.tcc \
+ /home/mram/cvs/ss7/src/include/Ss7ConstDef.h \
+ /home/tayana/cvs/util/src//processlock/include/ProcessLock.h \
+ /home/tayana/cvs/util/src//strtok/include/StrTokenizer.h \
+ /home/mram/cvs/ss7/src/include/SS7LogCodes.h \
+ /home/mram/cvs/ss7/src/include/Ss7Structs.h \
+ /home/mram/cvs/ss7/src/include/Ss7ConstDef.h \
+ /home/mram/cvs/ss7/src/include/MsuStructs.h \
+ /home/mram/cvs/ss7/src/include/Ss7Structs.h \
+ /home/mram/cvs/ss7/src/ss7util/include/Ss7BerEncDec.h \
+ /home/mram/cvs/ss7/src/include/TcapStructs.h include/SccpAculabUtil.h \
+ include/SccpAculabConstDef.h \
+ /home/mram/cvs/ss7/src/include/SS7LogCodes.h \
+ /home/mram/cvs/Thirdparty//src/ACULAB/include/sccp_api.h \
+ /home/mram/cvs/Thirdparty//src/ACULAB/include/sccp_synch.h
