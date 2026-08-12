@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>BFILE library: bfwrite() - buffered file write</title>
+</head>
+<body>
+<h1>BFILE library: bfwrite() - buffered file write</h1>
+<h2>Name</h2>
+<p>
+bfwrite() - buffered file write
+
+<h2>Synopsis</h2>
+<p>
+<code>
+#include "bfile.h"
+<br>
+<br>
+int bfwrite(BFILE *<a name="bfp">bfp</a>,
+	size_t *<a name="left">left</a>,
+	void *<a name="ptr">ptr</a>,
+	size_t <a name="size">size</a>);
+</code>
+
+<h2>Decription</h2>
+<p>
+The <code>bfwrite</code> function writes data to an open file.
+The <code>BFILE</code> must have been set up with
+<a href="bfile_bfsetup.html">bfsetup()</a>
+and must not be in an error condition.
+Up to
+<a href="#size">size</a> bytes from the memory area
+pointed to by <a href="#ptr">ptr</a> are written. All the data is
+written unless an error occurs. The number of bytes not written is
+stored at <a href="#left">*left</a>
+so this is zero if the function returns zero (i.e. no error).
+However, a non-zero return value does not necessarily indicate that
+any data remains unwritten. If an error occurs, the
+<code>BFILE</code> is put into an error condition, which
+can only be cleared by <a href="bfile_bferror.html">bferror()</a>.
+
+<h2>Return value</h2>
+<p>
+Returns <code>0</code> if successful, or an <code>errno</code> value otherwise.
+
+<h2>See also</h2>
+<p>
+<a href="bfile_ctor.html">bfile(), bfile_dtor()</a>,
+<a href="bfile_bferror.html">bferror()</a>.
+
+<hr>
+<p>
+This function is part of the <a href="bfile.html">BFILE library</a>.
+</body>
+</html>

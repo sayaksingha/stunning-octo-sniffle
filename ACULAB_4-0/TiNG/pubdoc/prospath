@@ -1,0 +1,595 @@
+	Prosody signal path processing
+secname sort
+
+	Create a signal path
+apifn	sm_path_create
+params	sm_path_create_parms createp
+	The created signal path.
+field	tSMPathId path out
+	A value obtained from
+fnref   sm_open_module
+	which indicates the module on which the path is to be created.
+field   tSMModuleId module in
+unstruct
+	Creates a signal path. A signal path permits a variety of
+	transformations to be performed on a signal. If no transformations
+	are enabled, a path acts as a pass through.
+	<p>
+	The modules
+modref	inchan
+	and
+modref	passthru
+	are required.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+error   ERR_SM_NO_RESOURCES - if no suitable output channel free
+error   ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified
+
+	Configure a signal path to perform echo cancellation
+apifn	sm_path_echocancel
+params	sm_path_echocancel_parms cancelp
+	The signal path to be configured
+field	tSMPathId path in
+	Enables (non-zero) or disables (zero) echo cancellation of the
+	input signal.
+field   tSM_INT enable in
+	The datafeed which is the reference signal. Only used if
+ref	enable
+	is non-zero.
+field   tSMDatafeedId reference in
+	Enables (non-zero) or disables (zero) non-linear processing. 
+	The exact behaviour of the non-linear processing module is controlled
+	by
+ref	mode
+	. Negative 
+	values represent the lower limit in dBm0. Positive values cause 
+	the default value of -42dBm0 to be used.
+	Only used if
+ref	enable
+	is non-zero.
+field   tSM_INT non_linear in
+	Selects the non-linear echo cancellation mode to be used. Only used if
+ref	non_linear
+	is non-zero.
+enumstart kSMPathEchoNonLinearMode
+	Uses non-linear processing to suppress the signal whenever
+	echo or background noise are dominant. This mode of operation
+	is suitable for large-scale conferencing and/or IVR applications,
+	where it is important that the signal is completely muted whenever
+	the caller is not speaking.
+enum	kSMPathEchoNonLinearModeMuting
+	Uses non-linear processing to replace the signal with comfort noise
+	whenever echo might otherwise be audible. This mode of operation is
+	most appropriate to IP gateway applications where background noise is
+	desirable to maintain the illusion of continuity.
+enum	kSMPathEchoNonLinearModeCNG
+enumend mode in
+	Enables (non-zero) or disables (zero) the use of automatic gain
+	control on the input signal.
+	Only used if
+ref	enable
+	is non-zero.
+field   tSM_INT use_agc in
+	Enables (non-zero) or disables (zero) holding the gain fixed at its
+	current value. This can be used after the AGC gain factor has adjusted
+	itself to prevent further changes.
+	Only used if
+ref	enable
+	is non-zero.
+field   tSM_INT fix_agc in
+	If non-zero, sets the span (in milliseconds) of the echo cancellation.
+	A side effect of this is that the input conditioning may be re-initialised.
+	Only used if
+ref	enable
+	is non-zero.
+field   tSM_INT span in
+	If non-zero, sets delay (in milliseconds) before the reference signal is presented 
+	to echo cancellation reference input (allowing application to compensate for time 
+	it takes reference signal to reach the TDM circuit, so avoiding the effective span 
+	being diminished by this amount). Input conditioning is re-initialised. To set a 
+	zero delay, use the value -1. If zero, the delay is unchanged and input conditioning
+	is not re-initialised. The default delay is zero milliseconds. 
+field	tSM_INT delay in
+enumstart kSMPathEchoToneAction
+	No special action on occurence of tones.
+enum	kSMPathEchoToneActionNone
+	TTY tones are expected - when detected action taken to mute TTY echo but passthrough non-echo TTY.
+enum	kSMPathEchoTonetActionMuteTTY
+enumend tone_action in
+unstruct
+	Configures echo cancellation on a signal path. The
+	input is examined for an echo of the
+ref	reference
+	signal, and any echo found is suppressed.
+	<p>
+	Non-linear echo cancellation can operate in two modes. The default is 
+	non-linear echo cancellation with muting, which is suitable for large-scale 
+	conferencing and/or IVR applications, where it is important that the signal 
+	is completely muted whenever the caller is not speaking.
+	<p>
+	Non-linear echo cancellation with comfort noise generation (CNG) never mutes 
+	the signal. Instead it replaces any residual traces of echo with "comfort 
+	noise". This mode of operation is most appropriate to IP gateway applications 
+	where background noise is desirable to maintain the illusion of continuity.
+	<p>
+	If tone_action is set to mute TTY, the echo cancellation algorithm will expect to 
+	encounter TTY tones on its primary input and its reference. 
+	Its output will be muted whenever such tones are present on its reference and for a 
+	short time afterwards (thus muting echoes of tones). It will pass though TTY tones 
+	present on its primary input at other times. This behaviour should only be enabled 
+	if TTY tones are expected in the signal path. It would normally be used with 
+	non-linear mode disabled.
+	<p>
+	Requires the module
+modref  echocan.
+explain
+	0
+retval
+
+	Configure a signal path to perform automatic gain control
+apifn	sm_path_agc
+params	sm_path_agc_parms agcp
+	The signal path to be configured
+field	tSMPathId path in
+	Indicator of whether automatic gain control is to be enabled
+	(non-zero) or disabled (zero).
+field   tSM_INT agc in
+	The volume adjustment (dBm0).
+field	tSM_INT volume in
+unstruct
+	Configures automatic gain control and fixed volume adjustment on
+	a signal path. The
+ref	agc
+	parameter controls whether or not automatic gain control is
+	applied to the signal. If
+ref	agc
+	is non-zero then automatic gain control is applied. The
+	volume adjustment specified is performed after the AGC and
+	has a range of at least -24 to +8 dB. Volume adjustment is
+	always applied, even if AGC is disabled.
+	<p>
+	Requires the module
+modref  gainbg.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Adjust AGC settings.
+apifn	sm_path_agc_adjust_settings
+params	sm_path_agc_adjust_settings_parms agcadjp
+	The signal path which has AGC enabled.
+field	tSMPathId path in
+	The rate at which the AGC decays the estimate of the loudest signal, 
+	as a fraction.
+field	float max_level_decay in
+	The target output level in dBm0.
+field	float target_level in
+unstruct
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - the path does not have AGC enabled
+
+	Configure a signal path to perform pitch shifting
+apifn	sm_path_pitchshift
+params	sm_path_pitchshift_parms pitchshiftp
+	The signal path to be configured
+field	tSMPathId path in
+	The number of octaves by which the signal is to be shifted.
+	Values less than zero cause a downward shift (for example, the
+	value <code>-0.08333</code> configures a shift down one semitone),
+	values greater than zero cause an upward shift, and the value
+	zero disables pitch shifting.
+field   float shift in
+unstruct
+	Configures pitch shifting on a signal path.
+	<p>
+	Requires the module
+modref  pitchshift.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Configure a signal path to add in another signal
+apifn	sm_path_mix
+params	sm_path_mix_parms mixp
+	The signal path to be configured
+field	tSMPathId path in
+	Enables (non-zero) or disables (zero) adding another signal
+	to the input signal.
+field   tSM_INT enable in
+	The datafeed which is the signal to be added. Only used if
+ref	enable
+	is non-zero.
+field   tSMDatafeedId mixin in
+	Volume adjustment (dB).
+field	tSM_INT volume in
+unstruct
+	Configures signal mixing on a signal path.
+	The specified signal is added into the signal being processed
+	by this path, and the result is adjusted according to the
+ref	volume
+	parameter, which has a range of at least -24 to +8 dB.
+	Typically, the signal is adjusted by -6 dB to prevent the sum
+	of the two signals being louder than each original signal.
+	<p>
+	Requires the module
+modref  gainbg.
+explain
+	0
+retval
+
+	Configure a signal path to convert signal to a different sampling rate
+apifn	sm_path_resample
+params	sm_path_resample_parms resamplep
+	The signal path to be configured
+field	tSMPathId path in
+	Sets the up-sampling ratio. This value must be in the range 1..6.
+field   tSM_INT uprate in
+	Sets the down-sampling ratio. This value must be in the range 1..6.
+field   tSM_INT downrate in
+unstruct
+	Configures sample rate conversion on a signal path. If
+ref	uprate
+	and
+ref	downrate
+	are equal, sample rate conversion is disabled. Otherwise the
+	signal is converted to a sampling rate of
+ref	uprate
+	/
+ref	downrate
+	times the original sampling rate. For example, if
+ref	uprate
+	is two, and
+ref	downrate
+	is one, the sampling rate is doubled. To produce the best audio quality,
+	and to use the least processor time,
+ref	uprate
+	should always be kept as small as possible. For example,
+ref	uprate
+	= 2, with
+ref	downrate
+	= 3, would decrease the sampling rate to two-thirds of the original
+	value, but so would
+ref	uprate
+	= 4, with
+ref	downrate
+	= 6. Both the audio quality and the CPU loading will be noticeably better
+	with
+ref	uprate
+	= 2, than with
+ref	uprate
+	= 4.
+	<p>
+	Requires the module
+modref  resample.
+explain
+	0
+retval
+
+	Obtain a datafeed from a signal path
+apifn	sm_path_get_datafeed
+params	sm_path_datafeed_parms datafeedp
+	The signal path from which to obtain a datafeed
+field	tSMPathId path in
+	The datafeed object representing the processed signal from
+	the signal path
+field	tSMDatafeedId datafeed out
+unstruct
+	Request a datafeed identifier from a signal path. This identifer
+	can subsequently be used in a call to 
+fnref	sm_channel_datafeed_connect,
+fnref	sm_tdmtx_datafeed_connect
+	or
+fnref	sm_vmptx_datafeed_connect
+	to connect the result of the signal path procesing to a speech
+	channel (tSMChannelId), TDM[tx], or a VMP[tx]
+	respectively. It is valid until the path is destroyed.
+	Datafeed connections can only be made between objects allocated
+	on the same <code>tSMModuleId</code>.
+	<p>
+	Requires the module
+modref	datafeed
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Destroy a previously allocated signal path
+apifn	sm_path_destroy -dtor
+	A tSMPathId that has been prevously created by a call to 
+fnref	sm_path_create
+	.
+param	tSMPathId path
+	Destroys
+ref	path
+	and invalidates the tSMPathId.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Determine path status
+apifn	sm_path_status
+params	sm_path_status_parms statusp
+	The path to interrogate
+field	tSMPathId path in
+enumstart kSMPathStatus
+	Indicates that there is nothing significant to report.
+enum	kSMPathStatusRunning
+	Tone detector reports ongoing tone or silence.
+enum	kSMPathStatusOngoingTone
+	Tone detector reports previously ongoing tone or silence has completed.
+enum	kSMPathStatusEndTone
+	Indicates that the path has stopped and can be destroyed.
+enum	kSMPathStatusStopped
+enumend status out
+	Additional information relating to the current status of the path 
+union
+	This field is only valid if the status is either
+ref	kSMPathStatusOngoingTone
+	or
+ref kSMPathStatusEndTone.
+struct
+	The id for the recognised tone (or zero if silence).
+field	tSM_INT id out
+	The ongoing or final duration of the tone or silence.
+field	unsigned duration out
+unstruct	tone
+unstruct	u
+unstruct
+	Returns the current status of the path or an error to indicate that
+	a problem occurred.
+	<p>
+	When the event, obtained from
+fnref	sm_path_get_event,
+	is signalled the user must call this function to determine the nature
+	of the status change. The change in status may indicate that an error 
+	occurred whilst processing a user request or it may be notifiying the 
+	user of a change to the previous state of the path.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources existed to create the path
+
+	Obtain an event for a path
+apifn	sm_path_get_event
+params	sm_path_event_parms eventp
+	The path 
+field	tSMPathId path in
+	The event identifier
+field	tSMEventId event out
+unstruct
+	If the call completes successfully 
+ref	event
+	will hold the tSMEventId belonging to 
+ref	path.
+	The tSMEventId is valid until the path is destroyed using 
+fnref	sm_path_destroy.
+	This event will be signalled when a status change occurs on the 
+	path. When the event is signalled the user must call 
+fnref	sm_path_status
+	to discover the nature of the status change.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Connect a datafeed to a signal path
+apifn	sm_path_datafeed_connect
+params	sm_path_datafeed_connect_parms datafeedp
+	The signal path that will receive and process the data
+field	tSMPathId path in
+	The datafeed acting as a source of data for the signal path
+field	tSMDatafeedId data_source in
+unstruct
+	Connects a datafeed to a signal path. The
+ref	data_source
+	must be a datafeed obtained from 
+fnref	sm_channel_get_datafeed,
+fnref	sm_tdmrx_get_datafeed
+fnref	sm_vmprx_get_datafeed
+	or 
+fnref	sm_path_get_datafeed.
+	Datafeed connections can only be made between objects allocated
+	on the same <code>tSMModuleId</code>.
+	The signal path
+ref	path
+	will receive any data that is generated by the output task from which 
+ref	data_source
+	was derived.
+	<p>
+	To disconnect a signal path from a datafeed, specify 
+	<code>kSMNullDatafeedId</code> as the tSMDatafeedId in
+ref	data_source
+	<p>
+	Requires the module
+modref	datafeed
+	to have been downloaded.
+explain
+	0
+retval
+
+version	Prel
+	Configure a signal path to decode AVF encapsulated AMR-NB encoded data to linear audio
+apifn	sm_path_avf_amrnb_dec
+params	sm_path_avf_amrnb_dec_parms amrnbdecparms
+	The signal path to be configured
+field	tSMPathId path in
+	Enables (non-zero) or disables (zero) the AMR-NB decoder.
+field	tSM_INT enable in
+unstruct
+	Configures AVF encapsulated AMR-NB decoding on a signal path.
+explain
+	0
+retval
+version +
+
+version	Prel
+	Configure a signal path to encode linear audio to AVF encapsulated AMR-NB encoded data
+apifn	sm_path_avf_amrnb_enc
+params	sm_path_avf_amrnb_enc_parms amrnbencparms
+	The signal path to be configured
+field	tSMPathId path in
+	Enables (non-zero) or disables (zero) the AMR-NB encoder.
+field	tSM_INT enable in
+	The payload type which should be used in the output AVF. Note that on AVF replay the payload type
+	in the AVF is ignored so, in general, the value supplied here is irrelevant. However if, for instance,
+	the resulting file was to be output using a streaming server, the payload type may well be used.
+field	tSM_INT payload_type in
+	The speed to use in bits per second. It must be one of the speeds which the AMR codec can
+	encode, which are: 4750, 5150, 5900, 6700, 7400, 7950, 10200, and 12200.
+field	tSM_INT bitrate in
+	Whether to enable the Voice Activity Detector.
+field	tSM_INT vad_enable in
+unstruct
+	Configures AVF encapsulated AMR-NB encoding on a signal path.
+	Requires the module
+modref  amr-nb-prs
+	or
+modref	amr-nb-all.
+explain
+	0
+retval
+version +
+
+	Configure a signal path to apply a delay to signal
+apifn	sm_path_delay
+params	sm_path_delay_parms delayparms
+	The signal path to be configured
+field	tSMPathId path in
+	Enables (non-zero) or disables (zero) delay.
+field	tSM_INT enable in
+	Delay value measured in samples.
+field	tSM_INT delay in
+unstruct
+	Delays signal by specified number of samples. If signal path already
+	has a delay configured, the delay is changed to new value. A new or
+	increased delay has gap filled with silence.
+	<p>
+	Requires the module
+modref  delay
+	to be loaded.
+explain
+	0
+retval
+
+	Configure a signal path to apply a filter to emphasise or deemphasise high frequencies
+apifn	sm_path_emphasis
+params	sm_path_emphasis_parms emphparms
+	The signal path to be configured
+field	tSMPathId path in
+	Enables (non-zero) or disables (zero) filter.
+field	tSM_INT enable in
+	Indicates what mode the filter operates in.
+enumstart kSMPathEmphMode
+	Puts the filter into HF emphasis mode.
+enum	kSMPathEmphModeHFEmphasis
+	Puts the filter into HF de-emphasis mode.
+enum	kSMPathEmphModeHFDeemphasis
+enumend mode in
+	Extra gain to apply to the signal as part of the filter, in dB.
+field	tSM_INT gain in
+unstruct
+	Configures a high-frequency emphasis/de-emphasis filter.
+	In emphasis mode, response curve is approximately -3dB at 0Hz rising
+	to 0dB at 300Hz and 20dB at 3330Hz.
+	In de-emphasis mode, the inverse filter is applied: 3dB at 0Hz falling
+	to 0dB at 300Hz and -20dB at 3330Hz.
+	Disabling the filter also disables the gain.
+	Note that the frequencies quoted are proportional to the input signal sample rate 
+	and those given are for an input signal sample rate of 8000 samples per second. 
+	<p>
+	Requires the module
+modref  emph
+	to be loaded.
+explain
+	0
+retval
+
+	Configure a signal path to detect and optionally eliminate tones
+apifn	sm_path_tonedetect
+params	sm_path_tonedetect_parms tdparms
+	The signal path to be configured
+field	tSMPathId path in
+	Enables (non-zero) or disables (zero) elimination of detected tones from signal.
+field	tSM_INT elim in
+	Tone detection mode - see 
+fnref	sm_listen_for
+	for more details.
+enumstart kSMPathToneDetectMode
+	Tone detection disabled.
+enum	kSMPathToneDetectModeNone
+	Simple tone detection enabled, no minimum period.
+enum	kSMPathToneDetectModeMinDurationNoMinimum
+	Robust detection of tones with duration as short as 40mS.
+enum	kSMPathToneDetectModeMinDuration40
+	Simple tone detection enabled, tone must be valid for 64ms to be detected.
+enum	kSMPathToneDetectModeMinDuration64
+enumend min_duration in
+	Selects tone set used for tone detection - use same as for active_tone_set_id field in
+fnref	sm_listen_for.
+field	tSM_INT tone_set_id in
+unstruct
+	Configures a tone detector on signal path.
+	Detected tones are reported through 
+fnref	sm_path_status.
+	Tones that are detected may optionally be eliminated.
+	When eliminating tones, the signal is delayed by small amount so entire 
+	tone can be eliminated.
+	<p>
+	Requires the module
+modref  td
+	to be loaded.
+explain
+	0
+retval
+
+	Instructs a path to stop all processing
+apifn	sm_path_stop
+params	sm_path_stop_parms stopp
+	A tSMPathId that has been previously created by a call to
+fnref	sm_path_create.
+field	tSMPathId path in
+unstruct
+	Requests that a path stops executing. The user will be notified that
+	a path has terminated by a final status, kSMPAthStatusStopped, from
+fnref	sm_path_status.
+	Once the stopped status notification has been received the path can 
+	be destroyed using
+fnref	sm_path_destroy.
+	<p>
+	Once the path has stopped the event should no longer be used to wait
+	for status notifications as it will be signalled permanently. The event
+	is invalidated when
+fnref	sm_path_destroy
+	is called.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Configure a signal path to eliminate TTY signals
+apifn	sm_path_ttyeliminate
+params	sm_path_ttyeliminate_parms ttyeliminatep
+	The signal path to be configured
+field	tSMPathId path in
+	Enables (non-zero) or disables (zero) elimination of TTY signals.
+field	tSM_INT enable in
+unstruct
+	Configures TTY elimination on a signal path.
+	<p>
+	Requires the module
+modref  ttyasyrx.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+

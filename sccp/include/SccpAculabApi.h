@@ -60,7 +60,7 @@ class SccpAculab
 
    SsapStatus     mSaapStatus; 
 
-   acu_sccp_con_t *mConnection;
+    acu_sccp_con_t *mConnection;
 
    int            mLocalPc;
 
@@ -101,6 +101,7 @@ class SccpAculab
      BOOLEAN SendAcuSccpMsg(const void *data, unsigned int dataLen, UINT32 transId); 
      
      BOOLEAN SetRemoteLocalAddress(acu_sccp_addr_t lLocAddr, acu_sccp_addr_t lRemAddr);
+     BOOLEAN SetReturnOption(bool enable);
 
      BOOLEAN UnblockConnection(acu_sccp_con_t *con);
 

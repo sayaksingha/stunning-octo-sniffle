@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody WAV BFILE: API</title>
+</head>
+<body>
+<h1>Prosody WAV BFILE: API</h1>
+<p>
+The following functions are provided by the
+<a href="../highapi_bf_wavfile.html">Prosody WAV BFILE API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr>
+	<td><a href="#sm_replay_wav_bf_start">sm_replay_wav_bf_start()</a>
+	<td>&nbsp;
+	<td>Play a WAV file
+
+	<tr>
+	<td><a href="#sm_replay_wav_bf_close">sm_replay_wav_bf_close()</a>
+	<td>&nbsp;
+	<td>Close a WAV file opened by sm_replay_wav_bf_start
+
+	<tr>
+	<td><a href="#sm_record_wav_bf_start">sm_record_wav_bf_start()</a>
+	<td>&nbsp;
+	<td>Record into a WAV file
+
+	<tr>
+	<td><a href="#sm_record_wav_bf_close">sm_record_wav_bf_close()</a>
+	<td>&nbsp;
+	<td>Close a WAV file created by sm_record_wav_bf_start
+
+	<tr>
+	<td><a href="#sm_record_wav_bf_trim_close">sm_record_wav_bf_trim_close()</a>
+	<td>&nbsp;
+	<td>Trim and close a WAV file created by sm_record_wav_bf_start
+
+	<tr>
+	<td><a href="#sm_replay_wav_bf_get_type">sm_replay_wav_bf_get_type()</a>
+	<td>&nbsp;
+	<td>Determine the type of data in a WAV file
+
+</table>
+<p>
+This document is also available as
+<a href="highapi_bf_wavfile-index.html">separate pages for each function</a>.
+<hr>
+<h2><a name="sm_replay_wav_bf_start">Prosody WAV BFILE: API: sm_replay_wav_bf_start</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_replay_wav_bf_start(char *<a href="#field-filename">filename</a>, <a href="../apitype.html#type-SM_BFILE_REPLAY_PARMS">SM_BFILE_REPLAY_PARMS</a> *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-filename">filename</a>
+<dd>
+The name of the WAV file to be played.
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure as for
+<a href="apifn-sm_replay_bfile_start.html">sm_replay_bfile_start()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+Opens and parses header of WAV file, sets up
+<a href="apifn-sm_replay_bfile_start.html#field-fd">fd</a>,
+<a href="apifn-sm_replay_start.html#field-type">replay_parms.type</a>,
+and
+<a href="apifn-sm_replay_start.html#field-data_length">replay_parms.data_length</a>,
+in structure pointed at by
+<a class=pref href="#field-file_parms">file_parms</a>
+and then invokes
+<a href="apifn-sm_replay_bfile_start.html">sm_replay_bfile_start</a>.
+<p>
+The other elements of the
+<a href="apifn-sm_replay_bfile_start.html#field-file_parms">replay_parms</a>
+structure must be set up as for
+<a href="apifn-sm_replay_bfile_start.html">sm_replay_bfile_start()</a>.
+Note that the offset is assumed to be
+relative to the first octet of speech data following the WAV
+header. If
+<a href="apifn-sm_replay_bfile_start.html#field-offset">offset</a>,
+and
+<a href="apifn-sm_replay_start.html#field-data_length">replay_parms.data_length</a>,
+are both set to zero then
+<a class=pref href="#field-file_parms">file_parms</a>
+will be set up to replay all the speech data in the WAV file.
+<p>
+<strong>Note: It is the responsibility of the application to
+operate the replay as described in
+<a href="../highapi_bf_playrec.html">Prosody high level BFILE play/record</a>
+documentation and to
+close the file following replay completion or abort (using
+<a href="#sm_replay_wav_bf_close">sm_replay_wav_bf_close()</a>).
+</strong>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem accessing file containing replay data<li>ERR_SM_FILE_FORMAT - file not WAV format (or unsupported WAV feature)</ul>
+<hr>
+<h2><a name="sm_replay_wav_bf_close">Prosody WAV BFILE: API: sm_replay_wav_bf_close</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_replay_wav_bf_close(<a href="../apitype.html#type-SM_BFILE_REPLAY_PARMS">SM_BFILE_REPLAY_PARMS</a> *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_replay_wav_bf_start">sm_replay_wav_bf_start()</a>
+to start a replay which has not yet been closed.
+</dl>
+<h3>Description</h3>
+<p>
+Following completion of WAV file replay this function may be
+called to close the replay file and release the associated file
+descriptor.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem closing file</ul>
+<hr>
+<h2><a name="sm_record_wav_bf_start">Prosody WAV BFILE: API: sm_record_wav_bf_start</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_record_wav_bf_start(char *<a href="#field-filename">filename</a>, <a href="../apitype.html#type-SM_BFILE_RECORD_PARMS">SM_BFILE_RECORD_PARMS</a> *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-filename">filename</a>
+<dd>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure as for
+<a href="apifn-sm_record_bfile_start.html">sm_record_bfile_start()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+Creates file with given name, allocates space in file by writing
+blank WAV file header, sets up
+<a href="apifn-sm_record_bfile_start.html#field-fd">fd</a>
+in structure pointed at by
+<a class=pref href="#field-file_parms">file_parms</a>
+and then invokes
+<a href="apifn-sm_record_bfile_start.html">sm_record_bfile_start</a>.
+<p>
+The other elements of the
+<a href="apifn-sm_record_bfile_start.html#field-record_parms">record_parms</a>.
+structure must be set up
+as for
+<a href="apifn-sm_record_bfile_start.html">sm_record_bfile_start</a>.
+The setting of the
+<a href="apifn-sm_record_start.html#field-type">record_parms.type</a>,
+parameter will determine type of WAV file created.
+<p>
+Note it is the responsibility of the application to close the
+file following record completion or abort using
+<a href="#sm_record_wav_bf_close">sm_record_wav_bf_close()</a>.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem writing to file</ul>
+<hr>
+<h2><a name="sm_record_wav_bf_close">Prosody WAV BFILE: API: sm_record_wav_bf_close</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_record_wav_bf_close(<a href="../apitype.html#type-SM_BFILE_RECORD_PARMS">SM_BFILE_RECORD_PARMS</a> *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_record_wav_bf_start">sm_record_wav_bf_start()</a>
+to start a record which has not yet been closed.
+</dl>
+<h3>Description</h3>
+<p>
+Following completion of a recording into a WAV file this
+function must be called to write the correct WAV header in space
+previously reserved by 
+<a href="#sm_record_wav_bf_start">sm_record_wav_bf_start()</a>
+then closes the file.
+<p>
+Note that the
+<a href="apifn-sm_record_start.html#field-sampling_rate">sampling_rate</a>
+of the
+<a href="apifn-sm_record_bfile_start.html#field-record_parms">record_parms</a>
+structure must be set to the recorded sample rate,as returned by
+<a href="apifn-sm_record_status.html">sm_record_status()</a>.
+This is done automatically except when
+<a href="apifn-sm_record_bfile_progress_istatus.html">sm_record_bfile_progress_istatus()</a>
+has been used.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem writing to file</ul>
+<hr>
+<h2><a name="sm_record_wav_bf_trim_close">Prosody WAV BFILE: API: sm_record_wav_bf_trim_close</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_record_wav_bf_trim_close(<a href="../apitype.html#type-SM_BFILE_RECORD_PARMS">SM_BFILE_RECORD_PARMS</a> *<a href="#field-file_parms">file_parms</a>, <a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-trimLength">trimLength</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_record_wav_bf_start">sm_record_wav_bf_start()</a>
+to start a record which has not yet been closed.
+<dt><a name="field-trimLength">trimLength</a>
+<dd>
+The number of octets to trim from the end of the data.
+</dl>
+<h3>Description</h3>
+<p>
+<a class=pref href="#field-trimLength">trimLength</a>
+octets of data are subtracted from the WAV file length recorded
+in the WAV header and hence this amount of data will be omitted
+from the end of a replay of this WAV file. Then a
+<a href="#sm_record_wav_bf_close">sm_record_wav_bf_close()</a>
+is performed.
+<p>
+Note that the
+<a href="apifn-sm_record_start.html#field-sampling_rate">sampling_rate</a>
+of the
+<a href="apifn-sm_record_bfile_start.html#field-record_parms">record_parms</a>
+structure must be set to the recorded sample rate,as returned by
+<a href="apifn-sm_record_status.html">sm_record_status()</a>.
+This is done automatically except when
+<a href="apifn-sm_record_bfile_progress_istatus.html">sm_record_bfile_progress_istatus()</a>
+has been used.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem writing to file</ul>
+<hr>
+<h2><a name="sm_replay_wav_bf_get_type">Prosody WAV BFILE: API: sm_replay_wav_bf_get_type</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_replay_wav_bf_get_type(char *<a href="#field-filename">filename</a>, int *<a href="#field-replay_type">replay_type</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-filename">filename</a>
+<dd>
+The name of a WAV file.
+<dt><a name="field-replay_type">replay_type</a>
+<dd>
+The address of where the data type code is to be saved.
+</dl>
+<h3>Description</h3>
+<p>
+Given name of existing WAV file, returns in
+<a class=pref href="#field-replay_type">replay_type</a>
+Prosody API data format type id that would be used by
+<a href="apifn-sm_replay_start.html">sm_replay_start</a>.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem reading file</ul>
+<hr>
+<p>These functions constitute the
+<a href="../highapi_bf_wavfile.html">Prosody WAV BFILE API</a>.
+</body>
+</html>

@@ -1,0 +1,694 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody high level FILE play/record: API</title>
+</head>
+<body>
+<h1>Prosody high level FILE play/record: API</h1>
+<p>
+The following functions are provided by the
+<a href="../highapi_playrec.html">Prosody high level FILE play/record API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr>
+	<td><a href="#sm_replay_file_start">sm_replay_file_start()</a>
+	<td>&nbsp;
+	<td>
+Start replaying data from a file.
+
+	<tr>
+	<td><a href="#sm_replay_file_progress_istatus">sm_replay_file_progress_istatus()</a>
+	<td>&nbsp;
+	<td>Proceed with replaying data from a file
+
+	<tr>
+	<td><a href="#sm_replay_file_progress">sm_replay_file_progress()</a>
+	<td>&nbsp;
+	<td>Proceed with replaying data from a file
+
+	<tr>
+	<td><a href="#sm_replay_file_complete">sm_replay_file_complete()</a>
+	<td>&nbsp;
+	<td>Replay remaining data from a file and clean up afterwards
+
+	<tr>
+	<td><a href="#sm_replay_file_stop">sm_replay_file_stop()</a>
+	<td>&nbsp;
+	<td>Abort replaying data from a file.
+
+	<tr>
+	<td><a href="#sm_record_file_start">sm_record_file_start()</a>
+	<td>&nbsp;
+	<td>Start recording data into a file.
+
+	<tr>
+	<td><a href="#sm_record_file_progress_istatus">sm_record_file_progress_istatus()</a>
+	<td>&nbsp;
+	<td>Proceed with recording data to a file
+
+	<tr>
+	<td><a href="#sm_record_file_progress_ostatus">sm_record_file_progress_ostatus()</a>
+	<td>&nbsp;
+	<td>Proceed with recording data to a file and report ongoing status
+
+	<tr>
+	<td><a href="#sm_record_file_progress">sm_record_file_progress()</a>
+	<td>&nbsp;
+	<td>Proceed with recording data to a file
+
+	<tr>
+	<td><a href="#sm_record_file_complete">sm_record_file_complete()</a>
+	<td>&nbsp;
+	<td>Record remaining data to a file and clean up afterwards
+
+	<tr class=version-TiNG>
+	<td><a href="#sm_record_file_complete_tstatus">sm_record_file_complete_tstatus()</a>
+	<td>T
+	<td>Record remaining data to a file, report temination status and clean up afterwards
+
+	<tr>
+	<td><a href="#sm_record_file_stop">sm_record_file_stop()</a>
+	<td>&nbsp;
+	<td>Abort the recording of data to a file
+
+</table>
+<p>
+Key to <strong>W</strong> column:
+<table border>
+<tr class=version-TiNG><th>T
+	<td>Functionality added in Prosody version 2 (TiNG)
+</table>
+<p>
+This document is also available as
+<a href="highapi_playrec-index.html">separate pages for each function</a>.
+<hr>
+<h2><a name="sm_replay_file_start">Prosody high level FILE play/record: API: sm_replay_file_start</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_replay_file_start(struct sm_file_replay_parms *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">*file_parms</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_file_replay_parms {
+	<a href="../apitype.html#type-tSM_OPEN_FILE">tSM_OPEN_FILE</a> <a href="#field-fd">fd</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-offset">offset</a>;					/* in */
+	<a href="../apitype.html#type-SM_REPLAY_PARMS">SM_REPLAY_PARMS</a> <a href="#field-replay_parms">replay_parms</a>;				/* in */
+	int <a href="#field-status">status</a>;						/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-private_length">private_length</a>;				/* out */
+	int <a href="#field-completing">completing</a>;						/* out */
+	int <a href="#field-data_length_in_buffer">data_length_in_buffer</a>;				/* out */
+	char <a href="#field-buffer">buffer[kSMMaxHiReplayDataBufferSize]</a>;		/* out */
+} SM_FILE_REPLAY_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Prepares a channel for replay of data from a file to an output
+channel previously allocated by a call to
+<a href="apifn-sm_channel_alloc_placed.html">sm_channel_alloc_placed()</a>.
+<p>
+When using the TiNG dll under Windows use of this function requires a FILE* 
+to be passed across the dll boundry. This may cause problems when the 
+application uses a different C runtime library from the TiNG dll. Since the 
+C runtime library used by the TiNG dll may change in future versions, 
+<strong>this function is deprecated when using the TiNG dll</strong>.
+<p>
+The fields of the structure
+<a class=pref href="#field-replay_parms">replay_parms</a>
+should be set up as
+described in
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a>
+low level API call. Note the field
+<a href="apifn-sm_replay_start.html#field-data_length">data_length</a>
+should either be set to zero or to the actual number of octets
+to be replayed from the file. If it is set to zero then all of
+the data starting from
+<a class=pref href="#field-offset">offset</a>
+to the end of the file will be replayed.
+<p>
+The
+<a class=pref href="#field-status">status</a>
+field is used to indicate the current status of the
+replay. On return from a successful invocation of
+<a href="#sm_replay_file_start">sm_replay_file_start()</a>
+it will be set to a value of <code>ERR_SM_PENDING</code> and
+will continue to have this value until replay has been
+completed, aborted or terminated on occurrence of an error.
+<p>
+The fields
+<a class=pref href="#field-private_length">private_length</a>,
+<a class=pref href="#field-data_length_in_buffer">data_length_in_buffer</a>
+and
+<a class=pref href="#field-buffer">buffer</a>
+are used internally by the high level library and should not be
+accessed by the application.
+<p>
+The replay is finished when a call to
+<a href="#sm_replay_file_complete">sm_replay_file_complete()</a>
+returns.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-fd">fd</a><dd>The file containing the data to be played. This must have
+been opened with C standard I/O library function
+<cite>fopen()</cite> unless the library was built for Microsoft
+Windows with the C preprecessor symbol
+<code>__SMWIN32HLIB__</code> defined, in which case it must be a
+Windows <code>HANDLE</code>. It is recommended that the
+<a href="../highapi_bf_playrec.html">
+Prosody high level BFILE play/record</a> is used where possible
+instead of rebuilding this library, since it avoids the risk of
+accidentally using the library built for the wrong type of file
+access.
+
+<dt><a name="field-offset">offset</a><dd>The offset measured in octets (starting from zero) of the first
+octet of replay data in the file referenced by
+<a class=pref href="#field-fd">fd</a>.
+
+<dt><a name="field-replay_parms">replay_parms</a><dd>A structure as defined for
+<a href="apifn-sm_replay_start.html">sm_replay_start</a>.
+
+<dt><a name="field-status">status</a><dd>The status of the replay.
+
+<dt><a name="field-private_length">private_length</a><dd>A field reserved for the library.
+
+<dt><a name="field-completing">completing</a><dd>A field reserved for the library.
+
+<dt><a name="field-data_length_in_buffer">data_length_in_buffer</a><dd>A field reserved for the library.
+
+<dt><a name="field-buffer">buffer</a><dd>A field reserved for the library.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem accessing file containing replay data</ul>
+<hr>
+<h2><a name="sm_replay_file_progress_istatus">Prosody high level FILE play/record: API: sm_replay_file_progress_istatus</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_replay_file_progress_istatus(<a href="../apitype.html#type-SM_FILE_REPLAY_PARMS">SM_FILE_REPLAY_PARMS</a> *<a href="#field-file_parms">file_parms</a>, int <a href="#field-initial_status">initial_status</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_replay_file_start">sm_replay_file_start()</a>
+to start a replay that has not yet indicated that it has
+finished.
+<dt><a name="field-initial_status">initial_status</a>
+<dd>
+A recent status returned from
+<a href="apifn-sm_replay_status.html">sm_replay_status()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+Transfers file data to speech processing module for previously
+initiated replay unless the channel has insufficient buffering space
+to accept more data, or all data has been transferred, or an
+error occurs.
+<p>
+If the current replay status for the channel is not known,
+then the
+<a href="#sm_replay_file_progress">sm_replay_file_progress()</a>
+variant of the call must be used.
+<p>
+The parameter
+<a class=pref href="#field-file_parms">file_parms</a>
+must point to the same
+<code>sm_file_replay_parms</code> structure as was previously
+used to initiate the file replay.
+<p>
+On return if the status field is still set to a value of
+<code>ERR_SM_PENDING</code> then further calls to this routine will be
+required to complete the file replay. If status has a zero value
+then replay has successfully completed. Otherwise replay has
+been terminated on error, and status will be set to a
+corresponding error code.
+<p>
+Note: this routine (or the equivalent
+<a href="#sm_replay_file_progress">sm_replay_file_progress()</a>)
+must be periodically invoked following a call to
+<a href="#sm_replay_file_start">sm_replay_file_start()</a>.
+This may either be done explicitly by the application, or
+alternatively through a call to
+<a href="#sm_replay_file_complete">sm_replay_file_complete()</a>
+which will handle the scheduling of
+calls to
+<a href="#sm_replay_file_progress">sm_replay_file_progress()</a>
+on behalf of the application.
+<h3>Returns</h3>
+<p>The same value as stored in the status field of the structure
+pointed to by
+<a class=pref href="#field-file_parms">file_parms</a>
+which is 0 or <code>ERR_SM_PENDING</code>
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_PENDING - no error but replay has not yet finished</ul>
+<hr>
+<h2><a name="sm_replay_file_progress">Prosody high level FILE play/record: API: sm_replay_file_progress</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_replay_file_progress(<a href="../apitype.html#type-SM_FILE_REPLAY_PARMS">SM_FILE_REPLAY_PARMS</a> *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_replay_file_start">sm_replay_file_start()</a>
+to start a replay that has not yet indicated that it has
+finished.
+</dl>
+<h3>Description</h3>
+<p>
+This is the same as
+<a href="#sm_replay_file_progress_istatus">sm_replay_file_progress_istatus()</a>
+except it first determines the replay status.
+<p>
+If the current replay status for the channel is known,
+then the
+<a href="#sm_replay_file_progress_istatus">sm_replay_file_progress_istatus()</a>
+variant of the call should be used with
+<a href="#field-initial_status">initial_status</a>
+set to this status.
+<hr>
+<h2><a name="sm_replay_file_complete">Prosody high level FILE play/record: API: sm_replay_file_complete</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_replay_file_complete(<a href="../apitype.html#type-SM_FILE_REPLAY_PARMS">SM_FILE_REPLAY_PARMS</a> *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_replay_file_start">sm_replay_file_start()</a>
+to start a replay that has not yet indicated that it has
+finished.
+</dl>
+<h3>Description</h3>
+<p>
+Transfers all remaining data from file to speech processing
+module for previously initiated replay. This call may block
+during execution while it waits for buffering capacity to become
+available on the speech processing module.
+<p>
+On completion the
+<a href="#field-offset">offset</a>
+field will have been updated to indicate at which byte offset in
+the file replay was aborted at, thus allowing a simple method
+for playback to be resumed through a subsequent call to
+<a href="#sm_replay_file_start">sm_replay_file_start()</a>.
+<p>
+Note that this function assigns an event to the channel and
+removes it again when the replay finishes. If the channel
+previously had an event assigned, that assignment may have
+been lost (this depends on the operating system as events
+work differently on different operating systems).
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - could not allocate replay event</ul>
+<hr>
+<h2><a name="sm_replay_file_stop">Prosody high level FILE play/record: API: sm_replay_file_stop</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_replay_file_stop(<a href="../apitype.html#type-SM_FILE_REPLAY_PARMS">SM_FILE_REPLAY_PARMS</a> *<a href="#field-file_parms">file_parms</a>, int <a href="#field-nowait">nowait</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_replay_file_start">sm_replay_file_start()</a>
+to start a replay that has not yet indicated that it has
+finished.
+<dt><a name="field-nowait">nowait</a>
+<dd>
+Whether to wait for a corresponding call to
+<a href="#sm_replay_file_complete">sm_replay_file_complete()</a>
+to have complete the replay before returning
+</dl>
+<h3>Description</h3>
+<p>
+Abort a previously initiated file replay. If
+<a class=pref href="#field-nowait">nowait</a>
+if non-zero, this function
+assumes the current file replay is being progressed by a
+separate thread of execution in which
+<a href="#sm_replay_file_complete">sm_replay_file_complete()</a>
+has been invoked.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_record_file_start">Prosody high level FILE play/record: API: sm_record_file_start</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_record_file_start(struct sm_file_record_parms *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">*file_parms</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_file_record_parms {
+	<a href="../apitype.html#type-tSM_OPEN_FILE">tSM_OPEN_FILE</a> <a href="#field-fd">fd</a>;					/* in */
+	<a href="../apitype.html#type-SM_RECORD_PARMS">SM_RECORD_PARMS</a> <a href="#field-record_parms">record_parms</a>;				/* in */
+	int <a href="#field-status">status</a>;						/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-private_length">private_length</a>;				/* out */
+	int <a href="#field-completing">completing</a>;						/* out */
+	char <a href="#field-buffer">buffer[kSMMaxHiRecordDataBufferSize]</a>;		/* out */
+} SM_FILE_RECORD_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Prepares channel for recording of data to a file from an input
+channel previously allocated by a call to
+<a href="apifn-sm_channel_alloc_placed.html">sm_channel_alloc_placed()</a>.
+<p>
+When using the TiNG dll under Windows use of this function requires a FILE* 
+to be passed across the dll boundry. This may cause problems when the 
+application uses a different C runtime library from the TiNG dll. Since the 
+C runtime library used by the TiNG dll may change in future versions, 
+<strong>this function is deprecated when using the TiNG dll</strong>.
+<p>
+The status field is used to indicate the current status of the
+record. On return from a successful invocation of
+<a href="#sm_record_file_start">sm_record_file_start()</a>
+it will be set to a value of <code>ERR_SM_PENDING</code> and
+will continue to have this value until recording has been
+completed, aborted or terminated on occurrence of an error.
+<p>
+The fields
+<a class=pref href="#field-private_length">private_length</a>
+and
+<a class=pref href="#field-buffer">buffer</a>
+are used internally by the high level library and should not be
+accessed by the application.
+<p>
+The recording is finished when a call to
+<a href="#sm_record_file_complete">sm_record_file_complete()</a>
+returns.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-fd">fd</a><dd>The file into which the data is to be recorded. This must have
+been opened with C standard I/O library function
+<cite>fopen()</cite> unless the library was built for Microsoft
+Windows with the C preprecessor symbol
+<code>__SMWIN32HLIB__</code> defined, in which case it must be a
+Windows <code>HANDLE</code>. It is recommended that the
+<a href="../highapi_bf_playrec.html">
+Prosody high level BFILE play/record</a> is used where possible
+instead of rebuilding this library, since it avoids the risk of
+accidentally using the library built for the wrong type of file
+access.
+
+<dt><a name="field-record_parms">record_parms</a><dd>A structure as defined for
+<a href="apifn-sm_record_start.html">sm_record_start</a>.
+
+<dt><a name="field-status">status</a><dd>The status of the record.
+
+<dt><a name="field-private_length">private_length</a><dd>A field reserved for the library.
+
+<dt><a name="field-completing">completing</a><dd>A field reserved for the library.
+
+<dt><a name="field-buffer">buffer</a><dd>A field reserved for the library.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem accessing file to contain recorded data</ul>
+<hr>
+<h2><a name="sm_record_file_progress_istatus">Prosody high level FILE play/record: API: sm_record_file_progress_istatus</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_record_file_progress_istatus(<a href="../apitype.html#type-SM_FILE_RECORD_PARMS">SM_FILE_RECORD_PARMS</a> *<a href="#field-file_parms">file_parms</a>, int <a href="#field-initial_status">initial_status</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_record_file_start">sm_record_file_start()</a>
+to start recording that has not yet indicated that it has
+finished.
+<dt><a name="field-initial_status">initial_status</a>
+<dd>
+A recent status returned from
+<a href="apifn-sm_record_status.html">sm_record_status()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+Transfers data from a recording channel to file for a
+previously initiated record unless the channel has insufficient
+buffered data to collect, or all data in recording has
+been collected, or an error occurs.
+<p>
+If the current record status for the channel is not known, then
+the
+<a href="#sm_record_file_progress">sm_record_file_progress()</a>
+variant of the call must be used.
+<p>
+On return if the status field is still set to a value of
+<code>ERR_SM_PENDING</code> then further calls to this routine
+will be required to complete the file record. If the status is
+zero then recording successfully completed, otherwise the
+record has been terminated on error, and the status will be set
+to a corresponding error code.
+<p>
+Note: this routine must be periodically invoked following a call
+to
+<a href="#sm_record_file_start">sm_record_file_start()</a>.
+This may either be done explicitly by the application, or
+alternatively through a call to
+<a href="#sm_record_file_complete">sm_record_file_complete()</a>
+which will handle the scheduling of calls to
+<a href="#sm_record_file_progress">sm_record_file_progress()</a>
+on behalf of the application.
+<p>
+Note that the
+<a href="apifn-sm_record_start.html#field-sampling_rate">sampling_rate</a>
+of the
+<a href="#field-record_parms">record_parms</a>
+structure is not updated to the recorded sample rate, as returned by
+<a href="apifn-sm_record_status.html">sm_record_status()</a>.
+If the recording is to a WAV file, then this is must be done by the application 
+before closing the WAV file. Otherwise the WAV header will not have the correct 
+values.
+<h3>Returns</h3>
+<p>The same value as stored in the status field of the structure
+pointed to by
+<a class=pref href="#field-file_parms">file_parms</a>
+which is 0 or <code>ERR_SM_PENDING</code>
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_PENDING - no error but record has not yet finished</ul>
+<hr>
+<h2><a name="sm_record_file_progress_ostatus">Prosody high level FILE play/record: API: sm_record_file_progress_ostatus</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_record_file_progress_ostatus(<a href="../apitype.html#type-SM_FILE_RECORD_PARMS">SM_FILE_RECORD_PARMS</a> *<a href="#field-file_parms">file_parms</a>, <a href="../apitype.html#type-SM_RECORD_STATUS_PARMS">SM_RECORD_STATUS_PARMS</a> *<a href="#field-status_parms">status_parms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_record_file_start">sm_record_file_start()</a>
+to start recording that has not yet indicated that it has
+finished.
+<dt><a name="field-status_parms">status_parms</a>
+<dd>
+A pointer to a structure as passed into
+<a href="apifn-sm_record_status.html">sm_record_status()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+This is the same as
+<a href="#sm_record_file_progress_istatus">sm_record_file_progress_istatus()</a>
+except it first determines the status of the recording and reports
+this to the user. 
+<p>
+When this function returns without an error, the fields in the 
+<a class=pref href="#field-status_parms">status_parms</a>
+structure are valid. On completion of a recording, the
+termination status will be reported in the 
+<a class=pref href="#field-status_parms">status_parms</a>
+structure.
+<p>
+If the current record status for the channel is known,
+then the
+<a href="#sm_record_file_progress_istatus">sm_record_file_progress_istatus()</a>
+variant of the call should be used with
+<a href="#field-initial_status">initial_status</a>
+set to this status.
+<h3>Returns</h3>
+<p>The same value as stored in the status field of the structure
+pointed to by
+<a class=pref href="#field-file_parms">file_parms</a>
+which is 0 or <code>ERR_SM_PENDING</code>
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_PENDING - no error but record has not yet finished</ul>
+<hr>
+<h2><a name="sm_record_file_progress">Prosody high level FILE play/record: API: sm_record_file_progress</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_record_file_progress(<a href="../apitype.html#type-SM_FILE_RECORD_PARMS">SM_FILE_RECORD_PARMS</a> *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_record_file_start">sm_record_file_start()</a>
+to start recording that has not yet indicated that it has
+finished.
+</dl>
+<h3>Description</h3>
+<p>
+This is the same as
+<a href="#sm_record_file_progress_istatus">sm_record_file_progress_istatus()</a>
+except it first determines the record status.
+<p>
+If the current record status for the channel is known,
+then the
+<a href="#sm_record_file_progress_istatus">sm_record_file_progress_istatus()</a>
+variant of the call should be used with
+<a href="#field-initial_status">initial_status</a>
+set to this status.
+<h3>Returns</h3>
+<p>The same value as stored in the status field of the structure
+pointed to by
+<a class=pref href="#field-file_parms">file_parms</a>
+which is 0 or <code>ERR_SM_PENDING</code>
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_PENDING - no error but record has not yet finished</ul>
+<hr>
+<h2><a name="sm_record_file_complete">Prosody high level FILE play/record: API: sm_record_file_complete</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_record_file_complete(<a href="../apitype.html#type-SM_FILE_RECORD_PARMS">SM_FILE_RECORD_PARMS</a> *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_record_file_start">sm_record_file_start()</a>
+to start recording that has not yet indicated that it has
+finished.
+</dl>
+<h3>Description</h3>
+<p>
+Transfers all remaining data from speech processing module to
+file for previously initiated record. This call may block during
+execution while it waits for buffered data to become available
+on the speech processing module.
+<p>
+Note that this function assigns an event to the channel and
+removes it again when the replay finishes. If the channel
+previously had an event assigned, that assignment may have
+been lost (this depends on the operating system as events
+work differently on different operating systems).
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - could not allocate record event</ul>
+<hr>
+<h2><a name="sm_record_file_complete_tstatus">Prosody high level FILE play/record: API: sm_record_file_complete_tstatus</a></h2>
+	<p class="header-TiNG">This function is only in Prosody version 2 (TiNG).</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_record_file_complete_tstatus(<a href="../apitype.html#type-SM_FILE_RECORD_PARMS">SM_FILE_RECORD_PARMS</a> *<a href="#field-file_parms">file_parms</a>, <a href="../apitype.html#type-SM_RECORD_STATUS_PARMS">SM_RECORD_STATUS_PARMS</a> *<a href="#field-status_parms">status_parms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_record_file_start">sm_record_file_start()</a>
+to start recording that has not yet indicated that it has
+finished.
+<dt><a name="field-status_parms">status_parms</a>
+<dd>
+A pointer to a structure as passed into
+<a href="apifn-sm_record_status.html">sm_record_status</a>.
+</dl>
+<h3>Description</h3>
+<p>
+This is the same as
+<a href="#sm_record_file_complete">sm_record_file_complete()</a>
+except that on successful completion the status_parms structure will 
+contain the termination status of the recording. The fields in the 
+status_parms structure are only valid when the function returns success.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - could not allocate record event</ul>
+<hr>
+<h2><a name="sm_record_file_stop">Prosody high level FILE play/record: API: sm_record_file_stop</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_record_file_stop(<a href="../apitype.html#type-SM_FILE_RECORD_PARMS">SM_FILE_RECORD_PARMS</a> *<a href="#field-file_parms">file_parms</a>, int <a href="#field-nowait">nowait</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="#sm_record_file_start">sm_record_file_start()</a>
+to start recording that has not yet indicated that it has
+finished.
+<dt><a name="field-nowait">nowait</a>
+<dd>
+Whether to wait for a corresponding call to
+<a href="#sm_record_file_complete">sm_record_file_complete()</a>
+to have complete the recording before returning
+</dl>
+<h3>Description</h3>
+<p>
+Abort a previously initiated file recording. If
+<a class=pref href="#field-nowait">nowait</a>
+if non-zero, this function
+assumes the current file recording is being progressed by a
+separate thread of execution in which
+<a href="#sm_record_file_complete">sm_record_file_complete()</a>
+has been invoked.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>These functions constitute the
+<a href="../highapi_playrec.html">Prosody high level FILE play/record API</a>.
+</body>
+</html>

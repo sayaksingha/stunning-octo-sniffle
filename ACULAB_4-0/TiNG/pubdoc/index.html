@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody</title>
+</head>
+<body>
+<h1>Prosody</h1>
+<p>
+Prosody uses a variety of Aculab cards to provide many computer telephony
+functions. There are three main types of documentation available:
+<ul>
+	<li><a href="#guides">Guides</a> which explain how to use the
+	features
+	<li><a href="#ref">Reference manuals</a> which provide a
+	comprehensive description of every API function
+	<li><a href="#notes">Application notes</a> which give extra
+	information on individual areas of functionality
+</ul>
+<h2><a name="guides">Guides</a></h2>
+<p>
+<dl>
+<dt><a href="overview.html">Prosody Overview</a>
+<dd>An overview of the features of Prosody and how to find
+documentation on them.
+<dt><a href="install.html">Prosody Installation guide</a>
+<dd>How to install the Prosody package.
+<dt><a href="howto_download.html">Prosody Guide - how to download firmware</a>
+<dd>
+How to download firmware to the Prosody processors (Prosody X only).
+<dt><a href="howto_test.html">Prosody Guide - how to run test programs</a>
+<dd>
+How to run some of the test programs provided with Prosody.
+<dt><a href="howto_buildapp.html">Prosody Guide - how to build applications to use Prosody</a>
+<dd>
+How to build applications which use the Prosody APIs - compiler and
+linker settings
+<dt><a href="howto_play.html">Prosody Guide - how to play data</a>
+<dd>
+How to play data using the various methods supported by Prosody.
+<dt><a href="howto_record.html">Prosody Guide - how to record data</a>
+<dd>
+How to record data using the various methods supported by Prosody.
+<dt><a href="howto_detect.html">Prosody Guide - how to perform detections</a>
+<dd>
+How to use the Prosody detection features to detect such things as
+tones and speech.
+<dt><a href="howto_playtone.html">Prosody Guide - how to play tones</a>
+<dd>
+How to generate various kinds of tones using Prosody.
+<dt><a href="howto_conf.html">Prosody Guide - how to perform conferencing</a>
+<dd>
+How to set up conferences with Prosody.
+<dt><a href="howto_data.html">Prosody Guide - how to use data
+communications</a>
+<dd>
+How to use the Prosody Data communcations features.
+<dt><a href="howto_datafeed.html">Prosody Guide - how to use datafeeds</a>
+<dd>
+How to use the datafeed API calls to connect Prosody end-points
+</dl>
+
+<h2><a name="ref">Reference manuals</a></h2>
+<p>
+<dl>
+<dt><a href="pros_x.html">Accessing Prosody X cards and Prosody S virtual cards</a>
+<dd>The functions used to open Prosody X cards and Prosody S virtual cards.
+<dt><a href="prosgen.html">Generic API reference manual</a>
+<dd>Generic aspects of the API which are used for all types of functionality.
+<dt><a href="prospapi.html">Speech processing API reference manual</a>
+<dd>Record, playback, tone detection, tone generation, conferencing,
+and echo cancellation.
+<dt><a href="prosdc.html">Data communications API reference manual</a>
+<dd>Low level data communcations, both digital (such as V.110) and
+analogue (such as modems).
+<dt><a href="prosrtpapi.html">RTP API reference manual</a>
+<dd>RTP media handling.
+<dt><a href="prosfmpapi.html">FMP API reference manual</a>
+<dd>Fax over IP low-level API
+<dt><a href="prospath.html">Signal path processing reference manual</a>
+<dd>Various types of processing on signals passing though Prosody
+<dt><a href="prosvid.html">Audio Video Format processing reference manual</a>
+<dd>Basic Audio Video Format stream handling
+<dt><a href="prosh223api.html">H.223 multiplex reference manual</a>
+<dd>H.223 multiplex API
+<dt><a href="prossntp.html">Simple Network Time Protocol client reference manual</a>
+<dd>SNTP client API
+<dt><a href="prosi460muxapi.html">I.460 multiplex reference manual</a>
+<dd>I.460 stream multiplex API
+<dt><a href="prossprt.html">Simple Packet Relay Transport end point reference manual</a>
+<dd>SPRT end point API
+<dt><a href="prosdtls.html">Datagram Transport Layer Security (DTLS) api reference manual</a>
+<dd>DTLS API
+<dt><a href="prosframerapi.html">Framer reference manual</a>
+<dd>Framer API
+<dt><a href="highapi_playrec.html">High level play/record API
+reference manual</a>
+<dd>Simplified record into files and playback from files.
+<dt><a href="highapi_wavfile.html">WAV file API reference manual</a>
+<dd>Simplified record and playback of WAV files.
+<dt><a href="highapi_conf.html">High level conferencing API reference
+manual</a>
+<dd>Simplified conferencing.
+<dt><a href="adsilib.html">ADSI library reference manual</a>
+<dd>Source code library for ADSI functionality (calling number delivery and visual messsage waiting indication)
+<dt><a href="rtcplib.html">RTCP library reference manual</a>
+<dd>Source code library for handling RTCP data
+<dt><a href="v8.html">V.8 library reference manual</a>
+<dd>Source code library for the V.8 protocol
+</dl>
+
+<h2><a name="notes">Application notes</a></h2>
+<p>
+<ul>
+<li><a href="an-firmware-migration-guide.html">Prosody application note: migrating from TiNG v2 to TiNG v3 firmware</a>
+<li><a href="an-worker.html">Prosody application note: waiting on multiple channels</a>
+<li><a href="an-data_transfer.html">Prosody application note: considerations for data transfer thresholds</a>
+<li><a href="an-largeconf.html">Prosody application note: building large conferences distributed over multiple Prosody modules</a>
+<li><a href="an-dtmf-det-issues.html">Prosody application note: DTMF detection issues</a>
+<li><a href="an-custom-tonedet.html">Prosody application note: configuring universal tone detection</a>
+<li><a href="an-record-2way.html">Prosody application note: recording 2-party conversations</a>
+<li><a href="an-speechdataformats.html">Prosody application note: speech processing replay and record data formats</a>
+<li><a href="an-apps-for-windows.html">Prosody application note: writing applications for Microsoft Windows</a>
+<li><a href="an-echo-cancellation.html">Prosody application note: echo cancellation (algorithm characteristics)</a>
+<li><a href="an-highlevel-conf.html">Prosody application note: adding features to high level conferencing library</a>
+<li><a href="an-multiprocess.html">Prosody application note: simultaneous
+use of Prosody by multiple processes</a>
+<li><a href="an-v18.html">Prosody application note: implementing V.18 compatibility</a>
+<li><a href="an-lsd.html">Prosody application note: Live Speaker Detection</a>
+<li><a href="an-wav.html">Prosody application note: WAV files</a>
+<li><a href="an-wait_for_completion.html">Prosody application note: waiting for completion</a>
+<li><a href="an-pxVoIPtones.html">Prosody application note: guide to the reception and generation of tones on VoIP calls</a>
+<li><a href="an-px-connection-failure.html">Prosody application note: dealing with Prosody X connection failure</a>
+<li><a href="an-wideband.html">Prosody application note: using wideband sampling rates</a>
+<li><a href="an-placement.html">Prosody application note: ProsodyX TiNG Algorithm Placement</a>
+<li><a href="an-pxdspcpuprofile.html">Prosody application note: ProsodyX TiNG DSP CPU Usage Profiling</a>
+<li><a href="an-usingrtcp.html">Prosody application note: Using RTCP</a>
+<li><a href="an-ipv6.html">Prosody application note: using IPv6 RTP</a>
+</ul>
+<p>
+There is also a <a href="gen/contents.html">list of all documents
+organised by title</a>.
+</body>
+</html>

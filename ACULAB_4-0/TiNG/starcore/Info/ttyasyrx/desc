@@ -1,0 +1,2 @@
+Receiver for ITU V.18 Annex A compatible TTYs. This decodes 
+a sequence of characters from the data received.

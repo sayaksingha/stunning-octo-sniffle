@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: tonegen</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: tonegen</h1>
+<p>
+This program allows the Prosody tone generation API to be exercised.
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have downloaded the firmware module
+<a href="gen/softmodindex.html#tonegen">tonegen</a>. On Prosody X you must
+also have downloaded
+<a href="gen/softmodindex.html#datafeed">datafeed</a>.
+<p>
+Run <code>tonegen</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/tonegen</span> or
+<span class="type-WINNT"> gen-WINNT_V6/tonegen</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table border>
+<tr>
+	<th class=bg>Option&nbsp;format<th class=bg>Meaning
+
+<tr>
+	<td><code>-t</code> &lt;timeslot&gt;
+		<td>timeslot to use for output (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>).
+		
+<tr>
+	<td><code>-x</code> &lt;modspec&gt;
+		<td>Use these Prosody processor modules, specified as
+		described in
+		<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a>
+
+</table>
+<p>
+For example:
+<pre>
+	tonegen -x x:1.2.3.4/mykey -t64:0
+</pre>
+<p>
+starts the program using the timeslot <code>64:0</code> for output.
+<p>
+While it is running, it reads commands and exectues them. It prints a
+prompt, which consists of <code>m</code> and the current module
+number, reads a line of input and interprets it as a command,
+which consists of one character followed by any parameters.
+The commands are:
+<table border>
+<tr>
+	<th class=bg>Character<th class=bg>Meaning
+
+<tr>
+	<td><code>?</code><td>Print summary of possible commands
+
+<tr>
+	<td><code>c</code> DUR o/r/c (=ID ON OFF)*<td>
+	Play a tone sequence (i.e. a call progress tone). The
+	duration is specified in milliseconds. See
+	<a href="gen/apifn-sm_play_cptone.html">sm_play_cptone()</a>.
+	The <code>type</code> field used by that function is indicated by the letter
+	<code>o</code>, <code>r</code> or <code>c</code>, and the
+	<code>cadences</code> field is filled in from the list of
+	IDs. For example, the command: "<code>c 10000 r =17 400 208
+	=17 400 2000</code>" generates ten seconds of U.K. ring tone.
+
+
+<tr>
+	<td><code>d</code> DUR IDD "DIGITS"<td>
+	Play DTMF digits. The duration of each digit and the
+	inter-digit delay are given in milliseconds. See
+	<a href="gen/apifn-sm_play_digits.html">sm_play_digits()</a>.
+	
+
+<tr>
+	<td><code>f</code> FREQ AMPL<td>
+	Add a new tone component with specified frequency (in Hz) and
+	amplitude (in dBm0). The tone ID is printed. See
+	<a href="gen/apifn-sm_add_output_freq.html">sm_add_output_freq()</a>.
+	
+
+<tr>
+	<td><code>m</code> MOD<td>
+	Select module for future commands.
+
+<tr>
+	<td><code>p</code> DUR CODE<td>
+	Play a tone. The duration is specified in milliseconds. The
+	tone is specified as a tone ID which can either be one
+	printed by the <code>t</code> command or one in the range
+	defined by the built-in tones. See
+	<a href="gen/apifn-sm_play_tone.html">sm_play_tone()</a>.
+
+<tr>
+	<td><code>q</code><td>quit
+
+<tr>
+	<td><code>t</code> TONE1 TONE2<td>
+	Add a new tone consisting of the two specified components.
+	The components are specified by tone IDs which can refer to a
+	built-in tone, a tone added by the <code>f</code> command,
+	or silence (specified by the value 0). The tone ID is
+	printed.
+	See
+	<a href="gen/apifn-sm_add_output_tone.html">sm_add_output_tone()</a>.
+
+<tr>
+	<td><code>#</code> anything<td>do nothing - used for
+	comments
+
+<tr>
+	<td><code>'</code> text...<td>print text - used
+	when input is a file so that you can monitor its progress
+	
+
+</table>
+<p>
+The source code for this program is provided (tonegen.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

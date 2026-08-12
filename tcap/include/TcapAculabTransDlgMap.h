@@ -51,7 +51,8 @@ class TransDlgMap
    
    ~TransDlgMap();
    
-   BOOLEAN Init(int lTransValidationKey,int lSsn);
+   // Ab Change: Pass lCfgFile so it can be passed to DlgMgr
+   BOOLEAN Init(int, int, TEXT*);
    
    BOOLEAN ReadConfig();
    

@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_close_prosody</title>
+</head>
+<body>
+<h1>Prosody generic: API: sm_close_prosody</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_close_prosody(struct sm_close_prosody_parms *<a href="#field-closep">closep</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-closep">*closep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_close_prosody_parms {
+	<a href="../apitype.html#type-tSMCardId">tSMCardId</a> <a href="#field-card_id">card_id</a>;					/* in */
+} SM_CLOSE_PROSODY_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Reverses the effect of
+<a href="apifn-sm_open_prosody_x.html">sm_open_prosody_x()</a>,
+or
+<a href="apifn-sm_open_prosody_s_v3.html">sm_open_prosody_s_v3()</a>.
+If, after closing the card, you want to use Prosody API
+functions which refer to this card you must invoke
+<a href="apifn-sm_open_prosody_x.html">sm_open_prosody_x()</a>,
+or
+<a href="apifn-sm_open_prosody_s_v3.html">sm_open_prosody_s_v3()</a>
+again.
+It is a serious error to close a card on which there are
+open modules.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-card_id">card_id</a><dd>The card to close.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

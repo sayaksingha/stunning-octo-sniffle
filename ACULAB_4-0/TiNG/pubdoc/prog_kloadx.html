@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody program: kloadx</title>
+</head>
+<body>
+<h1>Prosody program: kloadx</h1>
+<p>
+This downloads a firmware kernel to a Prosody X card. Firmware kernels for
+Prosody X cards have the suffix <code>.xmf</code>
+<p>
+Go to directory $(TiNG)/test. 
+<p>
+Run <code>kloadx</code> with the appropriate options (the program is 
+<span class=type-LINUX>../util/gen-LINUX_V6/kloadx</span> or 
+<span class=type-WINNT>../util/gen-WINNT_V6/kloadx</span> 
+depending on which operating system you are using). 
+<p>
+Command line options are: 
+<table>
+  <tr>
+    <td><code>-i</code> ip-address 
+    <td>Specifies the IP address for Prosody X card on which is the module 
+      where the kernel is to be loaded 
+  <tr>
+    <td><code>-k</code> security-key 
+    <td>Specifies the security key for Prosody X card on which is the module 
+      where the firmware is to be loaded 
+  <tr>
+    <td><code>-m</code> module 
+    <td>Specifies the module to which the firmware is to be downloaded 
+      (default 0). 
+  <tr>
+    <td><code>-r</code> 
+    <td>Specifies that the Prosody processor must be reset before loading the 
+      kernel. This is necessary if you want to replace a kernel which has 
+      already been downloaded. 
+  <tr>
+    <td><code>-z</code> 
+    <td>Specifies that <code>kload</code> should omit loading of symbols 
+      to downloaded kernel. Normally only used for special kernel builds 
+      containing diagnostic software. 
+  <tr>
+    <td><code>-q</code> 
+    <td>Perform extra read back verification of downloaded kernel code.
+	  Normally only used to diagnose hardware installation problems.
+  <tr>
+    <td><code>-t</code> timeout 
+    <td>Specifies the maximum duration in seconds of kernel load attempt. If this time
+	  is exceeded, kernel load attempt is abandoned (default 60 seconds).
+  <tr>
+    <td><code>-v</code> verbose-level 
+    <td>Specifies a number which controls the amount of commentary printed 
+      during the download. Larger numbers generate more output. Currently the 
+      maximum commentary is produced when the value is 2 or more. 
+  <tr>
+    <td><code>-p0 -p1 -p2 -p3</code> parameter 
+    <td>Specifies an additional kernel parameter. Only used with special kernel
+	  builds.
+  <tr>
+    <td>&lt;kernel-file&gt; 
+    <td>name of file which contains the kernel to be downloaded. 
+</tr>
+</table>
+<p>
+For example, 
+<pre>
+	../util/gen-LINUX_V6/kloadx -i 172.16.1.220 -k mykey -v1 ../starcore/gen/pxting_kernel.xmf
+</pre>
+<p>
+downloads the kernel to the first Prosody processor on the card specified. 
+However, for convenience a shell script or batch file is provided called 
+<code>klx</code> which runs the appropriate program for the operating
+system and supplies the normal name of the kernel. For this example, you
+could use it like this instead of using kloadx directly: 
+<pre>
+	klx -i 172.16.1.220 -k mykey -v1
+</pre>
+<p>
+<hr>
+
+<p>
+This is one of the <a href="howto_test.html">Prosody test programs</a>. 
+</body>
+</html>

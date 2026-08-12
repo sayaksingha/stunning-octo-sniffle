@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_add_output_tone</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_add_output_tone</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_add_output_tone(struct sm_output_tone_parms *<a href="#field-tonep">tonep</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-tonep">*tonep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_output_tone_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-component1_id">component1_id</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-component2_id">component2_id</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-id">id</a>;						/* out */
+} SM_OUTPUT_TONE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This call may be used to add a new output tone to the repertoire
+of those supported by the given module. The new tone will be a
+dual tone having two components identified by
+<a class=pref href="#field-component1_id">component1_id</a>
+and
+<a class=pref href="#field-component2_id">component2_id</a>
+where these each refer to either a predefined component frequency
+or one defined by the application through a call to
+<a href="apifn-sm_add_output_freq.html">sm_add_output_freq()</a>.
+On return
+<a class=pref href="#field-id">id</a>
+will be set to an identifier for the new tone. This identifier
+may be used in calls to
+<a href="apifn-sm_play_tone.html">sm_play_tone()</a>
+and
+<a href="apifn-sm_play_cptone.html">sm_play_cptone()</a>
+to refer to the newly defined output tone.
+<p>
+See
+<a href="../prospapi_outtones.html">
+Prosody speech processing: pre-loaded output tones</a>,
+for list of predefined component frequencies, and
+for list of predetermined simple output tones.
+<p>
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-module">module</a><dd>The module whose tone set if to be modified.
+
+<dt><a name="field-component1_id">component1_id</a><dd>The identifier of the first component of the tone.
+
+<dt><a name="field-component2_id">component2_id</a><dd>The identifier of the second component of the tone.
+
+<dt><a name="field-id">id</a><dd>The identifier returned if the tone pair is added.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists<li>ERR_SM_NO_RESOURCES - if no resources to store new output tone<li>ERR_SM_BAD_PARAMETER - if component id parameter out of range<li>ERR_SM_CHANNEL_ALLOCATED - channel still allocated</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

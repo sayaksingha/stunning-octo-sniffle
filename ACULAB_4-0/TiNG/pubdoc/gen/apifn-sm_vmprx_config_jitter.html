@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_config_jitter</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_config_jitter</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_config_jitter(struct sm_vmprx_jitter_parms *<a href="#field-jitterp">jitterp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-jitterp">*jitterp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_jitter_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-max_delay_ms">max_delay_ms</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-initial_delay_ms">initial_delay_ms</a>;				/* in */
+} SM_VMPRX_JITTER_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Allows an application to confgure the jitter buffer belonging to a 
+VMP[rx]. Default values are used for the jitter buffer when a 
+VMP[rx] is created, so explicit configuration may not be necesary.
+Reconfiguration of the jitter buffer may result in 
+audible artifacts in the audio stream during reconfiguration.
+<p>
+It is generally considered that the total end-to-end delay
+must be no more than about 150 milliseconds for acceptable
+usability. Unavoidable delay comes from two main sources:
+packetisation delay and propagation delay.
+A codec causes packetisation delay, for example,
+the G.711 codec sending packets each containing 20 mS of data
+must add 20 mS of delay. Propagation delay obviously varies
+with the distance covered, with the longest Earthbound link
+(halfway around the world) taking at least 67 mS, as
+limited by the speed of light. In practice, delays of about
+10 to 25 mS can be found within the U.S.A., with
+international delays being longer (e.g. U.S.A. to U.K. about
+50 to 60 mS). This means that the jitter buffer should
+generally be limited to 100 mS, with a smaller value used for
+long-distance calls or when using codecs which impose a longer
+packetisation delay..
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to be configured
+
+<dt><a name="field-max_delay_ms">max_delay_ms</a><dd>Maximum allowable length for the jitter buffer in
+milliseconds. The default is 100.
+
+<dt><a name="field-initial_delay_ms">initial_delay_ms</a><dd>Initial amount of audio the jitter buffer should accumulate at
+startup. The default is 50.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

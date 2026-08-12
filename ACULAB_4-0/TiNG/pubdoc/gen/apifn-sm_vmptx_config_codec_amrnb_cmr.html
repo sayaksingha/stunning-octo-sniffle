@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_codec_amrnb_cmr</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_codec_amrnb_cmr</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_codec_amrnb_cmr(struct sm_vmptx_config_codec_amrnb_cmr_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_config_codec_amrnb_cmr_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-bitrate">bitrate</a>;					/* in */
+} SM_VMPTX_CONFIG_CODEC_AMRNB_CMR_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures the AMR narrow-band codec to request the given mode.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to which to add the codec
+
+<dt><a name="field-bitrate">bitrate</a><dd>The speed to request via the CMR field, in bits per second. It must be
+one of the speeds which the AMR narrow-band codec can encode (which are:
+4750, 5150, 5900, 6700, 7400, 7950, 10200, and 12200),
+or 0 to request "any rate" (CMR = 15).
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

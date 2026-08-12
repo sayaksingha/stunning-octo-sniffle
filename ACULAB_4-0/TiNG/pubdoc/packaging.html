@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody TiNG packaging</title>
+</head>
+<body>
+<h1>Prosody TiNG packaging</h1>
+<p>
+<a href="index.html">Prosody TiNG</a> is supplied in several pieces.
+This allows you to download only the pieces you require. 
+<p>
+The pieces have names in the form
+<code>TiNG-</code>$part<code>-</code>$ver<code>.tar.bz2</code> where
+<em>$part</em> is one of the names in the table below for a part of the
+distribution and <em>$ver</em> is a code which is specific to each
+version. Note that not all variants are currently distributed, but all are
+listed here so that you can recognise them in old installations.
+<p>
+The V6 API was introduced to allow much greater flexibility in the API
+permitting developments such as hot-swap support and Prosody X. It is now
+the only standard way to use the API, so for every piece you download, if
+there is a V6 supplement, you need that as well.
+<p>
+<table border>
+<tr><th>Part<th>Used for
+<tr><td>common<td>Files which are common to all systems (e.g.
+documentation, downloadable firmware, etc) 
+<tr class="type-LINUX"><td>LINUX<td>Files required for any version of Linux
+<tr class="type-LINUX"><td>LINUX_V6<td>Files required for V6 on Linux
+<tr class="type-LINUX"><td>LINUX_V6_AMD64<td>Files required for V6 on Linux on AMD64
+<tr class="type-QNX"><td>QNX<td>Files required for any type of QNX
+<tr class="type-QNX"><td>QNX_PPC<td>Files required for QNX on PowerPC
+<tr class="type-QNX"><td>QNX_X86<td>Files required for QNX on Intel x86 family processors
+<tr class="type-WINNT"><td>WINNT<td>Files required for Windows
+<tr class="type-WINNT"><td>WINNT_V6<td>Files required for V6 on Windows
+<tr class="type-WINNT"><td>WINNT_V6_AMD64<td>Files required for V6 on Windows on AMD64
+</table>
+<p>
+In a few cases, a file may be included in more than one piece. Such files are
+always identical in every piece, so the you always get the same result
+regardless of the order in which you unpack different pieces.

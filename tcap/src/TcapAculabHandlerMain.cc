@@ -14,7 +14,7 @@ static const char *id = "@(#) $Id: TcapAculabHandlerMain.cc,v 1.1.4.8.4.1.2.1 20
 // Originated : 23-JAN-2010                                       Paresh
 //----------------------------------------------------------------------
 #include "TcapAculabHandler.h"
-
+#include "TcapAculabHandler.h"
 //----------------------------------------------------------------------
 Log      gLog;
 PegApi   gPeg;
@@ -25,6 +25,7 @@ BOOLEAN  gRestoreStatus;
 
 pthread_t gRxThreadId[MAX_ACU_TCAP_INSTANCES +1];
 pthread_t gTxThreadId[MAX_ACU_TCAP_INSTANCES +1];
+
 void *RxThread (void *);
 void *TxThread (void *);
 
@@ -58,9 +59,8 @@ void * RxThread (void *lPtr)
       if (true == lTcapAculabHandler->RxMsgFromStack (&lMsg, lInstanceNo))
       {
          //lTempPtr->pMsg = lMsg; Not required
-
-         TcapMsg lTcapMsg;
-         memset (&lTcapMsg, 0, sizeof (TcapMsg));
+         AnsiTcapMsg lTcapMsg;
+         memset (&lTcapMsg, 0, sizeof (AnsiTcapMsg));
 
          lTcapAculabHandler->ProcessRxMsgFromStack (lMsg, lTcapMsg, lInstanceNo);
       }
@@ -98,7 +98,7 @@ void * TxThread (void *lPtr)
    {
       if( true == gRestoreStatus)
       {
-         TcapMsg lTcapMsg;
+         AnsiTcapMsg lTcapMsg;
          acu_tcap_msg_t lMsgPtr;
 
          //gettimeofday (&lTimeValue, NULL);
@@ -128,6 +128,8 @@ void * TxThread (void *lPtr)
    return NULL;
 }
 
+
+
 //----------------------------------------------------------------------
 // METHOD      : CreateThreads
 // DESCRIPTION : function creates threads 
@@ -142,6 +144,8 @@ BOOLEAN HandleThreads(TcapAculabHandler *tcapAculabHandlerObj)
 
    map<UINT32, SsapDetails>::iterator lmSsapDetails = gSsapDetails.begin();
    SsapDetails lSsapDetails;
+
+
 
    for(; lmSsapDetails != gSsapDetails.end(); lmSsapDetails++)
    {
@@ -161,8 +165,8 @@ BOOLEAN HandleThreads(TcapAculabHandler *tcapAculabHandlerObj)
             pthread_create (&lThreadId, NULL, &RxThread, &lAcuThreadStruct);
          if (0 == lRetVal)
          {
-            printf ("%s: Tid:%lu Rx Thread(%d) Creation success\n",
-                  gProcessName, lThreadId, lAcuThreadStruct.instanceNo);
+            T(gTrace, printf ("%s: Tid:%lu Rx Thread(%d) Creation success\n",
+                  gProcessName, lThreadId, lAcuThreadStruct.instanceNo););
 
             pthread_detach (lThreadId);
             gRxThreadId[lAcuThreadStruct.instanceNo] = lThreadId;
@@ -171,7 +175,7 @@ BOOLEAN HandleThreads(TcapAculabHandler *tcapAculabHandlerObj)
          {
             snprintf (lLogText, MAX_LOG_TEXT_LEN,
                   "ErrCode:%d Rx Thread Creation failed", lRetVal);
-            printf ("%s:\33[31m %s. Exiting...\33[0m\n", gProcessName, lLogText);
+            TERR(gTrace, printf ("%s:\33[31m %s. Exiting...\33[0m\n", gProcessName, lLogText););
 
             return false;
          }
@@ -182,8 +186,8 @@ BOOLEAN HandleThreads(TcapAculabHandler *tcapAculabHandlerObj)
             pthread_create (&lThreadId, NULL, &TxThread, &lAcuThreadStruct);
          if (0 == lRetVal)
          {
-            printf ("%s: Tid:%lu Tx Thread(%d) Creation success\n",
-                  gProcessName, lThreadId, lAcuThreadStruct.instanceNo);
+            T(gTrace, printf ("%s: Tid:%lu Tx Thread(%d) Creation success\n",
+                  gProcessName, lThreadId, lAcuThreadStruct.instanceNo););
 
             pthread_detach (lThreadId);
             gTxThreadId[lAcuThreadStruct.instanceNo] = lThreadId;
@@ -192,7 +196,7 @@ BOOLEAN HandleThreads(TcapAculabHandler *tcapAculabHandlerObj)
          {
             snprintf (lLogText, MAX_LOG_TEXT_LEN,
                   "Error Tx Thread Creation failed. ErrCode:%d)", lRetVal);
-            printf ("%s:\33[31m %s Exiting...\33[0m\n", gProcessName, lLogText);
+            TERR(gTrace, printf ("%s:\33[31m %s Exiting...\33[0m\n", gProcessName, lLogText););
 
             return false;
          }
@@ -218,15 +222,54 @@ int main (int argc, char *argv[])
    TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
    TEXT lCfgFile[MAX_LOG_TEXT_LEN + 1] = "";
 
-   if (argc != 3)
+   // if (argc != 3)
+   // {
+   //    printf ("Usage: %s <ssn> <no of thread instances>\n",
+   //          basename (argv[0]));
+   //    printf ("export %s=1\n", TRACE_ACU_TCAP_HDLR_ENV);
+
+   //    return 1;
+   // }
+
+
+      if (argc != 3)
    {
-      printf ("Usage: %s <ssn> <no of thread instances>\n",
-            basename (argv[0]));
-      printf ("export %s=1\n", TRACE_ACU_TCAP_HDLR_ENV);
+      // Modern ASCII Art Banner (TCAP)
+      printf("\n");
+      printf("  ████████╗ ██████╗ █████╗ ██████╗ \n");
+      printf("  ╚══██╔══╝██╔════╝██╔══██╗██╔══██╗\n");
+      printf("     ██║   ██║     ███████║██████╔╝\n");
+      printf("     ██║   ██║     ██╔══██║██╔═══╝ \n");
+      printf("     ██║   ╚██████╗██║  ██║██║     \n");
+      printf("     ╚═╝    ╚═════╝╚═╝  ╚═╝╚═╝     \n");
+      printf("  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+      
+      // Product Name & Version
+      printf("  \033[1;36mProduct     :\033[0m Aculab ANSI TCAP Handler\n");
+      printf("  \033[1;36mVersion     :\033[0m %s \n",ANSI_PRODUCT_VER);
+      
+      // Description (What it does)
+      printf("  \033[1;36mDescription :\033[0m Facilitates Transaction Capabilities Application\n");
+      printf("                Part (TCAP) messaging over SS7 networks. It acts\n");
+      printf("                as the signaling handler for telecommunication nodes.\n\n");
+      
+      // ANSI Standard Info
+      printf("  \033[1;36mCompliance  :\033[0m Implements the ANSI (American National Standards\n");
+      printf("                Institute) SS7 specification for TCAP. This ensures\n");
+      printf("                standardized communication and routing primarily\n");
+      printf("                used in North American telecom networks.\n");
+      printf("  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
+
+      // Usage Instructions
+      printf("  \033[1;33mUsage:\033[0m %s <ssn> <no of thread instances>\n\n", basename(argv[0]));
+      
+      // Environment variables
+      printf("  \033[1;31mENABLE TRACE:\033[0m\n");
+      printf("  export %s=1\n\n", TRACE_ACU_TCAP_HDLR_ENV);
 
       return 1;
    }
-
+   
    int lSsn = atoi (argv[1]);
    int lNoOfInstance = atoi (argv[2]);
 
@@ -263,13 +306,16 @@ int main (int argc, char *argv[])
    sprintf (lCfgFile, "Tcap_%d.cfg", lSsn);
 
    gLog.SetProcessName (gProcessName);
-   printf ("%s:\33[32m Starting...\33[0m\n", gProcessName);
+   T(gTrace, {
+      printf ("%s:\33[32m Starting...\33[0m\n", gProcessName);
+      printf ("DEBUG: sizeof(AnsiTcapMsg) in handler = %zu\n", sizeof(AnsiTcapMsg));
+   });
 
    // Initialize log object
    if (true != gLog.Init())
    {
-      printf ("%s:\33[31m Log object Init Failed. Exiting...\33[0m\n",
-            gProcessName);
+      TERR(gTrace, printf ("%s:\33[31m Log object Init Failed. Exiting...\33[0m\n",
+            gProcessName););
 
       return 1;
    }
@@ -281,8 +327,8 @@ int main (int argc, char *argv[])
    if (LOCK_SUCCESS != lProcessLock.Lock ())
    {
       gLog.GenerateLog (GSYS16);
-      printf ("%s:\33[31m Process already running. Exiting...\33[0m\n",
-            gProcessName);
+      TERR(gTrace, printf ("%s:\33[31m Process already running. Exiting...\33[0m\n",
+            gProcessName););
 
       return 1;
    }
@@ -293,8 +339,8 @@ int main (int argc, char *argv[])
    if (true != gPeg.Init ("SHM_TCAP_PEG_KEY"))
    {
       gLog.GenerateLog (GSYS04, "PegApi object Init Failed");
-      printf ("%s:\33[31m PegApi object Init Failed. Exiting...\33[0m\n",
-            gProcessName);
+      TERR(gTrace, printf ("%s:\33[31m PegApi object Init Failed. Exiting...\33[0m\n",
+            gProcessName););
 
       return 1;
    }
@@ -302,8 +348,8 @@ int main (int argc, char *argv[])
    if (true != lTcapAculabHandler.Init (lCfgFile, lSsn, lNoOfInstance))
    {
       gLog.GenerateLog (GSYS04, "Handler object Init Failed");
-      printf ("%s:\33[31m Handler object Init Failed. Exiting...\33[0m\n",
-            gProcessName);
+      TERR(gTrace, printf ("%s:\33[31m Handler object Init Failed. Exiting...\33[0m\n",
+            gProcessName););
 
       return 1;
    }
@@ -313,14 +359,14 @@ int main (int argc, char *argv[])
    if(false == HandleThreads(&lTcapAculabHandler))
    {
       gLog.GenerateLog (GSYS04, "Failed Creating Threads");
-      printf ("%s:\33[31m Failed Created Threads. Exiting...\33[0m\n",
-            gProcessName);
+      TERR(gTrace, printf ("%s:\33[31m Failed Created Threads. Exiting...\33[0m\n",
+            gProcessName););
 
       return 1;
    }
 
    gLog.GenerateLog (GSYS03);
-   printf ("%s:\33[32m Initialization Okay...\33[0m\n", gProcessName);
+   T(gTrace, printf ("%s:\33[32m Initialization Okay...\33[0m\n", gProcessName););
 
    //AculabUtil::ResetConfigFlag();
    //AculabUtil::PrintConfig();
@@ -347,8 +393,8 @@ int main (int argc, char *argv[])
          {
             snprintf (lLogText, MAX_LOG_TEXT_LEN,
                   "Error Ssap instance %d running status false", lCount);
-            printf ("%s:\33[31m %s Reconnecting SSAP\33[0m\n",
-                  gProcessName, lLogText);
+            TERR(gTrace, printf ("%s:\33[31m %s Reconnecting SSAP\33[0m\n",
+                  gProcessName, lLogText););
             TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText);)
                gLog.GenerateLog(ACUTCAP33, lLogText);
 
@@ -370,7 +416,7 @@ int main (int argc, char *argv[])
    }
 
    gLog.GenerateLog (GSYS02);
-   printf ("%s:\33[32m Shutting down...\33[0m\n", gProcessName);
+   T(gTrace, printf ("%s:\33[32m Shutting down...\33[0m\n", gProcessName););
 
    return 0;
 }

@@ -1,0 +1,12 @@
+Testlib	error.o
+Testlib	cardlist.o
+Testlib	modlist.o
+.	locplay.o
+Testlib	eventset.o
+libutil	random.o
+Testlib	fmtcode.o
+libutil	generic_io.o
+Testlib	errcode_sm.o
+apilib
+Testlib	perthread_trace.o
+Testlib	remote_trace.o

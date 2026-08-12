@@ -1,0 +1,334 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody API: data types</title>
+</head>
+<body>
+<h1>Prosody API: data types</h1>
+<p>
+These are the data types used by Prosody API functions:
+<dl>
+
+<dt>
+<a name="type-tSMCardId">tSMCardId</a>
+<dd>
+A card identifier. This is an arbitrary value specified when the card is
+opened with
+<a href="gen/apifn-sm_open_prosody_x.html">sm_open_prosody_x()</a> or
+<a href="gen/apifn-sm_open_prosody_s_v3.html">sm_open_prosody_s_v3()</a>.
+
+<dt> <a name="type-tSMChannelId">tSMChannelId</a>
+<dd>
+A channel identifier. This is an opaque type. Values are created by
+<a href="gen/apifn-sm_channel_alloc_placed.html">sm_channel_alloc_placed()</a>
+and are destroyed by
+<a href="gen/apifn-sm_channel_release.html">sm_channel_release()</a>.
+
+<dt> <a name="type-tSMCollectorId">tSMCollectorId</a>
+<dd>
+A data collector. This is an opaque type. It identifies an object which
+collects data and passes it into a datafeed.
+
+<dt> <a name="type-tSMDatafeedId">tSMDatafeedId</a>
+<dd>
+A datafeed identifier. This is an opaque type. It identifies a source of data
+to which connections can be made and is retrieved by a function such as
+<a href="gen/apifn-sm_tdmrx_get_datafeed.html">sm_tdmrx_get_datafeed()</a>.
+
+<dt> <a name="type-tSMDispatcherId">tSMDispatcherId</a>
+<dd>
+A data dispatcher. This is an opaque type. It identifies an object which
+takes data from a datafeed and sends it to a configrable location.
+
+<dt> <a name="type-tSMFMPrxId">tSMFMPrxId</a>
+<dd>
+A FMP[rx] identifier, which identifies an endpoint which can receive a
+T.38 fax media stream. This is an opaque type. Values are created by
+<a href="gen/apifn-sm_fmprx_create.html">sm_fmprx_create()</a> and
+are destroyed by
+<a href="gen/apifn-sm_fmprx_destroy.html">sm_fmprx_destroy()</a>.
+
+<dt> <a name="type-tSMFMPtxId">tSMFMPtxId</a>
+<dd>
+A FMP[tx] identifier, which identifies an endpoint which can transmit a
+T.38 fax media stream. This is an opaque type. Values are created by
+<a href="gen/apifn-sm_fmptx_create.html">sm_fmptx_create()</a> and
+are destroyed by
+<a href="gen/apifn-sm_fmptx_destroy.html">sm_fmptx_destroy()</a>.
+
+<dt> <a name="type-tSMH223muxId">tSMH223muxId</a>
+<dd>
+An H.223 Mux identifier. This is an opaque type. Values are created by
+<a href="gen/apifn-sm_h223mux_create.html">sm_h223mux_create()</a>
+and are destroyed by
+<a href="gen/apifn-sm_h223mux_destroy.html">sm_h223mux_destroy()</a>.
+
+<dt> <a name="type-tSMI460muxId">tSMI460muxId</a>
+<dd>
+An i460 Mux identifier. This is an opaque type. Values are created by
+<a href="gen/apifn-sm_i460mux_create.html">sm_i460mux_create()</a>
+and are destroyed by
+<a href="gen/apifn-sm_i460mux_destroy.html">sm_i460mux_destroy()</a>.
+
+<dt> <a name="type-tSMI460InputId">tSMI460InputId</a>
+<dd>
+An i460 Mux Port identifier. This is an opaque type. Values are created by
+<a href="gen/apifn-sm_i460mux_datafeed_connect.html">sm_i460mux_datafeed_connect()</a>
+and are destroyed by
+<a href="gen/apifn-sm_i460mux_datafeed_disconnect.html">sm_i460mux_datafeed_disconnect()</a>.
+
+<dt> <a name="type-tSMEventId">tSMEventId</a>
+<dd>
+An event identifer. Values are created by
+<a href="gen/apifn-smd_ev_create.html">smd_ev_create()</a> and
+are destroyed by <a href="gen/apifn-smd_ev_free.html">smd_ev_free()</a>. The
+values must be interpreted in different ways for each operating system.
+
+<dt> <a name="type-tSMModuleId">tSMModuleId</a>
+<dd>
+A module identifier. This is an opaque type. Values are created by
+<a href="gen/apifn-sm_open_module.html">sm_open_module()</a>
+and are destroyed by
+<a href="gen/apifn-sm_close_module.html">sm_close_module()</a>.
+
+<dt> <a name="type-tSMPathId">tSMPathId</a>
+<dd>
+A path identifier. This is an opaque type. It identifies a signal path
+on which processing may be performed. Values are created by
+<a href="gen/apifn-sm_path_create.html">sm_path_create()</a> and
+are destroyed by
+<a href="gen/apifn-sm_path_destroy.html">sm_path_destroy()</a>.
+
+<dt> <a name="type-tSMRTCPHandId">tSMRTCPHandId</a>
+<dd>
+An RTCP handler identifier, which identifies an object that handles
+received RTCP reports and generates outgoing RTCP reports.
+Values are created by
+<a href="gen/apifn-sm_rtcphand_create.html">sm_rtcphand_create()</a> and
+are destroyed by
+<a href="gen/apifn-sm_rtcphand_destroy.html">sm_rtcphand_destroy()</a>.
+
+<dt> <a name="type-tSMTDMrxId">tSMTDMrxId</a>
+<dd>
+A TDM[rx] identifier, which identifies an object that receives data from
+a TDM (time division multiplexing) timeslot. This is an opaque type.
+Values are created by
+<a href="gen/apifn-sm_tdmrx_create.html">sm_tdmrx_create()</a> and
+are destroyed by
+<a href="gen/apifn-sm_tdmrx_destroy.html">sm_tdmrx_destroy()</a>.
+
+<dt> <a name="type-tSMTDMtxId">tSMTDMtxId</a>
+<dd>
+A TDM[tx] identifier, which identifies an object that transmits data to
+a TDM (time division multiplexing) timeslot. This is an opaque type.
+Values are created by
+<a href="gen/apifn-sm_tdmtx_create.html">sm_tdmtx_create()</a> and
+are destroyed by
+<a href="gen/apifn-sm_tdmtx_destroy.html">sm_tdmtx_destroy()</a>.
+
+<dt> <a name="type-tSMAVFplayId">tSMAVFplayId</a>
+<dd>
+A AVF stream player identifier, which identifies a AVF stream player.
+This is an opaque type. Values are created by
+<a href="gen/apifn-sm_avfplay_create.html">sm_avfplay_create()</a>
+and are destroyed by
+<a href="gen/apifn-sm_avfplay_destroy.html">sm_avfplay_destroy()</a>.
+
+<dt> <a name="type-tSMAVFrecId">tSMAVFrecId</a>
+<dd>
+A AVF stream recorder identifier, which identifies a AVF stream recorder.
+This is an opaque type. Values are created by
+<a href="gen/apifn-sm_avfrec_create.html">sm_avfrec_create()</a>
+and are destroyed by
+<a href="gen/apifn-sm_avfrec_destroy.html">sm_avfrec_destroy()</a>.
+
+<dt> <a name="type-tSMVMPrxId">tSMVMPrxId</a>
+<dd>
+A VMP[rx] identifier, which identifies an endpoint which can receive an
+RTP media stream. This is an opaque type. Values are created by
+<a href="gen/apifn-sm_vmprx_create.html">sm_vmprx_create()</a> and
+are destroyed by
+<a href="gen/apifn-sm_vmprx_destroy.html">sm_vmprx_destroy()</a>.
+
+<dt> <a name="type-tSMVMPtxId">tSMVMPtxId</a>
+<dd>
+A VMP[tx] identifier, which identifies an endpoint which can transmit an
+RTP media stream. This is an opaque type. Values are created by
+<a href="gen/apifn-sm_vmptx_create.html">sm_vmptx_create()</a> and
+are destroyed by
+<a href="gen/apifn-sm_vmptx_destroy.html">sm_vmptx_destroy()</a>.
+
+<dt> <a name="type-tSMVMPTxToneSetId">tSMVMPTxToneSetId</a>
+<dd>
+An identifier which identifies a set of tones that can be used when
+transmitting RTP to remove tones from the coded audio and instead encode
+them as specified in RFC 2833. This is an opaque type. Values are
+created by
+<a href="gen/apifn-sm_vmptx_create_toneset.html">sm_vmptx_create_toneset()</a>
+and are destroyed by
+<a href="gen/apifn-sm_vmptx_destroy_toneset.html">sm_vmptx_destroy_toneset()</a>.
+
+<dt> <a name="type-tSMVMPTxToneSet">tSMVMPTxToneSet</a>
+<dd>
+A structure that defines a set of tones to be used when transmitting RTP to 
+remove tones from the coded audio and instead encode them as specified in RFC 2833. 
+Values are passed to
+<a href="gen/apifn-sm_vmptx_create_toneset.html">sm_vmptx_create_toneset()</a>.
+
+<dt> <a name="type-tSMVMPTxCSRCListId">tSMVMPTxCSRCListId</a>
+<dd>
+An identifier which identifies a list of contributing source identifiers (CSRC) that 
+can be used when transmitting RTP. This is an opaque type. Values are
+created by
+<a href="gen/apifn-sm_vmptx_create_csrc_list.html">sm_vmptx_create_csrc_list()</a>
+and are destroyed by
+<a href="gen/apifn-sm_vmptx_destroy_csrc_list.html">sm_vmptx_destroy_csrc_list()</a>.
+
+<dt> <a name="type-tSMSNTPId">tSMSNTPId</a>
+<dd>
+An identifier which identifies a simple network time protocol (SNTP) client. 
+This is an opaque type. Values are created by
+<a href="gen/apifn-sm_sntp_create.html">sm_sntp_create()</a>
+and are destroyed by
+<a href="gen/apifn-sm_sntp_destroy.html">sm_sntp_destroy()</a>.
+
+<dt> <a name="type-tSMSPRTId">tSMSPRTId</a>
+<dd>
+An identifier which identifies a simple packet relay transport (SPRT) end point. 
+This is an opaque type. Values are created by
+<a href="gen/apifn-sm_sprt_create.html">sm_sprt_create()</a>
+and are destroyed by
+<a href="gen/apifn-sm_sprt_destroy.html">sm_sprt_destroy()</a>.
+
+<dt> <a name="type-tSMDTLSrxId">tSMDTLSrxId</a>
+<dd>
+An identifier which identifies a datagram transport layer security (DTLS) packet receiver. 
+This is an opaque type. Values are created by
+<a href="gen/apifn-sm_dtlsrx_create.html">sm_dtlsrx_create()</a>
+and are destroyed by
+<a href="gen/apifn-sm_dtlsrx_destroy.html">sm_dtlsrx_destroy()</a>.
+
+<dt> <a name="type-tSMDTLStxId">tSMDTLStxId</a>
+<dd>
+An identifier which identifies a datagram transport layer security (DTLS) packet transmitter. 
+This is an opaque type. Values are created by
+<a href="gen/apifn-sm_dtlstx_create.html">sm_dtlstx_create()</a>
+and are destroyed by
+<a href="gen/apifn-sm_dtlstx_destroy.html">sm_dtlstx_destroy()</a>.
+
+<dt> <a name="type-tSM_INT">tSM_INT</a>
+<dd>
+A signed 32-bit integer.
+
+<dt> <a name="type-tSM_UT32">tSM_UT32</a>
+<dd>
+An unsigned 32-bit integer.
+
+<dt> <a name="type-tSM_UT64">tSM_UT64</a>
+<dd>
+An unsigned 64-bit integer.
+
+<dt> <a name="type-tSMConference">tSMConference</a>
+<dd>
+A (high level) conference. This is an opaque type used by the
+<a href="highapi_conf.html">high level conferencing API</a>.
+Values are created by
+<a href="gen/apifn-sm_conference_create.html">sm_conference_create()</a>
+and are destroyed by
+<a href="gen/apifn-sm_conference_delete.html">sm_conference_delete()</a>.
+
+<dt> <a name="type-SM_RECORD_PARMS">SM_RECORD_PARMS</a>
+<dd>
+A description of a recording operation. See
+<a href="gen/apifn-sm_record_start.html">sm_record_start()</a>
+in the <a href="prospapi.html">Prosody speech processing API</a>
+for its definition.
+
+<dt> <a name="type-SM_RECORD_STATUS_PARMS">SM_RECORD_STATUS_PARMS</a>
+<dd>
+A description of a recording status operation. See
+<a href="gen/apifn-sm_record_status.html">sm_record_status()</a>
+in the <a href="prospapi.html">Prosody speech processing API</a>
+for its definition.
+
+<dt> <a name="type-SM_REPLAY_PARMS">SM_REPLAY_PARMS</a>
+<dd>
+A description of a replay operation. See
+<a href="gen/apifn-sm_replay_start.html">sm_replay_start()</a>
+in the <a href="prospapi.html">Prosody speech processing API</a>
+for its definition.
+
+<dt> <a name="type-SM_FILE_RECORD_PARMS">SM_FILE_RECORD_PARMS</a>
+<dd>
+A description of a recording operation which uses a file. See
+<a href="gen/apifn-sm_record_file_start.html">sm_record_file_start()</a>
+in the <a href="highapi_playrec.html">high level play/record API</a>
+for its definition.
+
+<dt> <a name="type-SM_FILE_REPLAY_PARMS">SM_FILE_REPLAY_PARMS</a>
+<dd>
+A description of a recording operation which uses a file. See
+<a href="gen/apifn-sm_replay_file_start.html">sm_replay_file_start()</a>
+in the <a href="highapi_playrec.html">high level play/record API</a>
+for its definition.
+
+<dt> <a name="type-SM_BFILE_RECORD_PARMS">SM_BFILE_RECORD_PARMS</a>
+<dd>
+A description of a recording operation which uses a file. See
+<a href="gen/apifn-sm_record_bfile_start.html">sm_record_bfile_start()</a>
+in the <a href="highapi_bf_playrec.html">high level BFILE play/record API</a>
+for its definition.
+
+<dt> <a name="type-SM_BFILE_REPLAY_PARMS">SM_BFILE_REPLAY_PARMS</a>
+<dd>
+A description of a recording operation which uses a file. See
+<a href="gen/apifn-sm_replay_bfile_start.html">sm_replay_bfile_start()</a>
+in the <a href="highapi_bf_playrec.html">high level BFILE play/record API</a>
+for its definition.
+
+<dt> <a name="type-FILE">FILE</a>
+<dd>
+An open file. This type is defined in the C <code>stdio</code>
+library.
+
+<dt> <a name="type-SOCKADDR_IN">SOCKADDR_IN</a>
+<dd>
+An IPv4 (Internet) address and port.
+
+<dt> <a name="type-in_addr">struct in_addr</a>
+<dd>
+An IPv4 (Internet) address.
+
+<dt> <a name="type-SOCKADDR_IN6">SOCKADDR_IN6</a>
+<dd>
+An IPv6 (Internet) address and port.
+
+<dt> <a name="type-in6_addr">struct in6_addr</a>
+<dd>
+An IPv6 (Internet) address.
+
+<dt> <a name="type-tSM_OPEN_FILE">tSM_OPEN_FILE</a>
+<dd>
+An open file. This is the same as the type <code>FILE</code> defined in
+the C <code>stdio</code> library unless the Proosdy library was built
+for Microsoft Windows with the C preprecessor symbol
+<code>__SMWIN32HLIB__</code> defined, in which case it is instead a
+Windows <code>HANDLE</code>. 
+
+<dt> <a name="type-BFILE">BFILE</a>
+<dd>
+An open file. This type is defined in the
+<a href="bfile.html">bfile library</a>.
+
+<dt> <a name="type-ADSI_MODULE">ADSI_MODULE</a>
+<dd>
+A pointer to an opaque structure used by the
+<a href="adsilib.html">ADSI library</a>.
+
+<dt> <a name="type-SM_ASR_CHARACTERISTICS" class=version-v1>SM_ASR_CHARACTERISTICS</a>
+<dd>
+Only available in version 1.
+
+</dl>

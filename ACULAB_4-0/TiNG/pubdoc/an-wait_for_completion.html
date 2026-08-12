@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody application note: waiting for completion</title>
+</head>
+<body>
+<h1>Prosody application note: waiting for completion</h1>
+<p>
+The API functions
+<a href="gen/apifn-sm_play_tone.html">sm_play_tone()</a>,
+<a href="gen/apifn-sm_play_cptone.html">sm_play_cptone()</a>,
+and <a href="gen/apifn-sm_play_digits.html">sm_play_digits()</a>
+have a <code>wait_for_completion</code> parameter field which can
+make them wait until the play operation has completed. In some
+situations this method of waiting is unsuitable because it also
+blocks any other use of the same channel. For example, if you want to
+play a tone while recording speech on the same channel, the collection
+of recorded data cannot proceed while the tone is playing.
+<p>
+Since this is caused by the guarantee of thread-safety provided by
+the Prosody API, if the play is split into several Prosody API calls,
+the maximum delay is reduced to the time of the longest such call.
+Using code similar to this:
+<pre>
+  int evsafewait_sm_play_digits(SM_PLAY_DIGITS_PARMS *pp, tSMEventId ev)
+  {
+   int e;
+   pp-&gt;wait_for_completion = 0;
+   e = sm_play_digits(pp);
+   if (e) return e;
+   for (;;) {
+   	SM_PLAY_DIGITS_STATUS sp;
+   	e = smd_ev_wait(ev);
+   	if (e) return e;
+   	memset(&amp;sp, 0, sizeof(sp));
+   	sp.channel = pp-&gt;channel;
+   	e = sm_play_digits_status(&amp;sp);
+   	if (e) return e;
+   	if (sp.status == kSMPlayDigitsStatusComplete) return 0;
+   }
+  }
+</pre>
+<p>
+it is possible to wait for the play to finish without blocking other
+operations. This is because, once
+<a href="gen/apifn-sm_play_digits.html">sm_play_digits()</a> has
+started the play, the only Prosody API call which operates on the
+channel is 
+<a href="gen/apifn-sm_play_digits_status.html">sm_play_digits_status()</a>,
+which does not block.
+<p>
+Obviously, equivalent functions would be needed to wait for
+<a href="gen/apifn-sm_play_tone.html">sm_play_tone()</a>, and
+<a href="gen/apifn-sm_play_cptone.html">sm_play_cptone()</a>.
+<p>
+This method of waiting is not atomic with respect to Prosody API
+functions, so it is possible that, while this thread is trying to
+wait, another thread can call
+<a href="gen/apifn-sm_play_digits_status.html">sm_play_digits_status()</a>,
+seeing the <code>kSMPlayDigitsStatusComplete</code> status, and
+possiby making this thread get the error
+<code>ERR_SM_WRONG_CHANNEL_STATE</code> when it next tries to check
+the status. If the event is a non-idle event, then this thread will
+get stuck waiting on an event that will never be signalled (since
+non-idle events are not signalled while no operation is in progress).
+Consequently, if this method is used, the application must
+co-ordinate access to the channel to ensure that only one thread at a
+time attempts to play digits or tones on a channel.
+<p>
+If no event has been associated with the channel, one must be
+allocated for waiting on, which can be done like this:
+<pre>
+  	// if channel does not have a suitable event already allocated
+  int safewait_sm_play_digits(SM_PLAY_DIGITS_PARMS *pp)
+  {
+   SM_CHANNEL_SET_EVENT_PARMS ep;
+   int e, e2;
+   memset(&amp;ep, 0, sizeof(ep));
+   ep.channel = pp-&gt;channel;
+   ep.event_type = kSMEventTypeWriteData;
+   ep.issue_events = kSMChannelSpecificEvent;
+   e = smd_ev_create(&amp;ep.event, ep.channel, ep.event_type, ep.issue_events);
+   if (e) return e;
+   e = sm_channel_set_event(&amp;ep);
+   if (!e) {
+	SM_CHANNEL_SET_EVENT_PARMS up;
+	int e3;
+	memset(&amp;up, 0, sizeof(up));
+   	e = evsafewait_sm_play_digits(pp, ep.event);
+   	up.channel = pp-&gt;channel;
+	up.event_type = kSMEventTypeWriteData;
+	up.issue_events = kSMChannelNoEvent;
+	e3 = sm_channel_set_event(&amp;up);
+	if (!e) e = e3;	// earlier error has priority
+   }
+   e2 = smd_ev_free(ep.event);
+   if (!e) e = e2;	// we lose the error e2 if we got an earlier one
+   return e;
+  }
+</pre>
+<p>
+Obviously, this imposes further requirements on the application to
+avoid thread-safety problems. For example, the application cannot
+call this function in one thread while doing anything in another
+thread on the same channel which sets or uses the write-event, however
+typical applications usually fall into one of two catagories: those
+which assign the event to a channel as soon as the channel is allocated,
+which can use the above <code>evsafewait_sm_play_digits()</code>
+directly, and those which only ever assign an event to a channel,
+which can use the above <code>safewait_sm_play_digits()</code>. Other
+types of applications will need the above code to be adapted to suit
+them.

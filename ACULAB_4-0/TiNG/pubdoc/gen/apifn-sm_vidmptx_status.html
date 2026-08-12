@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vidmptx_status</title>
+</head>
+<body class=version-deprecated>
+<h1>Prosody RTP processing: API: sm_vidmptx_status</h1>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vidmptx_status(struct sm_vidmptx_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vidmptx_status_parms {
+	<a href="../apitype.html#type-tSMVidMPtxId">tSMVidMPtxId</a> <a href="#field-vidmptx">vidmptx</a>;					/* in */
+	<a name="enum-kSMVidMPtxStatus">enum kSMVidMPtxStatus</a> {
+		<a href="#field-kSMVidMPtxStatusRunning">kSMVidMPtxStatusRunning</a>,
+		<a href="#field-kSMVidMPtxStatusStopped">kSMVidMPtxStatusStopped</a>,
+		<a href="#field-kSMVidMPtxStatusSSRC">kSMVidMPtxStatusSSRC</a>,
+		<a href="#field-kSMVidMPtxStatusInternalError">kSMVidMPtxStatusInternalError</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	union {
+		struct {
+			int <a href="#field-u-ssrc-ssrc">ssrc</a>;				/* out */
+		} <a href="#field-u-ssrc">ssrc</a>;						/* out */
+		struct {
+			int <a href="#field-u-internal_error-num_errors">num_errors</a>;				/* out */
+		} <a href="#field-u-internal_error">internal_error</a>;				/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SM_VIDMPTX_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Returns the current status of the VidMP[tx] or an error to indicate that
+a problem occurred during start-up.
+<p>
+When the event, obtained from
+<a href="apifn-sm_vidmptx_get_event.html">sm_vidmptx_get_event()</a>,
+is signalled the user must call this function to determine the nature
+of the status change. The change in status may indicate that an error 
+occurred whilst processing a user request or it may be notifiying the 
+user of a change to the previous state of the VidMP[tx].
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-deprecated><a name="field-vidmptx">vidmptx</a>	(Deprecated)
+<dd class=version-deprecated>The VidMP[tx] to interrogate
+
+<dt class=version-deprecated><a name="field-status">status</a>	(Deprecated)
+<dd class=version-deprecated>
+<div class=version-deprecated>
+One of these values:
+<dl>
+<dt><a name="field-kSMVidMPtxStatusRunning">kSMVidMPtxStatusRunning</a>
+<dd>Indicates that there is nothing significant to report
+
+<dt><a name="field-kSMVidMPtxStatusStopped">kSMVidMPtxStatusStopped</a>
+<dd>Indicates that the VidMP[tx] has stopped transmitting RTP and that it is
+safe to destroy
+
+<dt><a name="field-kSMVidMPtxStatusSSRC">kSMVidMPtxStatusSSRC</a>
+<dd>Indicates that the SSRC value has been chosen. The value is given
+in the
+<a class=pref href="#field-u-ssrc-ssrc">ssrc</a>
+field.
+
+<dt><a name="field-kSMVidMPtxStatusInternalError">kSMVidMPtxStatusInternalError</a>
+<dd>Indicates that the VidMP[tx] encountered one or more internal errors when
+processing the incoming AVF stream. These errors will result in the media
+packet stream output from the VidMP[tx] missing some data. Note that such
+errors are not fatal - the VidMP[tx] continues to run. These status reports
+are throttled in order to maintain a sensibly low rate of reporting even in
+the event of a high rate of errors.
+
+</dl>
+</div>
+<dt class=version-deprecated><a name="field-u">u</a>	(Deprecated)
+<dd class=version-deprecated>Additional information relating to the current status of the VidMP[tx]
+
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u-ssrc">ssrc</a><dd>This field is only valid if the
+<a class=pref href="#field-status">status</a>
+is
+<a class=pref href="#field-kSMVidMPtxStatusSSRC">kSMVidMPtxStatusSSRC</a>.
+
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u-ssrc-ssrc">ssrc</a><dd>The SSRC value chosen.
+
+</dl>
+</div>
+<dt><a name="field-u-internal_error">internal_error</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMVidMPtxStatusInternalError">kSMVidMPtxStatusInternalError</a>
+
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u-internal_error-num_errors">num_errors</a><dd>The number of internal errors encountered by the VidMP[tx] covered by this
+status report.
+
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources existed to create the VidMP[tx]</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

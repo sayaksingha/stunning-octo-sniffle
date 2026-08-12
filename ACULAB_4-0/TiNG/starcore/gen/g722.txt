@@ -1,0 +1,8 @@
+ITU_T General Public Licence information (ITU-T Rec. G.191 09/2005).
+====================================================================
+
+The software module "g722.sob" is derived from Aculab modifications
+to ITU-T G.722 source code ("g722.c" forming part of ITU-T G.191).
+Aculab modifications were applied to v2.0 1.Jul.1995 of this source code.
+The Aculab modified version of this G.722 source code is available on request.
+

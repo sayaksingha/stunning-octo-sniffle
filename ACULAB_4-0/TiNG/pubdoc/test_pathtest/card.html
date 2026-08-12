@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>pathtest - card command</title>
+</head>
+<body>
+<h1>pathtest - card command</h1>
+<p>
+There are two forms of the <code>card</code> command. The first form adds
+a card to the list of available cards, and the second selects one of the
+available cards as the one to be used.
+
+<h2>Adding a card</h2>
+<p>
+The command to add a card is <code>card +$CARDSPEC</code> where the
+<code>$CARDSPEC</code> is one of the following:
+<ul>
+<li>The characters "<code>s:</code>" followed the port number of
+a Prosody S server.
+<li>The characters "<code>x:</code>" followed the IP address of a
+Prosody X card.
+</ul>
+
+<h2>Using a card</h2>
+<p>
+When the command "<code>card $N</code>", where <code>$N</code> is a
+number, selects the Nth card.
+<p>
+Currently, only the <a href="mod.html">mod</a> command uses the
+selected card.
+<hr>
+<p>
+This is a command understood by the <a href="pathtest.html">pathtest</a>
+test program.

@@ -1,0 +1,21 @@
+-TiNGtrace
+CH	high_pass_filter	bool
+CL	frame_len	unsigned
+CNm	comfort_noise_payload_mapping	unsigned
+CV	variant		unsigned
+Ca	clerk_addr	string
+Cb	bitrate		unsigned
+Cp	clerk_port	unsigned
+Ct	pticks		unsigned
+Cv	vad		unsigned
+M	maxts		unsigned
+P	per_mod			unsigned
+c	codec			string
+d	dest_ip			string
+f	rfc2833tones    	unsigned
+m	payloadmapping		unsigned
+n	numchan			unsigned
+p	source_port		unsigned
+q	dest_port		unsigned
+t	timeslot		timeslot
+x	serialnumber		string

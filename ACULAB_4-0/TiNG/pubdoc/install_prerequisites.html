@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: prerequisites </title>
+</head>
+<body>
+<h1>Prosody installation guide: prerequisites </h1>
+<p>
+You will need:
+<ul>
+	<li>a C compiler
+</ul>
+<p>
+Note that the C code uses C++ style comments (//....) in a few
+places. The C language standard, <cite>ISO 9899:1999</cite>, commonly
+known as "<cite>C99</cite>" added a requirement that compilers
+support this style of comment, which was already a common extension,
+though very old C compilers may not recognise it or need special tweaks.
+<p>
+Also very useful:
+<ul>
+	<li>a GNU make program
+		(available as standard on <span class="type-LINUX">Linux</span>
+		and <span class="type-QNX">QNX</span>)
+		or <span class="type-WINNT">(for Windows only) Visual Studio</span>
+	<li>perl (version 5)
+	<li>md5sum
+		(available as standard on some operating systems, or
+		downloadable as source as part of
+		<a href="http://www.gnu.org/software/coreutils/">GNU coreutils</a>)
+	<li>a shell <code>/bin/sh</code>
+	<li>a C++ compiler (only for a very few test programs)
+</ul>
+<p>
+Note that they are not essential. If you are using Microsoft
+VisualStudio, it can build everything automatically but otherwise it is
+exceedingly tedious to build without these facilities since you must
+build everything manually. The document
+<a href="build_cconly.html">Prosody
+installation guide: building without using the Makefiles</a> describes
+how to do this.
+<p>
+<p>
+The version required of perl is version 5, but since this was released
+in 1994, it would be surprising to find a system still using perl 4.
+<p>
+If you have all of these you are now ready to start the
+<a href="install_build1.html">first-time build</a>.
+<p>
+If you want to use an automated build system other than GNU make
+(such as a visual integrated development environment), you should
+read <a href="build_cconly.html">Prosody installation guide: building
+without using the Makefiles</a>, which tells you what compiler options you
+need, and <a href="layout.html">Prosody: layout of the distribution</a>
+which should help you determine where to find the information on what
+files are used when building each part of the distribution.
+
+<h2>Obtaining tools to build automatically</h2>
+<p>
+A comprehensive set of GNU tools for Windows is available from
+<a href="http://cygwin.com">http://cygwin.com</a> including gcc, make,
+and bash. Note that several of the scripts in the Prosody distribution
+assume that /bin/sh is a shell. Cygwin does not do this by default. You
+can easily fix this with:
+<pre>
+	mkdir /bin			<i>(in case it's not already there)</i>
+	cp `type -p bash`.exe /bin/sh.exe
+</pre>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody SNTP Client: API: sm_sntp_get_event</title>
+</head>
+<body>
+<h1>Prosody SNTP Client: API: sm_sntp_get_event</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_sntp_get_event(struct sm_sntp_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sntp_event_parms {
+	<a href="../apitype.html#type-tSMSNTPId">tSMSNTPId</a> <a href="#field-sntp">sntp</a>;						/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_SNTP_EVENT_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+the event will be signalled when a status change occurs on the SNTP client.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-sntp">sntp</a><dd>The SNTP client.
+
+<dt><a name="field-event">event</a><dd>The event identifier
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prossntp.html">Prosody SNTP Client API</a>.
+</body>
+</html>

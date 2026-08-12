@@ -1,0 +1,17 @@
+#!/bin/sh
+if test -d /dev/aculab
+then
+	rm /dev/aculab/*
+else
+	mkdir /dev/aculab
+fi
+cardno=0
+find /devices -name \*TiNG | sed -e 's/:TiNG//' | while read dev
+do
+	serialno=`../diag/serialno/gen-SOL_32/serialno -c "$dev":TiNG`
+	ln -s ../.."$dev":dummy /dev/aculab/Trace_"$serialno"
+	ln -s ../.."$dev":TiNG /dev/aculab/Prosody_"$serialno"
+	ln -s ../.."$dev":ACUc /dev/aculab/ACUc$cardno
+	ln -s ../.."$dev":ACUs /dev/aculab/ACUs$cardno
+	cardno=`expr $cardno + 1`
+done

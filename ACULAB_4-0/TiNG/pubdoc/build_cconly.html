@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: building without using the Makefiles</title>
+</head>
+<body>
+<h1>Prosody installation guide: building without using the Makefiles</h1>
+<p>
+After you have <a href="install_environ.html">set up the build
+environment</a>, you can run a C compiler to build any of the
+components.
+<p>
+You must make the compiler define some pre-processor symbols. For a
+command-line compiler, this is normally done with a
+"<code>-D</code>symbol<code>=</code>value" option. The symbols you
+need to define are:
+<table border>
+<tr>
+	<th>Symbol<th>Value<th>Meaning
+
+<tr class="type-LINUX">
+	<td><code>TiNGTYPE_LINUX</code><td>anything
+		<td><strong>Use only on Linux</strong>
+		 Indicates that the component should be built for Linux
+
+<tr class="type-QNX">
+	<td><code>TiNGTYPE_QNX</code><td>anything
+		<td><strong>Use only on QNX</strong>
+		 Indicates that the component should be built for QNX
+
+<tr class="type-WINNT">
+	<td><code>TiNGTYPE_WINNT</code><td>anything
+		<td><strong>Use only on Windows 2000 / XP</strong>
+		 Indicates that the component should be built for Windows
+
+<tr class="type-WINNT">
+	<td><code>_WIN32_WINNT</code><td>0x400
+		<td><strong>Use only on Windows 2000 / XP</strong>
+		 Indicates that the component can use facilities
+		 introduced in Windows NT 4 (only needed for
+		 SignalObjectAndWait() in libutil/WINNT/pthread.c)
+
+<tr>
+	<td><code>_REENTRANT</code><td>anything
+		<td>This symbol indicates that you are building a
+		multi-threaded program.
+		
+
+</table>
+<p>
+Additionally, you may define:
+<p>
+<table border>
+<tr>
+	<td rowspan=2><code>TiNG_TRACE</code><td>0
+		<td>No API tracing is possible.
+
+<tr>
+			<td>1
+			<td>(default) Normal API tracing is possible.
+
+<tr>
+	<td><code>STATIC</code><td><code>static</code> or empty
+		<td>The <code>static</code> keyword has two meanings
+		in C. It can be used to limit scope of an identifier
+		which would otherwise be global, and it can be used
+		to extend the lifetime of an object which is local to
+		a function and would otherwise be destroyed when the
+		function returns. For debugging it may be useful to
+		make all statics be global while not affecting object
+		lifetimes. To allow this, where
+		<code>static</code> would be used to limit scope, the
+		identifier <code>STATIC</code> is used instead. Then
+		if you want to make all the static declarations be
+		global, you can define <code>STATIC</code> to be
+		empty.
+
+</table>
+<p>
+You need to set the list of include directories for the compiler to
+search. These are the directories which may be required:
+<table>
+<tr>
+	<th>Directory <th>required for
+
+<tr>
+	<td>$(TiNG)/include <td>all Prosody functions
+
+<tr class="type-WINNT">
+	<td>$(TiNG)/include/libutil/WINNT <td>most test programs on Windows
+
+<tr>
+	<td>switch/include <td>switch driver functions
+
+<tr>
+	<td>call/include <td>call control functions
+
+</table>
+<p>
+For a command-line compiler, this is normally done with a
+"<code>-I</code>directory" option.
+You can safely set the list of
+include directories to be all of the above even if some are not
+necessary for the application you are building.
+<p>
+You will also need to use the correct options to select a
+multithreaded program. It is not essential for every program to be
+multithreaded, but since many are, it's much easier
+to build everything as multithreaded rather than build a single
+threaded library and a multithreaded library and use different
+options for each program depending on which it is.
+<p>
+You also need to find out what needs to be built. Look in the
+<code>Makefile</code> for the target operating system in each
+directory.
+For example, if you want to build everything in the
+<code>$(TiNG)/apilib</code> directory, look in
+<code>$(TiNG)/apilib/LINUX_V6/Makefile.inc</code>,
+<code>$(TiNG)/apilib/WINNT_V6/Makefile.inc</code>, as appropriate and the files
+you need to build are those described by the target
+"<code>all-$(TiNGTARGET):</code>".
+<p>
+If you need to build a program (rather than just object files), you
+will see that each program is described in the Makefile. For example,
+in the <code>test/ansplay</code> directory's Makefile for Linux, you will
+find that <a href="test_ansplay.html">ansplay</a> is described by:
+<pre>
+	gen-$(TiNGTARGET)/ansplay: ../../gen/version.i gen/ansplay.args.i $(LINK_OBJS)
+		$(LINK) $(LINK_OBJS) -lpthread $(LIBS) $(LIBS_COMMON) $(LIBS_SW) $(LIBS_CL) 2&gt;&amp;1 | t0 errs/$@
+</pre>
+<p>
+so you can see the linker options required. The list of files is
+derived from two files: <code>objlist</code> and
+<code>LINUX_V6/objlist</code>. Each contains a list of items required, one
+per line, with the first column indicating where the item it to be
+found and the second column naming the item. These files are
+processed by <code>$(TiNG)/libutil/obj2make.pl</code> to generate
+suitable parts for the Makefile. Here's the main <code>objlist</code>
+file for <code>ansplay</code>:
+<pre>
+	.	ansplay.o
+	Testlib	cardlist.o
+	Testlib	checkplay.o
+	Testlib	errcode_sm.o
+	Testlib	error.o
+	Testlib	fmtcode.o
+	Testlib	modlist.o
+	Testlib	watchl1.o
+	apilib
+	call
+	libutil	bfile.o
+	libutil	bfopen.o
+	libutil	vseprintf.o
+	switch
+</pre>
+<p>
+which shows you the list of object files you need to link. The lines
+'<code>call</code>' and '<code>switch</code>' show that the call and
+switch libraries are needed, while the other lines refer to object
+files within TiNG. If you
+follow the build order described in
+<a href="install_build1.html">Prosody installation guide: first time
+build</a> and <a href="install_buildrest.html">Prosody installation
+guide: building software components</a> you will find that everything you
+need is always ready by the time you need it.
+<p>
+You should read also <a href="layout.html"> Prosody: layout of the
+distribution</a> which should help you determine where to find the
+information on what files are used when building each part of the
+distribution.
+</body>
+</html>

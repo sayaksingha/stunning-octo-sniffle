@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: ansplay</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: ansplay</h1>
+<p>
+This is a very simple playback application. It answers a call and plays
+the given speech file. It stops playing when the caller hangs up. If the
+file ends before the caller hangs up, it starts playing it again from
+the beginning. The file is assumed to have no headers or other
+formatting of any kind - just the data. The test program
+<a href="test_ansrec.html">ansrec</a> generates these files directly, but
+for many formats the header is harmless (sounds
+like a short burst of noise).
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have the call control driver initialised. This is documented
+separately in the call control documentation.
+<p>
+You must have downloaded firmware modules as listed below.
+<p>
+Run <code>ansplay</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/ansplay</span> or
+<span class="type-WINNT">gen-WINNT_V6/ansplay</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table>
+<tr>
+	<td><code>-a 1</code>
+		<td>use AGC (automatic gain control)
+
+<tr>
+	<td><code>-F</code> &lt;format&gt;
+		<td>play data in this format. The known formats can
+		be listed by specifying a question mark
+		(<code>?</code>).
+
+<tr>
+	<td><code>-O</code> 
+		<td>play only once. The default is to restart at the 
+		beginning of the file when the end is reached
+
+<tr>
+	<td><code>-P</code> &lt;N&gt;
+		<td>The number of channels to allocate per module
+<tr>
+	<td><code>-s</code> &lt;speed&gt;
+		<td>play faster or slower (as a percentage)
+
+<tr>
+	<td><code>-t</code> &lt;timeslot&gt;
+		<td>timeslot to use (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>)
+
+<tr>
+	<td><code>-v</code> &lt;volume&gt;
+		<td>play at this volume (adjustment in dB)
+
+<tr>
+	<td><code>-x</code> &lt;serialno&gt;
+		<td>Prosody X card serial number with no Prosody
+		module specification in <code>[...]</code> after it.
+		All Prosody modules on that card are used.
+<tr>
+	<td>&lt;file&gt;
+		<td>name of file into which data is to be recorded
+
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/ansplay -F ALawPCM@8000 -x 12345678 -P 64 -t 64:0 rec1.dat
+</pre>
+<p>
+would play from <code>rec1.dat</code> data assumed to be A-law encoded
+speech allocating 64 channels per Prosody Procesor module on the card
+with serial number 12345678, which must also have the trunks on which
+the calls will come in.
+<p>
+Note that this program cannot switch data between a Prosody module on
+one card and a call answered on another card.
+<p>
+The firmware modules that are required depend on the options you
+specify. Here are the details:
+<p>
+<table border>
+<tr>
+	<th class=bg>Module<th class=bg>When needed
+
+<tr>
+	<td><a href="gen/softmodindex.html#datafeed">datafeed</a>
+		<td>always on Prosody X
+
+<tr>
+	<td><a href="gen/softmodindex.html#gainbg">gainbg</a>
+		<td>If you use '<code>-a 1</code>' for AGC
+		or '<code>-v</code>' to adjust the volume
+
+<tr>
+	<td><a href="gen/softmodindex.html#fast">fast</a>
+		<td>If you use '<code>-s</code>' to play the file
+		faster than normal
+
+<tr>
+	<td><a href="gen/softmodindex.html#slow">slow</a>
+		<td>If you use '<code>-s</code>' to play the file
+		slower than normal
+
+<tr>
+	<td><a href="gen/softmodindex.html#outchan">outchan</a>
+		<td>always
+
+<tr>
+	<td><a href="gen/softmodindex.html#sixkin">sixkout</a>
+		<td>when the file format is ACUBLKPCM@6000,
+		ALawPCM@6000, OKIADPCM@6000, ULawPCM@6000 or otherwise
+		sampled at 6000 Hz
+
+<tr>
+	<td><a href="gen/softmodindex.html#sixkout">sixkout</a>
+		<td>when the file format is ACUBLKPCM@6000,
+		ALawPCM@6000, OKIADPCM@6000, ULawPCM@6000 or otherwise
+		sampled at 6000 Hz
+
+<tr>
+	<td><a href="gen/softmodindex.html#11_to_8">11_to_8</a>
+		<td>when the file format is 
+		sampled at 11000 Hz
+
+<tr>
+	<td><a href="gen/softmodindex.html#playA">playA</a>
+		<td>when the file format is
+		ALawPCM@6000 or ALawPCM@8000
+
+<tr>
+	<td><a href="gen/softmodindex.html#playima">playima</a>
+		<td>when the file format is IMAADPCM
+
+<tr>
+	<td><a href="gen/softmodindex.html#playmu">playmu</a>
+		<td>when the file format is
+		ULawPCM@6000 or ULawPCM@8000
+
+<tr>
+	<td><a href="gen/softmodindex.html#playoki">playoki</a>
+		<td>when the file format is
+		OKIADPCM@6000 or OKIADPCM@8000
+
+</table>
+<p>
+Just like <a href="test_ansrec.html">ansrec</a>, it reports status
+changes and data speed and it can be stopped with the '<code>q</code>'
+command.
+<p>
+The source code for this program is provided (ansplay.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

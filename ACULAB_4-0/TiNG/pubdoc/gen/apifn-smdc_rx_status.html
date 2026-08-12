@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody data communications: API: smdc_rx_status</title>
+</head>
+<body>
+<h1>Prosody data communications: API: smdc_rx_status</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int smdc_rx_status(struct smdc_rx_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_rx_status_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-available_octets">available_octets</a>;				/* out */
+	<a name="enum-kSMDCRxStatus">enum kSMDCRxStatus</a> {
+		<a href="#field-kSMDCRxStatusEmpty">kSMDCRxStatusEmpty</a>,
+		<a href="#field-kSMDCRxStatusData">kSMDCRxStatusData</a>,
+		<a href="#field-kSMDCRxStatusOverrun">kSMDCRxStatusOverrun</a>,
+		<a href="#field-kSMDCRxStatusCarrier">kSMDCRxStatusCarrier</a>,
+		<a href="#field-kSMDCRxStatusFinished">kSMDCRxStatusFinished</a>,
+		<a href="#field-kSMDCRxStatusSigMetric">kSMDCRxStatusSigMetric</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-flow">flow</a>;						/* out */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-carrier-carrier">carrier</a>;			/* out */
+		} <a href="#field-u-carrier">carrier</a>;					/* out */
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-metric-metric">metric</a>;				/* out */
+		} <a href="#field-u-metric">metric</a>;					/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SMDC_RX_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Reports the status of a channel whose input half has been
+configured for data communications.
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The data communication channel.
+
+<dt><a name="field-available_octets">available_octets</a><dd>The amount of data currently buffered in this channel. Only
+valid if the
+<a class=pref href="#field-status">status</a>
+field reports
+<a class=pref href="#field-kSMDCRxStatusData">kSMDCRxStatusData</a>.
+
+<dt><a name="field-status">status</a><dd>The receiver status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCRxStatusEmpty">kSMDCRxStatusEmpty</a>
+<dd>No data is available for reading.
+
+<dt><a name="field-kSMDCRxStatusData">kSMDCRxStatusData</a>
+<dd>Some data is available for reading.
+
+<dt><a name="field-kSMDCRxStatusOverrun">kSMDCRxStatusOverrun</a>
+<dd>Data has been lost because the buffer has overflowed.
+
+<dt><a name="field-kSMDCRxStatusCarrier">kSMDCRxStatusCarrier</a>
+<dd>The input half has begun or stopped receiving a meaningful signal.
+
+<dt><a name="field-kSMDCRxStatusFinished">kSMDCRxStatusFinished</a>
+<dd>The receiver has finished with data communications. When this
+status is reported, the channel's input half reverts to the
+idle state that it was in before
+<a href="apifn-smdc_channel_config.html">smdc_channel_config()</a>
+was used. Therefore it can be re-configured or used for
+another purpose and a subsequent call to
+<a href="apifn-smdc_rx_status.html">smdc_rx_status()</a>
+will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+
+<dt><a name="field-kSMDCRxStatusSigMetric">kSMDCRxStatusSigMetric</a>
+<dd>The receiver is reporting a measurement relating to received signal
+prior to receiver termination. This status only occurs if receiver has been configured to report this metric.
+
+</dl>
+<dt><a name="field-flow">flow</a><dd>Indicator of whether the receiver has stopped incoming data by
+using flow control (non-zero) or not (zero).
+
+<dt><a name="field-u">u</a><dd>Additional information specifying the current status
+
+
+<dl>
+<dt><a name="field-u-carrier">carrier</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMDCRxStatusCarrier">kSMDCRxStatusCarrier</a>
+
+
+<dl>
+<dt><a name="field-u-carrier-carrier">carrier</a><dd>The current carrier status: zero=off, non-zero=on.
+
+</dl>
+<dt><a name="field-u-metric">metric</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMDCRxStatusSigMetric">kSMDCRxStatusSigMetric</a>
+
+
+<dl>
+<dt><a name="field-u-metric-metric">metric</a><dd>A measure of received signal.
+
+</dl>
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosdc.html">Prosody data communications API</a>.
+</body>
+</html>

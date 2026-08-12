@@ -1,0 +1,4 @@
+Prefix/suffix provider.
+	Adds a prefix and a suffix to each transmission. The
+	prefix and suffix can by any number if bits in
+	length.

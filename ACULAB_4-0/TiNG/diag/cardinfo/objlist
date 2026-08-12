@@ -1,0 +1,2 @@
+libutil	generic_io.o
+.	cardinfo.o

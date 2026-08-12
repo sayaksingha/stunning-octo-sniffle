@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: detect</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: detect</h1>
+<p>
+This is a simple detection application. It answers answers an
+incoming call and listens for tones, DTMF digits, or other signals as
+you specified. It does not play
+any prompts. It stops detecting when the caller hangs up.
+It can only use the default tone tables. To test detection with 
+new tone tables use <a href="test_tonedet.html">tonedet</a>.
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have the call control driver initialised. This is documented
+separately in the call control documentation.
+<p>
+You must have these firmware modules loaded:
+<ul>
+	<li><a href="gen/softmodindex.html#datafeed">datafeed</a> (on Prosody X only)
+	<li><a href="gen/softmodindex.html#inchan">inchan</a>
+	<li><a href="gen/softmodindex.html#td">td</a>
+</ul>
+<p>
+Run <code>detect</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/detect</span> or
+<span class="type-WINNT"> gen-WINNT_V6/detect</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table>
+<tr>
+	<td><code>-a 1</code>
+		<td>map tones to digits. This is only useful for
+		detecting DTMF tones, in which case it shows the
+		DTMF digit as digits rather than as codes
+
+<tr>
+	<td><code>-C</code> &lt;alg&gt;
+		<td>enable signal categorisation with specified
+		algorithm
+
+<tr>
+	<td><code>-c 1</code>
+		<td>enable detection of call progress tones
+
+<tr>
+	<td><code>-T</code> &lt;type&gt;
+		<td>the type of tone detection to use. One of these
+		values:
+		<table border>
+		<tr> <th class=bg>value<th class=bg>meaning 
+		<tr> <td>e<td>tone end detection
+		<tr> <td>l<td>tone length detection
+		<tr> <td>s<td>tone start detection
+		</table>
+		
+
+<tr>
+	<td><code>-g</code> &lt;duration&gt;
+		<td>enable grunt detection with specified duration
+
+<tr>
+	<td><code>-M</code> &lt;tonemode&gt;
+		<td>enable tone detection with specified mode for
+		minimum tone duration (one of
+		"<code>1</code>", "<code>40</code>",
+		"<code>64</code>")
+
+<tr>
+	<td><code>-P</code> &lt;N&gt;
+		<td>The number of channels to allocate per module
+
+<tr>
+	<td><code>-s</code> &lt;toneset&gt;
+		<td>select tone set to use for tone detection
+
+<tr>
+	<td><code>-t</code> &lt;timeslot&gt;
+		<td>timeslot to use (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>).
+		
+<tr>
+	<td><code>-x</code> &lt;serialno&gt;
+		<td>A serial number with no Prosody
+		module specification in <code>[...]</code> after it.
+		All Prosody modules on that card are used.
+
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/detect -x12345678 -t 64:0 -M 1 -a 1
+</pre>
+<p>
+would listen for DTMF digits using the card with serial number 12345678.
+<p>
+Note that this program cannot switch data from a call answered on one card to
+a Prosody module on another card.
+<p>
+While the program is running it shows status changes in some detail.
+Layer 1 statistics are printed like this:
+<pre>
+	0: +nos +los usr=f3
+</pre>
+<p>
+This is about port 0, and the details are as returned by
+<code>call_l1_stats()</code>. Information about a particular call
+appears like this:
+<pre>
+	0.1: CS_WAIT_FOR_INCOMING
+</pre>
+<p>
+This relates to timeslot 1 on port 0, and reports the state from
+<code>call_state()</code>.
+<p>
+When it detects anything, it prints a description of what was
+detected. For example:
+<pre>
+	Digit: 42 (*) 0
+</pre>
+<p>
+means that it detected the DTMF digit <code>*</code>.
+<p>
+The source code for this program is provided (detect.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

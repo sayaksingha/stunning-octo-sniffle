@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_config_jitter_resync_notify</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_config_jitter_resync_notify</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_config_jitter_resync_notify(struct sm_vmprx_config_jitter_resync_notify_parms *<a href="#field-notifyp">notifyp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-notifyp">*notifyp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_config_jitter_resync_notify_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-enable">enable</a>;						/* in */
+} SM_VMPRX_CONFIG_JITTER_RESYNC_NOTIFY_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures the notification of VMP[rx] timestamp resync. The clock
+rate of an incomming RTP stream may deviate by a small amount from that
+of the local system (clock drift) requiring the VMP[rx] jitter buffer to resynchronise 
+when the accumulated drift exceeds jitter buffer capacity. By default the 
+the application is unaware of any such resyncs, but this call allows
+the VMP[rx] to be configured so that the VMP[rx] event is signalled when such 
+resync occurs. The application then must invoke
+<a href="apifn-sm_vmprx_status.html">sm_vmprx_status()</a>
+to obtain the resync status information.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to be configured
+
+<dt><a name="field-enable">enable</a><dd>A non-zero value value enables notification of sync loss.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

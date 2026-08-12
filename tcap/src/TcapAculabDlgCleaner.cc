@@ -52,7 +52,8 @@ BOOLEAN DlgCleaner::Init()
 {
    TEXT  lLogText[MAX_LOG_TEXT_LEN + 1] = "";
 
-   if(false == mDlgManager.Init())
+   // Ab Change: Pass TCAP_ANSI_CFG down to DlgManager
+   if(false == mDlgManager.Init((TEXT*)TCAP_ANSI_CFG))
    {
       snprintf(lLogText, MAX_LOG_TEXT_LEN, 
             "Dialogue Manager Initialization failed. Exiting...");
@@ -103,13 +104,12 @@ BOOLEAN DlgCleaner::ReadConfig()
    TEXT      lLogText[MAX_LOG_TEXT_LEN + 1] = "";
    CfgRead   lCfgRead(gProcessName);
 
-   if(false == lCfgRead.CfgInit(SS7_KER_CFG))
+   if (false == lCfgRead.CfgInit(TCAP_ANSI_CFG))
    {
       snprintf(lLogText, MAX_LOG_TEXT_LEN,
-            "Failed to open the file %s", SS7_KER_CFG);
+            "Failed to open the file %s", TCAP_ANSI_CFG);
       TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
       gLog.GenerateLog(GSYS09,lLogText);
-      lCfgRead.CfgDeInit();
       return false;
    }
 
@@ -118,9 +118,10 @@ BOOLEAN DlgCleaner::ReadConfig()
    {
       snprintf(lLogText, MAX_LOG_TEXT_LEN,
             "ACU_TCAP_DLG_TIMEOUT Parameter not found in %s",
-            SS7_KER_CFG);
+            TCAP_ANSI_CFG);
       TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
       gLog.GenerateLog(GSYS11,lLogText);
+      lCfgRead.CfgDeInit();
       return false;
    }
    else
@@ -134,9 +135,10 @@ BOOLEAN DlgCleaner::ReadConfig()
    {
       snprintf(lLogText, MAX_LOG_TEXT_LEN,
             "ACU_TCAP_DLG_TIMEOUT_CAP Parameter not found in %s",
-            SS7_KER_CFG);
+            TCAP_ANSI_CFG);
       TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
       gLog.GenerateLog(GSYS11,lLogText);
+      lCfgRead.CfgDeInit();
       return false;
    }
    else
@@ -145,37 +147,42 @@ BOOLEAN DlgCleaner::ReadConfig()
                gProcessName, mCapDlgTimeout););
    }
 
+   if(CFG_OK != lCfgRead.GetConfigNum("ACU_TCAP_DLG_CLEANER_SSN",
+            mSpecialSsn, 1, 255 ))
+   {
+      snprintf(lLogText, MAX_LOG_TEXT_LEN,
+            "ACU_TCAP_DLG_CLEANER_SSN Parameter not found in %s",
+            TCAP_ANSI_CFG);
+      TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
+      gLog.GenerateLog(GSYS11,lLogText);
+      lCfgRead.CfgDeInit();
+      return false;
+   }
+   else
+   {
+      T(gTrace, printf("%s: ACU_TCAP_DLG_CLEANER_SSN = %d\n",
+               gProcessName, mSpecialSsn););
+   }
 
    if (CFG_OK != lCfgRead.GetConfigNum("MAX_ACU_TCAP_DLG_SIZE", 
             mMaxDlgSize, 
             1, 500000))
    {
-      sprintf(lLogText, "Configuration Error for MAX_ACU_TCAP_DLG_SIZE in file kernel.cfg, exiting ...");
+      sprintf(lLogText, "Configuration Error for MAX_ACU_TCAP_DLG_SIZE in file %s, exiting ...", TCAP_ANSI_CFG);
       T(gTrace, printf("%s\n", lLogText););
-      //gLog.GenerateLog(DLG23, lLogText);
       lCfgRead.CfgDeInit();
+      return false;
    }
    else
    {
       T(gTrace, printf("%s: MAX_ACU_TCAP_DLG_SIZE = %d\n", gProcessName, mMaxDlgSize););
    }
 
-   lCfgRead.CfgDeInit();
-
-   if (false == lCfgRead.CfgInit(SS7_IPC_CFG))
-   {
-      snprintf(lLogText, MAX_LOG_TEXT_LEN,
-            "Failed to open the file %s", SS7_IPC_CFG);
-      TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
-      gLog.GenerateLog(GSYS09,lLogText);
-      lCfgRead.CfgDeInit();
-      return false;
-   }
    if(CFG_OK != lCfgRead.GetConfigNum("MSG_TCAP_HDLR_Q_RCV",mTcapMsgQKey ,
             SS7_MIN_IPC_Q_KEY, SS7_MAX_IPC_Q_KEY))
    {
       snprintf(lLogText, MAX_LOG_TEXT_LEN,
-            "MSG_TCAP_HDLR_Q_RCV Parameter not found in %s",SS7_KER_CFG);
+            "MSG_TCAP_HDLR_Q_RCV Parameter not found in %s",TCAP_ANSI_CFG);
       TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
       gLog.GenerateLog(GSYS11,lLogText);
       lCfgRead.CfgDeInit();
@@ -187,7 +194,6 @@ BOOLEAN DlgCleaner::ReadConfig()
    }
 
    lCfgRead.CfgDeInit();
-
 
    return true;
 }
@@ -203,22 +209,21 @@ void DlgCleaner::ReloadConfig()
    TEXT      lLogText[MAX_LOG_TEXT_LEN + 1] = "";
    CfgRead   lCfgRead(gProcessName);
 
-   //***************** Open kernel.cfg file ********************
-   if(false == lCfgRead.CfgInit(SS7_KER_CFG))
+   if(false == lCfgRead.CfgInit(TCAP_ANSI_CFG))
    {
       snprintf(lLogText, MAX_LOG_TEXT_LEN,
-            "Failed to open the file %s", SS7_KER_CFG);
+            "Failed to open the file %s", TCAP_ANSI_CFG);
       TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
       gLog.GenerateLog(GSYS09,lLogText);
-      lCfgRead.CfgDeInit();
+      return;
    }
 
    if(CFG_OK != lCfgRead.GetConfigNum("ACU_TCAP_DLG_TIMEOUT",
             mDlgTimeout, DLG_TIMEOUT_MIN, DLG_TIMEOUT_MAX ))
    {
       snprintf(lLogText, MAX_LOG_TEXT_LEN,
-            "DLG_TIMEOUT Parameter not found in %s",
-            SS7_KER_CFG);
+            "ACU_TCAP_DLG_TIMEOUT Parameter not found in %s",
+            TCAP_ANSI_CFG);
       TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
       gLog.GenerateLog(GSYS11,lLogText);
    }
@@ -233,7 +238,7 @@ void DlgCleaner::ReloadConfig()
    {
       snprintf(lLogText, MAX_LOG_TEXT_LEN,
             "ACU_TCAP_DLG_TIMEOUT_CAP Parameter not found in %s",
-            SS7_KER_CFG);
+            TCAP_ANSI_CFG);
       TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
       gLog.GenerateLog(GSYS11,lLogText);
    }
@@ -243,9 +248,22 @@ void DlgCleaner::ReloadConfig()
                gProcessName, mCapDlgTimeout););
    }
 
+   if(CFG_OK != lCfgRead.GetConfigNum("ACU_TCAP_DLG_CLEANER_SSN",
+            mSpecialSsn, 1, 255 ))
+   {
+      snprintf(lLogText, MAX_LOG_TEXT_LEN,
+            "ACU_TCAP_DLG_CLEANER_SSN Parameter not found in %s",
+            TCAP_ANSI_CFG);
+      TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
+      gLog.GenerateLog(GSYS11,lLogText);
+   }
+   else
+   {
+      T(gTrace, printf("%s: ACU_TCAP_DLG_CLEANER_SSN = %d\n",
+               gProcessName, mSpecialSsn););
+   }
 
    lCfgRead.CfgDeInit();
-   //***************** Close kernel.cfg file ********************
 }
 
 
@@ -281,7 +299,7 @@ BOOLEAN DlgCleaner::SendPreArrangedEnd(unsigned int lDlgId, int lSsn)
    INT16 lMsgLen = sizeof (TcapMsg);
 
 
-   TcapMsg lTcapMsg;
+   AnsiTcapMsg lTcapMsg;
    memset(&lTcapMsg,0,sizeof(lTcapMsg));
 
    lTcapMsg.ssn = lSsn;
@@ -332,7 +350,7 @@ BOOLEAN DlgCleaner::CleanTimedoutDlg()
 
       //Call can last for more than actual MAP dialogues
       //Currently call can last upto maximum of 7200 seconds 
-      if(lSsn == 146)
+      if(lSsn == mSpecialSsn)
       {
          if(((lCurrTime - lInsertTime) > mCapDlgTimeout) && lInsertTime !=0 )
          {

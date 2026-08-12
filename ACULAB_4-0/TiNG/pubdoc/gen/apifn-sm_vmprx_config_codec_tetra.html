@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_config_codec_tetra</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_config_codec_tetra</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_config_codec_tetra(struct sm_vmprx_codec_tetra_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_codec_tetra_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+} SM_VMPRX_CODEC_TETRA_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a TETRA speech codec to the VMP[rx] setting the payload type 
+mapping to
+<a class=pref href="#field-payload_type">payload_type</a>.
+<p>
+It is possible to change the payload type mapping of a codec whilst a
+VMP[rx] remains valid by specifying a new payload type mapping for a
+given codec. This supersedes any previous mappings that were in effect
+for that codec.
+<p>
+If the call completes successfully, RTP packets arriving at the VMP[rx]
+with a payload type that matches a mapped type will be decoded using 
+this codec.
+<p>
+If the codec is given the payload type <code>-1</code> the codec is no
+longer valid for this RTP session, unless it is subsequently 
+reconfigured.
+<p>
+There is not currently a standard packet encoding for wrapping 
+TETRA-encoded speech into RTP. This implementation expects RTP frames 
+that have standard RTP header followed by: ETSI two octet Payload header 
+(with bits for framing rate, frame number, information element control, 
+traffic type, contents control and payload) - the payload header follows 
+the format described in ETSI TS 100 392-3-8 V0.0.8 section 5.2.1 TETRA ISI 
+payload encoding. Two 18 octet tetra frames - each frame consisting of BFI 
+bit followed by 137 bits of tetra encoded data (holding 30ms of encoded 
+audio data according to traffic type 0 followed by 6 padding bits) - thus 
+this pair of frames conveys 60ms of audio
+<p> 
+The tetra encoded data in the 18 octet tetra frames is expected to be 
+traffic type 0 - ACELP (ETS 300 395-2, 4.2.2.7) following MSB-LSB bit order.
+<p>
+The contents of the ETSI payload header are ignored apart from contents 
+control bits which have following effect:
+<ul>
+<li>0 - normal case - traffic 1 and traffic 2 are used to construct signal 
+<li>1 - use BFI procedure to fill in gap left by absent traffic 1 
+<li>3 - use BFI procedure to fill in gap left by absent traffic 2 
+<li>4 - use BFI procedure to fill in gap left by absent traffic 1 
+</ul>
+<p>
+all other values: - we use packet loss concealment algorithm to fill in gap 
+left by absent traffic 1 and traffic 2
+<p>
+Note for incoming data, the RTP timestamp is used to control jitter buffer 
+frame numbers in Tetra payload header are ignored.
+<p>
+This requires the module
+<a href="softmodindex.html#tetra">tetra</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to which to add the codec
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type identifer to use with this codec (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13). Supplying a value of
+<code>-1</code> will remove any payload type configuration from the 
+codec preventing its use.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

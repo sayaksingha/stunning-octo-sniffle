@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody SNTP Client: API: sm_sntp_config</title>
+</head>
+<body>
+<h1>Prosody SNTP Client: API: sm_sntp_config</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_sntp_config(struct sm_sntp_config_parms *<a href="#field-configp">configp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sntp_config_parms {
+	<a href="../apitype.html#type-tSMSNTPId">tSMSNTPId</a> <a href="#field-sntp">sntp</a>;						/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN">SOCKADDR_IN</a> <a href="#field-server">server</a>;					/* in */
+	int <a href="#field-TOS">TOS</a>;						/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-no_reply_delay">no_reply_delay</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-had_reply_delay">had_reply_delay</a>;				/* in */
+} SM_SNTP_CONFIG_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This function configures the NTP server used by the SNTP client. If the 
+reply to a NTP request is not received within
+<a class=pref href="#field-no_reply_delay">no_reply_delay</a>
+then the next request is sent. Otherwise the next NTP request is sent
+<a class=pref href="#field-had_reply_delay">had_reply_delay</a>
+after the previous request.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-sntp">sntp</a><dd>The SNTP client to configure.
+
+<dt><a name="field-server">server</a><dd>The SOCKADDR_IN structure specifying the destination IP address and port 
+of the NTP server to use. A struct SOCKADDR_IN must be configured with an 
+address family, an IP address and a port. Note that most operating systems 
+define this structure such that fields are in network byte order. The 
+structure must be correctly cast such that an IP V4 address is specified. 
+
+<dt><a name="field-TOS">TOS</a><dd>The Type Of Service (TOS) indicator to be sent in the NTP packets.
+
+<dt><a name="field-no_reply_delay">no_reply_delay</a><dd>The delay, in ms, between requests when no reply has been received.
+
+<dt><a name="field-had_reply_delay">had_reply_delay</a><dd>The delay, in ms, between requests when a reply has been received.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prossntp.html">Prosody SNTP Client API</a>.
+</body>
+</html>

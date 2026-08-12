@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<link rel=stylesheet type="text/css" href="evapi.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>eventset_stop</title>
+<body>
+
+<h1>EVENTSET: eventset_stop() - instructs the worker thread to
+end</h1>
+
+<h2>Name</h2>
+
+<p>
+eventset_stop()
+
+<h2>Synopsis</h2>
+
+<pre>#include &quot;eventset.h&quot;</pre>
+
+<pre>err_t eventset_stop(EVENTSET *evs)</pre>
+
+<h2>Description</h2>
+
+<p>
+The <code>eventset_stop()</code> function
+sets a flag and returns immediately. The effect of this is to
+instruct the <a href="EVENTSET.html"><em>worker thread</em></a>
+to quit.
+
+<p>
+The <a href="EVENTSET.html"><em>worker thread</em></a> spends
+most of its time inside the &quot;main loop&quot;, which is
+implemented inside <code>eventset_wait()</code>.
+When <code>eventset_wait()</code> notices that
+this stop flag is set, it returns. On return from <code>eventset_wait()</code>, the <a href="EVENTSET.html"><em>worker thread</em></a> would normally
+tidy up and return. Note that, because <code>eventset_stop()</code>
+returns immediately, if you want to be sure that all of those
+threads have actually stopped, you must wait until the <a href="EVENTSET.html"><em>worker thread</em></a> has completed
+(for example, by calling pthread_join()).
+
+<h2>Return value</h2>
+
+<p>
+<code>eventset()</code> returns NULL if
+successful, or non-NULL otherwise. If non-NULL, the <code>err_t</code> object contains error strings
+which may be printed or otherwise communicated to the user.
+
+<h2>See also</h2>
+
+<p>
+<a href="eventset_wait.html">eventset_wait()</a>

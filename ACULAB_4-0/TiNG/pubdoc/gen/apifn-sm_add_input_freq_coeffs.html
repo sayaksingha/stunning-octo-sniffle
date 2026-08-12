@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_add_input_freq_coeffs</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_add_input_freq_coeffs</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_add_input_freq_coeffs(struct sm_input_freq_coeffs_parms *<a href="#field-freqcoeffp">freqcoeffp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-freqcoeffp">*freqcoeffp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_input_freq_coeffs_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	double <a href="#field-upper_limit">upper_limit</a>;					/* in */
+	double <a href="#field-lower_limit">lower_limit</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-id">id</a>;						/* out */
+} SM_INPUT_FREQ_COEFFS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This call may be used to add a pair of input frequency coefficients
+(<a class=pref href="#field-upper_limit">upper_limit</a>,
+<a class=pref href="#field-lower_limit">lower_limit</a>
+specified in Hz) to the repertoire of those supported by the
+given module. These coefficients are used to specify upper and
+lower rejection frequencies for tone recognition. On return
+<a class=pref href="#field-id">id</a>
+will be set to an identifier for the new input frequency
+coefficient pair.
+<p>
+See 
+<a href="../prospapi_intones.html">
+Prosody speech processing: pre-loaded input tones</a>
+for list of predefined frequency coefficients.
+<p>
+See 
+<a href="../tonedet.html">
+Prosody speech processing: Details of tone detection
+algorithm</a> for more details on choosing upper and lower
+rejection limits for a given input frequency.
+<p>
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-module">module</a><dd>The module whose tone set if to be modified.
+
+<dt><a name="field-upper_limit">upper_limit</a><dd>The upper frequency boundary (in Hz).
+
+<dt><a name="field-lower_limit">lower_limit</a><dd>The lower frequency boundary (in Hz).
+
+<dt><a name="field-id">id</a><dd>The identifier of the tone added.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists<li>ERR_SM_NO_RESOURCES - if no resources to store new coefficients<li>ERR_SM_BAD_PARAMETER - if frequency or amplitude parameter out of range<li>ERR_SM_CHANNEL_ALLOCATED - channel still allocated</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

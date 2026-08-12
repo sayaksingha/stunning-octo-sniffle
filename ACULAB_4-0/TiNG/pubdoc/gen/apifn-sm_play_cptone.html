@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_play_cptone</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_play_cptone</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_play_cptone(struct sm_play_cptone_parms *<a href="#field-cptonep">cptonep</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-cptonep">*cptonep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_play_cptone_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-duration">duration</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-wait_for_completion">wait_for_completion</a>;				/* in */
+	<a name="enum-kSMPlayCPToneType">enum kSMPlayCPToneType</a> {
+		<a href="#field-kSMPlayCPToneTypeOneShot">kSMPlayCPToneTypeOneShot</a>,
+		<a href="#field-kSMPlayCPToneTypeRepeat">kSMPlayCPToneTypeRepeat</a>,
+		<a href="#field-kSMPlayCPToneTypeContinuous">kSMPlayCPToneTypeContinuous</a>,
+	} <a href="#field-type">type</a>;							/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-tone_count">tone_count</a>;					/* in */
+	struct sm_cadence {
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-cadences-tone_id">tone_id</a>;				/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-cadences-on_cadence">on_cadence</a>;				/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-cadences-off_cadence">off_cadence</a>;				/* in */
+	} <a href="#field-cadences">cadences[kSMMaxPlayCPToneCadences]</a>;			/* in */
+} SM_PLAY_CPTONE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This call allows an application to generate a call-progress tone
+on specified output channel
+<a class=pref href="#field-channel">channel</a>.
+<p>
+If the call-progress tone is to be output continuously (or until
+interrupted by
+<a href="apifn-sm_play_cptone_abort.html">sm_play_cptone_abort()</a>),
+the parameter
+<a class=pref href="#field-duration">duration</a>
+should be set to zero. Otherwise
+<a class=pref href="#field-duration">duration</a>
+should be set to the required call-progress tone duration in
+milliseconds (the
+<a class=pref href="#field-duration">duration</a>
+parameter is ignored if
+<a class=pref href="#field-type">type</a>
+is
+<a class=pref href="#field-kSMPlayCPToneTypeOneShot">kSMPlayCPToneTypeOneShot</a>).
+<p>
+Each element of
+<a class=pref href="#field-cadences">cadences</a>
+specifies an on-period
+<a class=pref href="#field-cadences-on_cadence">on_cadence</a>
+and an off-period
+<a class=pref href="#field-cadences-off_cadence">off_cadence</a>
+both specified in milliseconds, and also
+<a class=pref href="#field-cadences-tone_id">tone_id</a>
+referencing to one of the module's currently defined simple
+output tones (see
+<a href="../prospapi_outtones.html">
+Prosody speech processing: pre-loaded output tones</a>,
+for list of ids for output tones
+downloaded with module firmware and see
+description of
+<a href="apifn-sm_add_output_tone.html">sm_add_output_tone()</a>
+for how an application
+may define its own simple output tones). Here are some
+examples of call-progress tones which use
+<a class=pref href="#field-kSMPlayCPToneTypeRepeat">kSMPlayCPToneTypeRepeat</a>:
+<p>
+<table border>
+<tr><th rowspan=2>Name</th><th rowspan=2>tone_count</th>
+	<th colspan=4>cadences</th></tr>
+<tr><th>pos</th><th>tone_id</th><th>on_cadence</th><th>off_cadence</th></tr>
+<tr><td rowspan=2>U.K. ring tone</td><td rowspan=2>2</td>
+	<td>0</td><td>17</td> <td>400</td> <td>208</td></tr>
+<tr>
+	<td>1</td><td>17</td> <td>400</td> <td>2000</td></tr>
+<tr><td>U.K. busy</td><td>1</td>
+	<td>0</td><td>16</td> <td>384</td> <td>384</td></tr>
+<tr><td>E.C. busy</td><td>1</td>
+	<td>0</td><td>18</td> <td>512</td> <td>512</td></tr>
+<tr><td rowspan=3>S.I.T.</td><td rowspan=3>3</td>
+	<td>0</td><td>19</td> <td>336</td> <td>32</td></tr>
+<tr>
+	<td>1</td><td>20</td> <td>336</td> <td>32</td></tr>
+<tr>
+	<td>2</td><td>21</td> <td>336</td> <td>1008</td></tr>
+</table>
+<p>
+The
+<a class=pref href="#field-wait_for_completion">wait_for_completion</a>
+flag may be set by the application in which case the API call
+will not complete until the tone has been completely output,
+however no other Prosody API function can be performed on the
+channel during this waiting period.
+Obviously setting this flag is not useful when the tone has been
+specified as being a continuous tone with no fixed duration,
+since there would then be no way to stop the tone.
+See the document <a href="../an-wait_for_completion.html">Prosody
+application note: waiting for completion</a> for examples of
+how to wait without blocking other functions.
+<p>
+Alternatively the application can wait to be notified by an
+event that tone generation of a given duration has completed.
+When a write event has been associated with channel (see
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event</a>),
+then the driver will notify the application with that event
+whenever it needs to invoke
+<a href="apifn-sm_play_cptone_status.html">sm_play_cptone_status()</a>.
+<p>
+This requires the module
+<a href="softmodindex.html#tonegen">tonegen</a>
+to have been downloaded.
+<p>
+The channel is reserved for playing the tone until the API has
+reported completion. If the
+<a class=pref href="#field-wait_for_completion">wait_for_completion</a>
+flag is set, then the API considers that completion has been
+reported when this API function returns, otherwise completion
+is reported only by
+<a href="apifn-sm_play_cptone_status.html">sm_play_cptone_status()</a>
+returning the status
+<a href="apifn-sm_play_cptone_status.html#field-kSMPlayCPToneStatusComplete">
+kSMPlayCPToneStatusComplete</a>. In this case the
+application <strong>must</strong> call
+<a href="apifn-sm_play_cptone_status.html">sm_play_cptone_status()</a>
+periodically and should use an event on the channel to notify it
+when to check the status.
+No other output activity can
+take place on the channel until the completion of the tone has
+been reported.
+Note that the event itself does not
+indicate completion of the tone. It is possible for the event
+to be signalled even if the tone has not yet completed, so it
+is essential that the application checks the status and
+continues waiting if the tone has not completed.
+<p>
+Note that the only way to stop a continuous tone is by calling
+<a href="apifn-sm_play_cptone_abort.html">sm_play_cptone_abort()</a>.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel on which the tone is to be played.
+
+<dt><a name="field-duration">duration</a><dd>The duration of the tone (mS), or the value zero for indefinite
+length. This parameter is ignored if
+<a class=pref href="#field-type">type</a>
+is
+<a class=pref href="#field-kSMPlayCPToneTypeOneShot">kSMPlayCPToneTypeOneShot</a>.
+
+<dt><a name="field-wait_for_completion">wait_for_completion</a><dd>An indicator of whether this function would return as soon
+as it has set up the generation of the tone (0), or wait
+until the end of the tone (non-zero). If this value is zero,
+the application must have an event associated with this
+channel and invoke
+<a href="apifn-sm_play_cptone_status.html">sm_play_cptone_status()</a>
+whenever the event is set.
+
+<dt><a name="field-type">type</a><dd>The style of playing to use.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMPlayCPToneTypeOneShot">kSMPlayCPToneTypeOneShot</a>
+<dd>Output sequence of
+<a class=pref href="#field-tone_count">tone_count</a>
+cadences just once.
+
+<dt><a name="field-kSMPlayCPToneTypeRepeat">kSMPlayCPToneTypeRepeat</a>
+<dd>Repeatedly output sequence of
+<a class=pref href="#field-tone_count">tone_count</a>
+cadences.
+
+<dt><a name="field-kSMPlayCPToneTypeContinuous">kSMPlayCPToneTypeContinuous</a>
+<dd>Continuously output tone specified by
+<a class=pref href="#field-cadences-tone_id">tone_id</a>
+in first element of
+<a class=pref href="#field-cadences">cadences</a>.
+Both
+<a class=pref href="#field-cadences-on_cadence">on_cadence</a>,
+<a class=pref href="#field-cadences-off_cadence">off_cadence</a>
+and other elements of
+<a class=pref href="#field-cadences">cadences</a>
+are ignored. Since this is the same as using
+<a href="apifn-sm_play_tone.html">sm_play_tone()</a>,
+the use of this value is deprecated in favour of
+<a href="apifn-sm_play_tone.html">sm_play_tone()</a>.
+
+</dl>
+<dt><a name="field-tone_count">tone_count</a><dd>The number of items in
+<a class=pref href="#field-cadences">cadences</a>.
+
+<dt><a name="field-cadences">cadences</a><dd>The sequence of tones.
+
+
+<dl>
+<dt><a name="field-cadences-tone_id">tone_id</a><dd>A tone identifier.
+
+<dt><a name="field-cadences-on_cadence">on_cadence</a><dd>The duration (in mS) that this tone is on for.
+
+<dt><a name="field-cadences-off_cadence">off_cadence</a><dd>The duration (in mS) of silence after this tone.
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - unknown tone type, inconsistent parameters</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

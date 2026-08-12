@@ -1,0 +1,238 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: polltest</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: polltest</h1>
+<p>
+This is a data communications tester. It can generate and check test
+patterns using protocols which run over digital connections (i.e. no
+modems).
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have downloaded firmware modules as listed below.
+<p>
+Run <code>polltest</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/polltest</span> or
+<span class="type-WINNT"> gen-WINNT_V6/polltest</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table border>
+<tr>
+	<th class=bg>Option&nbsp;format<th class=bg>Meaning
+
+<tr>
+	<td><code>-P</code> &lt;protocol&gt;
+		<td>The communications protocol to use. One of these
+		values: <ul>
+		<li><code>v110</code>
+		<li><code>hdlc</code>
+		<li><code>rlp</code>
+		<li><code>raw</code>
+		</ul>
+		The known formats can be listed by specifying a question mark
+		(<code>?</code>).
+
+<tr>
+	<td><code>-c 1</code>
+		<td>check for errors and report error rate if non-zero
+
+<tr>
+	<td><code>-c 2</code>
+		<td>as for "<code>-c 1</code>" but more verbose
+
+<tr>
+	<td><code>-f</code> &lt;file&gt;
+		<td>record incoming data into rxfile-0-0, rxfile-0-1 etc
+
+<tr>
+	<td><code>-m</code> &lt;module&gt;
+		<td>The Prosody module to use. This is the number of the
+		module on the card.
+
+<tr>
+	<td><code>-n</code> &lt;nchan&gt;
+		<td>record this many channels (default = 1)
+
+<tr>
+	<td><code>-i</code> &lt;timeslot&gt;
+		<td>timeslot to use for input (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>). If you specify more than one channel,
+		they use consecutive timeslots starting at this one.
+		For example, the options "<code>-n 3 -i64:20</code>"
+		use input timeslots <code>64:20</code>, <code>64:21</code>,
+		and <code>64:22</code>.
+
+<tr>
+	<td><code>-o</code> &lt;timeslot&gt;
+		<td>timeslot to use for output (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>). If you specify more than one channel,
+		they use consecutive timeslots starting at this one.
+		For example, the options "<code>-n 3 -o64:3</code>"
+		use output timeslots <code>64:3</code>, <code>64:4</code>,
+		and <code>64:5</code>.
+
+<tr>
+	<td><code>-X</code> &lt;limit&gt;
+		<td>stop when this much data has been received
+		(default=never). This is specified as the number of
+		seconds of full speed communications that it would take
+		to send the data (this is so that the same value can
+		be used with different speeds).
+
+<tr>
+	<td><code>-x</code> &lt;cardspec&gt;
+		<td>Use a Prosody processor module on this card, specified as
+		described in
+		<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a>
+
+</table>
+<p>
+For example, do a loopback test with a Prosody X card for 30-seconds worth
+of data:
+<pre>
+	polltest -x x:1.2.3.4/mykey -Phdlc -c 1 -i 20:0 -o 20:0 -X 30
+</pre>
+<p>
+The firmware modules that are required depend on the options you
+specify. Here are the details:
+<p>
+<table border>
+<tr>
+	<th class=bg>Module<th class=bg>When needed
+
+<tr>
+	<td><a href="gen/softmodindex.html#datafeed">datafeed</a>
+		<td>always on Prosody X
+
+<tr>
+	<td><a href="gen/softmodindex.html#datarx">datarx</a>
+		<td rowspan=2>always
+
+<tr>
+	<td><a href="gen/softmodindex.html#datatx">datatx</a>
+
+<tr>
+	<td><a href="gen/softmodindex.html#hdlcrx">hdlcrx</a>
+		<td rowspan=2>If you use '<code>-P hdlc</code>' for HDLC
+
+<tr>
+	<td><a href="gen/softmodindex.html#hdlctx">hdlctx</a>
+
+<tr>
+	<td><a href="gen/softmodindex.html#v110rlpr">v110rlpr</a>
+		<td rowspan=2>If you use '<code>-P rlp</code>' for V.110
+		RLP
+
+<tr>
+	<td><a href="gen/softmodindex.html#v110rlpt">v110rlpt</a>
+
+<tr>
+	<td><a href="gen/softmodindex.html#syncrx">syncrx</a>
+		<td rowspan=2>If you use '<code>-P raw</code>' for raw data
+
+<tr>
+	<td><a href="gen/softmodindex.html#synctx">synctx</a>
+
+<tr>
+	<td><a href="gen/softmodindex.html#v110">v110</a>
+		<td>If you use '<code>-P v110</code>' for V.110
+
+</table>
+<p>
+The following keys control it:
+<table border>
+<tr>
+	<th class=bg>Key<th class=bg>Function
+
+<tr>
+	<td><code>q</code>
+		<td>halts the program and prints total bytes
+		sent/received etc
+
+<tr>
+	<td><code>-</code>
+		<td>halts one channel
+
+<tr>
+	<td><code>u</code>
+		<td>makes transmitters underrun
+
+<tr>
+	<td><code>U</code>
+		<td>makes transmitters resume after underrun
+
+<tr>
+	<td><code>f</code>
+		<td>makes transmitters send frames of 0xFF
+
+<tr>
+	<td><code>0</code>
+		<td>makes transmitters send frames of 0x00
+
+</table>
+
+<p>
+While the program is running, it updates a status line every second
+with two characters for every channel. The meaning of these characters
+is:
+<table border>
+<tr>
+	<th class=bg>Character<th class=bg>Meaning
+
+<tr>
+	<td><code>.</code>
+		<td>channel idle
+
+<tr>
+	<td><code>T</code>
+		<td>channel transmitted data in last second
+
+<tr>
+	<td><code>U</code>
+		<td>channel will under-run by command
+
+<tr>
+	<td><code>u</code>
+		<td>channel is under-running
+
+<tr>
+	<td><code>R</code>
+		<td>channel received correct data in last second
+
+<tr>
+	<td><code>r</code>
+		<td>channel received error data in last second
+
+<tr>
+	<td><code>c</code>
+		<td>channel received frame with bad CRC in last second
+
+<tr>
+	<td><code>s</code>
+		<td>channel is receiving no signal (i.e. no flags)
+
+<tr>
+	<td><code>x</code>
+		<td>channel has been closed and is stopping
+
+<tr>
+	<td><code>_</code>
+		<td>channel is stopped
+
+</table>
+<p>
+The source code for this program is provided (polltest.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

@@ -1,0 +1,5 @@
+sm_conference_create	Ft
+sm_conference_add_party	iPsFtCtCtiiii_
+sm_conference_remove_party	iPsFtCtCt_
+sm_conference_delete	vFt
+sm_conference_info	iPsFtiPCt_

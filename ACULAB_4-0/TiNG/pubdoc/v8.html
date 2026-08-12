@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>V.8 library</title>
+</head>
+<body>
+<h1>V.8 library</h1>
+<p>
+The V.8 library contains source code to implement the ITU V.8 standard.
+To use the V.8 library you must <code>#include "v8lib/v8.h"</code>.
+The structure <code>struct v8</code> is used to hold all of the state
+required by the protocol. All fields of this structure are maintained
+automatically by the V.8 library. To start running the V.8 protocol,
+call one of these functions, passing in a pointer to an uninitialised
+<code>struct v8</code> and a Prosody channel:
+<ul>
+<li><code>v8_start_answer()</code> - to answer a call
+<li><code>v8_start_send_ci()</code> - to initiate a call with CI
+<li><code>v8_start_send_cm()</code> - to initiate a call without CI after ANSam detection
+</ul>
+<p>
+The Prosody channel must be a full-duplex channel which has no
+operations in progress.
+<p>
+All library functions return standard Prosody error codes. After
+calling any library function which returned zero (success), check the
+status field in the <code>struct v8</code>. These values require you to
+take action:
+<dl>
+<dt>V8STS_CONFIG_CI
+<dd>
+	call <code>v8_set_outmessage()</code> to configure the CI message desired
+
+<dt>V8STS_CONFIG_CM
+<dd>
+	call <code>v8_set_outmessage()</code> to configure the CM message desired
+
+<dt>V8STS_GOT_CM_CONFIG_JM
+<dd>
+	call <code>v8_fetch_inmessage()</code> to retrieve the CM message received
+	and then call <code>v8_set_outmessage()</code> to configure the JM message desired
+
+<dt>V8STS_GOT_JM_SENDING_CJ
+<dd>
+	call <code>v8_fetch_inmessage()</code> to retrieve the JM message received
+
+<dt>V8STS_DONE
+<dd>
+	The protocol is finished. Set up the channel for the type of
+	connection negotiated and proceed as appropriate. The field 
+	<code>rxfsk_metric</code> in <code>struct v8</code> can be passed
+	on to a subsequent modem.  The field <code>flags_detected</code>
+	in <code>struct v8</code> can be used if subsequent code needs
+	to know if V.8 failed due to an HDLC frame being detected.
+</dl>
+<p>
+Other values indicate that the next action to occur will be within
+the V.8 protocol itself.
+<p>
+When started with <code>v8_start_answer()</code>, the ANSam sent does not
+have phase reversals. Calling <code>v8_do_ansam_phase_reversals()</code>
+after <code>v8_start_answer()</code> will make the ANSam have phase
+reversals.
+<p>
+To stop performing the V.8 protocol, call <code>v8_abort()</code>.
+The protocol does not necessarily end instantly - its end is still
+indicated by the status changing to V8STS_DONE.
+<p>
+In addition to actions specified above that you must perform, there are
+actions that must be performed based on events:
+<ul>
+<li>If the <code>struct v8</code> field <code>await_read_event</code>
+is non-zero and the channel's read event is signalled, call
+<code>v8_handle_read()</code>
+<li>If the <code>struct v8</code> field <code>await_write_event</code>
+is non-zero and the channel's write event is signalled, call
+<code>v8_handle_write()</code>
+<li>If the <code>struct v8</code> field <code>await_recognition_event</code>
+is non-zero and the channel's recognition event is signalled, call
+<code>v8_handle_recognition()</code>
+</ul>
+<p>
+To assist in manipulating the messages, there are two functions
+supplied with the library and intended to be modified as necessary:
+<dl>
+<dt><code>v8_build_code()</code>
+<dd>
+	builds a message from local capabilities. It returns
+	the length of the message.
+
+<dt><code>v8_check_code()</code>
+<dd>
+	checks an incoming message (CI or CM) and builds a
+	response (i.e. JM). It returns the length of the reply.
+</dl>
+<p>
+The functions, as written, use const integers to determine which
+capabilities to use. If a capability varies at runtime, for example
+because it depends on what is specified in a configuration file or on
+resource availability, then the code should be modified so that the
+functions take a parameter which indicates when the capability is
+available.
+<p>
+The <code>v8_check_code()</code> function should also be modified to indicate
+which capabilities have been agreed, so that the appropriate action
+can be taken after completing the V.8 protocol.
+
+<h2>Protocol notes</h2>
+<p>
+The V.8 protocol is used by other standards. Sometimes the text of these
+standards seems to conflict with the text of the V.8 standard. Here
+is a list of various issues and how they are handled in the library.
+
+<h3>ANSam timeout</h3>
+<p>
+V.8 (8.2.2) states that ANSam shall be transmitted for 5 +/- 1 seconds
+(i.e. 4 to 6 seconds). T.30 (6.1.1) states that the ANSam timeout is 2.6
+to 4.0 seconds. The library uses the only value common to these
+ranges: four seconds.
+
+<h2>Internals</h2>
+<p>
+The state machine works as follows:
+<table border>
+<tr><td><th colspan=5>Waiting for
+<tr><th>State
+	<th>Read<th>Tone generation<th>Write<th>Detect<th>User<th>Notes
+<tr><td>V8STS_CONFIG_CI
+	<td>-<td>-<td>-<td>-<td>CI<td>Start of calling, if listening for ANSam
+<tr><td>V8STS_SENDING_CI_AWAIT_ANSAM
+	<td>-<td>(silence)<td>(CI)<td>ANSam<td>-<td>V.21 tx and tone generation alternate
+<tr><td>V8STS_STOPPING_CI_GOT_ANSAM	
+	<td>-<td>-<td>-<td>-<td>-
+<tr><td>V8STS_CONFIG_CM
+	<td>-<td>-<td>-<td>-<td>CM<td>Start of calling, if ANSam already heard
+<tr><td>V8STS_SENDING_CM_AWAIT_JM
+	<td>Yes<td>-<td>CM<td>-<td>-
+<tr><td>V8STS_GOT_JM_SENDING_CJ
+	<td>-<td>-<td>CJ<td>-<td>-
+<tr><td>V8STS_AWAIT_CI
+	<td>Yes<td>ANSam<td>-<td>-<td>-<td>Start of answering
+<tr><td>V8STS_GOT_CI_AWAIT_CM
+	<td>Yes<td>ANSam<td>-<td>-<td>-
+<tr><td>V8STS_GOT_CM_CONFIG_JM
+	<td>Yes<td>-<td>-<td>-<td>JM
+<tr><td>V8STS_SENDING_JM_AWAIT_CJ
+	<td>Yes<td>-<td>JM<td>-<td>-
+<tr><td>V8STS_STOPPING
+	<td>?<td>?<td>?<td>-<td>-<td>Waiting for all parts to finish
+<tr><td>V8STS_DONE
+	<td>-<td>-<td>-<td>-<td>-<td>
+</table>
+<p>
+The calling state machine looks like this:
+<p>
+<img src="gen/v8call.png" alt="V.8 calling state machine">
+<p>
+while the answering state machine looks like this:
+<p>
+<img src="gen/v8ans.png" alt="V.8 answering state machine">
+<p>
+
+<h2>Trace</h2>
+<p>
+If <a href="trace_app.html#datafeed">TiNGtrace</a> is enabled, the V.8 library functions will normally 
+output trace through the TiNG library trace mechanism. It is possible to use an alternative application
+specific mechanism by assigning the address of a trace function to <code>v8_showtrace</code> in the
+same way as this is done for <code>TiNG_showtrace</code> for TiNG library. This may be necessary if an 
+application is built with a different compiler version to that used to build TiNG library where
+the two compilers have different layouts for a va_list structure.
+<p>
+<hr>
+<p>
+The V.8 library is distributed with
+<a href="index.html">Prosody</a>.
+
+</body>
+</html>

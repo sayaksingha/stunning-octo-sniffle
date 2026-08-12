@@ -1,0 +1,13 @@
+@import url(TiNG.css);
+
+.type-WINNT {
+	background-color:aqua;
+}
+
+.type-LINUX {
+	background-color:lime;
+}
+
+.trace {
+	background-color:silver;
+}

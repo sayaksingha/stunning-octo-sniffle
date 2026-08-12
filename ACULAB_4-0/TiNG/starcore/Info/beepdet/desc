@@ -1,0 +1,3 @@
+Beep detection.
+Used by <a href="apifn-sm_beep_listen_for.html">
+sm_beep_listen_for()</a> to detect beeps.

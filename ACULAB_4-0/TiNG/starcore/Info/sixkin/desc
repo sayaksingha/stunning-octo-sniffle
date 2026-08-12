@@ -1,0 +1,3 @@
+Converter to allow recording at 6kHz instead of 8kHz. This is
+used in conjunction with a recording format to reduce the size
+of the recorded data by 25%.

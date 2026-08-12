@@ -1,0 +1,38 @@
+-TiNGtrace
+m	module		unsigned
+i	inifile		string
+
+L	local_ip	string
+p	patlen		unsigned
+
+e	encoding	string
+u	modulation	string
+
+C	crcsize		unsigned
+c	crc		unsigned
+
+X	stopbits	unsigned
+d	databits	unsigned
+
+s	standard	string
+M	markfreq	float
+S	spacefreq	float
+B	bitrate		unsigned
+P	power		float
+
+x	serialnumber	string
+
+RCH	high_pass_filter	bool
+RCL	frame_len	unsigned
+RCNm	comfort_noise_payload_mapping	unsigned
+RCV	variant		unsigned
+RCb	codec_bitrate		unsigned
+RCt	pticks		unsigned
+RCv	vad		unsigned
+Rc	codec			string
+Rd	dest_ip			string
+Rf	rfc2833tones    	unsigned
+Rm	payloadmapping		unsigned
+Rp	dest_port		unsigned
+Rq	source_port		unsigned
+RK	srtp_key	string

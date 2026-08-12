@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody - Details of Tone Detection Algorithm</title>
+</head>
+<body>
+<h1>Prosody - Details of Tone Detection Algorithm</h1>
+<p>
+Note that the tone detector by default has an operating range of 250 Hz to
+3406.25 Hz, which may be limited further when used with a particular
+input tone set by
+<a href="gen/apifn-sm_adjust_input_tone_set.html">sm_adjust_input_tone_set()</a>
+- see section on <a href="#advanced">advanced rejection parameters</a>
+below.
+<p>
+This document contains information that is necessary for applications
+that require to define their own sets of recognisable input tones. The
+second section, <a href="#advanced">"advanced rejection parameters"</a>
+is necessary only if very specific and exact frequency rejection
+criteria are to be met. Otherwise it can be ignored, and frequency
+detection will be guaranteed as stated.
+
+<h2>Basic Parameters required for tone detection</h2>
+<p>
+In order to define a new set of recognisable input tones for a
+particular module, an application must define any additionally required
+pairs of input frequency coefficients through calls to
+<a href="gen/apifn-sm_add_input_freq_coeffs.html">sm_add_input_freq_coeffs()</a>,
+and then make a call made to
+<a href="gen/apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>
+referencing these coefficients and also supplying extra parameters.
+The input frequency coefficients supplied by the application in calls to
+<a href="gen/apifn-sm_add_input_freq_coeffs.html">sm_add_input_freq_coeffs()</a>
+specify an upper and lower frequency for a tone in the
+detection repertoire. In order to guarantee detection of edge
+frequencies, 15.625Hz should be added to the upper limit, and subtracted
+from the lower limit. Rejection is guaranteed for tones more than
+15.625Hz outside of these modified limits. Detection and Rejection
+specifications can be made more accurate (see
+<a href="#advanced">"Advanced rejection parameters"</a>). As well as
+referencing previously defined input frequency coefficients, the
+following extra parameters must be specified in calls to
+<a href="gen/apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>:
+
+<table border>
+<tr><th>Parameter<th>Description
+<tr><td>req_third_peak
+	<td>The maximum allowable power of a third frequency component,
+	as a fraction of the maximum tone power. This is a form of noise
+	level, which will annihilate tones with harmonic distortion. For
+	default DTMF detection this is 0.0794
+
+<tr><td>req_signal_to_noise_ratio
+	<td>The minimum allowable signal-to-noise power ratio, where
+	"signal" is defined as approximately the energy contained in the
+	two strongest frequency components (tones). For default DTMF
+	detection this is 5 dB
+
+<tr><td>req_minimum_power
+	<td>The minimum allowable power of each individual tone. For
+	DTMF detection the default is -36dBm0
+
+<tr><td>req_twist_for_dual_tone
+	<td>The maximum allowed absolute difference, as a ratio, between
+	the powers of the two detected tones. For default DTMF detection
+	this is 10.0
+</table>
+<p>
+Note that the values in the parameters above do not necessarily exactly
+reflect the specifications for detection (e.g. maximum absolute twist
+for DTMF detection is specified as 6dB). The only real way of meeting a
+specification exactly (as for the default DTMF coefficients) is by
+adaptive empirical testing.
+
+<h2><a name="advanced">Advanced Rejection Parameters</a></h2>
+<p>
+Internally, tone frequencies are detected as integer multiples of
+15.625Hz, plus an offset of 7.3125Hz. There is a maximum error of
+15.625Hz in the detected frequency. This is illustrated by this
+diagram:
+<p>
+<img src="gen/toneround.png" alt="diagram of rounding of tone frequencies">
+<p>
+The frequencies which can be reported are A, B, C, and D. These are
+15.625 Hz apart. A tone which falls between two may be reported as
+either of the two, so all tones in the region labelled "rounding"
+will be reported as either B or C, but it is not possible to
+determine which.
+<p>
+When a frequency limit (either upper or lower) is specified, this
+means that there is a region where it is uncertain whether tones in
+that region will be considered to be above or below the limit. This
+diagram shows a limit between B and C:
+<p>
+<img src="gen/tonelimit.png" alt="diagram of frequency limit handling">
+<p>
+Any tones with frequencies below B are definitely reported as being
+below the limit: any tones with frequencies above C are definitely
+reported as being above the limit: however it is uncertain whether a
+tone between B and C will be considered to be above the limit (if it
+happens to be rounded to C) or below the limit (if it happens to be
+rounded to B). For example, if you configure Prosody to recognise a
+tone between 1000Hz and 2000 Hz, the effect is:
+<p>
+<table border>
+<tr><th>Received tone, f<th>Result
+<tr><td>f &le; 992.1875<td>reject - too low
+<tr><td>992.1875 &lt; f &lt; 1007.8125<td>uncertain
+<tr><td>1007.8125 &le; f &le; 1992.1875<td>accept
+<tr><td>1992.1875 &lt; f &lt; 2007.8125<td>uncertain
+<tr><td>2007.8125 &le; f<td>reject - too high
+</table>
+<p>
+
+Awareness of the actual detection frequencies allows more accurate
+limits to be set, and allows performance to be predictable. A
+command-line utility <code>bandaid.pl</code> is supplied (in the
+<code>diag</code> directory) which shows the actual detection
+and rejection regions for any arbitrary frequency band limits.
+By default, with user defined sets of input tones, the operating range
+of the tone detector is set to its maximum range of 250Hz to 3406.25Hz.
+More restrictive low and high cut off frequencies may be set up by
+invoking
+<a href="gen/apifn-sm_adjust_input_tone_set.html">sm_adjust_input_tone_set()</a>
+for parameter <code>kAdjustToneSetFPParamIdStartFreq</code> or
+<code>kAdjustToneSetFPParamIdStopFreq</code>.
+The granularity of the lower and upper limits is 31.25 Hz, so actual
+limit frequencies used by detector will be nearest multiples of 31.25 Hz
+less than the specified limit frequency.
+<p>
+<h2>Tone Detection Modes</h2>
+<p>
+There are three tone detection modes (see
+<a href="gen/apifn-sm_listen_for.html">sm_listen_for</a>). The mode
+affects the way in which time information is used to affect detection of
+digits. This is important for talk-off rejection. Talk-off refers to
+the erroneous triggering of a tone detection by speech or some other
+signal. One standard test, which we call "the Mitel test" uses side 2 of
+Mitel's "DTMF Receiver Test Cassette", part number CM7291. For this
+test, a talk-off figure of less than 30 is considered to be acceptable.
+<p>
+The recommended mode is <code>kSMToneEndDetectionMinDuration40</code>.
+<p>
+The following modes notify the application as soon as a tone is detected
+by the DSP.
+<dl>
+<dt>kSMToneDetectionNoMinDuration
+<dd>
+No time information is used. If the correct frequencies are detected
+with the correct SNR, twist, etc. for however short a duration, the
+tone is considered to be present. This mode results in a talk-off figure
+of 10 for the standard Mitel test.
+
+<dt>kSMToneDetectionMinDuration64
+<dd>
+As far as the tone detection algorithm is concerned, two consecutive
+detections of the same tone are required before a valid tone is
+considered to be present. Since tone detections are performed at 32ms
+intervals, this implies that if the tone is valid for 64ms it will
+definitely be detected. Shorter durations between 32ms and 64ms may be
+detected but cannot be guaranteed. This mode results in a talk-off
+figure of 0 (zero).
+
+<dt>kSMToneDetectionMinDuration40
+<dd>
+This mode uses a slightly more complex algorithm for analysing duration
+of a valid tone, and enables robust detection of tones with durations as
+short as 40ms. Talk-off performance is either 1 (50% probability) 2
+(25%) or 0 (25%) depending on timing of the start of the test. At least
+48ms gap between tones is required for correct detection of a sequence
+of tones.
+</dl>
+<p>
+Modes <code>kSMToneEndDetectionNoMinDuration</code>,
+<code>kSMToneEndDetectionMinDuration64</code>, and
+<code>kSMToneEndDetectionMinDuration40</code> are equivalent to the
+<code>kSMToneDetection*</code> modes, except that the application is
+notified only when the tone has ceased. This is often preferable in an
+interactive application, because a user may hold a tone button for a
+long time and would therefore be unable to hear the response to the tone
+for the duration of the key press.
+<p>
+Modes <code>kSMToneLenDetectionNoMinDuration</code>,
+<code>kSMToneLenDetectionMinDuration64</code>,
+<code>kSMToneLenDetectionMinDuration40</code> are equivalent to the
+<code>kSMToneEndDetection</code> modes. They notify the application when
+the tone ceases, and the tone information acquired through
+<a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a>
+incorporates the duration of the detected tone (granularity 32ms). For
+details of retrieving this information see documentation for
+<a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a>.
+
+<h2>Tone Detection De-bouncing</h2>
+<p>
+The three basic detection modes provide different sensitivities to short
+tones (each with a slightly different trade-off between sensitivity and
+talk-off performance). Further, if the application is susceptible to
+poor-quality DTMF signals, the application developer can apply further
+restrictions on the durations of tones and spaces. The API call
+<a href="gen/apifn-sm_adjust_input_tone_set.html">sm_adjust_input_tone_set()</a>
+allows the following parameters to be adjusted in a tone-set:
+<ul>
+<li>kAdjustToneSetIntParamIdMinOnTime
+<li>kAdjustToneSetIntParamIdMinOffTime
+</ul>
+<p>
+These parameters apply globally to a Prosody module, for any channels
+detecting tones using the tone set to which the parameters were applied.
+The following rules apply:
+<ul>
+<li> Tones that exist for less than MinOnTime will not be detected
+<li> A space between tones that lasts for less than MinOffTime will be ignored.
+<li> These parameters only influence detections where the mode
+specified to
+<a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a> is either
+<code>kSMToneLenMinDuration64</code> or
+<code>kSMToneEndMinDuration64</code>.
+<li> If a tone changes, the MinOffTime will be ignored. A new tone will
+always be detected, even if there is a very small space between it and
+the previous tone as long as the new tone persists for MinOnTime.
+<li> When detection mode
+<code>kSMToneLenDetectionMinDuration64</code> is used, the detected
+duration is affected as follows: the duration reported for a tone
+includes any spaces shorter than MonOffTime and any tones shorter
+than MinOnTime.
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,3 @@
+Async transmit. This is used to implement the async encoding
+in a transmit protocol. It encodes a sequence of characters
+as a stream of digital data.

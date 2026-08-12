@@ -1,0 +1,8 @@
+p	port			unsigned
+t	timeslot		unsigned
+w	remdiscwait		bool
+c	charge			bool
+P	timeslot_preferred	bool
+s	sending_complete	bool
+o	origin_addr		string
+x	serialnumber		string

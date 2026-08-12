@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Protocols: V</title>
+</head>
+<body>
+
+<h1>Prosody data communications Protocols: V.32</h1>
+<p>
+V.32 is an ITU-T standard modem.
+<p>
+This protocol implements the transmitter and receiver for V.32. Since it 
+is a full duplex protocol, it can only be used with a channel configured 
+for full duplex operation. Each channel must also be configured for either 
+originate or answer mode. To implement a V32 link, one end must be 
+configured to originate mode and the other to answer mode.
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic data communications 
+documentation.
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_v32.h"</code> to get the 
+	appropriate declarations.
+<p>
+	The protocol value is <code>kSMDCProtocolV32</code>
+<p>
+	The config_data pointer must point to one of these structs:
+<pre>
+	typedef struct smdc_v32_config_parms {
+		unsigned speed;
+		tSM_INT isanswer;
+		tSM_INT no_ans_tone;
+		tSM_INT retrain_can_change_speed;
+	} SMDC_V32_CONFIG_PARMS;
+</pre>
+<p>
+	'<code>speed</code>' is the data rate in bits per second. This can be 
+	one of the standard speeds: 4800 or 9600, or 0 to indicate that either speed 
+	can be used.
+<p>
+	'<code>isanswer</code>' configures the channel to 'answer' mode (non zero) 
+	or 'originate' mode (zero).
+<p>
+	'<code>no_ans_tone</code>' configures the channel to not send or expect the
+	V.25 ANS tone. This is used when the ANS tone has already been handled, for 
+	example after V.8 negotiation.
+<p>
+	'<code>retrain_can_change_speed</code>' configures the channel to allow the 
+	speed to change when the far end initiates a retrain. The allowed speeds are 
+	determined by the initial speed configuration or the last speed used when initiating
+	a retrain using <a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a>.
+<p>
+	The protocol can use these encodings: SYNC, ASYNC, HDLC.
+<p>
+	The firmware modules <a href="gen/softmodindex.html#v32">v32</a>,
+	<a href="gen/softmodindex.html#inchan">inchan</a> and 
+	<a href="gen/softmodindex.html#outchan">outchan</a> must have been downloaded.
+
+<h3><a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a></h3>
+<p>
+	The <a href="gen/apifn-smdc_line_control.html#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>
+	command is supported by this protocol. 
+	The <a href="gen/apifn-smdc_line_control.html#field-kSMDCLineCtlCmdRetrain">kSMDCLineCtlCmdRetrain</a>
+	command is supported by this protocol, where the 
+	<a href="gen/apifn-smdc_line_control.html#field-retrain_speed">retrain_speed</a> accepts the same 
+	values as the initial <code>speed</code>.
+	<br>
+	Note that no other commands are useful since the receiver is always connected and control of RTS is automatic.
+<h3><a href="gen/apifn-smdc_line_status.html">smdc_line_status()</a></h3>
+<p>
+	Until the modem has trained the <code>rx_status</code> is
+	<code>kSMDCRxStatusNoCarrier</code>. Once the training is complete
+	<code>rx_status</code> will be either <code>kSMDCRxStatusReceivingData</code>
+	or <code>kSMDCRxStatusCarrierPresent</code> depending on whether
+	any data has been received but not collected.
+	<br>
+	When the modem is retraining the <code>link_status</code> is
+	<code>kSMDCLinkStatusConnecting</code>.
+
+<h3><a href="gen/apifn-smdc_tx_status.html">smdc_tx_status()</a></h3>
+<p>
+	[note] 'flow' is not useful since there is no flow
+	control mechanism.
+
+<h3><a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a></h3>
+<p>
+	The only notification implemented is NotifyOnCapacity.
+<p>
+	When setting the capacity, it is necessary to specify a
+	value one greater than the value required. i.e. to get notified
+	when space is available for at least 32 bytes, set the capacity
+	to 33 or greater.
+
+<h3><a href="gen/apifn-smdc_rx_status.html">smdc_rx_status()</a></h3>
+<p>
+	When the <code>status</code> is <code>kSMDCRxStatusCarrier</code> then 
+	the <code>u.carrier.carrier</code> value is either the current speed or 
+	zero. A value of zero indicates that training has failed.
+
+<h3><a href="gen/apifn-smdc_rx_control.html">smdc_rx_control()</a></h3>
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+</body>
+</html>

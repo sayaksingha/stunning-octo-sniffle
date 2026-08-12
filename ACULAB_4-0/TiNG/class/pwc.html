@@ -1,0 +1,339 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Prosody with classes</title>
+</head>
+<body>
+<h1>Prosody with classes</h1>
+<p>
+All Prosody basic APIs are defined using only the C language. For C++
+programs, it is much nicer to use a C++ API, but there is no official Aculab
+C++ API. Here is a C++ API for Prosody which is built mostly
+automatically from the same master specification that builds the C API
+and the documentation. It allows Prosody functions to be invoked like
+this:
+<pre>
+	Prosody::Error e = chan.replay_start()
+		.type(Prosody::kSMDataFormatALawPCM)
+		.speed(50);
+	if (e) {
+		// handle the error
+	}
+</pre>
+<p>
+where <code>chan</code> is an object of type
+<code>Prosody::Channel</code>.
+<p>
+<strong>Note: this is not an official Aculab API and is not supported by
+Aculab in any way.</strong>
+
+<h2>Basic architecture</h2>
+<h3>Objects</h3>
+<p>
+A typical Prosody API function, such as
+<a href="../pubdoc/gen/apifn-sm_replay_start.html"><code>sm_replay_start()</code></a>
+can be considered to operate on one object using a variety of
+parameters. In the C API, the object is specified in a field in the
+function's parameter structure. This field has a name which is the
+same as the kind of object. These are the types of objects used in
+the API:
+<table border>
+<tr><th>C type
+	<th>C++ type
+	<th>Field name
+	<th>API areas covered
+<tr><td><code>tSMCardId</code>
+	<td><code>Prosody::Card</code>
+	<td><code>card</code>
+	or <code>card_id</code>
+	<td><a href="gen/prosgen-card.html">Generic API</a>
+<tr><td><code>tSMChannelId</code>
+	<td><code>Prosody::Channel</code>
+	<td><code>channel</code>
+	<td><a href="gen/prosgen-channel.html">Generic API</a>,
+	<a href="gen/prospapi-channel.html">Speech API</a>,
+	<a href="gen/prosdc-channel.html">Data communications API</a>
+<tr><td><code>tSMEventId</code>
+	<td><code>Prosody::Event</code>
+	<td><code>eventId</code>
+	<td><a href="prosgen-event.html">Generic API</a>
+<tr><td><code>tSMModuleId</code>
+	<td><code>Prosody::Module</code>
+	<td><code>module</code>
+	or <code>module_id</code>
+	or <code>mod_id</code>
+	<td><a href="gen/prosgen-module.html">Generic API</a>,
+	<a href="gen/prospapi-module.html">Speech API</a>
+<tr><td><code>tSMPathId</code>
+	<td><code>Prosody::Path</code>
+	<td><code>path</code>
+	<td><a href="gen/prospath-path.html">signal path API</a>
+<tr><td><code>tSMRTCPHandId</code>
+	<td><code>Prosody::Rtcphand</code>
+	<td><code>rtcphand</code>
+	<td><a href="gen/prosrtpapi-rtcphand.html">RTP API</a>
+<tr><td><code>tSMTDMrxId</code>
+	<td><code>Prosody::Tdmrx</code>
+	<td><code>tdmrx</code>
+	<td><a href="gen/prosgen-tdmrx.html">Generic API</a>
+<tr><td><code>tSMTDMtxId</code>
+	<td><code>Prosody::Tdmtx</code>
+	<td><code>tdmtx</code>
+	<td><a href="gen/prosgen-tdmtx.html">Generic API</a>
+<tr><td><code>tSMVidplayId</code>
+	<td><code>Prosody::Vidplay</code>
+	<td><code>vidplay</code>
+	<td><a href="gen/prosvid-vidplay.html">Video API</a>
+<tr><td><code>tSMVidrecId</code>
+	<td><code>Prosody::Vidrec</code>
+	<td><code>vidrec</code>
+	<td><a href="gen/prosvid-vidrec.html">Video API</a>
+<tr><td><code>tSMVMPrxId</code>
+	<td><code>Prosody::Vmprx</code>
+	<td><code>vmprx</code>
+	<td><a href="gen/prosrtpapi-vmprx.html">RTP API</a>
+<tr><td><code>tSMVMPtxId</code>
+	<td><code>Prosody::Vmptx</code>
+	<td><code>vmptx</code>
+	<td><a href="gen/prosrtpapi-vmptx.html">RTP API</a>
+</table>
+<p>
+For example, the 
+<a href="../pubdoc/gen/apifn-sm_replay_start.html"><code>sm_replay_start()</code></a>
+function has a <code>tSMChannelId</code> field called
+<code>channel</code> in its parameter structure, so this is the
+object it operates on. Therefore the C code:
+<pre>
+	tSMChannelid chan;
+	SM_REPLAY_PARMS rpp;
+	...
+	rpp.channel = chan;
+	...
+	... sm_replay_start(&amp;rpp) ... etc
+</pre>
+<p>
+becomes in C++:
+<pre>
+	Prosody::Channel chan;
+	...
+	... chan.replay_start() ... etc
+</pre>
+<p>
+The API function name in C starts with the <code>sm_</code> prefix to
+help avoid conflicts with user-defined functions. In C++ this is
+unnecessary, because namespaces provide a better way to do it. All
+the Prosody identifiers are defined in the <code>Prosody</code>
+namespace, guaranteeing that they cannot cause conflicts.
+
+<h3>Object Lifetime</h3>
+<p>
+Construction of one of the C++ objects does not cause the underlying
+Prosody object to be allocated - the Prosody function must still be
+called. For example, the code:
+<pre>
+	Prosody::Channel chan;
+</pre>
+<p>
+does not allocate a Prosody channel - it merely constructs an object which
+can manage a Prosody channel. To cause allocation you must use:
+<pre>
+	chan.alloc_placed()
+</pre>
+<p>
+However, when one of the C++ objects is destroyed, with two exceptions,
+any underlying Prosody object is freed. For example, for both of these
+cases:
+<pre>
+	{
+	 Prosody::Channel chan;
+	}
+</pre>
+<p>
+and
+<pre>
+	Prosody::Channel chan;
+	... chan.alloc_placed() ...
+	...
+	... chan.release() ...
+</pre>
+<p>
+the destruction of <code>chan</code> has no further effect. However in
+this case:
+<pre>
+	{
+	 Prosody::Channel chan;
+	 ... chan.alloc_placed() ...
+	 ... code which does not release chan ...
+	}
+</pre>
+<p>
+the destruction of <code>chan</code> performs
+<code>sm_channel_release()</code> to free the underlying Prosody channel.
+<p>
+The first exception to this rule for destructors is that the
+<code>Prosody::Card</code> destructor does not free the
+<code>tSMCardId</code>.
+<p>
+The other exception is that the <code>Prosody::Event</code> destructor
+does not free the <code>tSMEventId</code> if it was supplied to the
+constructor, but it does free it if it was allocated with a
+<code>create()</code> method. Therefore in:
+<pre>
+		// given tSMEventId ev
+	Prosody::Event e1(ev);
+	Prosody::Event e2;
+	... e2.create(kSMChannelSpecificEvent, chan) ...
+	Prosody::Event e3;
+	... e3.create(kSMAnyChannelEvent) ...
+	Prosody::Event e4;
+	... e4.createnonidle(kSMChannelSpecificEvent, chan) ...
+</pre>
+<p>
+the event <code>ev</code> will not be freed unless <code>e1.free()</code>
+is used, whereas all of <code>e2</code>, <code>e3</code>, and
+<code>e4</code> guarantee to free their underlying <code>tSMEventId</code>
+objects if they have not yet been freed when they are destroyed.
+
+<h3>Parameters</h3>
+<p>
+In the C API, most functions are passed their parameters by using a
+pointer to a structure, which must be set to all zero bytes (typically
+by <code>memset()</code>) before use. This is to allow extra parameters
+to be added to API functions without requiring changes to application
+code. Any extra field added to the structure is initialised to zero, so
+the value zero can be used to represent the behaviour before adding the
+field and all applications which were written before the extra parameter was
+added will continue to work as they did before. In C++, this can be
+achieved without needing the caller to manage the parameter structure.
+In C++ the setup of the parameter structure looks like this:
+<pre>
+	Prosody::Channel chan;
+	...
+	chan.replay_start()
+		.type(Prosody::kSMDataFormatALawPCM)
+	        .sampling_rate(8000)
+	        .volume(-3)
+	        .speed(70)
+</pre>
+<p>
+The operation (here <code>replay_start()</code>) returns an anonymous
+object which collects the parameters. The anonymous object implements a
+set of methods, one for each possible parameter, whose names are the
+names of the parameter fields defined in the C API. Any parameters not
+explicitly set default to zero. Parameter fields which return values
+(marked with <code>/* out */</code> in the documentation) are the
+addresses of where the output is to be put. For example,
+<a href="../pubdoc/gen/apifn-sm_replay_status.html"><code>sm_replay_status()</code></a>
+fills in the <code>status</code> field in its parameter structure. In
+the C++ API it looks like this:
+<pre>
+	Prosody::Channel chan;
+	enum Prosody::kSMReplayStatus sts;
+	...
+	chan.replay_status()
+		.status(&amp;sts)
+	...
+</pre>
+<p>
+If an output parameter is not specified, the value generated for that
+parameter is not stored anywhere.
+
+<h3>Prosody errors</h3>
+<p>
+Each Prosody function in the C API returns an error code, with the
+value zero indicating no error. In the C++ API the functions return
+an object of type <code>Prosody::Error</code>, which has an implicit
+conversion to <code>int</code> providing the error code. It also
+helps catch a very common programming error - not testing the return
+value of a Prosody function. It does this by printing an error
+message (on stderr) and aborting the program if a Prosody error is
+not checked. There are two ways a Prosody error can be checked:
+<ul>
+	<li>Using the conversion to <code>int</code>
+	<li>Using the conversion to <code>bool</code>
+</ul>
+<p>
+Usually a Prosody API function is checked for error using the conversion to
+<code>bool</code>, like this:
+<pre>
+	Prosody::Error e = chan.replay_status().status(&amp;sts);
+	if (e) {
+		// report the error somewhere
+		// take recovery action
+	}
+</pre>
+<p>
+If the error object is destroyed before its value is used (which happens
+when either one of the implicit conversions is used or when it is copied
+into another error object), then its destructor prints to stderr
+complaining that a
+Prosody error has been ignored and calls <code>abort()</code>. This
+greatly helps to find the occasional use of a Prosody API function where
+the error code is not being tested, as it reports the problem whenver
+the function is used - not just when the function returns an error and
+ignoring that error causes an obscure problem later.
+<p>
+For testing and debugging, or for situations where you want to show
+that it's completely hopeless trying to cope with an error, it's
+possible to indicate that it's OK to ignore an error. This is done by
+the <code>ok()</code> method. For example:
+<pre>
+	Prosody::Error e = chan.release();
+	e.ok();		// ignores the error
+</pre>
+<p>
+Note that this is <strong>not</strong> the same as:
+<pre>
+	chan.release().ok();		// incorrect
+</pre>
+<p>
+which tries to invoke the <code>ok()</code> method on the anonymous
+object used to collect parameters.
+
+<h3>When the Prosody function is called</h3>
+<p>
+The preceeding section suggests when a Prosody function actually
+gets invoked. It's when the anonymous structure which has been
+collecting parameters is converted into an object of type
+<code>Prosody::Error</code>. Consequently, if it is not
+converted, the Prosody function is not called. For example:
+<pre>
+	...
+	chan.replay_start()
+		.type(Prosody::kSMDataFormatALawPCM);	// Oops!
+	...
+</pre>
+<p>
+To help catch mistakes whereby the parameters are prepared, but the
+function is not called, if the anonymous structure is destroyed before
+being used, its destructor prints a complaint on stderr and calls
+abort(), so the above example will abort the program if it gets run.
+
+<h2>Sample code</h2>
+<p>
+Some examples are provided to demonstrate and allow testing of the C++
+API.
+<dl>
+<dt>demo.cpp
+<dd>
+Very simple example showing only the allocation of a channel and an event.
+
+<dt>demoreplay.cpp
+<dd>
+Basic replay example. A channel is allocated, used for one replay, and
+released.
+
+<dt>demofile.cpp
+<dd>
+A more complex example. A number of channels are allocated. Each is used for
+both a replay and a recording. The replays each play a file once, while the
+recordings are stopped after a delay, and finally, all resources are
+freed and the program exits. This example also uses the EventSet mechanism
+to allow a worker thread to process record and replay operations while
+the main thread controls the starting and stopping of the operations.
+
+</dl>
+<p>
+The <a href="../test/pathtest/doc/pathtest.html">pathtest</a> test program
+is written in C++ and uses this API extensively.

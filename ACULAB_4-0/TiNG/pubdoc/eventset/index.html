@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<link rel=stylesheet type="text/css" href="evapi.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>EVENTSETs</title>
+<body>
+
+<h1>EVENTSETs</h1>
+
+<h2>An Overview</h2>
+
+<p>
+It is fairly common, in C programming, to want to do something
+like this:
+
+<pre><span class=ccomment>// Setting up</span>
+create_several_events<span class=cpunctuation>();</span></pre>
+
+<pre><span class=ccomment>// The main loop</span>
+<span class=ckeyword>while</span> <span class=cpunctuation>(</span>not_finished<span class=cpunctuation>)</span>
+<span class=cpunctuation>{</span>
+	wait_until_at_least_one_event_is_signalled<span class=cpunctuation>();</span>
+<span class=ckeyword>	for</span> <span class=cpunctuation>(</span>each signalled event<span class=cpunctuation>,</span> e<span class=cpunctuation>)</span>
+<span class=cpunctuation>	{</span>
+		do_something<span class=cpunctuation>(</span>e<span class=cpunctuation>);</span>
+<span class=cpunctuation>	}
+}</span></pre>
+
+<p>
+EVENTSETs provide a way to do exactly that.
+
+<p>
+Actually, EVENTSETs do not do the setting up - you still have
+to create all the events yourself. But the rest of it is all
+neatly encapsulated within the EVENTSET object.
+
+<p>
+An EVENTSET is an object. Since this is C and not C++, and C
+doesn't have objects per se, EVENTSET is implemented as a
+<code>struct</code> together with a set of
+functions. There is also a second <code>struct</code>,
+called ACTIVE_JOB, which represents a single event. For each
+event you want to handle, you create an ACTIVE_JOB, and insert it
+into the EVENTSET. The ACTIVE_JOB contains not only the event,
+but also a callback to the handling function,called
+<code>do_something()</code> in the pseudocode above.
+
+<p>
+So why are EVENTSETs better than hand-coding the pseudocode
+above? What's wrong with <code>WaitForMultipleObjects()</code>?
+
+<p>
+Well, apart from being non-portable, <code>WaitForMultipleObjects()</code>
+also gives you almost no information about <em>which</em> events
+have been signalled: you have to assume that all (or at least,
+a range) of them have been signalled, just in case.
+
+<p>
+The EVENTSET approach is better.
+
+<p>
+In fact, the whole of the main loop is implemented in a single
+function: <code>eventset_wait()</code>. The
+EVENTSET mechanism requires that <code>eventset_wait()</code>
+be run in another thread, called the <strong>worker thread</strong>
+in this documentation, which you are responsible for creating.
+The initial thread, called the <strong>management thread</strong>
+in this documentation, does all the setting up and shutting down.
+
+<p>
+For more detail, read the rest of the documentation:
+
+<h2>Structures</h2>
+
+<p>
+<a href="EVENTSET.html">EVENTSET</a><br>
+<a href="ACTIVE_JOB.html">ACTIVE_JOB</a>
+
+<h2>Functions</h2>
+
+<p>
+<a href="eventset_ctor.html">eventset()</a><br>
+<a href="eventset_delete.html">eventset_delete()</a><br>
+<a href="eventset_dtor.html">eventset_dtor()</a><br>
+<a href="eventset_insert.html">eventset_insert()</a><br>
+<a href="eventset_stop.html">eventset_stop()</a><br>
+<a href="eventset_wait.html">eventset_wait()</a>
+
+<h2>Callbacks</h2>
+
+<p>
+<a href="active_job_handler.html">handler()</a><br>
+<a href="active_job_cleanup_fn.html">cleanup_fn()</a>
+
+<hr>
+<p>
+EVENTSETs are a good way to organise
+<a href="../an-worker.html">waiting on multiple Prosody channels</a>.

@@ -1,0 +1,681 @@
+	Prosody Audio Video Format (AVF)
+secname	sort
+
+version deprecated
+	Create AVF player
+apifn	sm_avfplay_create
+params	sm_avfplay_create_parms avfcp
+	The created AVF player.
+field	tSMAVFplayId avfplay out
+	A value obtained from
+fnref   sm_open_module
+	which indicates the module on which the AVF player is to be created.
+field   tSMModuleId module in
+unstruct
+	Creates a player which can replay an AVF stream. An AVF player is a
+	task which accepts as input an AVF stream from the host, and generates
+	as output one of a number of data formats including the raw unchanged
+	AVF stream and linear audio.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+error   ERR_SM_NO_RESOURCES - if no suitable output channel free
+error   ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified
+version -
+
+version deprecated
+	Destroy a previously allocated AVF player
+apifn	sm_avfplay_destroy -dtor
+	A tSMAVFplayId that has been prevously created by a call to 
+fnref	sm_avfplay_create.
+param	tSMAVFplayId avfplay
+	Destroys
+ref	avfplay
+	invalidating the tSMAVFplayId.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Synchronise with another AVF player
+apifn	sm_avfplay_sync
+params	sm_avfplay_sync_parms avfsp
+	A tSMAVFplayId that has been prevously created by a call to 
+fnref	sm_avfplay_create.
+field	tSMAVFplayId avfplay in
+	The tSMAVFplayId, that has been prevously created by a call to 
+fnref	sm_avfplay_create,
+	of the player with which we wish to synchronise. Or, set to 0 to un-synchronise.
+field	tSMAVFplayId sync_avfplay in
+unstruct
+	Ensures that all future playbacks on 
+ref	avfplay
+	are synchronised with those on 
+ref sync_avfplay.
+	To achieve synchronised playbacks following a call to
+fnref sm_avfplay_sync
+	,
+fnref sm_avfplay_start
+	must be called on both
+ref	avfplay
+	and 
+ref	sync_avfplay
+	. The playbacks can be started in any order. Once started, the playbacks
+	will not process data until at least one full AVF frame has been put to
+	both. If data is supplied to one playback before the other has started,
+	that data will be buffered until the other playback has received at
+	least one full AVF frame. Once the playbacks begin processing data,
+	they progress as usual.
+	<p>
+	When two playbacks are synchronised and processing data, if one playback
+	is stopped then restarted it will not re-synchronise with the running
+	playback and an error will be returned. If both playbacks are stopped
+	then restarted, the two playbacks will synchronise as described above.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Starts a previously allocated AVF player
+apifn	sm_avfplay_start
+params	sm_avfplay_start_parms avfsp
+	A tSMAVFplayId that has been prevously created by a call to 
+fnref	sm_avfplay_create.
+field	tSMAVFplayId avfplay in
+	The type of data to output on the datafeed.
+enumstart	kSMAVFOutputType
+	Output raw AVF-encapsulated video frames. The AVF player does not
+	modify or interpret the media data within these frames.
+enum	kSMAVFOutputAVFVideo
+	Output raw AVF-encapsulated audio frames. The AVF player does not
+	modify or interpret the media data within these frames.
+enum	kSMAVFOutputAVFAudio
+	Output linear audio, converting the supplied AVF-encapsulated audio
+	frames' payload using the audio decoder specified in the
+ref	u_dest_type-audio-src_type
+	field.
+enum	kSMAVFOutputLinearAudio
+enumend	dest_type in
+union
+	This struct is valid only if
+ref	dest_type
+	is
+ref	kSMAVFOutputAVFAudio
+	or
+ref	kSMAVFOutputLinearAudio
+struct
+	The output sampling rate in Hz. For example, 8000 for narrowband audio. If
+	set to 0, a value of 8000 is assumed.
+field	tSM_INT sampling_rate in
+	The audio encoding of the AVF-encapsulated source data.
+enumstart	kSMAudioDataFormat
+	G.711 A-law. This uses 8 bits per sample.
+enum	kSMAudioDataFormatALawPCM
+	G.711 mu-law. This uses 8 bits per sample.
+enum	kSMAudioDataFormatULawPCM
+	AMR-NB. The sampling rate must be 8000Hz.
+enum	kSMAudioDataFormatAMRNB
+	16-bit linear coding, where each sample is a signed value (-32768 to 32767). The first octet of each sample is the less significant one.
+enum	kSMAudioDataFormat16bit
+	8-bit unsigned linear coding, where each sample is an unsigned value (0 to 255). This is Microsoft's 8-bit format.
+enum	kSMAudioDataFormat8bit
+enumend	src_type in
+unstruct	audio
+unstruct	u_dest_type
+	This must be set to the desired size of the playback's buffer on the module
+	in bytes. For audio replays 8192 is generally a suitable value. For video 
+	replays the value depends on the video content but MUST be comfortably 
+	larger than the largest AVF frame to be replayed. If set to 0, for
+ref	dest_type
+ref kSMAVFOutputAVFAudio
+	the assumed size is 8192, and for
+ref	dest_type
+ref kSMAVFOutputAVFVideo
+	the assumed size is 32768. This value is ignored if
+ref	dest_type
+	is
+ref kSMAVFOutputLinearAudio
+	and, in this case, a default buffer size is used as for regular audio playback.
+field	tSM_INT hbuf_size in
+	For Aculab use only: sets the test mode. Must be set to 0 for normal operation.
+field	tSM_INT test_mode in
+unstruct
+	Starts the necessary tasks on the module for playback of AVF-encapsulated
+	video or audio.
+	<p>
+	Note that, unlike most tasks, an AVF player can output different types
+	of data - e.g. AVF AMR-NB audio stream, AVF H.263 video stream, etc. -
+	dependant on how it is started. It is the application writer's
+	responsibility to ensure that any task (e.g. VMP[tx]) connected to the
+	AVF player's datafeed is able to process this data.
+	<p>
+	Note: The union in in the above struct is used to allow future expansion.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Stops a previously started AVF player.
+apifn	sm_avfplay_stop
+params	sm_avfplay_stop_parms avfsp
+	A tSMAVFplayId that has been prevously created by a call to 
+fnref	sm_avfplay_create.
+field	tSMAVFplayId avfplay in
+	The type of stop to perform. Set to a non zero value to stop immediately, 
+	discarding any data which has been supplied but not yet played. Otherwise, 
+	the play will stop once all data supplied has been played. 
+field	tSM_INT immediate in
+unstruct
+	Stops the AVF player tasks.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Obtain a datafeed from a AVF player
+apifn	sm_avfplay_get_datafeed
+params	sm_avfplay_datafeed_parms datafeedp
+	The AVF player from which to obtain a datafeed
+field	tSMAVFplayId avfplay in
+	The datafeed object representing the signal from the AVF player.
+field	tSMDatafeedId datafeed out
+unstruct
+	Request a datafeed identifier from a AVF player. This identifer can
+	subsequently be used in a call to any of the *_datafeed_connect()
+	functions to connect the output from the AVF player to a destination.
+	It is valid until the AVF player is destroyed. Note that the type of
+	data to be output - e.g. AVF AMR-NB audio stream, linear audio stream,
+	AVF H.263 video stream, etc. - is set by
+fnref	sm_avfplay_start
+	and that it is the application writer's responsibility to ensure that
+	any task (e.g. VMP[tx]) connected to the AVF player's datafeed is
+	able to process this data.
+	Datafeed connections can only be made between objects allocated on the
+	same <code>tSMModuleId</code>.
+	<p>
+	Requires the module
+modref	datafeed
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Obtain an event for a AVF player
+apifn	sm_avfplay_get_event
+params	sm_avfplay_event_parms eventp
+	The AVF player 
+field	tSMAVFplayId avfplay in
+	The event identifier
+field	tSMEventId event out
+unstruct
+	If the call completes successfully 
+ref	event
+	will hold the tSMEventId belonging to 
+ref	avfplay.
+	The tSMEventId is valid until the AVF player is destroyed using 
+fnref	sm_avfplay_destroy.
+	This event will be signalled when a status change occurs on the 
+	AVF player. When the event is signalled the user must call 
+fnref	sm_avfplay_status
+	to discover the nature of the status change.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Write data to a AVF player
+apifn	sm_avfplay_put_data
+params	sm_avfplay_put_data_parms datap
+	The AVF player
+field	tSMAVFplayId avfplay in
+	A pointer to the data to be written.
+field	char* data in vidtx_data
+	The amount of data in the buffer.
+field	tSM_INT max_length in
+	The amount of data actually written.
+field	tSM_INT done_length out
+unstruct
+	Attempt to write data to a AVF player. Less than the
+	maximum will be written when either:
+	<ul>
+	<li>there is a status change which must be checked
+	<li>there is insufficient space and this function has been 
+	forbidden to wait.
+	</ul>
+	<p>
+	To permit maximum system throughput, this function refuses to
+	write to an AVF player whose status has changed since it was last
+	checked. This allows an application to avoid checking the
+	status during bulk data transfer. The application only needs
+	to check the status (using
+fnref	sm_avfplay_status)
+	when a call to
+fnref	sm_avfplay_put_data
+	returns with
+ref	done_length
+	equal to zero. If a status change occurs while writing data,
+ref	done_length
+	may indicate that some, but not all, of the data was written.
+	In this case, often the most convenient way for an application to
+	react is to note how much data has been sent, and to
+	try to send more. Since the new attempt will indicate that
+	no data was written, it means that the application does not
+	need to have different cases to handle a status change at the
+	beginning of the data buffer and a status change after a
+	partial write.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Determine AVF player status
+apifn	sm_avfplay_status
+params	sm_avfplay_status_parms statusp
+	The AVF player to interrogate
+field	tSMAVFplayId avfplay in
+enumstart kSMAVFplayStatus
+	Indicates that there is nothing significant to report
+enum	kSMAVFplayStatusRunning
+	Indicates that the AVF player has failed to play data because it
+	did not have the data in time.
+enum	kSMAVFplayStatusUnderrun
+	Indicates that the replay job is still ongoing, all required data for 
+	replay has been supplied, the replay job will complete once all module 
+	buffered data has been transmitted 
+enum	kSMAVFplayStatusCompleteData
+	Indicates that the replay job has completed, all module buffered data 
+	has been transmitted
+enum	kSMAVFplayStatusComplete
+enumend status out
+unstruct
+	Returns the current status of the AVF player or an error to
+	indicate that a problem occurred during start-up.
+	<p>
+	When the event, obtained from
+fnref	sm_avfplay_get_event,
+	is signalled the user must call this function to determine the nature
+	of the status change. The change in status may indicate that an error 
+	occurred whilst processing a user request or it may be notifiying the 
+	user of a change to the previous state of the AVF player.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources existed to create 
+	the AVF player
+version -
+
+version deprecated
+	Create AVF recorder
+apifn	sm_avfrec_create
+params	sm_avfrec_create_parms vcp
+	The created AVF recorder.
+field	tSMAVFrecId avfrec out
+	A value obtained from
+fnref   sm_open_module
+	which indicates the module on which the AVF recorder is to be created.
+field   tSMModuleId module in
+unstruct
+	Creates a recorder which can record an AVF stream. An AVF recorder is
+	a task which accepts as input one of a number of data formats -
+	including a raw AVF stream and linear audio - and generates as output
+	an AVF stream to the host.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+error   ERR_SM_NO_RESOURCES - if no suitable output channel free
+error   ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified
+version -
+
+version deprecated
+	Destroy a previously allocated AVF recorder
+apifn	sm_avfrec_destroy -dtor
+	A tSMAVFrecId that has been prevously created by a call to 
+fnref	sm_avfrec_create.
+param	tSMAVFrecId avfrec
+	Destroys
+ref	avfrec
+	invalidating the tSMAVFrecId.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Synchronise with another AVF recorder
+apifn	sm_avfrec_sync
+params	sm_avfrec_sync_parms avfsp
+	A tSMAVFrecId that has been prevously created by a call to 
+fnref	sm_avfrec_create.
+field	tSMAVFrecId avfrec in
+	The tSMAVFrecId, that has been prevously created by a call to 
+fnref	sm_avfrec_create,
+	of the recorder with which we wish to synchronise. Or, set to 0 to un-synchronise.
+field	tSMAVFrecId sync_avfrec in
+unstruct
+	Ensures that all future records on 
+ref	avfrec
+	are synchronised with those on 
+ref sync_avfrec.
+	To achieve synchronised records following a call to
+fnref sm_avfrec_sync
+	,
+fnref sm_avfrec_start
+	must be called on both,
+ref	avfrec
+	and
+ref	sync_avfrec
+	. The records can be started in any order. Once started, the records
+	will not process any data until the first full AVF frame arrives at
+	either. This allows their internal time references to start in step
+	and, therefore,	for synchronised playback of a recorded AVF stream
+	pair to be achieved. Once the records begin processing data, they
+	progress as usual.
+	<p>
+	When two records are synchronised and processing data, if one record
+	is stopped then restarted it will not re-synchronise with the running
+	record and an error will be returned. If both records are stopped
+	then restarted, the two records will synchronise as described above.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Starts a previously allocated AVF recorder 
+apifn	sm_avfrec_start
+params	sm_avfrec_start_parms avfsp
+	A tSMAVFrecId that has been prevously created by a call to 
+fnref	sm_avfrec_create.
+field	tSMAVFrecId avfrec in
+	The type of data expected as input from the datafeed.
+enumstart	kSMAVFInputType
+	Expect AVF-encapsulated video frames.
+enum	kSMAVFInputAVFVideo
+	Expect AVF-encapsulated audio frames.
+enum	kSMAVFInputAVFAudio
+	Expect linear audio, converting the supplied AVF-encapsulated audio frames'
+	payload using the audio encoder specified in the
+ref	u_src_type-audio-dest_type
+	field.
+enum	kSMAVFInputLinearAudio
+enumend	src_type in
+union
+	This struct is valid only if
+ref	src_type
+	is
+ref kSMAVFInputAVFAudio
+	or
+ref	kSMAVFInputLinearAudio
+struct
+	The payload type which should be used in the output AVF. Note that on 
+	AVF replay the payload type in the AVF is ignored so, in general, the 
+	value supplied here is irrelevant. However if, for instance, the resulting 
+	file was to be output using a streaming server, the payload type may well 
+	be used. This value is ignored unless
+ref	src_type
+	is
+ref	kSMAVFInputLinearAudio
+	as it is only in this case that the AVF frames are constructed in the tasks
+	started by this function.
+field	tSM_INT payload_type in
+	This specifies the type of audio to be output - i.e. the encoder to be run
+	on the input linear audio. It is ignored unless
+ref src_type
+	is set to
+ref	kSMAVFInputLinearAudio
+enumref	kSMAudioDataFormat dest_type in
+union
+	This struct is valid only if
+ref	u_src_type-audio-dest_type
+	is
+ref kSMAudioDataFormatAMRNB
+	and is ignored unless
+ref src_type
+	is set to
+ref	kSMAVFInputLinearAudio
+struct
+	The speed to use in bits per second. It must be one of the speeds which 
+	the AMR codec can encode, which are: 4750, 5150, 5900, 6700, 7400, 7950, 
+	10200, and 12200. 
+field	tSM_INT bitrate in
+	Whether to enable the Voice Activity Detector.
+field	tSM_INT vad_enable in
+unstruct	amrnb
+unstruct	u_dest_type
+unstruct	audio
+unstruct	u_src_type
+	This must be set to the desired size of the record's buffer on the module in
+	bytes. For audio records 8188 is generally a suitable value. For video
+	records the value depends on the video content but MUST be comfortably larger
+	than the largest AVF frame to be recorded. If set to 0, for
+ref	src_type
+ref	kSMAVFInputAVFAudio
+	the assumed size is 8188, and for
+ref	src_type
+ref	kSMAVFInputAVFVideo
+	the assumed size is 32764. This value is ignored if
+ref	src_type
+	is
+ref	kSMAVFInputLinearAudio
+	and, in this case, a default buffer size is used as for regular audio
+	record. Note that in order to achieve optimum memory allocation on the
+	Prosody X platform, this value should generally be a power of two, minus 4.
+field	tSM_INT hbuf_size in
+	For Aculab use only: sets the test mode. Must be set to 0 for normal operation.
+field	tSM_INT test_mode in
+unstruct
+	Starts the necessary tasks on the module for record of AVF-encapsulated
+	video or audio.
+	<p>
+	If
+ref	src_type
+	is set to 
+ref	kSMAVFInputAVFVideo
+	once the AVF recorder has been started, it will not emit any AVF frames
+	to the host until it has received an AVF frame containing a video
+	I-Frame. This helps to ensure that when the resulting video is rendered
+	- e.g. by a 3GP file player - the video starts cleanly. When recording
+	both audio and video,
+fnref	sm_avfrec_sync
+	can be used to help achieve lipsync even when the video AVF stream to
+	the host starts some time after the audio AVF stream.
+	<p>
+	Note that, unlike most tasks, an AVF recorder can input different types
+	of data - e.g. AVF AMR-NB audio stream, AVF H.263 video stream, etc. -
+	dependant on how it is started. It is the application writer's
+	responsibility to ensure that the task (e.g. VMP[rx]) to which the AVF
+	rec's datafeed is connected is able to generate this data.
+	<p>
+	Note: The unions in in the above struct are used to allow future expansion.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Aborts a previously allocated AVF recorder if it is active.
+apifn	sm_avfrec_stop
+params	sm_avfrec_stop_parms avfsp
+	A tSMAVFrecId that has been prevously created by a call to 
+fnref	sm_avfrec_create.
+field	tSMAVFrecId avfrec in
+	The type of stop to perform. Set to a non zero value to stop immediately, 
+	discarding any data which has been recorded but not yet collected. Otherwise, 
+	the record will stop once all data recorded has been collected. 
+field	tSM_INT immediate in
+unstruct
+	Stop the AVF recorder task.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Connect a datafeed to an AVF recorder
+apifn	sm_avfrec_datafeed_connect
+params	sm_avfrec_datafeed_connect_parms datafeedp
+	The AVF recorder that will receive and process the data
+field	tSMAVFrecId avfrec in
+	The datafeed acting as a source of data for the AVF recorder
+field	tSMDatafeedId data_source in
+unstruct
+	Connects a datafeed to a AVF recorder. The
+ref	data_source
+	must be a datafeed obtained from 
+fnref	sm_vmprx_get_datafeed
+	Datafeed connections can only be made between objects allocated
+	on the same <code>tSMModuleId</code>.
+	The AVF recorder
+ref	avfrec
+	will receive any data that is generated by the output task from which 
+ref	data_source
+	was derived. Note that the type of data accepted as input - e.g. AVF
+	AMR-NB audio stream, linear audio stream, AVF H.263 video stream, etc.
+	- is set by
+fnref	sm_avfrec_start
+	and that it is the application writer's responsibility to ensure that
+	the output task provides data of the correct type.
+	<p>
+	To disconnect a AVF recorder from a datafeed, specify 
+	<code>kSMNullDatafeedId</code> as the tSMDatafeedId in
+ref	data_source
+	<p>
+	Requires the module
+modref	datafeed
+	to have been downloaded.
+explain
+	0
+retval
+version -
+
+version deprecated
+	Read data from a AVF recorder
+apifn	sm_avfrec_get_data
+params	sm_avfrec_get_data_parms datap
+	The AVF recorder.
+field	tSMAVFrecId avfrec in
+	A pointer to the buffer into which data should be read.
+field	char* data in vidrx_data
+	The amount of space in the buffer.
+field	tSM_INT max_length in
+	The amount of data actually read.
+field	tSM_INT done_length out
+unstruct
+	Attempt to read data from a AVF recorder. Less than the
+	maximum will be read when either:
+	<ul>
+	<li>there is a status change which must be checked
+	<li>there is no more data to read
+	</ul>
+	<p>
+	To permit maximum system throughput, this function refuses to
+	read from a AVF recorder whose status has changed since it was last
+	checked. This allows an application to avoid checking the
+	status during bulk data transfer. The application only needs
+	to check the status when a call to
+fnref	sm_avfrec_get_data
+	returns with
+ref	done_length
+	equal to zero. This also ensures that status changes are
+	reported at the point in the data at which they occurred,
+	which may be important for some applications.
+	<p>
+	If an error is reported, the
+ref	done_length
+	field indicates the amount of data which was read before the
+	error occurred.
+	<p>
+	Any amount of data (up to
+ref	max_length)
+	may be returned.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Obtain an event for a AVF recorder
+apifn	sm_avfrec_get_event
+params	sm_avfrec_event_parms eventp
+	The AVF recorder 
+field	tSMAVFrecId avfrec in
+	The event identifier
+field	tSMEventId event out
+unstruct
+	If the call completes successfully 
+ref	event
+	will hold the tSMEventId belonging to 
+ref	avfrec.
+	The tSMEventId is valid until the AVF recorder is destroyed using 
+fnref	sm_avfrec_destroy.
+	This event will be signalled when a status change occurs on the 
+	AVF recorder. When the event is signalled the user must call 
+fnref	sm_avfrec_status
+	to discover the nature of the status change.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+version -
+
+version deprecated
+	Determine AVF recorder status
+apifn	sm_avfrec_status
+params	sm_avfrec_status_parms statusp
+	The AVF recorder to interrogate
+field	tSMAVFrecId avfrec in
+enumstart kSMAVFrecordStatus
+	Indicates that there is nothing significant to report
+enum	kSMAVFrecordStatusRunning
+	Indicates that the AVF recorder has lost some data because it
+	did not have enough space to store it because data was not
+	collected quickly enough.
+enum	kSMAVFrecordStatusOverrun
+	Indicates that the record job is still ongoing, all required data for 
+	record has been supplied, the record job will complete once all module 
+	buffered data has been collected 
+enum	kSMAVFrecordStatusCompleting
+	Indicates that the record job has completed, all module buffered data has 
+	been collected
+enum	kSMAVFrecordStatusComplete
+enumend status out
+unstruct
+	Returns the current status of the AVF recorder or an error to
+	indicate that a problem occurred during start-up.
+	<p>
+	When the event, obtained from
+fnref	sm_avfrec_get_event,
+	is signalled the user must call this function to determine the nature
+	of the status change. The change in status may indicate that an error 
+	occurred whilst processing a user request or it may be notifiying the 
+	user of a change to the previous state of the AVF recorder.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources existed to create the AVF recorder
+version -
+

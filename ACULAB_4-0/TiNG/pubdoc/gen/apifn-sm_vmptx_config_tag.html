@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_tag</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_tag</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_tag(struct sm_vmptx_tag_parms *<a href="#field-tagp">tagp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-tagp">*tagp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_tag_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a name="enum-kSMVMPTxTagType">enum kSMVMPTxTagType</a> {
+		<a href="#field-kSMVMPTxTagTypeUlaw">kSMVMPTxTagTypeUlaw</a>,
+		<a href="#field-kSMVMPTxTagTypeAlaw">kSMVMPTxTagTypeAlaw</a>,
+	} <a href="#field-tag_type">tag_type</a>;						/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-min_time">min_time</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-max_time">max_time</a>;					/* in */
+} SM_VMPTX_TAG_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to be configured
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type of the packets to be tagged.
+
+<dt><a name="field-tag_type">tag_type</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMVMPTxTagTypeUlaw">kSMVMPTxTagTypeUlaw</a>
+<dd>The tag is in G.711 U-law.
+
+<dt><a name="field-kSMVMPTxTagTypeAlaw">kSMVMPTxTagTypeAlaw</a>
+<dd>The tag is in G.711 A-law.
+
+</dl>
+<dt><a name="field-min_time">min_time</a><dd>The minimum time between tags in milliseconds.
+
+<dt><a name="field-max_time">max_time</a><dd>The maximum time between tags in milliseconds.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

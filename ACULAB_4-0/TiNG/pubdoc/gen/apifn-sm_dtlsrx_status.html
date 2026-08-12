@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody DTLS processing: API: sm_dtlsrx_status</title>
+</head>
+<body>
+<h1>Prosody DTLS processing: API: sm_dtlsrx_status</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_dtlsrx_status(struct sm_dtlsrx_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlsrx_status_parms {
+	<a href="../apitype.html#type-tSMDTLSrxId">tSMDTLSrxId</a> <a href="#field-dtlsrx">dtlsrx</a>;					/* in */
+	<a name="enum-kSMDTLSrxStatus">enum kSMDTLSrxStatus</a> {
+		<a href="#field-kSMDTLSrxStatusRunning">kSMDTLSrxStatusRunning</a>,
+		<a href="#field-kSMDTLSrxStatusStopped">kSMDTLSrxStatusStopped</a>,
+		<a href="#field-kSMDTLSrxStatusHasPacket">kSMDTLSrxStatusHasPacket</a>,
+		<a href="#field-kSMDTLSrxStatusOverrun">kSMDTLSrxStatusOverrun</a>,
+	} <a href="#field-status">status</a>;						/* out */
+} SM_DTLSRX_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Returns the current status of the DTLS[rx] or an error to indicate that
+an error has occurred.
+<p>
+When the event, obtained from
+<a href="apifn-sm_dtlsrx_get_event.html">sm_dtlsrx_get_event()</a>,
+is signalled the user must call this function to determine the nature of
+the status change. The change in status may indicate that an error occurred
+whilst processing a user request or it may be notifiying the user of a
+change to the previous state of the DTLS[rx].
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-dtlsrx">dtlsrx</a><dd>The DTLS[rx] to interrogate
+
+<dt><a name="field-status">status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMDTLSrxStatusRunning">kSMDTLSrxStatusRunning</a>
+<dd>Indicates that there is nothing significant to report
+
+<dt><a name="field-kSMDTLSrxStatusStopped">kSMDTLSrxStatusStopped</a>
+<dd>Indicates that the DTLS[rx] has stopped processing DTLS and that
+it can be safely destroyed
+
+<dt><a name="field-kSMDTLSrxStatusHasPacket">kSMDTLSrxStatusHasPacket</a>
+<dd>Indicates that a DTLS packet is available to be read.
+
+<dt><a name="field-kSMDTLSrxStatusOverrun">kSMDTLSrxStatusOverrun</a>
+<dd>Data has been lost because the packet buffer has overflowed.
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources existed to create the DTLS[rx]</ul>
+<hr>
+<p>This function is part of the <a href="../prosdtls.html">Prosody DTLS processing API</a>.
+</body>
+</html>

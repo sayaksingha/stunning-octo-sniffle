@@ -1,0 +1,3 @@
+Echo cancellation.
+If this module has not been downloaded, an attempt to use
+echo cancellation will use an unmodified signal.

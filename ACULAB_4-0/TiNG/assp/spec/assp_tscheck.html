@@ -1,0 +1,498 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>ASSP: Timestamp checks on the validity of packets</title>
+</head>
+<body>
+<h1>ASSP: Timestamp checks on the validity of packets</h1>
+<h2>Introduction</h2>
+<h3>Notation</h3>
+<p>
+For a packet, P:
+<ul>
+<li><code>P.TXTS</code> is the TXTS field sent in that packet (as
+extended by the HIGHTIME option)
+<li><code>Tx(P)</code> is the time of transmission of P as measured
+at the transmitter
+<li><code>Rx(P)</code> is the time of reception of P as measured
+at the receiver
+</ul>
+<h3>General</h3>
+<p>
+Since the maximum delay through the network is assumed to be MSL, if
+two packets are sent at the same time:
+<pre>
+	Rx(A) - MSL &lt;= Rx(B) &lt;= Rx(A) + MSL
+or	-MSL &lt;= Rx(B) - Rx(A) &lt;= MSL
+</pre>
+
+<h2>Checks using TXTS</h2>
+<p>
+For two packets, A and B, delay measured at the receiver may differ
+because of different delays in transit. The maximum difference at the
+receiver occurs when B is delayed by almost MSL and A is not delayed:
+<pre>
+	Rx(B) - Rx(A) &lt; Tx(B) + MSL - Tx(A)
+</pre>
+<p>
+while the minimum occurs in the opposite case:
+<pre>
+	Rx(B) - Rx(A) &gt; Tx(B) - Tx(A) - MSL
+</pre>
+<p>
+which gives this:
+<pre>
+	Tx(B) - Tx(A) - MSL &lt; Rx(B) - Rx(A) &lt; Tx(B) + MSL - Tx(A)
+	- MSL &lt; (Rx(B) - Rx(A)) - (Tx(B) - Tx(A)) &lt; MSL
+</pre>
+<p>
+We check packets as they arrive, so <code>Rx(B) &gt;= Rx(A)</code>.
+The time differences on which this relies are only measured to limited
+accuracy, so the check required is derived in
+<a href="assp_txts_theory.html">TXTS check</a> and is:
+<pre>
+if dTXTS &lt; 0,
+	-MSL &lt; dRx / Ermin - dTXTS / Etmax
+	dRx / Ermax - dTXTS / Etmax &gt; MSL
+if dTXTS &gt; 0,
+	-MSL &lt; dRx / Ermin - dTXTS / Etmin
+	dRx / Ermax - dTXTS / Etmin &lt; MSL
+</pre>
+<p>
+As an optimisation to avoid division, this can be re-written as:
+<pre>
+if dTXTS &lt; 0,
+	-MSL * Ermin * Etmax &lt; dRx * Etmax - dTXTS * Ermin
+	dRx * Etmax - dTXTS * Ermax &gt; MSL * Ermax * Etmax
+if dTXTS &gt; 0,
+	-MSL * Ermin * Etmin &lt; dRx * Etmin - dTXTS * Ermin
+	dRx * Etmin - dTXTS * Ermax &lt; MSL * Ermax * Etmin
+</pre>
+If the check fails, the packet is alien, otherwise it is valid. When
+valid, it is fresh if <code>B.TXTS &gt; A.TXTS</code>.
+and stale if <code>B.TXTS &lt; A.TXTS</code>.
+If <code>B.TXTS == A.TXTS</code> packet B may be either fresh or
+stale, and we cannot tell from the TXTS field.
+<p>
+In fact, there is one more factor to take into consideration: the
+time values <code>A</code> and <code>B</code> are discrete, so there
+is rounding error. If a time value <code>X</code>, is within a limit of
+the true time, <code>T</code> or <code>R</code> for transmitter and
+receiver respectively:
+<pre>
+	T &lt;= X &lt; T+et
+and	R &lt;= X &lt; R+er
+</pre>
+<p>
+Then the test becomes:
+<pre>
+	dT - et - er - MSL &lt; dR &lt; dT + et + er + MSL
+	-(et + er + MSL) &lt; dR - dT &lt; et + er + MSL
+</pre>
+<p>
+While it seems obvious that the normal choice of scaling for TXTS values
+would be one where <code>et = er = 1</code>, there may be circumstances
+(such as mobile devices with variable clock rate) where the precision is
+better than the accuracy, leading to a larger value of <code>e</code>.
+Greater precision means that the fixed size time fields wrap sooner, so
+the precision should be as low as possible. However, the RTT cannot be
+measured to a better precision than the timestamps, so the precision
+should be as high as necessary for sufficiently good RTT measurement.
+Obviously, no measurement can be better than the accuracy of the clock,
+so the precision used should be no higher than the best accuracy
+expected.
+
+<h3>Check TXTS</h3>
+<pre>
+	deltaT = B.TXTS - A.TXTS; // taking into account HIGHTIME
+	deltaR = Rx(B) - Rx(A);
+	dRdT = deltaT - deltaR;
+	if (dRdT < -(et + er + MSL)) return ALIEN;
+	if (dRdT > et + er + MSL) return ALIEN;
+	if (deltaT &gt; 0) {
+		// further checks on fresh packets
+		return FRESH;
+	} else if (deltaT &lt; 0) {
+		// further checks on stale packets
+		return STALE;
+	} else {
+		return UNKNOWN;	// but not ALIEN
+	}
+</pre>
+
+<h3>Limitations on TXTS check</h3>
+<p>
+The TXTS check is limited by the accuracy of the clocks used.
+Assuming a linear error, <code>x</code> of our clock ticks are
+<code>(1 + E)*x</code> ticks of the transmitter's clock, where
+<code>E</code> is the factor by which the transmitter's clock is
+fast. This error causes the difference <code>B.TXTS - A.TXTS</code>
+to compute:
+<pre>
+	(1 + E) * Tx(B) - (1 + E) * Tx(A)
+	(1 + E) * (Tx(B) - Tx(A))
+	(1 + E) * dT
+	dT + E * dT
+</pre>
+<p>
+so the <code>dR - dT</code> value is wrong by the same amount. If
+this is big enough, all valid packets will be rejected. This occurs
+when
+<pre>
+	E * dT = et + er + MSL
+	dT = (et + er + MSL) / E     if E &gt; 0
+	dT = -(et + er + MSL) / E     if E &lt; 0
+</pre>
+<p>
+<table>
+<tr><th>E<th>dT limit<th>duration
+<tr><td>1/2<td>+510000004<td>8m +30s
+<tr><td>1/10<td>+2550000020<td>42m +30s
+<tr><td>1/100<td>+25500000200<td>7h 5m
+<tr><td>1/1000<td>+255000002000<td>2d 22h 50m
+<tr><td>1/10000<td>+2550000020000<td>29d 12h 20m
+<tr><td>1/100000<td>+25500000200000<td>295d 3h 20m
+<tr><td>1/1000000<td>+255000002000000<td>8y 31d 9h 20m +2s
+</table>
+
+
+If we have two packets which have
+experienced the maximum difference in transit delay, then any error
+will cause the TXTS check to fail.
+However, this difference in delay is
+extremely unlikely, so we will (somewhat arbitrarily) consider what
+happens when the difference in delay is MSL / 2.
+We are interested in multiples of 2^32,
+and an error of +/- 2^31. If the clock ticks <code>N * 2^32</code>
+times, and results in an error of +/- 2^31, this table shows the
+relationship between clock accuracy, the value of <code>N</code>, and
+the length of the duration <code>N * 2^32</code> ticks for a
+microsecond-resolution clock.
+
+<table>
+<tr><th>p = 1/E<th>(1 - E)<th>(1 + E)<th>N<th>duration
+<tr><td>1/2<td>0.5<td>1.5<td>1<td>1h 11m 34S
+<tr><td>1/10<td>0.9<td>1.1<td>5<td>5h 57m 54S
+<tr><td>1/100<td>0.99<td>1.01<td>50<td>2d 11h 39m 8S
+<tr><td>1/1000<td>0.999<td>1.001<td>500<td>24d 20h 31m 23S
+
+<tr><td>1/10000<td>0.9999<td>1.0001<td>5000<td>248d 13h 13m 56S
+
+<tr><td>1/100000<td>0.99999<td>1.00001<td>50000<td>6y 295d 12h 19m 24S
+<tr><td>1/1000000<td>0.999999<td>1.000001<td>500000<td>68y 35d 3h 14m 8S
+<tr><td>1/10000000<td>0.9999999<td>1.0000001<td>5000000<td>680y 351d 8h 21m 20S
+</table>
+
+<p>
+Since a typical system may derive its clock from an ordinary quartz
+crystal with a tolerance of about 100 ppm (parts per million). The
+table shows that a difference between receiver and transmitter of
+100 ppm (or 1/10000) leads to TXTS values drifting by 2^31 after 248
+days.
+<p>
+Consequently, if we have a transmitter and receiver, each with clocks
+accurate to about 50 ppm, and every established connection will
+receive packets with gaps of less than about 248 days, then the TXTS
+check is correct without further modification. The relationship
+between maximum inter-arrival gap and clock accuracy is linear, so a
+500 ppm clock could not tolerate a gap of 25 days. If it is necessary
+to support a combination for which the normal TXTS check is not
+valid, then the high bits of the clock must be communicated. This
+could be done by sending the high bits in an option. Since this value
+is only needed every <code>N</code> clock ticks, it could be sent
+only when necessary.
+
+<h3>Effectiveness of the TXTS check</h3>
+<p>
+If a packet is received with a random value in TXTS, what is the
+probablility that it will be accepted by the check?
+<p>
+It is obviously the number of TXTS values that pass the check divided by
+the number of possible TXTS values. It may appear that the number of
+possible TXTS values is infinite, since as many high bits as
+necessary are sent in HIGHBITS options. However, since the high bits of
+the TXTS field are sometimes deduced rather than being explicit, a
+packet with no HIGHTIME option and a random TXTS field has a probability
+of passing the TXTS check. Even if a HIGHTIME option is present, when the
+packet has been sent by a malicious attacker, the probability is about
+the same, since the HIGHTIME value is often easily predicted. The
+probability of a random value passing the TXTS check is the size of
+the valid range, divided by 2^32 (because the HIGHBITS are not
+guaranteed to be checked).
+<pre>
+	dT - et - er - MSL &lt; dR &lt; dT + et + er + MSL
+	dT &lt; dR + et + er + MSL
+	dR  - et - er - MSL &lt; dT
+	dR  - et - er - MSL &lt; dT &lt; dR + et + er + MSL
+</pre>
+<p>
+So the range of values is <code>2 * (et + er + MSL)</code> wide. This is
+a time. so we can express the 2^32 clock ticks as a time and
+calculate the probability:
+<table>
+<tr><th>Tick<th>probability
+<tr><td>1 uS<td>0.11874
+<tr><td>1 mS<td>0.0001187
+<tr><td>MSL / 2<td>0.000000001397
+</table>
+<p>
+These figures assume <code>er = et = 1</code>. Obviously, the slower
+the clock ticks, the fewer valid values there are for the timestamp
+in a given packet. A clock that ticks every 100 nS would never reject
+any packet, since it could run through all possible timestamps in the
+interval between two packets.
+
+<h2>Checks using REFTS</h2>
+<p>
+The REFTS values sent are TXTS values which have been received. If 
+we receive two packets, A and B, in that order, we can check the
+validity of B. If <code>A.REFTS == B.REFTS</code>, then the value is
+valid. This is because the REFTS value must be a value we sent, and
+which was received at the remote. Even if we have sent values later than
+<code>A.REFTS</code> they may not have arrived, so it is still valid to
+receive the value <code>A.REFTS</code>. If <code>B.REFTS</code> and
+<code>A.REFTS</code> differ then they must be values from two
+packets, P and Q, which we sent such that A.REFTS == P.TXTS and B.REFTS
+== Q.TXTS. Since we cannot receive a TXTS value back in a REFTS field
+until after we have sent it, we have either:
+<pre>
+	A.REFTS == P.TXTS &lt; B.REFTS == Q.TXTS &lt;= Rx(B)
+or	B.REFTS == Q.TXTS &lt; A.REFTS == P.TXTS &lt;= Rx(A) &lt;= Rx(B)
+</pre>
+<p>
+depending on whether P or Q was sent first. We will consider these
+cases separately.
+<h3><code>A.REFTS == P.TXTS &lt; B.REFTS == Q.TXTS &lt;= Rx(B)</code></h3>
+<h4>No re-ordering</h4>
+<p>
+In this case P may have been sent arbitrarily far into the past, and its
+TXTS value may have been used many times since then. However the last
+time that it could have been used is just before Q arrived, so this is
+the latest time at which A could have been sent, which is no later than
+Tx(Q) + MSL, and therefore the last time that we could have received A
+is Tx(Q) + MSL * 2:
+<pre>
+	Rx(A) &lt;= Tx(Q) + 2 * MSL
+	Rx(A) &lt;= Q.TXTS + 2 * MSL
+	Rx(A) - 2 * MSL &lt;= B.REFTS &lt;= Rx(B)
+	A.REFTS &lt; B.REFTS &lt;= Rx(B) &amp;&amp; Rx(A) - 2 * MSL &lt;= B.REFTS &lt;= Rx(B)
+</pre>
+<h4>Double re-ordering</h4>
+<p>
+This is where P was sent before Q, but they were re-ordered in the
+network. The remote sent B before A, and those were also re-ordered,
+so A arrives first and quotes the older TXTS value. Therefore:
+<pre>
+	Tx(P) &lt;= Tx(Q) &lt;= Tx(P) + MSL
+	Tx(B) &lt;= Tx(A) &lt;= Tx(B) + MSL
+</pre>
+<p>
+A quotes the TXTS value from P, so it must have been sent after P
+arrived, which is after Q arrived, so the earliest A can have been
+sent is after Q arrived, which is after Q was sent:
+<pre>
+	Tx(Q) &lt;= Rx(A)
+	Q.TXTS &lt;= Rx(A)
+	B.REFTS &lt;= Rx(A)
+	A.REFTS &lt; B.REFTS &lt;= Rx(A) &lt;= Rx(B)
+</pre>
+<p>
+Also, the last time at which B could have been sent was before P
+arrived, which was before Tx(P) + MSL. Therefore the last time it
+could have arrvied was Tx(P) + 2 * MSL.
+<pre>
+	Rx(B) &lt;= Tx(P) + 2 * MSL
+	Rx(B) &lt;= A.REFTS + 2 * MSL
+	Rx(B) - 2 * MSL &lt;= A.REFTS
+	Rx(B) - 2 * MSL &lt;= A.REFTS &lt; B.REFTS &lt;= Rx(A) &lt;= Rx(B)
+</pre>
+
+
+<h3><code>B.REFTS == Q.TXTS &lt; A.REFTS == P.TXTS &lt;= Rx(B)</code></h3>
+<h4>P and Q have been re-ordered</h4>
+<p>
+In this case Q must have been sent first, so the latest it can have
+arrived is at Tx(Q) + MSL. Since they were re-ordered, P must have
+arrived before this, but it cannot have arrived before it was sent:
+<pre>
+	Tx(P) &lt;= Tx(Q) + MSL
+	P.TXTS &lt;= Q.TXTS + MSL
+	A.REFTS &lt;= B.REFTS + MSL
+</pre>
+<p>
+Also, A must have been sent after P arrived, so the earliest it can
+arrive is:
+<pre>
+	Tx(P) &lt;= Rx(A)
+</pre>
+<p>
+and the latest it can have been sent is just before Q arrived, which
+is no later than Tx(Q) + MSL, so the latest it can have arrived is
+after a further MSL:
+<pre>
+	Rx(A) &lt;= Tx(Q) + 2 * MSL
+	Tx(P) &lt;= Rx(A) &lt;= Tx(Q) + 2 * MSL
+	P.TXTS &lt;= Rx(A) &lt;= Q.TXTS + 2 * MSL
+	B.REFTS &lt;= Rx(A) &lt;= B.REFTS + 2 * MSL
+	B.REFTS - 2 * MSL &lt;= Rx(A) - 2 * MSL &lt;= B.REFTS
+	B.REFTS - 2 * MSL &lt;= Rx(A) - 2 * MSL &lt;= B.REFTS &lt; A.REFTS &lt;= Rx(B)
+</pre>
+<h4>A and B have been re-ordered</h4>
+<p>
+Again, Q must have been sent first. It can have been sent an
+arbitrarily long time ago, with B being sent before P arrived. Since
+the latest P can have arrived is Tx(P) + MSL, and B can take at most
+MSL in transit:
+<pre>
+	Rx(B) &lt;= Tx(P) + 2 * MSL
+	Rx(B) &lt;= P.TXTS + 2 * MSL
+	Rx(B) &lt;= A.REFTS + 2 * MSL
+	B.REFTS &lt; A.REFTS &lt;= Rx(B) &lt;= A.REFTS + 2 * MSL
+</pre>
+
+Combining all of these we have four possibilities:
+<pre>
+	Fresh: A.REFTS &lt; B.REFTS &lt;= Rx(B) &amp;&amp; Rx(A) - 2 * MSL &lt;= B.REFTS &lt;= Rx(B)
+	Stale: Rx(B) - 2 * MSL &lt;= A.REFTS &lt; B.REFTS &lt;= Rx(A) &lt;= Rx(B)
+	Stale: B.REFTS - 2 * MSL &lt;= Rx(A) - 2 * MSL &lt;= B.REFTS &lt; A.REFTS &lt;= Rx(B)
+	Fresh: B.REFTS &lt; A.REFTS &lt;= Rx(B) &lt;= A.REFTS + 2 * MSL
+</pre>
+<p>
+If all tests fail, a packet is alien: if a fresh test and a stale
+test pass, we cannot know whether it is fresh or stale until other
+fields are examined.
+
+<p>
+It's also possible to verify that the result of the TXTS check is
+consistent with the conclusion drawn by the REFTS check.
+
+<p>
+It may be useful to keep a record of the last TXTS value we sent.
+This means that if a connection is idle for a long time, we will
+reject any bogus REFTS value since the last TXTS we sent.
+<p>
+Note that a clock which ticks every microsecond will wrap a 32-bit
+counter after one hour, eleven minutes, 34.967296 seconds. If a
+connection has been idle for a long time, the checking must be
+careful to avoid rejecting valid packets.
+
+<h2>Checks using ACK</h2>
+<p>
+ACK values must be sent in non-decreasing order and cannot
+acknowledge data not yet sent. This allows us to
+check that for packets <code>A</code> and <code>B</code>:
+<pre>
+	deltaT = B.TXTS - A.TXTS;
+	acked = B.ACK - A.ACK;	// see section on ACK checks
+	if (deltaT &gt; 0) {
+		if (acked &lt; 0) return ALIEN;
+		if (B.ACK - TCB.SND.UNA &gt; TCB.SND.NXTSEQ - TCB.SND.UNA) return ALIEN;
+		return STALE;
+	} else if (deltaT &lt; 0) {
+		if (acked &gt; 0) return ALIEN;
+		return FRESH;
+	}
+	return FRESH;
+</pre>
+<p>
+Obviously, this performs no check if the TXTS values are the same,
+since we cannot tell the order of transmission. This test is also
+somewhat dangerous when a packet is stale. If we are transmitting very
+quickly, so that the ACK value has wrapped within the last MSL, then
+we might get an old packet with a numerically larger ACK value. This
+can only happen if more than 2^31 different values are sent in a
+period of MSL, but it is possible. Furthermore, the processing of a
+fresh packet updates <code>TCB.SND.UNA</code> to the ACK value
+received, so it is redundant to compare with A.ACK.
+
+<p>
+The recommended check is:
+<pre>
+	deltaT = B.TXTS - A.TXTS;
+	if (deltaT &gt; 0) {
+		if (B.ACK - TCB.SND.UNA &gt; TCB.SND.NXTSEQ - TCB.SND.UNA) return ALIEN;
+		return STALE;
+	}
+	return FRESH;
+</pre>
+<p>
+This check is incorporated into the check shown in the above section
+describing the TXTS checks.
+
+<h3>Effectiveness of the ACK check</h3>
+<p>
+If a packet is received with random values in TXTS and ACK, what is the
+probablility that it will be accepted by the ACK check? Firstly,
+there is a probability of 0.5 that it will be accepted because
+<code>deltaT</code> is zero or negative. In this case unsequenced options
+will be ignored, but any data might be used. If <code>deltaT</code>
+is positive, the probability of B.ACK being valid depends on the
+number of unacknowledged packets, <code>UP</code>, outstanding, and
+is <code>(UP + 1)/ 2^32</code>. The best case occurs when there are
+no outstanding packets, which is the typical case half of the time
+(because typically only one end is sending data, while the other is
+only sending acknowledgements).
+
+<h2>Checks using SEQ</h2>
+<p>
+While there are restrictions on which SEQ values can be sent, they
+are not very useful to validate packets. Assume we offer a fixed size
+window, <code>W</code>. When a packet arrives with SEQ value
+<code>S</code>, we know that the remote receiver must have seen our
+acknowledgement of <code>S - W</code>. Therefore:
+<pre>
+	Rx(S) &gt;= Tx(ACK = S-W) &gt;= Rx(S-W)
+</pre>
+<p>
+However, to check this, we would need to save for MSL either the time at
+which we first sent an ACK for each SEQ value, or the arrival times of
+all packets which carried a new SEQ value. This could be an arbitrarily
+large amount of data, so it is impractical, but it would be useful to
+have at least some criteria for classifying packets as alien based on
+their SEQ value, since a connection which has been idle for more than
+MSL can reject nearly all SEQ values. One way of doing this would be to
+record the earliest arrival time of each of the last <code>W</code> SEQ
+values, then if no new SEQ values are received for MSL, values are stale
+if:
+<pre>
+	RCV.NXT - W < S < 0
+</pre>
+<p>
+fresh if:
+<pre>
+	0 <= RCV.NXT < S + W
+</pre>
+<p>
+and alien otherwise.
+
+<h2>Generating replies</h2>
+
+<p>
+In some circumstances an incoming packet must cause a reply to be
+generated using only the information in the incoming packet. One
+example of this is an alien packet, which requires us to generate a
+RST. If we generate a packet, <code>OUT</code> in reply to a packet,
+<code>IN</code>, we should set:
+<pre>
+	OUT.SEQ = IN.ACK;
+	OUT.ACK = IN.SEQ;
+	OUT.TXTS = IN.REFTS;
+	OUT.REFTS = IN.TXTS;
+</pre>
+<p>
+A reply generated by this method may not pass the checks described
+above. In particular, the TXTS check is likely to fail because value
+is guaranteed to be at least RTT out of date, since it is IN.REFTS,
+which was an old value of TXTS. Consequently, when a packet is
+received and classified as alien, a special check must be made to see
+if it is a reply to the last packet sent. If so, it is fresh. This is
+necessary to clear half-open connections. If a half-open connection
+occurs with the open end using a large transmit window, its packets
+will provoke reset replies, but the replies will be ignored as each
+is a reply to a packet older than the latest. However, as part of
+loss recovery, the window must close, and when it reaches the value
+of one, the next reset generated will close the connection. Note that
+this is only guaranteed to work if the estimated RTT is at least as
+long as the true RTT, so it is important that excessive packet loss
+either cause the connection to close or cause the estimate of the RTT to
+increase.

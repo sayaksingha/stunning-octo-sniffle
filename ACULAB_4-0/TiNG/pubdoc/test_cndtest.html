@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: cndtest</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: cndtest</h1>
+<p>
+This application exercises the
+<a href="gen/apifn-sm_play_cnd_fsk.html">sm_play_cnd_fsk()</a> function
+from the <a href="adsilib.html">ADSI library</a>. See its
+documentation for further details of the meaning of the parameters.
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have downloaded these firmware modules:
+<ul>
+<li><a href="gen/softmodindex.html#datafeed">datafeed</a> (on Prosody X only)
+<li><a href="gen/softmodindex.html#tonegen">tonegen</a>
+<li><a href="gen/softmodindex.html#asytx">asytx</a>
+<li><a href="gen/softmodindex.html#fsktx">fsktx</a>
+<li><a href="gen/softmodindex.html#outchan">outchan</a>
+<li><a href="gen/softmodindex.html#prefsuf">prefsuf</a>
+<li><a href="gen/softmodindex.html#td">td</a>
+</ul>
+<p>
+Run <code>cndtest</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/cndtest</span> or
+<span class="type-WINNT"> gen-WINNT_V6/cndtest</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table>
+<tr>
+	<td><code>-A</code>
+		<td>Omit calling number from message, replacing it
+		with indication that call is anonymous
+
+<tr>
+	<td><code>-a</code> &lt;sastype&gt;
+		<td>the number of tone bursts in the SAS sequence
+
+<tr>
+	<td><code>-D</code> &lt;digits&gt;
+		<td>the digits to send as the calling number
+
+<tr>
+	<td><code>-h</code>
+		<td>use on-hook signalling
+
+<tr>
+	<td><code>-m</code> &lt;module&gt;
+		<td>The Prosody module to use. This is the number of the
+		module on the card.
+
+<tr>
+	<td><code>-N</code> &lt;name&gt;
+		<td>the name to send with the calling number
+
+<tr>
+	<td><code>-O</code>
+		<td>Omit calling number from message, replacing it
+		with indication that call is out-of-area
+
+<tr>
+	<td><code>-s</code>
+		<td>Use SMDF as the message format (rather than
+		MDMF)
+
+<tr>
+	<td><code>-T</code> &lt;MM-DD-hh:mm&gt;
+		<td>The date and time to include in the message
+
+<tr>
+	<td><code>-t</code> &lt;timeslot&gt;
+		<td>timeslot to use (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>). If you specify more than one channel,
+		they use consecutive timeslots starting at this one.
+		For example, the options "<code>-n 3 -t48:20</code>"
+		play to timeslots <code>48:20</code>, <code>48:21</code>,
+		and <code>48:22</code>.
+		
+<tr>
+	<td><code>-x</code> &lt;cardspec&gt;
+		<td>The address and key of the Prosody card to use.
+
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/cndtest -x x:1.2.3.4/mykey -t 64:0 -D 0123456789 -T 03-04-10:59
+</pre>
+<p>
+would send a CND sequence specifying a calling number of '0123456789'
+and a time of March 4th, 10:59am.
+to timeslot <code>48:0</code>.
+<p>
+The source code for this program is provided (cndtest.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

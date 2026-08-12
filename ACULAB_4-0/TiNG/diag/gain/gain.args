@@ -1,0 +1,3 @@
+g	gain		float
+i	infile		string
+o	outfile		string

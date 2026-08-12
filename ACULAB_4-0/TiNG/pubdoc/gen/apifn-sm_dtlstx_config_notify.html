@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody DTLS processing: API: sm_dtlstx_config_notify</title>
+</head>
+<body>
+<h1>Prosody DTLS processing: API: sm_dtlstx_config_notify</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_dtlstx_config_notify(struct sm_dtlstx_config_notify_parms *<a href="#field-configp">configp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_config_notify_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-packet_length">packet_length</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-no_capacity_event">no_capacity_event</a>;				/* in */
+} SM_DTLSTX_CONFIG_NOTIFY_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures when a DTLS[tx] reports capacity for another packet 
+to be queued. It also configures whether the event should be set 
+when there is capacity for another packet.
+<p>
+When
+<a class=pref href="#field-no_capacity_event">no_capacity_event</a>
+is zero, the event is set when 
+<a href="apifn-sm_dtlstx_status.html">sm_dtlstx_status()</a>
+will report <code>kSMDTLStxStatusHasCapacity</code>. If it
+is non-zero, the event will not be set unless a different status 
+will be reported.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>The DTLS[tx] to configure.
+
+<dt><a name="field-packet_length">packet_length</a><dd>The amount of capacity that must be available before
+<a href="apifn-sm_dtlstx_status.html">sm_dtlstx_status()</a>
+reports <code>kSMDTLStxStatusHasCapacity</code>.
+
+<dt><a name="field-no_capacity_event">no_capacity_event</a><dd>An indicator of whether the DTLS[tx] event should be set when 
+there is space for another packet to be queued.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosdtls.html">Prosody DTLS processing API</a>.
+</body>
+</html>

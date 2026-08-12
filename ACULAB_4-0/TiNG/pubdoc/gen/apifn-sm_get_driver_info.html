@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_get_driver_info</title>
+</head>
+<body>
+<h1>Prosody generic: API: sm_get_driver_info</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_get_driver_info(struct sm_driver_info_parms *<a href="#field-drvinfop">drvinfop</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-drvinfop">*drvinfop</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_driver_info_parms {
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-major">major</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-minor">minor</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-step">step</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-custom">custom</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-quality">quality</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-buildno0">buildno0</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-buildno1">buildno1</a>;					/* out */
+} SM_DRIVER_INFO_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Retrieves information about TiNG library version controlling Prosody
+modules installed in system.
+<p>
+On return, the parameters
+<a class=pref href="#field-major">major</a>,
+<a class=pref href="#field-minor">minor</a>
+and
+<a class=pref href="#field-step">step</a>
+will be set to the values <code>X</code>, <code>Y</code>, and
+<code>Z</code> respectively of the three element version no. for
+the library <code>X.Y.Z</code>.
+<p>
+The
+<a class=pref href="#field-custom">custom</a>
+parameter will be set to a non-zero value if the driver build is
+a custom special build of the driver for a specific customer.
+<p>
+The
+<a class=pref href="#field-quality">quality</a>
+parameter will be set to one of the following character values:
+<p>
+<table border cellpadding=5>
+<tr> <th>Quality</th> <th>Character</th> </tr>
+<tr>
+	<td>'B'</td>
+	<td>Beta quality version</td>
+</tr>
+<tr>
+	<td>'T'</td>
+	<td>Test version</td>
+</tr>
+<tr>
+	<td>'D'</td>
+	<td>Development (or alpha quality) version</td>
+</tr>
+<tr>
+	<td>'I'</td>
+	<td>Released version</td>
+</tr>
+</table>
+<p>
+The
+<a class=pref href="#field-buildno0">buildno0</a>
+and
+<a class=pref href="#field-buildno1">buildno1</a>
+parameters are for Aculab use only. However, note that it is essential to include these two
+parameters when describing the version to Aculab support staff.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-major">major</a><dd>Major version number
+
+<dt><a name="field-minor">minor</a><dd>Minor version number
+
+<dt><a name="field-step">step</a><dd>Version step.
+
+<dt><a name="field-custom">custom</a><dd>Indicator of custom software
+
+<dt><a name="field-quality">quality</a><dd>Quality code
+
+<dt><a name="field-buildno0">buildno0</a><dd>Part of build code
+
+<dt><a name="field-buildno1">buildno1</a><dd>Another part of build code
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

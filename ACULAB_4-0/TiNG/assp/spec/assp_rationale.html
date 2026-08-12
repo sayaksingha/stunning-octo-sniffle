@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>ASSP: rationale</title>
+</head>
+<body>
+<h1>ASSP: rationale</h1>
+<p>
+This document describes why certain alternatives were chosen in the
+design of <a href="assp_main.html">ASSP</a>.
+
+<h2>Selective acknowledgement</h2>
+<p>
+Firstly, let us consider alternative ways to represent which packets
+have arrived and which have not. Obviously the general situation is
+that all packets up to ACK-1 have arrived, and there is some number x,
+such that no packet &gt;= x has arrived. If no packets have been lost and
+there has been no re-ordering, then ACK == x. This can be represented
+as <code>...AAAnnn...</code> where <code>A</code> is a packet which has
+arrived and <code>n</code> is one which has not. The only interesting
+case arises when packets have arrived out of order (whether due to loss
+or re-ordering) and we have ACK < x. This means we have a sequence
+<code>...AAAn???...???Annnn...</code>.
+<p>
+Three obvious possibilities for representing the out-of-order packets
+are: a bitmask, a list of packets, and a list of ranges of packets. Note
+that the protocol is optimised for situations in which the loss is not
+big, so it is unlikely that there are isolated packets (i.e. ones for
+which both the one before and the one after are missing) so a list of
+ranges seems much preferred compared to a list of packets. Even with
+high loss, a list of ranges is a more compact representation. For
+example, if we send 1024 packets, the probability of a range being
+less compact than a list of packets only reaches 0.5 when the packet
+loss rate is above 0.5. Therefore it is much more economical to encode
+packets as a list of ranges.
+<p>
+This leads us to consider whether a bitmask is better than a list of
+ranges. The main disadvantage of bitmasks is the CPU time needed to
+process them. It is necessary both to find the bit in the mask and to
+test it. On some CPUs these are separate operations, whereas a
+comparison between two numbers is only one operation. This means that
+unless bitmasks have a significant advantage in other areas they will
+not be preferrable. To examine the space required in the packet,
+consider an example: if 1024 packets are outstanding, a bitmask
+of 1024 bits occupies the same space as 16 packet number ranges making
+a list occupy less space unless the loss rate is above about 1.5%.
+While we do not wish to prevent the protocol working at such a high
+loss rate, it is optimised for lower loss.
+<p>
+In conclusion, the best representation seems to use ranges of packet
+numbers. However, see also flow control for the actual representation
+of the ranges.
+
+<h2>Flow Control</h2>
+<p>
+To implement flow control we need something equivalent to the TCP
+window field. Obviously a number of packets is specified rather than a
+number of octets of data. However the interesting feature of this
+field is that its functionality can be combined with that of selective
+acknowledgement. Both tell a transmitter to refrain from sending
+packets, so a sufficiently general mechanism can cover both. In
+particular, starting at the packet referred to by the ACK number, the
+transmitter is told that it may transmit the next <code>A</code> packets
+in sequence, that it should not transmit the next <code>B</code> after
+that, transmit the next <code>C</code>, not the next <code>D</code>,
+etc. The transmitter need not care why the receiver doesn't want to
+receive a range of packets, merely that that range should not be sent.
+<p>
+Therefore, we want to encode a sequence <code>ACK, A, B, C, D...</code>
+which means that packets up to <code>ACK</code> have been received,
+please send packets <code>[ACK..A)</code>,
+please do not send <code>[A..B)</code>,
+send <code>[B..C)</code>,
+do not send <code>[C..D)</code>, etc. It is worth considering how to
+encode this. The <code>ACK</code> is sent in a fixed header field and
+the rest has to be sent in an option since it varies in size. We
+could send the numbers <code>A, B, C, D, ...</code>
+themselves, but we could also send the differences <code>A -
+ACK</code>, <code>B - A</code>, <code>C - B</code>, <code>D -
+C</code>, ... etc. Typically these differences will be small (unless
+the flow control window is more than 255 packets, they will all fit into
+one octet each). It may appear that we have a problem using octets
+if one of the
+differences exceeds 255, since it wouldn't fit into a single octet,
+but note that any value <code>V &gt; 255</code> can be encoded as <code>255, 0,
+V-255</code> (with <code>V-255</code> using the same trick in turn if
+it is still bigger than 255) since there is no reason why a value cannot
+be zero. There are three reasons why it seems best to encode them using
+one octet each:
+<ul>
+	<li>The transmitter and receiver do not need to convert the
+	values into and out of network byte order.
+	<li>One octet is a very compact representation, saving space
+	in the packets.
+	<li>It is much more likely that bugs in handling zero values
+	will be found than if 16 bits were used per value.
+</ul>
+<p>
+Therefore the flow control and selective acknowledgement features are
+implemented by a sequence of bytes, <code>X, Y, Z, ...</code> which
+tell the transmitter to send <code>X</code> packets starting at
+<code>ACK</code>, then <code>Z</code> packets starting at
+<code>ACK + X + Y</code>, etc. This is the WTR/DNS option list.
+<p>
+This encoding is smaller than a bitmask when the packet loss rate is
+below about 14%.
+
+<h2>Timestamps</h2>
+<p>
+An alternative to a timestamp in a packet is a packet number
+which is incremented for each packet sent. A packet number has these
+advantages:
+<ul>
+<li>A timestamp may stay at the same value for many packets, making it
+less easy to see if they were re-ordered. If two packets arrive carrying
+no data, they have the same sequence number and only a packet number can
+guarantee that the receiver can tell which was sent first.
+<li>Since a timestamp may be the same for several packets, only a packet
+number allows the receiver to know that two identical packets are
+duplicates generated by the network.
+<li>Packet numbers allow detection of lost ACKs.
+<li>Packet numbers allow a receiver to ignore appropriate fields from
+out-of-sequence packets (e.g. offered flow-control window) which have
+the property that only the last value is valid.
+</ul>
+<p>
+Timestamps have their own advantages. These are:
+<ul>
+<li>Timestamps are well tested in TCP (RFC 1323).
+<li>A timestamp allows calculation of RTT without having to remember
+when packets were sent. This can be quite a lot of information, and
+it would need to be recorded always. Data that might need to be
+re-transmitted and the out-of-order data awaiting reassembly are also
+potentially big users of storage, but both of those can be easily
+subjected to dynamic limits, while it is very difficult to limit the
+amount of packet timing information that is recorded without letting
+RTT estimation become too inaccurate to permit prompt
+re-transmissions.
+<li>Timestamps protect against wrapped sequence numbers for a larger
+variety of connections. By ticking once per half of the sequence space
+they effectively increase the sequence space by the size of the
+timestamp, whereas packet numbers may not increase the sequence space
+at all (when only one end sends data and the other only acknowledges
+it, the sequence numbers on the data packets are locked in step with
+the packet numbers). However note that if we assume an MSL of 255
+seconds, and 512 bytes per data packet, we can send at up to 34 GB/s
+with no protection other than the sequence numbers.
+<li>It is much easier to check received packets for validity based on
+timestamps, and such checks only need O(1) data per connection,
+whereas packet-numbering schemes seem to require O(N) data for N
+packets sent.
+</ul>
+<p>
+Since the amount of per-connection data is a concern when handling large
+numbers of connections, timestamps appear to be significantly better.
+
+<h2>Loss detection</h2>
+<p>
+In contrast to other protocols, we detect loss solely by use of a
+timeout. This is for two reasons: we have selective acknowledgement
+and we have fine-grained timers. Selective acknowledgement means that
+we don't need to rely on tricks such as detecting duplicate acks to
+deduce that a packet has been lost - we know exactly which packets have
+been received. This also means that the receiver's rules can be
+relaxed so that it doesn't have to send acks simply because packets
+have arrived out of sequence.
+<p>
+First, let's look at the theory. If we send a packet, we cannot
+possibly know its fate until after the RTT, since if it was
+successfully delivered we wouldn't get told until an ack arrives at
+least RTT later. We can only deduce loss from a failure to receive such
+an ack.
+<p>
+Fast retransmit in TCP rests on two principles: when a packet is lost
+the receiver is forced to send acks more quickly, and RTT estimates are
+very conservative. Together with the assumption that packet re-ordering
+is rare enough to be unimportant, the reception of the forced acks tells
+the sender that a packet was lost. For example, if packets 1, 2, 3, 4,
+5, 6, are sent at times <code>send(1)..send(6)</code> and packet 2 is
+lost, the acks are: 1, 1, 1, 1, 1, 1. and these are received at
+<code>send(1)+RTT(1)</code>, <code>send(3)+RTT(3)</code>,
+<code>send(4)+RTT(4)</code>, <code>send(5)+RTT(5)</code>, and
+<code>send(6)+RTT(6)</code>. TCP assumes packet loss at this point.
+In principle, we should be able to
+deduce packet loss at <code>send(2)+RTT(2)</code>. However we cannot
+know <code>RTT(2)</code> since packet 2 was lost, so we must wait until
+<code>send(2)+eRTT(2)</code> where <code>eRTT</code> is our estimated
+RTT. Fast retransmit firstly assumes that <code>send(2)+RTT(2)</code>
+&lt; <code>send(6)+RTT(6)</code> which seems quite reasonable, even in
+the presence of moderate re-ordering. It also assumes that
+<code>send(2)+eRTT(2)</code> is a lot greater than
+<code>send(6)+RTT(6)</code>. This is the assumption we do not maintain
+in ASSP. In other words, fast retransmit assumes that our estimate for
+the RTT for packet 2 is so much larger than the real RTT that it is
+worth re-transmitting based on packet 6. If the estimate was only a
+little bigger than reasonable, it wouldn't be worth adding a separate
+mechanism for fast retransmits. In particular, since it takes time to
+send packets 3, 4, 5, and 6, if the RTT estimate is really good, our
+retransmission timer would have fired before the ack for 6 had arrived
+and therefore the fast retransmit mechanism would never be used. In TCP
+there are two reasons why the ack for 6 arrives before the
+retransmission timer fires: the RTT timeout is far too big, and out of
+sequence packets are acked immediately whereas the RTT estimate is based
+on real RTT plus the delay incurred by delayed ack. One reason why the RTT
+timeout is too big is that the clock used is far too coarse-grained
+(typically resolving only down to 500mS) to allow the timer to fire at
+the correct time.
+<p>
+There is one situation in which duplicate acks could be useful to
+trigger re-transmissions. This is on connections with high bandwidth
+and long latency. In this situation the period
+<code>send(6)-send(2)</code> might be very short compared to the RTT,
+so if the network rarely re-orders packets the reception of duplicate
+acks might effectively be a very accurate estimate of the RTT at the
+time the lost packet was sent, therefore indicating that it was lost.
+However, one way to create a high bandwidth link is to aggregate many
+low bandwidth links, which can be easily achieved by sending packets
+down each of the low bandwidth links in turn. Unfortunately, this will
+cause a high rate of packet re-ordering in just the situation when we
+might want to rely on re-ordering being rare. Consequently it seems
+inadvisable to rely of duplicate ACKs as an indication of packet
+loss.
+<p>
+In conclusion, the rule for detecting loss is that we assume loss if a
+packet has not been acknowledged at a time after sending corresponding
+to the RTT timeout which is initially <code>RTT.AVRTT + 4 *
+RTT.RTTVAR</code> (or equivalent for fast ack packets).
+
+<h2>Re-transmission timeouts</h2>
+<p>
+Firstly, note that when a packet is sent it must acknowledge everything
+which has already been received. Therefore, when we send data, and a
+packet arrives after the RTT which fails to acknowledge it, we know it
+has been lost. This is regardless of any delayed ACK strategy that
+the receiver might be using because delayed ack only permits the
+receiver to delay sending the ack, not to send an ack which claims the
+packet wasn't received. Therefore, there are two possible
+timeouts for a packet: one which triggers re-transmission in the
+absence of a response, and one which is checked when a packet is
+received. These will be called the re-transmission timeout trigger
+(RToT) and re-transmission timeout check (RToC). 
+<p>
+For all data packets, RToC is:
+<code>FRTT.AVRTT + 4 * FRTT.RTTVAR</code> after the time of last
+transmission.
+<p>
+This is because FRTT measures the actual RTT of the path.
+RToT is never shorter than RToC, but is the same for FASTACK packets
+because they are supposed to be acknowledged immediately. For ACKLESS
+packets, there is no RToT (or you can consider it is infinite) since
+we do not expect an acknowledgement. Otherwise RToT is
+<code>RTT.AVRTT + 4 * RTT.RTTVAR</code> after the time of last
+transmission. When the RToT timeout has passed, the packet is eligible
+for re-transmission. When the RToC timeout has passed
+for any packet, and a packet is then received which fails to
+acknowledge it, it becomes eligible for re-transmission.
+<p>
+Just because a packet is eligible for re-transmission does not mean
+that it should or must be re-transmitted immediately. Apart from other
+restrictions such as congestion avoidance, a transmitter may defer
+sending for other reasons (for example, because its timeouts are too
+coarse and it hasn't noticed a RToT expiring, or it is using a more
+conservative estimate of RTT).
+<p>
+Note that in TCP there is normally no attempt to allow for the fact that
+delayed ACK does not permit a receiver to send an ACK which fails to
+acknowledge data received. This is for two reasons: firstly TCP does
+not have a good estimate of the path RTT independent of delayed ACK
+effects, so it cannot apply a shorter timeout, and secondly, typical
+implementations use such a coarse grained timer that the delay (typically
+500mS) added by delayed ack is not large enough to be noticeable.
+However the proposal in TCP Vegas to check for timeouts upon reception
+of duplicate ACKs does reduce the effects of the coarse grained timer,
+though it still lacks an accurate path RTT estimate.
+
+</body>
+</html>

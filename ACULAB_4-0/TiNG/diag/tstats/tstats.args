@@ -1,0 +1,3 @@
+c	card		string
+m	module		unsigned
+i	interval	unsigned

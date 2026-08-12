@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Encodings</title>
+</head>
+<body>
+<h1>Prosody data communications Encodings</h1>
+<p>
+Prosody defines an <em>encoding</em> as the way data is formatted for
+transport on a timeslot. The method of transport is called a
+<em>protocol</em>. Protocols are described in
+<a href="prosdc_protocol.html">Prosody data communications
+Protocols</a>.
+<p>
+The encodings available are:
+<ul>
+<li><a href="encoding_hdlc.html">HDLC - frames of data with optional CRC</a>
+<li><a href="encoding_sync.html">sync - raw uninterpreted data</a>
+<li><a href="encoding_async.html">async - characters with start bit, data, stop bit</a>
+<li><a href="encoding_none.html">none - protocol dependent data</a>
+</ul>
+<p>
+The possible combinations of protocols and encodings are described in
+<a href="prosdc_config.html">Prosody data communications Protocols
+and Encodings</a>.
+</body>

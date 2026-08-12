@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_ans_listen_for</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_ans_listen_for</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_ans_listen_for(struct sm_ans_listen_for_parms *<a href="#field-listenp">listenp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-listenp">*listenp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_ans_listen_for_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMANSMode">enum kSMANSMode</a> {
+		<a href="#field-kSMANSModeDisable">kSMANSModeDisable</a>,
+		<a href="#field-kSMANSModeDetect">kSMANSModeDetect</a>,
+	} <a href="#field-detection_mode">detection_mode</a>;					/* in */
+} SM_ANS_LISTEN_FOR_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This call controls detection of the ITU-T V.8 tones ANS and ANSam,
+which are used in the preliminary stages of modem negotiation.
+<p>
+When a tone is recognised, the recognition event associated with the
+channel is set and the application can then retrieve a tone identifier
+for the recognised tone by calling
+<a href="apifn-sm_get_recognised.html">sm_get_recognised()</a>.
+<p>
+The module
+<a href="softmodindex.html#ansam">ansam</a>
+is required by this call.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel on which to listen.
+
+<dt><a name="field-detection_mode">detection_mode</a><dd>The detection mode to use.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMANSModeDisable">kSMANSModeDisable</a>
+<dd>Stop detecting ANS and ANSam tones.
+
+<dt><a name="field-kSMANSModeDetect">kSMANSModeDetect</a>
+<dd>Initiate ANS and ANSam tone detection.
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - illegal mode</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

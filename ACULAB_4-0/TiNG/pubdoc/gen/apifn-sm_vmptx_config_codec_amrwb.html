@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_codec_amrwb</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_codec_amrwb</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_codec_amrwb(struct sm_vmptx_codec_amrwb_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_codec_amrwb_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-aligned">aligned</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-VADMode">VADMode</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-frames_per_packet">frames_per_packet</a>;				/* in */
+} SM_VMPTX_CODEC_AMRWB_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a VMP[tx] to use AMR wide-band for encoding data,
+as defined in
+<a href="http://www.ietf.org/rfc/rfc3267.txt">IETF RFC 3267</a>.
+<p>
+This requires the module
+<a href="softmodindex.html#amr-wb">amr-wb</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to which to add this codec
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type identifer to use with this codec (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13). Supplying a value of
+<code>-1</code> will remove any payload type configuration from the 
+codec preventing its use.
+
+<dt><a name="field-aligned">aligned</a><dd>Packet alignment (bandwidth efficient mode). 0 if packet is not aligned, otherwise packet is aligned.
+
+<dt><a name="field-VADMode">VADMode</a><dd>The mode of operation for the voice activity detector (i.e. discontinuous transmission, or DTX). 0 to
+disable DTX, otherwise enabled.
+
+<dt><a name="field-frames_per_packet">frames_per_packet</a><dd>The number of frames to send per packet. This value is normally one,
+which encodes 20 milliseconds per packet, but larger values could be
+used, to reduce the packet overhead at the expense of extra delay.
+This field is currently ignored. Packets are always transmitted with
+one frame per packet.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

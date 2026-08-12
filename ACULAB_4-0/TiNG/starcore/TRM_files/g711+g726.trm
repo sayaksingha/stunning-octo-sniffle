@@ -1,0 +1,9 @@
+WARNING: AUTOMATICALLY GENERATED FILE - DO NOT EDIT
+
+VERSION: 1
+DESCRIPTION: VoIP gateway G711+G726
+
+Modules: vmprx vmptx datafeed tonegen vmpplc inchan outchan passthru g726 rtcp
+
+Resources: ACU+G711+G726 60 tdm_in tdm_out 
+

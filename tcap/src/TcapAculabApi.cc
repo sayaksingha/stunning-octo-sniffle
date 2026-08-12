@@ -63,7 +63,8 @@ BOOLEAN TcapAculab::Init(TEXT *lCfgFile, BOOLEAN lPegFlag, int lNoOfInstance, in
 
    mNoOfInstance = lNoOfInstance;
 
-   if(false == this->ReadConfig())
+   // Ab Change: Pass lCfgFile down to ReadConfig
+   if(false == this->ReadConfig(lCfgFile))
    {
       return false;
    }
@@ -78,7 +79,8 @@ BOOLEAN TcapAculab::Init(TEXT *lCfgFile, BOOLEAN lPegFlag, int lNoOfInstance, in
       return false;
    }
 
-   if(false == mDlgManager.Init())
+   // Ab Change: Pass lCfgFile down to DlgManager
+   if(false == mDlgManager.Init(lCfgFile))
    {
       snprintf(lLogText, MAX_LOG_TEXT_LEN,
             "AI: Dialogue Manager Initialization failed. Exiting...");
@@ -88,7 +90,8 @@ BOOLEAN TcapAculab::Init(TEXT *lCfgFile, BOOLEAN lPegFlag, int lNoOfInstance, in
       return false;
    }
 
-   if(false == mTransDlgMap.Init(lTransValidationKey, lMsgType))
+   // Ab Change: Pass lCfgFile down to TransDlgMap
+   if(false == mTransDlgMap.Init(lTransValidationKey, lMsgType, lCfgFile))
    {
       snprintf(lLogText, MAX_LOG_TEXT_LEN,
             "AI: Trans Dialogue Manager Initialization failed. Exiting...");
@@ -112,6 +115,7 @@ BOOLEAN TcapAculab::ReloadConfig()
 {
    if(false == SsapCreate(true))
       return false;
+   return true;
 }
 
 //-------------------------------------------------------------------------------
@@ -159,10 +163,11 @@ BOOLEAN TcapAculab::SetTcapCinfigFilePath(TEXT *lCfgFile)
 // DESCRIPTION : Reads config parameters
 // PARAMETER   : none
 // RETURN      : BOOLEAN
-//-------------------------------------------------------------------------------
-BOOLEAN TcapAculab::ReadConfig()
+// Ab Change: Pass lCfgFile down to ReadConfig
+BOOLEAN TcapAculab::ReadConfig(TEXT* lCfgFile)
 {
-   if(false == this->ReadTcapConfig())
+   // Ab Change: Pass lCfgFile down to ReadTcapConfig
+   if(false == this->ReadTcapConfig(lCfgFile))
    {
       return false;
    }
@@ -175,13 +180,14 @@ BOOLEAN TcapAculab::ReadConfig()
 // DESCRIPTION : Reads config params related to TCAP
 // PARAMETER   : None
 // RETURN      : BOOLEAN
-//-------------------------------------------------------------------------------
-BOOLEAN TcapAculab::ReadTcapConfig()
+// Ab Change: Pass lCfgFile down to ReadTcapConfig
+BOOLEAN TcapAculab::ReadTcapConfig(TEXT* lCfgFile)
 {
    TEXT lLogText  [MAX_LOG_TEXT_LEN + 1] = "";
    CfgRead        lCfgRead("ACULAB_TCAP_API");
 
-   if (false == lCfgRead.CfgInit(SS7_KER_CFG))
+   // Ab Change: Read from lCfgFile instead of SS7_KER_CFG
+   if (false == lCfgRead.CfgInit(lCfgFile))
    {
       T(gTrace, printf("%s: CfgRead object(%s) intialization failed...\n",
                gProcessName, SS7_KER_CFG););
@@ -239,6 +245,7 @@ BOOLEAN TcapAculab::SsapCreate(BOOLEAN reload)
    static UINT8 lTemp;
    UINT32   lLocalPC;
 
+
    if(false == reload)
    {
       lTemp = 0;
@@ -260,9 +267,18 @@ BOOLEAN TcapAculab::SsapCreate(BOOLEAN reload)
       {
          if(ADDED_NEW != lSsapDetails.instance[i].status)
             continue;
-         mSsapPtr[lTemp] = acu_tcap_ssap_create(mCfgFile, 
-               acu_tcap_ssap_flags_t(ACU_TCAP_ITU | ACU_TCAP_LOG_STDERR));
+	 
+	 //ANSI - dynamic flag to support ansi | ITU
+        // mSsapPtr[lTemp] = acu_tcap_ssap_create(mCfgFile, acu_tcap_ssap_flags_t(tcapFlag | ACU_TCAP_LOG_STDERR));
+         
+            mSsapPtr[lTemp] = acu_tcap_ssap_create(mCfgFile,
+               acu_tcap_ssap_flags_t(SS7_STANDARD_ANSI | ACU_TCAP_LOG_STDERR));
+         // ---> ADD THIS ENTIRE BLOCK HERE <---
+             acu_tcap_ssap_set_cfg_int(mSsapPtr[lTemp], ACU_TCAP_CFG_ENC_DEF_LEN, 1);
+             acu_tcap_ssap_set_cfg_int(mSsapPtr[lTemp], ACU_TCAP_CFG_QOS_RET_OPT, 1);
 
+         //UPTO ANSI - 
+         
          if(NULL == mSsapPtr[lTemp])
          {
             sprintf(lLogText,"AI: Config File %s SSAP creation failed",mCfgFile);
@@ -467,6 +483,7 @@ BOOLEAN TcapAculab::SsapReConnect(int &lInstanceNo, INT16 &rMsgType, UINT32 &rDl
    UINT8  lTempInstance = 0;
    //This function deletes a SCCP access point, and any 
    //TCAP transactions created on it.
+   
    //
    sprintf(lLogText,"AI: MsgType:%d DlgTimeout:%d CapDlgTimeout:%d MaxDlgSize:%d RestoreStatus:%d SSAP Reconnect", 
          rMsgType, rDlgTimeout, rCapDlgTimeout, rMaxDlgSize, gRestoreStatus);
@@ -508,9 +525,13 @@ BOOLEAN TcapAculab::SsapReConnect(int &lInstanceNo, INT16 &rMsgType, UINT32 &rDl
    {
       return false;
    }
+   // ANSI - support dynamic flag to support ansi | ITU
    mSsapPtr[lInstanceNo] = acu_tcap_ssap_create(mCfgFile, 
-         acu_tcap_ssap_flags_t(ACU_TCAP_ITU | ACU_TCAP_LOG_STDERR));
-
+         acu_tcap_ssap_flags_t(SS7_STANDARD_ANSI | ACU_TCAP_LOG_STDERR));
+   // ---> ADD THIS ENTIRE BLOCK HERE <---
+       acu_tcap_ssap_set_cfg_int(mSsapPtr[lInstanceNo], ACU_TCAP_CFG_ENC_DEF_LEN, 1);
+       acu_tcap_ssap_set_cfg_int(mSsapPtr[lInstanceNo], ACU_TCAP_CFG_QOS_RET_OPT, 1);
+   //UPTO ANSI -
    if(NULL == mSsapPtr[lInstanceNo])
    {
       sprintf(lLogText,"AI: SSAP creation failed, config file %s",mCfgFile);
@@ -1153,11 +1174,11 @@ BOOLEAN TcapAculab::CreateAcuTcapOngoingTrans(acu_tcap_trans_t **lTrsnPtr,int &l
 // METHOD      : AcuTcapOperationRestore 
 // DESCRIPTION : Add aculab tcap message component from application tcap message 
 //               component
-// PARAMETER   : TcapMsg lTcapMsg,acu_tcap_msg_t *lMsg
+// PARAMETER   : AnsiTcapMsg lTcapMsg,acu_tcap_msg_t *lMsg
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
 #if 0
-BOOLEAN TcapAculab::AcuTcapOperationRestore(TcapMsg lTcapMsg, acu_tcap_msg_t *lMsg)
+BOOLEAN TcapAculab::AcuTcapOperationRestore(AnsiTcapMsg lTcapMsg, acu_tcap_msg_t *lMsg)
 {
    int lRetVal;
    TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
@@ -1296,14 +1317,14 @@ BOOLEAN TcapAculab::InitAcuTcapMsg(acu_tcap_msg_t *lMsg, acu_tcap_msg_type_t lTy
 // METHOD      : GetTcapDialogue 
 // DESCRIPTION : Gets Application TCAP Message dialogue portion
 //               from aculab tcap message dialogue
-// PARAMETER   : const acu_tcap_dialogue_t *, TcapMsg &(Refrence)
+// PARAMETER   : const acu_tcap_dialogue_t *, AnsiTcapMsg &(Refrence)
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
-BOOLEAN TcapAculab::GetTcapDialogue(const acu_tcap_dialogue_t *lDlg, TcapMsg &lTcapMsg)
+BOOLEAN TcapAculab::GetTcapDialogue(const acu_tcap_dialogue_t *lDlg, AnsiTcapMsg &lTcapMsg)
 {
 
-   TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
-
+   // TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
+/* IN new AnsiTcapMsg userInformation is not supported
    if(lDlg->td_flags & ACU_TCAP_DF_HAS_UI)
    {
       if(lDlg->td_ui_len > 11)
@@ -1328,7 +1349,8 @@ BOOLEAN TcapAculab::GetTcapDialogue(const acu_tcap_dialogue_t *lDlg, TcapMsg &lT
          gLog.GenerateLog(ACUTCAP113, 2, lLogText);
       }
    }
-
+*/
+ /* IN new AnsiTcapMsg applicationContext is not supported
    if(lDlg->td_flags & ACU_TCAP_DF_HAS_HEX_APP_CTX)
    {  
       lTcapMsg.applicationContext.numberOfBytes = lDlg->td_app_ctx_len;
@@ -1340,7 +1362,7 @@ BOOLEAN TcapAculab::GetTcapDialogue(const acu_tcap_dialogue_t *lDlg, TcapMsg &lT
       T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
       gLog.GenerateLog(ACUTCAP114, 2, lLogText);
    }
-
+  */
    return true;
 
 }
@@ -1349,11 +1371,362 @@ BOOLEAN TcapAculab::GetTcapDialogue(const acu_tcap_dialogue_t *lDlg, TcapMsg &lT
 // METHOD      : GetTcapComponets 
 // DESCRIPTION : Gets Application TCAP Components from aculab tcap message
 //               componet(s)
-// PARAMETER   : acu_tcap_msg_t * TcapMsg & ,TcapComponent *, int &lNoOfComp
+// PARAMETER   : acu_tcap_msg_t * lMsg, AnsiTcapMsg &lTcapMsg, const acu_tcap_dialogue_t *lDlg, TcapComponent *lComp, int &lNoOfComp
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
-BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
-      const acu_tcap_dialogue_t *lDlg, TcapComponent *lComp,int &lNoOfComp)
+#if 0
+BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, AnsiTcapMsg &lTcapMsg,
+      const acu_tcap_dialogue_t *lDlg, AnsiTcapComponent *lComp,int &lNoOfComp)
+{
+   TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
+
+   int NoOfComp = acu_tcap_msg_has_components(lMsg);
+
+   if(0 == NoOfComp)
+   {
+      lNoOfComp = 0;
+      sprintf(lLogText, "AI: DlgId:%d Components not Present", lTcapMsg.dialogueId);
+      T(gTrace,printf("%s: %s\n",gProcessName, lLogText););
+      gLog.GenerateLog(ACUTCAP115, 2, lLogText);
+
+      switch(lMsg->tm_msg_type)
+      {
+         case ACU_TCAP_MSG_LOCAL_ABORT:
+            {
+               lNoOfComp = 1;
+               lTcapMsg.componentPresent = true;
+               lComp->invokeId = 0;
+               lComp->lastComponent = TCAP_LAST_COMPONENT;
+               lComp->tcapComp = TCAP_ABORT_COMP;
+               lComp->tcapAbortComp.abortType = TCAP_USER_ABORT;
+               lComp->tcapAbortComp.abortReason.numberOfBytes = 1;
+               memcpy(&lComp->tcapAbortComp.abortReason.array,&lMsg->tm_p_abort_cause,1);
+
+	       sprintf(lLogText,
+                     "AI: DlgId:%d lTId:%08X Populating Abort Msg(LOCAL_ABORT)",
+                     lTcapMsg.dialogueId, lTcapMsg.origTransId );
+
+               //removing received txn id sprintf(lLogText, "AI: DlgId:%d lTId:%08X rTId:%08X Populating Abort Msg(LOCAL_ABORT)", lTcapMsg.dialogueId, lTcapMsg.origTransId ,lTcapMsg.destTransId);
+               
+	       T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+               gLog.GenerateLog(ACUTCAP116, 2, lLogText);
+               return true;
+            }
+
+         case ACU_TCAP_MSG_P_ABORT:   
+            {
+               lNoOfComp = 1;
+               lTcapMsg.componentPresent = true;
+               lComp->invokeId = 0;
+               lComp->lastComponent = TCAP_LAST_COMPONENT;
+               lComp->tcapComp = TCAP_ABORT_COMP;
+               lComp->tcapAbortComp.abortType = TCAP_PROTOCOL_ABORT;
+               lComp->tcapAbortComp.abortReason.numberOfBytes = 1;
+               memcpy(&lComp->tcapAbortComp.abortReason.array,&lMsg->tm_p_abort_cause,1);
+               sprintf(lLogText,
+                     "AI: DlgId:%d lTId:%08X Populating Abort Msg(LOCAL_ABORT)",
+                     lTcapMsg.dialogueId, lTcapMsg.origTransId );
+               //removing received txn id sprintf(lLogText, "AI: DlgId:%d lTId:%08X rTId:%08X Populating Abort Msg(P_ABORT)", lTcapMsg.dialogueId, lTcapMsg.origTransId ,lTcapMsg.destTransId);
+               T(gTrace,printf("%s: %s\n",gProcessName,lLogText););   
+               gLog.GenerateLog(ACUTCAP117, 2, lLogText);
+               return true;
+
+            }
+         case ACU_TCAP_MSG_ITU_ABORT:
+            {
+               lNoOfComp = 1;
+               lTcapMsg.componentPresent = true;
+               lComp->invokeId = 0;
+               lComp->lastComponent = TCAP_LAST_COMPONENT;
+               lComp->tcapComp = TCAP_ABORT_COMP;
+               lComp->tcapAbortComp.abortType = TCAP_USER_ABORT;
+
+               if(NULL != lDlg)
+               {
+                  if(lDlg->td_flags & ACU_TCAP_DF_HAS_ABRT_SOURCE || lDlg->td_flags & ACU_TCAP_DF_HAS_AARE_DIAG)
+                  {
+                     lComp->tcapAbortComp.abortReason.numberOfBytes = 1;
+
+                     switch(lDlg->td_result)
+                     {
+                        case ACU_TCAP_AARE_ACCEPTED_USER:
+                           lComp->tcapAbortComp.abortReason.array[0] = TCAP_AARE_ACCEPTED_USER;
+                           break;
+
+                        case ACU_TCAP_AARE_ACCEPTED_PROVIDER:
+                           lComp->tcapAbortComp.abortReason.array[0] = TCAP_AARE_ACCEPTED_PROVIDER;
+                           break;
+
+                        case ACU_TCAP_AARE_REJECT_USER_NULL:
+                           lComp->tcapAbortComp.abortReason.array[0] = TCAP_AARE_REJECT_USER_NULL;
+                           break;
+
+                        case ACU_TCAP_AARE_REJECT_USER_NO_REASON:
+                           lComp->tcapAbortComp.abortReason.array[0] = TCAP_AARE_REJECT_USER_NO_REASON;
+                           break;
+
+                        case ACU_TCAP_AARE_REJECT_USER_APPLICATION_CONTEXT_NOT_SUPPORTED:
+                           lComp->tcapAbortComp.abortReason.array[0] = TCAP_AARE_REJECT_USER_APPLICATION_CONTEXT_NOT_SUPPORTED;
+                           break;
+
+                        case ACU_TCAP_AARE_REJECT_PROVIDER_NULL:
+                           lComp->tcapAbortComp.abortReason.array[0] = TCAP_AARE_REJECT_PROVIDER_NULL;
+                           break;
+
+                        case ACU_TCAP_AARE_REJECT_PROVIDER_NO_REASON:
+                           lComp->tcapAbortComp.abortReason.array[0] = TCAP_AARE_REJECT_PROVIDER_NO_REASON;
+                           break;
+
+                        case ACU_TCAP_AARE_REJECT_PROVIDER_NO_COMMON_DIALOGUE_PORTION:
+                           lComp->tcapAbortComp.abortReason.array[0] = TCAP_AARE_REJECT_PROVIDER_NO_COMMON_DIALOGUE_PORTION;
+                           break;
+
+                        default:
+                           //Add default reason TBD
+                           break;
+                     }
+                  }
+		  /* application context not present in current AnsiTcapMsg
+                  if(lDlg->td_flags & ACU_TCAP_DF_HAS_HEX_APP_CTX)
+                  {
+                     memcpy(lTcapMsg.applicationContext.array, lDlg->td_app_ctx, lDlg->td_app_ctx_len);
+                     lTcapMsg.applicationContext.numberOfBytes = lDlg->td_app_ctx_len;
+                  }
+		  */
+               }
+               
+	      sprintf(lLogText, "AI: DlgId:%d lTId:%08X Populating Abort Msg(ITU_ABORT)", lTcapMsg.dialogueId, lTcapMsg.origTransId );
+              //Ansi dont support mutiple txn id so removing sprintf(lLogText, "AI: DlgId:%d lTId:%08X rTId:%08X Populating Abort Msg(ITU_ABORT)", lTcapMsg.dialogueId, lTcapMsg.origTransId ,lTcapMsg.destTransId);
+               T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+               gLog.GenerateLog(ACUTCAP118, 2, lLogText);
+               return true;
+            }
+         default:
+            {   
+               sprintf(lLogText, "AI: DlgId:%d lTId:%08X Msg:%d", lTcapMsg.dialogueId, lTcapMsg.origTransId ,  lMsg->tm_msg_type);
+               //Ansi dont support mutiple txn id so removing  sprintf(lLogText, "AI: DlgId:%d lTId:%08X rTId:%08X Msg:%d", lTcapMsg.dialogueId, lTcapMsg.origTransId , lTcapMsg.destTransId, lMsg->tm_msg_type);
+               TERR(gTrace,printf("%s: %s No Component Received\n",gProcessName,lLogText););
+               gLog.GenerateLog(ACUTCAP36,lLogText);
+
+               //return false;
+            }
+      }
+
+      lTcapMsg.componentPresent = false;
+      lTcapMsg.tcapComponent.lastComponent = TCAP_NO_COMPONENT;
+   }
+   else
+   {
+      sprintf(lLogText,"AI: DlgId:%d Components Present", lTcapMsg.dialogueId);
+      T(gTrace,printf("%s: %s\n",gProcessName, lLogText););
+      gLog.GenerateLog(ACUTCAP119, 2, lLogText);
+      const acu_tcap_component_t *Comp;
+      //if(0 != NoOfComp)
+      {
+         lTcapMsg.componentPresent = true; 
+
+         lNoOfComp = 0; 
+
+         while( ACU_TCAP_ERROR_NO_COMPONENT != acu_tcap_msg_get_component(lMsg , &Comp))
+         {   
+            //Sending multiple components
+            lComp->invokeId = Comp->tc_invoke_id;
+
+            lComp->tcapComp = GetTcapCompType(Comp->tc_type);
+
+            switch(lComp->tcapComp)
+            {
+               case TCAP_INVOKE_COMP: 
+                  {
+                     if(mPegFlag)
+                        gPeg.PegEvent(PEG_TCAP_INVOKE_COMP_RX);
+
+                     if(Comp->tc_flags & ACU_TCAP_CF_HAS_INT_OPCODE)
+                     {
+                        // INT opcode = National (no pointer was present)
+                        lComp->tcapInvokeComp.operation.operationCode = Comp->tc_op_code_val;
+                        lComp->tcapInvokeComp.operation.isPrivate = false;
+                     
+                        sprintf(lLogText,
+                              "AI: DlgId:%d lTId:%08X rTId:%08X Populating Invoke Msg(NATIONAL OPCODE:%d)",
+                              lTcapMsg.dialogueId, lTcapMsg.origTransId ,lTcapMsg.destTransId, 
+                              lComp->tcapInvokeComp.operation.operationCode);
+                        T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+                        gLog.GenerateLog(ACUTCAP120, 2, lLogText);
+
+                     }
+                     else if (Comp->tc_flags & ACU_TCAP_CF_HAS_HEX_OPCODE)
+                     {
+                        // HEX opcode = Private (pointer was present)
+                        lComp->tcapInvokeComp.operation.isPrivate = true;
+                        if (Comp->tc_op_code_len >= 2) 
+                        {
+                           // Pack Family and Specifier into UINT32
+                           lComp->tcapInvokeComp.operation.operationCode = 
+                              (Comp->tc_op_code[0] << 8) | Comp->tc_op_code[1];
+                        }
+                        else if (Comp->tc_op_code_len == 1)
+                        {
+                           lComp->tcapInvokeComp.operation.operationCode = Comp->tc_op_code[0];
+                        }
+                        sprintf(lLogText,
+                              "AI: DlgId:%d lTId:%08X rTId:%08X Populating Invoke Msg(PRIVATE OPCODE:%04X)",
+                              lTcapMsg.dialogueId, lTcapMsg.origTransId ,lTcapMsg.destTransId, 
+                              lComp->tcapInvokeComp.operation.operationCode);
+                        T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+                        gLog.GenerateLog(ACUTCAP120, 2, lLogText);
+                     }
+                     if(Comp->tc_flags & ACU_TCAP_CF_HAS_PARAMETER)
+                     {
+                        lComp->tcapInvokeComp.parameterData.numberOfBytes =
+                           Comp->tc_param_len;
+                        memcpy(&(lComp->tcapInvokeComp.parameterData.array),
+                              Comp->tc_param,Comp->tc_param_len);
+                        sprintf(lLogText,
+                              "AI: DlgId:%d lTId:%08X rTId:%08X Populating Invoke Msg(PARAM DATA)",
+                              lTcapMsg.dialogueId, lTcapMsg.origTransId ,lTcapMsg.destTransId);
+                        T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+                        gLog.GenerateLog(ACUTCAP121, 2, lLogText);
+                     }
+                  }
+                  break;
+               case TCAP_RET_RESULT_COMP:
+                  {
+                     if(mPegFlag)
+                        gPeg.PegEvent(PEG_TCAP_RET_RESULT_COMP_RX);
+
+                     TEXT lText[150 + 1] = "";
+                     if(Comp->tc_flags & ACU_TCAP_CF_HAS_INT_OPCODE)
+                     {
+                        lComp->tcapRetResultComp.operation.operationCode = Comp->tc_op_code_val;
+                        lComp->tcapRetResultComp.operation.isPrivate = false;
+                        sprintf(lText,"(OPCODE:%d)", lComp->tcapRetResultComp.operation.operationCode);
+                     }
+                     else
+                     {
+                        lComp->tcapRetResultComp.operation.operationCode = 0xFF;
+                        lComp->tcapRetResultComp.operation.isPrivate = false;
+                     }
+                     if(Comp->tc_flags & ACU_TCAP_CF_HAS_PARAMETER)
+                     {
+                        lComp->tcapRetResultComp.parameterData.numberOfBytes =
+                           Comp->tc_param_len;
+                        memcpy(&(lComp->tcapRetResultComp.parameterData.array),
+                              Comp->tc_param,Comp->tc_param_len);
+                        sprintf(lText,"%s","(PARAM DATA)");
+                     }
+                     if(Comp->tc_type == ACU_TCAP_COMP_ANSI_RESULT_NOTLAST)
+                     {   
+                        lComp->tcapRetResultComp.lastIndicator = 
+                           TCAP_NOT_LAST_INDICATOR; 
+                        sprintf(lLogText,
+                              "AI: DlgId:%d Populating Ret_Result Msg %s NOT_LAST",
+                              lTcapMsg.dialogueId, lText); 
+                        T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+                        gLog.GenerateLog(ACUTCAP122, 2, lLogText);
+                     }
+                     else
+                     {
+                        lComp->tcapRetResultComp.lastIndicator = 
+                           TCAP_LAST_INDICATOR;
+                        sprintf(lLogText,"AI: DlgId:%d Populating Ret_Result Msg %s LAST ",
+                              lTcapMsg.dialogueId, lText);
+                        T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+                        gLog.GenerateLog(ACUTCAP123, 2, lLogText);
+                     }
+                  }
+                  break;
+               case TCAP_RET_ERROR_COMP: 
+                  {
+                     if(mPegFlag)
+                        gPeg.PegEvent(PEG_TCAP_RET_ERROR_COMP_RX);
+
+                     if(Comp->tc_flags & ACU_TCAP_CF_HAS_INT_OPCODE)
+                     {
+                        // INT error code = National (no pointer was present)
+                        lComp->tcapRetErrorComp.errorCode.errorCode = Comp->tc_op_code_val;
+                        lComp->tcapRetErrorComp.errorCode.isPrivate = false;
+                     }
+                     else if(Comp->tc_flags & ACU_TCAP_CF_HAS_HEX_OPCODE)
+                     {
+                        // HEX error code = Private (pointer was present)
+                        lComp->tcapRetErrorComp.errorCode.isPrivate = true;
+                        if (Comp->tc_op_code_len >= 2)
+                        {
+                           lComp->tcapRetErrorComp.errorCode.errorCode =
+                              (Comp->tc_op_code[0] << 8) | Comp->tc_op_code[1];
+                        }
+                        else if (Comp->tc_op_code_len == 1)
+                        {
+                           lComp->tcapRetErrorComp.errorCode.errorCode = Comp->tc_op_code[0];
+                        }
+                     }
+                     if(Comp->tc_flags & ACU_TCAP_CF_HAS_PARAMETER)
+                     {
+                        lComp->tcapRetErrorComp.parameterData.numberOfBytes =
+                           Comp->tc_param_len;
+
+                        memcpy(&(lComp->tcapRetErrorComp.parameterData.array),
+                              Comp->tc_param,Comp->tc_param_len);
+                     }      
+                  }
+                  break;
+               case TCAP_REJECT_COMP: 
+                  {
+                     if(mPegFlag)
+                        gPeg.PegEvent(PEG_TCAP_REJECT_COMP_RX);
+
+                     lComp->tcapRejectComp.rejectType = 
+                        (EnumRejectType)Comp->tc_rejected_type;
+
+                     SetTcapProblem(lComp->tcapRejectComp.problem,
+                           Comp->tc_op_code_val);
+
+                  }
+                  break;
+               case TCAP_ABORT_COMP:
+                  {
+                  }
+                  break;
+               default:  
+                  {
+                     sprintf(lLogText,
+                           "AI: DlgId:%d lTId:%08X rTId:%08X Comp:%d Unknown Msg Component",
+                           lTcapMsg.dialogueId, lTcapMsg.origTransId,
+                           lTcapMsg.destTransId, lComp->tcapComp);
+                     TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+                     gLog.GenerateLog(ACUTCAP37,lLogText);
+
+                     return false;
+                  }
+            }
+            lComp->lastComponent = TCAP_NOT_LAST_COMPONENT;
+            lNoOfComp++; 
+            lComp++;
+         }
+         lComp--;
+         lComp->lastComponent = TCAP_LAST_COMPONENT;
+
+      }
+      //else
+      //{
+      //}
+   }
+
+   return true;
+}
+#endif
+//-------------------------------------------------------------------------------
+// METHOD      : GetTcapComponets
+// DESCRIPTION : Parses the Aculab Msg structure to Application TcapMsg
+// PARAMETER   : acu_tcap_msg_t *lMsg, AnsiTcapMsg &lTcapMsg,
+//               const acu_tcap_dialogue_t *lDialogInfo,
+//               TcapComponent *lComp, int &lNoOfComp
+// RETURN      : BOOLEAN
+//-------------------------------------------------------------------------------
+
+BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, AnsiTcapMsg &lTcapMsg,
+      const acu_tcap_dialogue_t *lDlg, AnsiTcapComponent *lComp,int &lNoOfComp)
 {
    TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
 
@@ -1380,8 +1753,8 @@ BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
                memcpy(&lComp->tcapAbortComp.abortReason.array,&lMsg->tm_p_abort_cause,1);
 
                sprintf(lLogText,
-                     "AI: DlgId:%d lTId:%08X rTId:%08X Populating Abort Msg(LOCAL_ABORT)",
-                     lTcapMsg.dialogueId, lTcapMsg.origTransId ,lTcapMsg.destTransId);
+                     "AI: DlgId:%d lTId:%08X Populating Abort Msg(LOCAL_ABORT)",
+                     lTcapMsg.dialogueId, lTcapMsg.origTransId);
                T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
                gLog.GenerateLog(ACUTCAP116, 2, lLogText);
                return true;
@@ -1399,8 +1772,8 @@ BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
                memcpy(&lComp->tcapAbortComp.abortReason.array,&lMsg->tm_p_abort_cause,1);
 
                sprintf(lLogText,
-                     "AI: DlgId:%d lTId:%08X rTId:%08X Populating Abort Msg(P_ABORT)",
-                     lTcapMsg.dialogueId, lTcapMsg.origTransId ,lTcapMsg.destTransId);
+                     "AI: DlgId:%d lTId:%08X Populating Abort Msg(P_ABORT)",
+                     lTcapMsg.dialogueId, lTcapMsg.origTransId);
                T(gTrace,printf("%s: %s\n",gProcessName,lLogText););   
                gLog.GenerateLog(ACUTCAP117, 2, lLogText);
                return true;
@@ -1462,14 +1835,14 @@ BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
                   }
                   if(lDlg->td_flags & ACU_TCAP_DF_HAS_HEX_APP_CTX)
                   {
-                     memcpy(lTcapMsg.applicationContext.array, lDlg->td_app_ctx, lDlg->td_app_ctx_len);
-                     lTcapMsg.applicationContext.numberOfBytes = lDlg->td_app_ctx_len;
+                     // memcpy(lTcapMsg.applicationContext.array, lDlg->td_app_ctx, lDlg->td_app_ctx_len);
+                     // lTcapMsg.applicationContext.numberOfBytes = lDlg->td_app_ctx_len;
                   }
                }
 
                sprintf(lLogText, 
-                     "AI: DlgId:%d lTId:%08X rTId:%08X Populating Abort Msg(ITU_ABORT)",
-                     lTcapMsg.dialogueId, lTcapMsg.origTransId ,lTcapMsg.destTransId);
+                     "AI: DlgId:%d lTId:%08X Populating Abort Msg(ITU_ABORT)",
+                     lTcapMsg.dialogueId, lTcapMsg.origTransId);
                T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
                gLog.GenerateLog(ACUTCAP118, 2, lLogText);
                return true;
@@ -1477,9 +1850,9 @@ BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
          default:
             {
                sprintf(lLogText,
-                     "AI: DlgId:%d lTId:%08X rTId:%08X Msg:%d",
+                     "AI: DlgId:%d lTId:%08X Msg:%d",
                      lTcapMsg.dialogueId, lTcapMsg.origTransId ,
-                     lTcapMsg.destTransId, lMsg->tm_msg_type);
+                     lMsg->tm_msg_type);
                TERR(gTrace,printf("%s: %s No Component Received\n",gProcessName,lLogText););
                gLog.GenerateLog(ACUTCAP36,lLogText);
 
@@ -1507,7 +1880,7 @@ BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
             //Sending multiple components
             lComp->invokeId = Comp->tc_invoke_id;
 
-            lComp->tcapComp = GetTcapCompType(Comp->tc_type); 
+            lComp->tcapComp = GetTcapCompType(Comp->tc_type);
 
             switch(lComp->tcapComp)
             {
@@ -1518,15 +1891,39 @@ BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
 
                      if(Comp->tc_flags & ACU_TCAP_CF_HAS_INT_OPCODE)
                      {
-                        lComp->tcapInvokeComp.operation.operationCode =
-                           Comp->tc_op_code_val;
+                        // INT opcode = National (no pointer was present)
+                        // Ab Comment : Aculab returns 16-bit National opcode (Family + Specifier) in tc_op_code_val
+                        lComp->tcapInvokeComp.operation.operationCode = Comp->tc_op_code_val;
+                        lComp->tcapInvokeComp.operation.isPrivate = false;
+                     
                         sprintf(lLogText,
-                              "AI: DlgId:%d lTId:%08X rTId:%08X Populating Invoke Msg(OPCODE %d)",
-                              lTcapMsg.dialogueId, lTcapMsg.origTransId ,lTcapMsg.destTransId, 
+                              "AI: DlgId:%d lTId:%08X Populating Invoke Msg(NATIONAL OPCODE:%d)",
+                              lTcapMsg.dialogueId, lTcapMsg.origTransId , 
                               lComp->tcapInvokeComp.operation.operationCode);
                         T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
                         gLog.GenerateLog(ACUTCAP120, 2, lLogText);
 
+                     }
+                     else if (Comp->tc_flags & ACU_TCAP_CF_HAS_HEX_OPCODE)
+                     {
+                        // HEX opcode = Private (pointer was present)
+                        lComp->tcapInvokeComp.operation.isPrivate = true;
+                        if (Comp->tc_op_code_len >= 2) 
+                        {
+                           // Pack Family and Specifier into UINT32
+                           lComp->tcapInvokeComp.operation.operationCode = 
+                              (Comp->tc_op_code[0] << 8) | Comp->tc_op_code[1];
+                        }
+                        else if (Comp->tc_op_code_len == 1)
+                        {
+                           lComp->tcapInvokeComp.operation.operationCode = Comp->tc_op_code[0];
+                        }
+                        sprintf(lLogText,
+                              "AI: DlgId:%d lTId:%08X Populating Invoke Msg(PRIVATE OPCODE:%04X)",
+                              lTcapMsg.dialogueId, lTcapMsg.origTransId , 
+                              lComp->tcapInvokeComp.operation.operationCode);
+                        T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+                        gLog.GenerateLog(ACUTCAP120, 2, lLogText);
                      }
                      if(Comp->tc_flags & ACU_TCAP_CF_HAS_PARAMETER)
                      {
@@ -1535,8 +1932,8 @@ BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
                         memcpy(&(lComp->tcapInvokeComp.parameterData.array),
                               Comp->tc_param,Comp->tc_param_len);
                         sprintf(lLogText,
-                              "AI: DlgId:%d lTId:%08X rTId:%08X Populating Invoke Msg(PARAM DATA)",
-                              lTcapMsg.dialogueId, lTcapMsg.origTransId ,lTcapMsg.destTransId);
+                              "AI: DlgId:%d lTId:%08X Populating Invoke Msg(PARAM DATA)",
+                              lTcapMsg.dialogueId, lTcapMsg.origTransId);
                         T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
                         gLog.GenerateLog(ACUTCAP121, 2, lLogText);
                      }
@@ -1550,13 +1947,15 @@ BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
                      TEXT lText[150 + 1] = "";
                      if(Comp->tc_flags & ACU_TCAP_CF_HAS_INT_OPCODE)
                      {
-                        lComp->tcapRetResultComp.operation.operationCode =
-                           Comp->tc_op_code_val;
-                        sprintf(lText,"(OPCODE)%d", Comp->tc_op_code_val);
+                        // Ab Comment : Aculab returns 16-bit National opcode (Family + Specifier) in tc_op_code_val
+                        lComp->tcapRetResultComp.operation.operationCode = Comp->tc_op_code_val;
+                        lComp->tcapRetResultComp.operation.isPrivate = false;
+                        sprintf(lText,"(OPCODE:%d)", lComp->tcapRetResultComp.operation.operationCode);
                      }
                      else
                      {
                         lComp->tcapRetResultComp.operation.operationCode = 0xFF;
+                        lComp->tcapRetResultComp.operation.isPrivate = false;
                      }
                      if(Comp->tc_flags & ACU_TCAP_CF_HAS_PARAMETER)
                      {
@@ -1566,7 +1965,7 @@ BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
                               Comp->tc_param,Comp->tc_param_len);
                         sprintf(lText,"%s","(PARAM DATA)");
                      }
-                     if(Comp->tc_type == ACU_TCAP_COMP_ITU_RESULT_NOTLAST)
+                     if(Comp->tc_type == ACU_TCAP_COMP_ANSI_RESULT_NOTLAST)
                      {   
                         lComp->tcapRetResultComp.lastIndicator = 
                            TCAP_NOT_LAST_INDICATOR; 
@@ -1594,18 +1993,23 @@ BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
 
                      if(Comp->tc_flags & ACU_TCAP_CF_HAS_INT_OPCODE)
                      {
-                        lComp->tcapRetErrorComp.errorCode.errorType = 2; //Loacl err
-                        lComp->tcapRetErrorComp.errorCode.errorCodeData.numberOfBytes = 1;
-                        lComp->tcapRetErrorComp.errorCode.errorCodeData.array[0] =
-                           Comp->tc_op_code_val;
-
+                        // INT error code = National (no pointer was present)
+                        lComp->tcapRetErrorComp.errorCode.errorCode = Comp->tc_op_code_val;
+                        lComp->tcapRetErrorComp.errorCode.isPrivate = false;
                      }
                      else if(Comp->tc_flags & ACU_TCAP_CF_HAS_HEX_OPCODE)
                      {
-                        lComp->tcapRetErrorComp.errorCode.errorType = 6; //Global Tag
-                        lComp->tcapRetErrorComp.errorCode.errorCodeData.numberOfBytes =  Comp->tc_op_code_len;
-                        memcpy(&(lComp->tcapRetErrorComp.errorCode.errorCodeData.array[0]),
-                              Comp->tc_op_code,Comp->tc_op_code_len);
+                        // HEX error code = Private (pointer was present)
+                        lComp->tcapRetErrorComp.errorCode.isPrivate = true;
+                        if (Comp->tc_op_code_len >= 2)
+                        {
+                           lComp->tcapRetErrorComp.errorCode.errorCode =
+                              (Comp->tc_op_code[0] << 8) | Comp->tc_op_code[1];
+                        }
+                        else if (Comp->tc_op_code_len == 1)
+                        {
+                           lComp->tcapRetErrorComp.errorCode.errorCode = Comp->tc_op_code[0];
+                        }
                      }
                      if(Comp->tc_flags & ACU_TCAP_CF_HAS_PARAMETER)
                      {
@@ -1637,9 +2041,9 @@ BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
                default:  
                   {
                      sprintf(lLogText,
-                           "AI: DlgId:%d lTId:%08X rTId:%08X Comp:%d Unknown Msg Component",
+                           "AI: DlgId:%d lTId:%08X Comp:%d Unknown Msg Component",
                            lTcapMsg.dialogueId, lTcapMsg.origTransId,
-                           lTcapMsg.destTransId, lComp->tcapComp);
+                           lComp->tcapComp);
                      TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
                      gLog.GenerateLog(ACUTCAP37,lLogText);
 
@@ -1662,18 +2066,21 @@ BOOLEAN  TcapAculab::GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
    return true;
 }
 
+
+
 //-------------------------------------------------------------------------------
 // METHOD      : GetTcapTimeOutComponet 
 // DESCRIPTION : Form TCAP Time out message
-// PARAMETER   : acu_tcap_msg_t * TcapMsg & , TcapMsg & lTcapMsg
+// PARAMETER   : acu_tcap_msg_t * lMsg, AnsiTcapMsg & lTcapMsg
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
 
-BOOLEAN  TcapAculab::GetTcapTimeOutComponet(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg)
+BOOLEAN  TcapAculab::GetTcapTimeOutComponet(acu_tcap_msg_t *lMsg, AnsiTcapMsg &lTcapMsg)
 {
    const acu_tcap_component_t *Comp;
 
    int lRetErr = acu_tcap_msg_get_component(lMsg , &Comp);
+   (void)lRetErr;
 
    lTcapMsg.tcapDlg = TCAP_RSP_TIMEOUT;
    lTcapMsg.componentPresent = true;
@@ -1687,15 +2094,15 @@ BOOLEAN  TcapAculab::GetTcapTimeOutComponet(acu_tcap_msg_t *lMsg, TcapMsg &lTcap
 //-------------------------------------------------------------------------------
 // METHOD      : FormTcapAbortMsg 
 // DESCRIPTION : Form TCAP abort message  
-// PARAMETER   : acu_tcap_msg_t * TcapMsg & ,TcapComponent *, int &lNoOfComp
+// PARAMETER   : acu_tcap_msg_t * AnsiTcapMsg & ,TcapComponent *, int &lNoOfComp
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
-BOOLEAN  TcapAculab::FormTcapAbortMsg(TcapMsg &lTcapMsg,EnumAbortType lType,
+BOOLEAN  TcapAculab::FormTcapAbortMsg(AnsiTcapMsg &lTcapMsg,EnumAbortType lType,
       acu_tcap_p_abort_cause_t lCause)
 {
    TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
 
-   lTcapMsg.tcapDlg = TCAP_ABORT;
+   lTcapMsg.tcapDlg = TCAP_ANSI_ABORT;
    lTcapMsg.componentPresent = true;
    lTcapMsg.tcapComponent.invokeId = 0;
 
@@ -1710,8 +2117,8 @@ BOOLEAN  TcapAculab::FormTcapAbortMsg(TcapMsg &lTcapMsg,EnumAbortType lType,
    memcpy(&lTcapMsg.tcapComponent.tcapAbortComp.abortReason.array,&lCause,1);
 
    sprintf(lLogText,
-         "AI: DlgId:%d lTId:%08X rTId:%08X Populating Abort Msg",
-         lTcapMsg.dialogueId, lTcapMsg.origTransId ,lTcapMsg.destTransId);
+         "AI: DlgId:%d lTId:%08X Populating Abort Msg",
+         lTcapMsg.dialogueId, lTcapMsg.origTransId );
 
    T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
    gLog.GenerateLog(ACUTCAP124, 2, lLogText);
@@ -1869,21 +2276,33 @@ EnumTcapComp TcapAculab::GetTcapCompType(const acu_tcap_comp_type_t &lComp)
    switch(lComp)
    {
       case ACU_TCAP_COMP_ITU_INVOKE:
-         return TCAP_INVOKE_COMP;
+      //ANSI
+      case ACU_TCAP_COMP_ANSI_INVOKE_LAST:
+      case ACU_TCAP_COMP_ANSI_INVOKE_NOTLAST:      
+	      return TCAP_INVOKE_COMP;
 
       case ACU_TCAP_COMP_ITU_RESULT_LAST:
+      //ANSIacu_tcap_msg_add_dialogue
+      case ACU_TCAP_COMP_ANSI_RESULT_LAST:   
          return TCAP_RET_RESULT_COMP;
 
       case ACU_TCAP_COMP_ITU_ERROR:
-         return TCAP_RET_ERROR_COMP;
+      //ANSI
+      case ACU_TCAP_COMP_ANSI_ERROR:
+	      return TCAP_RET_ERROR_COMP;
 
       case ACU_TCAP_COMP_ITU_REJECT:
+      //ANSI
+      case ACU_TCAP_COMP_ANSI_REJECT:
          return TCAP_REJECT_COMP;
 
       case ACU_TCAP_COMP_ITU_RESULT_NOTLAST:
-         return TCAP_RET_RESULT_COMP;
+      //ANSI
+      case ACU_TCAP_COMP_ANSI_RESULT_NOTLAST:
+	      return TCAP_RET_RESULT_COMP;
+
       case ACU_TCAP_COMP_LOCAL_REJECT:
-      case ACU_TCAP_COMP_OP_TIMEOUT :
+      case ACU_TCAP_COMP_OP_TIMEOUT:
       default:
          return TCAP_ABORT_COMP;
    }
@@ -1893,16 +2312,23 @@ EnumTcapComp TcapAculab::GetTcapCompType(const acu_tcap_comp_type_t &lComp)
 // METHOD      : AddAcuTcapDialogue 
 // DESCRIPTION : Adds dialogue to aculab tcap message from applicaton
 //               TCAP Message
-// PARAMETER   : acu_tcap_msg_t *lMsg,TcapMsg lTcapMsg
+// PARAMETER   : acu_tcap_msg_t *lMsg,AnsiTcapMsg lTcapMsg
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
-
-BOOLEAN TcapAculab::AddAcuTcapDialogue(acu_tcap_msg_t *lMsg,TcapMsg lTcapMsg)
+/* This not required as per ansi
+BOOLEAN TcapAculab::AddAcuTcapDialogue(acu_tcap_msg_t *lMsg,AnsiTcapMsg lTcapMsg)
 {
 
    TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
    TEXT lErrText[ACU_TCAP_ERR_TEXT_LEN + 1] = "";
    UINT32 lAbortReason;
+   
+   uint16_t ctx_len = 0;
+   // Only extract the value if the application actually provided it
+   if (lTcapMsg.applicationContext.numberOfBytes >= 2) 
+   {
+      ctx_len = (lTcapMsg.applicationContext.array[0] << 8) | lTcapMsg.applicationContext.array[1];
+   }
 
    if((TCAP_ABORT_COMP == lTcapMsg.tcapComponent.tcapComp))
    {
@@ -1946,20 +2372,39 @@ BOOLEAN TcapAculab::AddAcuTcapDialogue(acu_tcap_msg_t *lMsg,TcapMsg lTcapMsg)
                   break;
                   //default:
             }
+           
+            // int lRetVal = acu_tcap_msg_add_dialogue(lMsg, 
+            //       lAbortReason,
+            //       lTcapMsg.applicationContext.array,
+            //       lTcapMsg.applicationContext.numberOfBytes);
+           
 
-            int lRetVal = acu_tcap_msg_add_dialogue(lMsg, 
-                  lAbortReason,
-                  lTcapMsg.applicationContext.array,
-                  lTcapMsg.applicationContext.numberOfBytes);
+	        //ANSI -  Pass NULL for array, pass value in length parameter
+         //   int lRetVal = acu_tcap_msg_add_dialogue(lMsg, lAbortReason, NULL, ctx_len);
+         //   //UPTO ANSI         
+	      //   if(0 != lRetVal)
+         //       {
+         //          mAcuTcapUtil.ReturnAculabErrStr(lRetVal,lErrText);
+         //          sprintf(lLogText,"Tcap Add Msg Dialog Error %s",lErrText);
+         //          TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+         //          gLog.GenerateLog(ACUTCAP07,lLogText);
+         //          return false;
+         //       }
 
-            if(0 != lRetVal)
-            {
-               mAcuTcapUtil.ReturnAculabErrStr(lRetVal,lErrText);
-               sprintf(lLogText,"Tcap Add Msg Dialog Error %s",lErrText);
-               TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
-               gLog.GenerateLog(ACUTCAP07,lLogText);
-               return false;
-            }
+            if (ctx_len > 0 || lAbortReason != 0) 
+           {
+              int lRetVal = acu_tcap_msg_add_dialogue(lMsg, lAbortReason, NULL, ctx_len);
+              //UPTO ANSI         
+              if(0 != lRetVal)
+              {
+                 mAcuTcapUtil.ReturnAculabErrStr(lRetVal,lErrText);
+                 sprintf(lLogText,"Tcap Add Msg Dialog Error %s",lErrText);
+                 TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+                 gLog.GenerateLog(ACUTCAP07,lLogText);
+                 return false;
+              }
+           }
+
 
             return true;
          }
@@ -1967,13 +2412,25 @@ BOOLEAN TcapAculab::AddAcuTcapDialogue(acu_tcap_msg_t *lMsg,TcapMsg lTcapMsg)
    }
 
 
-   //ITU Abort (ABRT) abort source: 0 => user, 1 => provider
-   if(lTcapMsg.applicationContext.numberOfBytes != 0)
+   // //ITU Abort (ABRT) abort source: 0 => user, 1 => provider
+     
+   //ANSI
+   // int lRetVal = acu_tcap_msg_add_dialogue(lMsg, 0, NULL, ctx_len);
+      
+   // //UPTO ANSI
+   // if(0 != lRetVal)
+   // {
+   //    mAcuTcapUtil.ReturnAculabErrStr(lRetVal,lErrText);
+   //    sprintf(lLogText,"Tcap Add Msg Dialog App Context Error %s",lErrText);
+   //    TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+   //    gLog.GenerateLog(ACUTCAP07,lLogText);
+   //    return false;
+   // }
+
+   if (ctx_len > 0)
    {
-      int lRetVal = acu_tcap_msg_add_dialogue(lMsg, 0,
-            lTcapMsg.applicationContext.array, 
-            lTcapMsg.applicationContext.numberOfBytes);
-      if(0 != lRetVal)
+      int lRetVal = acu_tcap_msg_add_dialogue(lMsg, 0, NULL, ctx_len);   
+         if(0 != lRetVal)
       {
          mAcuTcapUtil.ReturnAculabErrStr(lRetVal,lErrText);
          sprintf(lLogText,"Tcap Add Msg Dialog App Context Error %s",lErrText);
@@ -1981,48 +2438,68 @@ BOOLEAN TcapAculab::AddAcuTcapDialogue(acu_tcap_msg_t *lMsg,TcapMsg lTcapMsg)
          gLog.GenerateLog(ACUTCAP07,lLogText);
          return false;
       }
+   }   
+   // UPTO ANSI -
+  
+   // else if(lTcapMsg.applicationContext.numberOfBytes != 0)
+   // {
+   // int lRetVal = acu_tcap_msg_add_dialogue(lMsg, 0,
+   //          lTcapMsg.applicationContext.array, 
+   //          lTcapMsg.applicationContext.numberOfBytes);
+   //    if(0 != lRetVal)
+   //    {
+   //       mAcuTcapUtil.ReturnAculabErrStr(lRetVal,lErrText);
+   //       sprintf(lLogText,"Tcap Add Msg Dialog App Context Error %s",lErrText);
+   //       TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+   //       gLog.GenerateLog(ACUTCAP07,lLogText);
+   //       return false;
+   //    }
 
-   }
-   if(lTcapMsg.userInformation.numberOfBytes != 0)
-   {
-      UINT8                   lTempArray[SS7_MAX_USER_INFO_PDU_LEN + 1];
-      lTempArray[0] = 0x28;
-      lTempArray[1] = lTcapMsg.userInformation.numberOfBytes;
-      memcpy(&lTempArray[2],lTcapMsg.userInformation.array,lTcapMsg.userInformation.numberOfBytes);
+   // }
+   
+   // if(lTcapMsg.userInformation.numberOfBytes != 0)
+   // {
+   //    UINT8                   lTempArray[SS7_MAX_USER_INFO_PDU_LEN + 1];
+   //    lTempArray[0] = 0x28;
+   //    lTempArray[1] = lTcapMsg.userInformation.numberOfBytes;
+   //    memcpy(&lTempArray[2],lTcapMsg.userInformation.array,lTcapMsg.userInformation.numberOfBytes);
 
-      int lRetVal = acu_tcap_msg_add_dlg_userinfo(lMsg,lTempArray,
-            lTcapMsg.userInformation.numberOfBytes + 2);
+   //    int lRetVal = acu_tcap_msg_add_dlg_userinfo(lMsg,lTempArray,
+   //          lTcapMsg.userInformation.numberOfBytes + 2);
 
-      //int lRetVal = acu_tcap_msg_add_dlg_userinfo(lMsg,lTcapMsg.userInformation.array,
-      //      lTcapMsg.userInformation.numberOfBytes);
-      if(0 != lRetVal)
-      {
-         mAcuTcapUtil.ReturnAculabErrStr(lRetVal,lErrText);
-         sprintf(lLogText,"Tcap Add Msg Dialog UserInfo Error %s",lErrText);
-         TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
-         gLog.GenerateLog(ACUTCAP07,lLogText);
-         return false;
-      }
+   //    //int lRetVal = acu_tcap_msg_add_dlg_userinfo(lMsg,lTcapMsg.userInformation.array,
+   //    //      lTcapMsg.userInformation.numberOfBytes);
+   //    if(0 != lRetVal)
+   //    {
+   //       mAcuTcapUtil.ReturnAculabErrStr(lRetVal,lErrText);
+   //       sprintf(lLogText,"Tcap Add Msg Dialog UserInfo Error %s",lErrText);
+   //       TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+   //       gLog.GenerateLog(ACUTCAP07,lLogText);
+   //       return false;
+   //    }
 
-   }
+   // }
+
    return true;
 }
-
+*/
 //-------------------------------------------------------------------------------
 // METHOD      : AddAcuTcapComponet 
 // DESCRIPTION : Add aculab tcap message component from application tcap message 
 //               component
-// PARAMETER   : TcapMsg lTcapMsg,acu_tcap_msg_t *lMsg
+// PARAMETER   : AnsiTcapMsg lTcapMsg,acu_tcap_msg_t *lMsg
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
-BOOLEAN TcapAculab::AddAcuTcapComponet(TcapMsg lTcapMsg, acu_tcap_msg_t *lMsg)
+#if 0
+BOOLEAN TcapAculab::AddAcuTcapComponet(AnsiTcapMsg lTcapMsg, acu_tcap_msg_t *lMsg)
 {
    int lRetVal;
    TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
    TEXT lErrText[ACU_TCAP_ERR_TEXT_LEN + 1] = "";
    DialogueComp      lDialogueComp;
    map<UINT32, DialogueComp>::iterator lDiaComp;
-
+   //ANSI 
+   int mStandard = SS7_STANDARD_ANSI ; //temp - ansi test
    memset(&lDialogueComp, 0, sizeof(DialogueComp));
 
    //sleep(10); // TBR
@@ -2081,8 +2558,62 @@ BOOLEAN TcapAculab::AddAcuTcapComponet(TcapMsg lTcapMsg, acu_tcap_msg_t *lMsg)
                //   2 Report failure only (return-result not valid)
                //   3 Report success only (return-error not valid)
                //   4 Outcome not reported (neither return-result nor return-error valid)
+            
+	       //ANSI -
+	            int lastClass = 1;
+               if (mStandard == SS7_STANDARD_ANSI && lTcapMsg.tcapComponent.lastComponent == TCAP_LAST_COMPONENT) {
+                   lastClass |= ACU_TCAP_LAST;
+               }
+
+
+               int invokeId = lTcapMsg.tcapComponent.invokeId;
+               if (invokeId == 0) {
+                  invokeId = ACU_TCAP_NO_INVOKE_ID;
+               }
+              // std::cout<< " TBR : [lTcapMsg.tcapComponent.tcapInvokeComp.operation.operationCode] --> "<<lTcapMsg.tcapComponent.tcapInvokeComp.operation.operationCode<<std::endl;
+
+               // Ab Comment : Production fix — lazy serialization dangling pointer.
+               // This block is inside #if 0 (disabled), but the bug is fixed here
+               // for consistency so re-enabling it is safe. The old ansi_priv_op[2]
+               // was a stack-local array destroyed before acu_tcap_msg_send() ran.
+               // Now we write into lOp.wireOpCode[] which lives in AnsiTcapMsg,
+               // keeping the pointer valid for the full Add -> Send sequence.
+               TCAPOperation& lOpOld = lTcapMsg.tcapComponent.tcapInvokeComp.operation;
+               if (mStandard == SS7_STANDARD_ANSI) {
+                  lOpOld.wireOpCode[0] = static_cast<UINT8>(
+                        (lOpOld.operationCode >> 8) & 0xFF);  // Ab Comment : Family byte
+                  lOpOld.wireOpCode[1] = static_cast<UINT8>(
+                        lOpOld.operationCode & 0xFF);          // Ab Comment : Specifier byte
+               }
 
                lRetVal = acu_tcap_msg_add_comp_invoke(lMsg,
+                     invokeId,
+                     ACU_TCAP_NO_INVOKE_ID, // linked_id
+                     lastClass,
+                     lTcapMsg.tcapComponent.tcapInvokeComp.timeout,
+                     (mStandard == SS7_STANDARD_ANSI) ? (void*)lOpOld.wireOpCode : NULL,
+                     2,
+                     lTcapMsg.tcapComponent.tcapInvokeComp.parameterData.array,
+                     lTcapMsg.tcapComponent.tcapInvokeComp.parameterData.numberOfBytes
+                  );
+                  
+ 		         /*lRetVal = acu_tcap_msg_add_comp_invoke(lMsg,
+               invokeId,
+               ACU_TCAP_NO_INVOKE_ID, //linked_id
+               1,// lastClass,
+               lTcapMsg.tcapComponent.tcapInvokeComp.timeout,
+               //5,
+               NULL,
+               (mStandard == SS7_STANDARD_ANSI) ?
+                 ((lTcapMsg.tcapComponent.tcapInvokeComp.operation.operationFamily << 8) |
+                  lTcapMsg.tcapComponent.tcapInvokeComp.operation.operationCode) :
+                 lTcapMsg.tcapComponent.tcapInvokeComp.operation.operationCode,
+               lTcapMsg.tcapComponent.tcapInvokeComp.parameterData.array,
+               lTcapMsg.tcapComponent.tcapInvokeComp.parameterData.numberOfBytes
+               );    */
+	        //UPTO ANSI - 
+		/*
+	       lRetVal = acu_tcap_msg_add_comp_invoke(lMsg,
                      lTcapMsg.tcapComponent.invokeId,
                      ACU_TCAP_NO_INVOKE_ID, //linked_id
                      //2,//last_class
@@ -2094,6 +2625,9 @@ BOOLEAN TcapAculab::AddAcuTcapComponet(TcapMsg lTcapMsg, acu_tcap_msg_t *lMsg)
                      lTcapMsg.tcapComponent.tcapInvokeComp.parameterData.array,
                      lTcapMsg.tcapComponent.tcapInvokeComp.parameterData.numberOfBytes
                      );
+		*/
+
+
                if(0 != lRetVal)
                {
                   mDialigueComponent.erase(lTcapMsg.dialogueId); //TBC Mahesh
@@ -2116,13 +2650,16 @@ BOOLEAN TcapAculab::AddAcuTcapComponet(TcapMsg lTcapMsg, acu_tcap_msg_t *lMsg)
                   lLast = 0;
                }
 
-               lRetVal = acu_tcap_msg_add_comp_result(lMsg,
-                     lTcapMsg.tcapComponent.invokeId,
-                     lLast,
-                     NULL,
-                     lTcapMsg.tcapComponent.tcapRetResultComp.operation.operationCode,
-                     lTcapMsg.tcapComponent.tcapRetResultComp.parameterData.array,
-                     lTcapMsg.tcapComponent.tcapRetResultComp.parameterData.numberOfBytes);
+                lRetVal = acu_tcap_msg_add_comp_result(lMsg,
+                      lTcapMsg.tcapComponent.invokeId,
+                      lLast,
+                      NULL,
+                      (mStandard == SS7_STANDARD_ANSI) ?
+                        ((lTcapMsg.tcapComponent.tcapRetResultComp.operation.operationFamily << 8) |
+                         lTcapMsg.tcapComponent.tcapRetResultComp.operation.operationCode) :
+                        lTcapMsg.tcapComponent.tcapRetResultComp.operation.operationCode,
+                      lTcapMsg.tcapComponent.tcapRetResultComp.parameterData.array,
+                      lTcapMsg.tcapComponent.tcapRetResultComp.parameterData.numberOfBytes);
                if(0 != lRetVal)
                {
                   mDialigueComponent.erase(lTcapMsg.dialogueId); //TBC Mahesh
@@ -2141,12 +2678,26 @@ BOOLEAN TcapAculab::AddAcuTcapComponet(TcapMsg lTcapMsg, acu_tcap_msg_t *lMsg)
                if(mPegFlag)
                   gPeg.PegEvent(PEG_TCAP_RET_ERROR_COMP_TX);
 
+                     //             lRetVal = acu_tcap_msg_add_comp_error(lMsg,
+                     // lTcapMsg.tcapComponent.invokeId,
+                     // NULL, //Local error
+                     // lTcapMsg.tcapComponent.tcapRetErrorComp.errorCode.errorCodeData.array[0],
+                     // lTcapMsg.tcapComponent.tcapRetErrorComp.parameterData.array,
+                     // lTcapMsg.tcapComponent.tcapRetErrorComp.parameterData.numberOfBytes);
+
+                // ANSI error code = 16-bit: upper byte = errorType (family), lower byte = array[0] (specifier)
+               int ansiErrorCode = (lTcapMsg.tcapComponent.tcapRetErrorComp.errorCode.errorType << 8) |
+                                    lTcapMsg.tcapComponent.tcapRetErrorComp.errorCode.errorCodeData.array[0];
+   
+
+
                lRetVal = acu_tcap_msg_add_comp_error(lMsg,
-                     lTcapMsg.tcapComponent.invokeId,
-                     NULL, //Local error
-                     lTcapMsg.tcapComponent.tcapRetErrorComp.errorCode.errorCodeData.array[0],
-                     lTcapMsg.tcapComponent.tcapRetErrorComp.parameterData.array,
-                     lTcapMsg.tcapComponent.tcapRetErrorComp.parameterData.numberOfBytes);
+                      lTcapMsg.tcapComponent.invokeId,
+                      NULL, // ANSI: pass NULL for op pointer, numeric code below
+                      ansiErrorCode,
+                      lTcapMsg.tcapComponent.tcapRetErrorComp.parameterData.array,
+                      lTcapMsg.tcapComponent.tcapRetErrorComp.parameterData.numberOfBytes);
+                      
                if(0 != lRetVal)
                {
                   mDialigueComponent.erase(lTcapMsg.dialogueId); //TBC Mahesh
@@ -2185,6 +2736,15 @@ BOOLEAN TcapAculab::AddAcuTcapComponet(TcapMsg lTcapMsg, acu_tcap_msg_t *lMsg)
             }
          case TCAP_ABORT_COMP: 
             {
+	       // ANSI -
+               if (mStandard == SS7_STANDARD_ANSI) 
+               {
+                  acu_tcap_msg_add_ansi_abort_userinfo(
+                        lMsg,
+                        lTcapMsg.tcapComponent.tcapAbortComp.abortReason.array,
+                        lTcapMsg.tcapComponent.tcapAbortComp.abortReason.numberOfBytes
+                  );
+               } 	           
                //acu_tcap_msg_add_ans_abort_userinfo(); 
                break;
             }
@@ -2195,6 +2755,232 @@ BOOLEAN TcapAculab::AddAcuTcapComponet(TcapMsg lTcapMsg, acu_tcap_msg_t *lMsg)
 
    return true;
 }
+
+#endif
+//-------------------------------------------------------------------------------
+// METHOD      : AddAcuTcapComponet
+// DESCRIPTION : Adds the Aculab Msg Component type
+// PARAMETER   : AnsiTcapMsg lTcapMsg , acu_tcap_msg_t *lMsg
+// RETURN      : BOOLEAN
+//-------------------------------------------------------------------------------
+
+BOOLEAN TcapAculab::AddAcuTcapComponet(AnsiTcapMsg lTcapMsg, acu_tcap_msg_t *lMsg)
+{
+   int lRetVal;
+   TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
+   TEXT lErrText[ACU_TCAP_ERR_TEXT_LEN + 1] = "";
+   DialogueComp      lDialogueComp;
+   map<UINT32, DialogueComp>::iterator lDiaComp;
+   //ANSI 
+   int mStandard = SS7_STANDARD_ANSI ; //temp - ansi test
+   memset(&lDialogueComp, 0, sizeof(DialogueComp));
+
+   //sleep(10); // TBR
+
+   lDiaComp = mDialigueComponent.find(lTcapMsg.dialogueId);
+
+   if(lDiaComp != mDialigueComponent.end())
+   {
+      //lDialogueComp.numberOfComponent = (*lDiaComp).second.numberOfComponent;
+      memcpy(&lDialogueComp, &lDiaComp->second, sizeof(DialogueComp));
+      mDialigueComponent.erase(lTcapMsg.dialogueId);
+
+      //TBR
+      /* while(lDialogueComp.numberOfComponent != 4)
+         {
+         memset(&lDialogueComp, 0, sizeof(DialogueComp));
+         lDiaComp = mDialigueComponent.find(lTcapMsg.dialogueId);
+         memcpy(&lDialogueComp, &lDiaComp->second, sizeof(DialogueComp));
+         mDialigueComponent.erase(lTcapMsg.dialogueId);
+         }
+      //TBR*/
+      //sleep(10);
+
+      sprintf(lLogText,
+            "AI: DlgId:%d Number of Components Received %d",
+            lTcapMsg.dialogueId, lDialogueComp.numberOfComponent);
+      T(gTrace, printf("%s: %s\n", gProcessName, lLogText);)
+         gLog.GenerateLog(ACUTCAP125, 2, lLogText);
+   }
+   else
+   {
+      lDialogueComp.numberOfComponent = 1;
+      memcpy(&lDialogueComp.tcapComponent[0], &lTcapMsg.tcapComponent, sizeof(AnsiTcapComponent));
+   }
+
+   for(UINT8 lTemp = 0; lTemp < lDialogueComp.numberOfComponent; lTemp++)
+   {
+      memcpy(&lTcapMsg.tcapComponent, &lDialogueComp.tcapComponent[lTemp], 
+            sizeof(AnsiTcapComponent));
+
+       //Replace opcode with null if it is 0xFF/255
+       if(lTcapMsg.tcapComponent.tcapInvokeComp.operation.operationCode == 0xFF)
+          lTcapMsg.tcapComponent.tcapInvokeComp.operation.operationCode = 0x00;
+
+       switch(lTcapMsg.tcapComponent.tcapComp)
+       {   
+          case TCAP_INVOKE_COMP:
+             {
+                if(mPegFlag)
+                   gPeg.PegEvent(PEG_TCAP_INVOKE_COMP_TX);
+
+                // ANSI TCAP operation class (0-4), bitwise OR with ACU_TCAP_LAST
+                // for INVOKE_LAST component
+                int lastClass = 1;
+                if (lTcapMsg.tcapComponent.lastComponent == TCAP_LAST_COMPONENT) {
+                    lastClass |= ACU_TCAP_LAST;
+                }
+
+                int invokeId = lTcapMsg.tcapComponent.invokeId;
+                if (invokeId == 0) {
+                   invokeId = ACU_TCAP_NO_INVOKE_ID;
+                }
+
+                TCAPOperation& lOp = lTcapMsg.tcapComponent.tcapInvokeComp.operation;
+                UINT8* pOpCode    = NULL;
+                int lOpCodeOrLen  = lOp.operationCode;  // Ab Comment : National path: pass integer opcode directly
+
+                if (lOp.isPrivate) {
+                   // Ab Comment : Private opcode — encode Family (high byte) and Specifier (low byte)
+                   // into wireOpCode[], which outlives this function scope.
+                   lOp.wireOpCode[0] = static_cast<UINT8>((lOp.operationCode >> 8) & 0xFF);  // Ab Comment : Family byte
+                   lOp.wireOpCode[1] = static_cast<UINT8>(lOp.operationCode & 0xFF);          // Ab Comment : Specifier byte
+                   pOpCode      = lOp.wireOpCode;
+                   lOpCodeOrLen = 2;  // Ab Comment : Private path: length=2 signals pointer mode to Aculab
+                }
+
+                lRetVal = acu_tcap_msg_add_comp_invoke(lMsg,
+                      invokeId,
+                      ACU_TCAP_NO_INVOKE_ID, // linked_id
+                      lastClass,
+                      lTcapMsg.tcapComponent.tcapInvokeComp.timeout,
+                      pOpCode,       // Ab Comment : NULL = National (integer), non-NULL = Private (2-byte array)
+                      lOpCodeOrLen,  // Ab Comment : Integer opcode for National, length=2 for Private
+                      lTcapMsg.tcapComponent.tcapInvokeComp.parameterData.array,
+                      lTcapMsg.tcapComponent.tcapInvokeComp.parameterData.numberOfBytes
+                   );
+
+                if(0 != lRetVal)
+                {
+                   mDialigueComponent.erase(lTcapMsg.dialogueId); //TBC Mahesh
+                   mAcuTcapUtil.ReturnAculabErrStr(lRetVal,lErrText);
+                   sprintf(lLogText,"Add Invoke Componet Error %s",lErrText);
+                   TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+                   gLog.GenerateLog(ACUTCAP07,lLogText);
+                   return false;
+                }
+                break;
+             }
+          case TCAP_RET_RESULT_COMP:
+             {
+                if(mPegFlag)
+                   gPeg.PegEvent(PEG_TCAP_RET_RESULT_COMP_TX);
+
+                int lLast = ACU_TCAP_LAST;
+                if(lTcapMsg.tcapComponent.tcapRetResultComp.lastIndicator == TCAP_NOT_LAST_INDICATOR)
+                {
+                   lLast = 0;
+                }
+
+                // ANSI Return Result does not carry operation code on the wire.
+                // Aculab ignores op_code and op_code_len for ANSI Result.
+                lRetVal = acu_tcap_msg_add_comp_result(lMsg,
+                      lTcapMsg.tcapComponent.invokeId,
+                      lLast,
+                      NULL,
+                      0,
+                      lTcapMsg.tcapComponent.tcapRetResultComp.parameterData.array,
+                      lTcapMsg.tcapComponent.tcapRetResultComp.parameterData.numberOfBytes);
+                if(0 != lRetVal)
+                {
+                   mDialigueComponent.erase(lTcapMsg.dialogueId); //TBC Mahesh
+                   mAcuTcapUtil.ReturnAculabErrStr(lRetVal,lErrText);
+                   sprintf(lLogText,"Tcap Add Msg Component Result Error %s",lErrText);
+                   TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+                   gLog.GenerateLog(ACUTCAP07,lLogText);
+                   return false;
+                }
+
+                break;
+             }
+          case TCAP_RET_ERROR_COMP:
+             {
+                if(mPegFlag)
+                   gPeg.PegEvent(PEG_TCAP_RET_ERROR_COMP_TX);
+
+                // Determine Private vs National error code encoding
+                // Same pattern as Invoke: pointer for Private, NULL for National
+                UINT8 ansi_priv_err[2];
+                UINT8* pErrCode = NULL;
+                int lErrCodeOrLen = lTcapMsg.tcapComponent.tcapRetErrorComp.errorCode.errorCode;
+
+                if (lTcapMsg.tcapComponent.tcapRetErrorComp.errorCode.isPrivate) {
+                   ansi_priv_err[0] = (lTcapMsg.tcapComponent.tcapRetErrorComp.errorCode.errorCode >> 8) & 0xFF;  // Family
+                   ansi_priv_err[1] = lTcapMsg.tcapComponent.tcapRetErrorComp.errorCode.errorCode & 0xFF;         // Specifier
+                   pErrCode = ansi_priv_err;
+                   lErrCodeOrLen = 2;
+                }
+
+                lRetVal = acu_tcap_msg_add_comp_error(lMsg,
+                      lTcapMsg.tcapComponent.invokeId,
+                      pErrCode,       // NULL = National, array pointer = Private
+                      lErrCodeOrLen,  // integer code for National, length 2 for Private
+                      lTcapMsg.tcapComponent.tcapRetErrorComp.parameterData.array,
+                      lTcapMsg.tcapComponent.tcapRetErrorComp.parameterData.numberOfBytes);
+
+                if(0 != lRetVal)
+                {
+                   mDialigueComponent.erase(lTcapMsg.dialogueId); //TBC Mahesh
+                   mAcuTcapUtil.ReturnAculabErrStr(lRetVal,lErrText);
+                   sprintf(lLogText,"Tcap Add Msg ComponentError Err %s",lErrText);
+                   TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+                   gLog.GenerateLog(ACUTCAP07,lLogText);
+                   return false;
+                } 
+                break;
+             }
+          case TCAP_REJECT_COMP:
+             {
+                if(mPegFlag)
+                   gPeg.PegEvent(PEG_TCAP_REJECT_COMP_TX);
+                acu_tcap_reject_problem_t lProb;
+
+                GetAcuRejectProblem(lProb,
+                      lTcapMsg.tcapComponent.tcapRejectComp.problem);
+
+                lRetVal = acu_tcap_msg_add_comp_reject(lMsg,
+                      lTcapMsg.tcapComponent.invokeId,
+                      lProb,
+                      NULL,
+                      0);
+                if(0 != lRetVal)
+                {
+                   mDialigueComponent.erase(lTcapMsg.dialogueId); //TBC Mahesh
+                   mAcuTcapUtil.ReturnAculabErrStr(lRetVal,lErrText);
+                   sprintf(lLogText,"Tcap Add Msg Component Reject Error %s",lErrText);
+                   TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
+                   gLog.GenerateLog(ACUTCAP07,lLogText);
+                   return false;
+                }
+                break;
+             }
+          case TCAP_ABORT_COMP: 
+             {
+                acu_tcap_msg_add_ansi_abort_userinfo(
+                      lMsg,
+                      lTcapMsg.tcapComponent.tcapAbortComp.abortReason.array,
+                      lTcapMsg.tcapComponent.tcapAbortComp.abortReason.numberOfBytes
+                );
+                break;
+             }
+          default:
+             break;
+      }   
+   }
+
+   return true;
+}
+
 
 //-------------------------------------------------------------------------------
 // METHOD      : GetAcuRejectProblem 
@@ -2312,9 +3098,9 @@ BOOLEAN TcapAculab::GetAcuRejectProblem(acu_tcap_reject_problem_t &lProb,
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
 
-BOOLEAN TcapAculab::FillTcapStruct(acu_tcap_msg_t *lMsg,TcapMsg &lTcapMsg,
+BOOLEAN TcapAculab::FillTcapStruct(acu_tcap_msg_t *lMsg,AnsiTcapMsg &lTcapMsg,
       const acu_tcap_dialogue_t *lDlg,
-      TcapComponent *lComp,int &lNoOfComp)
+      AnsiTcapComponent *lComp,int &lNoOfComp)
 {
    TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = ""; 
 
@@ -2325,31 +3111,31 @@ BOOLEAN TcapAculab::FillTcapStruct(acu_tcap_msg_t *lMsg,TcapMsg &lTcapMsg,
 
    if(false == GetTcapAddress(lTcapMsg.destAddress, LOCAL_ADDR,lMsg))
    {
-      sprintf(lLogText,"AI: DlgId:%d lTId:%08X rTId:%08X Populating Dest Tcap Address Failed",
-            lTcapMsg.dialogueId,lTcapMsg.origTransId,lTcapMsg.destTransId);
+      sprintf(lLogText,"AI: DlgId:%d lTId:%08X Populating Dest Tcap Address Failed",
+            lTcapMsg.dialogueId,lTcapMsg.origTransId);
       TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
       gLog.GenerateLog(ACUTCAP126, 2, lLogText);
    }
    else
    {
 
-      sprintf(lLogText,"AI: DlgId:%d lTId:%08X rTId:%08X Populating Dest Tcap Address Success",
-            lTcapMsg.dialogueId,lTcapMsg.origTransId,lTcapMsg.destTransId);
+      sprintf(lLogText,"AI: DlgId:%d lTId:%08X Populating Dest Tcap Address Success",
+            lTcapMsg.dialogueId,lTcapMsg.origTransId);
       T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
       gLog.GenerateLog(ACUTCAP127, 2, lLogText);
    }
 
    if(false == GetTcapAddress(lTcapMsg.origAddress, REMOTE_ADDR,lMsg))
    {
-      sprintf(lLogText,"AI: DlgId:%d lTId:%08X rTId:%08X Populating Orig Tcap Address Failed",
-            lTcapMsg.dialogueId,lTcapMsg.origTransId,lTcapMsg.destTransId);
+      sprintf(lLogText,"AI: DlgId:%d lTId:%08X Populating Orig Tcap Address Failed",
+            lTcapMsg.dialogueId,lTcapMsg.origTransId);
       TERR(gTrace,printf("%s: %s\n",gProcessName,lLogText););
       gLog.GenerateLog(ACUTCAP128, 2, lLogText);
    }
    else
    {
-      sprintf(lLogText,"AI: DlgId:%d lTId:%08X rTId:%08X Populating Orig Tcap Address Success",
-            lTcapMsg.dialogueId,lTcapMsg.origTransId,lTcapMsg.destTransId);
+      sprintf(lLogText,"AI: DlgId:%d lTId:%08X Populating Orig Tcap Address Success",
+            lTcapMsg.dialogueId,lTcapMsg.origTransId);
       T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
       gLog.GenerateLog(ACUTCAP129, 2, lLogText);
    }
@@ -2360,8 +3146,8 @@ BOOLEAN TcapAculab::FillTcapStruct(acu_tcap_msg_t *lMsg,TcapMsg &lTcapMsg,
    }   
    else
    {
-      sprintf(lLogText,"AI: DlgId:%d lTId:%08X rTId:%08X Dialog Portion Missing",
-            lTcapMsg.dialogueId,lTcapMsg.origTransId,lTcapMsg.destTransId);
+      sprintf(lLogText,"AI: DlgId:%d lTId:%08X Dialog Portion Missing",
+            lTcapMsg.dialogueId,lTcapMsg.origTransId);
       T(gTrace,printf("%s: %s\n",gProcessName,lLogText););
       gLog.GenerateLog(ACUTCAP35,lLogText);
    }
@@ -2415,7 +3201,7 @@ BOOLEAN TcapAculab::GetTransIds(acu_tcap_msg_t *lMsg,unsigned int *lLocId,
 // PARAMETER   : TCAPAddress &lAddress, EnumAddrFlag lFlag,acu_tcap_msg_t *lMsg
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
-
+/*
 BOOLEAN TcapAculab::GetTcapAddress(TCAPAddress &lAddress, 
       EnumAddrFlag lFlag,
       acu_tcap_msg_t *lMsg)
@@ -2509,7 +3295,90 @@ BOOLEAN TcapAculab::GetTcapAddress(TCAPAddress &lAddress,
 
    return true;
 }
+*/
 
+BOOLEAN TcapAculab::GetTcapAddress(TCAPAddress &lAddress, 
+      EnumAddrFlag lFlag,
+      acu_tcap_msg_t *lMsg)
+{
+   acu_sccp_addr_t * lAddr;
+
+
+   if(LOCAL_ADDR == lFlag)
+   {   
+      lAddr = acu_tcap_trans_get_locaddr(lMsg->tm_trans);
+   }
+   else
+   {
+      lAddr = acu_tcap_trans_get_remaddr(lMsg->tm_trans);
+   }
+
+
+   // Ab Comment : Set Address Indicator based on routing flags without wrapping digit decoding in an else block
+   if(lAddr->sa_flags & ACU_SCCP_SA_FLAGS_ROUTE_SSN)
+   {
+      lAddress.addressIndicator = lAddress.addressIndicator | 0x40;
+   }
+   else
+   {
+      lAddress.addressIndicator = lAddress.addressIndicator & ~0x40;
+   }
+
+   // Ab Comment : Always decode GT digits if present, regardless of routing indicator
+   if (lAddr->sa_gt.sag_num > 0)
+   {
+      lAddress.numberOfDigits = lAddr->sa_gt.sag_num;
+
+      int lTempCount = (lAddress.numberOfDigits + 1) / 2;
+      int j = 0;
+      for(int i = 0; i < lTempCount; i++)
+      {
+         lAddress.digits[j++] = lAddr->sa_gt.sag_digits[i] & 0x0F;
+         lAddress.digits[j++] = (lAddr->sa_gt.sag_digits[i] >> 4) & 0x0F;
+      }
+   }
+   else
+   {
+      lAddress.numberOfDigits = 0;
+   }
+
+
+
+   // ANSI: Bit 2 (0x02) is PC Indicator, Bit 1 (0x01) is SSN Indicator
+   if(lAddr->sa_valid & ACU_SCCP_SA_VALID_PC)
+   {
+      lAddress.pointCode = lAddr->sa_pc;
+      lAddress.addressIndicator = lAddress.addressIndicator | 0x02;
+   }
+
+   if(lAddr->sa_valid & ACU_SCCP_SA_VALID_SSN)
+   {
+      lAddress.subsystemNumber = lAddr->sa_ssn;
+      lAddress.addressIndicator = lAddress.addressIndicator | 0x01;
+   }
+
+   // In ANSI SCCP, NAI is not part of the SCCP address header, so we omit
+   // decoding ACU_SCCP_SA_VALID_NAI.
+   
+   if(lAddr->sa_valid & (ACU_SCCP_SA_VALID_TT | 
+            ACU_SCCP_SA_VALID_NP |
+            ACU_SCCP_SA_VALID_ES))
+   {
+      // If TT, NP, ES are present under ANSI, set 0x10 or 0x0c (default to 0x10)
+      lAddress.addressIndicator = lAddress.addressIndicator | 0x10;
+      lAddress.translationType = lAddr->sa_tt;
+      lAddress.numberingPlan   = lAddr->sa_np;
+      lAddress.encodingScheme  = lAddr->sa_es;
+   }
+   else if(lAddr->sa_valid & ACU_SCCP_SA_VALID_TT)
+   {
+      // If only TT is present under ANSI, set 0x04 (GTI = 1)
+      lAddress.addressIndicator = lAddress.addressIndicator | 0x04;
+      lAddress.translationType = lAddr->sa_tt;
+   }
+
+   return true;
+}
 //-------------------------------------------------------------------------------
 // METHOD      : SetLocTcapAddress 
 // DESCRIPTION : SetLocTcapAddress from aculab tcap adress
@@ -2592,6 +3461,7 @@ BOOLEAN TcapAculab::SetRemSccpAddr(TCAPAddress &lTcapAddress,int &lInstanceNo)
 // PARAMETER   : TCAPAddress &lAddress, EnumAddrFlag lFlag,acu_tcap_msg_t *lMsg
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
+
 BOOLEAN TcapAculab::SetRemTcapAddress(acu_tcap_msg_t *lMsg,
       TCAPAddress &lAddress)
 {
@@ -2602,12 +3472,108 @@ BOOLEAN TcapAculab::SetRemTcapAddress(acu_tcap_msg_t *lMsg,
       return false;
 }
 
+/*
+BOOLEAN TcapAculab::SetAddress(acu_sccp_addr_t *lAddr,
+      TCAPAddress &lAddress)
+{
+   // printf("Address Indicator : %02X\n", lAddress.addressIndicator);
+
+   if((lAddress.addressIndicator & 0x40) == 0)
+   {
+      // EXPLICITLY clear ACU_SCCP_SA_FLAGS_RAW_GT for ANSI.
+      lAddr->sa_flags &= ~ACU_SCCP_SA_FLAGS_RAW_GT;
+      lAddr->sa_valid &= ~ACU_SCCP_SA_VALID_GTI;
+      lAddr->sa_valid &= ~ACU_SCCP_SA_VALID_NAI;
+
+      lAddr->sa_gt.sag_num = lAddress.numberOfDigits;
+      int i = 0;
+
+      int lTemcount = 0;
+      if(0 == (lAddress.numberOfDigits % 2 ))
+      {
+         lTemcount = lAddress.numberOfDigits / 2;
+      }
+      else
+      {
+         lTemcount = lAddress.numberOfDigits / 2 + 1;
+      }
+
+      for(int j = 0; j < lTemcount ;)
+      {
+         lAddr->sa_gt.sag_digits[j] = 0x0F & lAddress.digits[i++];
+         lAddr->sa_gt.sag_digits[j] |= (0xF0 & (lAddress.digits[i++] << 4));
+         j++;
+      }
+
+      if(SCCP_ES_BCD_ODD == lAddress.encodingScheme)
+      {
+         lAddr->sa_gt.sag_digits[lTemcount - 1] = lAddr->sa_gt.sag_digits[lTemcount - 1] & 0x0F;
+      }
+
+   }
+   else
+   {
+      lAddr->sa_flags = ACU_SCCP_SA_FLAGS_ROUTE_SSN;
+   }
+
+   // ANSI: Bit 2 (0x02) is PC Indicator, Bit 1 (0x01) is SSN Indicator
+   if(lAddress.addressIndicator & 0x02 || lAddress.pointCode != 0)
+   {
+      lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_PC;
+      lAddr->sa_pc = lAddress.pointCode;
+   }
+   if(lAddress.addressIndicator & 0x01 || lAddress.subsystemNumber != 0)
+   {
+      lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_SSN;
+      lAddr->sa_ssn = lAddress.subsystemNumber;
+   }
+
+   // In ANSI SCCP, NAI is not part of the SCCP address header, so we omit
+   // setting ACU_SCCP_SA_VALID_NAI even if natureOfAddress is provided.
+   
+   // GTI = 1 (0x04): Translation Type only
+   if(lAddress.addressIndicator & 0x04 )
+   {
+      lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_TT;
+      lAddr->sa_tt = lAddress.translationType;
+   }
+   // GTI = 2 (0x08): Translation Type only
+   if(lAddress.addressIndicator & 0x08 )
+   {
+      lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_TT;
+      lAddr->sa_tt = lAddress.translationType;
+   }
+   // GTI = 3 (0x0c): Translation Type, Numbering Plan, Encoding Scheme
+   if(lAddress.addressIndicator & 0x0c )
+   {
+      lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_TT 
+         | ACU_SCCP_SA_VALID_NP
+         | ACU_SCCP_SA_VALID_ES;
+      lAddr->sa_tt = lAddress.translationType;
+      lAddr->sa_np = lAddress.numberingPlan;
+      lAddr->sa_es = lAddress.encodingScheme;
+   }
+   // GTI = 4 (0x10): Translation Type, Numbering Plan, Encoding Scheme
+   if(lAddress.addressIndicator & 0x10 )
+   {
+      lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_TT
+         | ACU_SCCP_SA_VALID_NP
+         | ACU_SCCP_SA_VALID_ES;
+      lAddr->sa_tt = lAddress.translationType;
+      lAddr->sa_np = lAddress.numberingPlan;
+      lAddr->sa_es = lAddress.encodingScheme;
+   }
+
+   return true;
+}
+*/
 //-------------------------------------------------------------------------------
 // METHOD      : SetAddress 
 // DESCRIPTION : SetAddress from aculab tcap adress
 // PARAMETER   : TCAPAddress &lAddress, EnumAddrFlag lFlag,acu_tcap_msg_t *lMsg
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
+/*
 BOOLEAN TcapAculab::SetAddress(acu_sccp_addr_t *lAddr,
       TCAPAddress &lAddress)
 {
@@ -2625,12 +3591,20 @@ BOOLEAN TcapAculab::SetAddress(acu_sccp_addr_t *lAddr,
 
       // EXPLICITLY clear ACU_SCCP_SA_VALID_GTI from sa_valid.
       // The Aculab SSAP pre-initializes sa_valid = 0xf7 (all bits set) from
-      // its config file, including VALID_GTI (bit 0).
+      // its Tcap_1000_8.cfg config file, including VALID_GTI (bit 0).
       // VALID_GTI tells the encoder "use the raw sa_gti field for GTI".
-      // Having VALID_GTI set alongside VALID_TT/NP/ES/NAI is ambiguous;
+      // Having VALID_GTI set *alongside* VALID_TT/NP/ES/NAI is ambiguous;
       // the SCCP encoder rejects it with "cannot convert supplied sa_valid to
-      // a gti".  Clearing it leaves TT+NP+ES+NAI as the sole source of truth.
+      // a gti".  Clearing it leaves TT+NP+ES+NAI as the sole source of truth
+      // so the encoder auto-selects GTI-4 (ANSI) and builds the GT header.
       lAddr->sa_valid &= ~ACU_SCCP_SA_VALID_GTI;
+      
+      // EXPLICITLY clear ACU_SCCP_SA_VALID_NAI for ANSI.
+      // ANSI SCCP (unlike ITU) does not support NAI in the GT header.
+      // Aculab's default sa_valid=0xf7 includes VALID_NAI. If left set,
+      // the encoder will throw "cannot convert supplied sa_valid to a gti"
+      // because there is no ANSI GTI that includes NAI.
+      lAddr->sa_valid &= ~ACU_SCCP_SA_VALID_NAI;
 
       lAddr->sa_gt.sag_num = lAddress.numberOfDigits;
       int i = 0;
@@ -2667,18 +3641,17 @@ BOOLEAN TcapAculab::SetAddress(acu_sccp_addr_t *lAddr,
    {
       lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_PC;
       lAddr->sa_pc = lAddress.pointCode;
+   
    }
-   if(lAddress.addressIndicator & 0x02 )
+
+   if(lAddress.addressIndicator & 0x02 || lAddress.subsystemNumber != 0)
    {
       lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_SSN;
       lAddr->sa_ssn = lAddress.subsystemNumber;
    }
 
-   if(lAddress.addressIndicator & 0x04 )
-   {
-      lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_NAI;
-      lAddr->sa_nai = lAddress.natureOfAddress;
-   }
+   // In ANSI SCCP, NAI is not part of the SCCP address header, so we omit
+   // setting ACU_SCCP_SA_VALID_NAI even if natureOfAddress is provided.
    if(lAddress.addressIndicator & 0x08 )
    {
       lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_TT;
@@ -2692,30 +3665,126 @@ BOOLEAN TcapAculab::SetAddress(acu_sccp_addr_t *lAddr,
       lAddr->sa_tt = lAddress.translationType;
       lAddr->sa_np = lAddress.numberingPlan;
       lAddr->sa_es = lAddress.encodingScheme;
-
    }
    if(lAddress.addressIndicator & 0x10 )
    {
       lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_TT
          | ACU_SCCP_SA_VALID_NP
-         | ACU_SCCP_SA_VALID_ES
-         | ACU_SCCP_SA_VALID_NAI;
-
+         | ACU_SCCP_SA_VALID_ES;
       lAddr->sa_tt = lAddress.translationType;
       lAddr->sa_np = lAddress.numberingPlan;
       lAddr->sa_es = lAddress.encodingScheme;
-      lAddr->sa_nai = lAddress.natureOfAddress;
+      // sa_nai is intentionally omitted for ANSI.
    }
 
-   // Ensure sa_nai is always populated when routing on GT and NAI is non-zero,
-   // regardless of whether addressIndicator bits 0x04/0x10 are set by the caller.
-   // This prevents the Aculab stack from selecting GTI-2/3 (no NAI in GT header)
-   // when GTI-4 (TT+NP+ES+NAI) is required.
-   if((lAddress.addressIndicator & 0x40) == 0 && lAddress.natureOfAddress != 0)
+   // No NAI fallback logic for ANSI.
+
+   return true;
+}
+*/
+
+
+
+BOOLEAN TcapAculab::SetAddress(acu_sccp_addr_t *lAddr,
+      TCAPAddress &lAddress)
+{
+   // printf("Address Indicator : %02X\n", lAddress.addressIndicator);
+
+   if((lAddress.addressIndicator & 0x40) == 0)
    {
-      lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_NAI;
-      lAddr->sa_nai = lAddress.natureOfAddress;
+      // EXPLICITLY clear ACU_SCCP_SA_FLAGS_RAW_GT.
+      // The Aculab SSAP may pre-set this flag from its config file.
+      // If left set, the stack treats sag_digits[] as a pre-formatted raw byte
+      // stream and will NOT prepend TT/NP/ES/NAI header bytes on the wire.
+      // Clearing it tells the stack to build the GT header bytes from sa_tt,
+      // sa_np, sa_es, sa_nai automatically when sending the SCCP UDT.
+      lAddr->sa_flags &= ~ACU_SCCP_SA_FLAGS_RAW_GT;
+
+      // EXPLICITLY clear ACU_SCCP_SA_VALID_GTI from sa_valid.
+      // The Aculab SSAP pre-initializes sa_valid = 0xf7 (all bits set) from
+      // its Tcap_1000_8.cfg config file, including VALID_GTI (bit 0).
+      // VALID_GTI tells the encoder "use the raw sa_gti field for GTI".
+      // Having VALID_GTI set *alongside* VALID_TT/NP/ES/NAI is ambiguous;
+      // the SCCP encoder rejects it with "cannot convert supplied sa_valid to
+      // a gti".  Clearing it leaves TT+NP+ES+NAI as the sole source of truth
+      // so the encoder auto-selects GTI-4 (ANSI) and builds the GT header.
+      lAddr->sa_valid &= ~ACU_SCCP_SA_VALID_GTI;
+
+      // EXPLICITLY clear ACU_SCCP_SA_VALID_NAI for ANSI.
+      // ANSI SCCP (unlike ITU) does not support NAI in the GT header.
+      // Aculab's default sa_valid=0xf7 includes VALID_NAI. If left set,
+      // the encoder will throw "cannot convert supplied sa_valid to a gti"
+      // because there is no ANSI GTI that includes NAI.
+      lAddr->sa_valid &= ~ACU_SCCP_SA_VALID_NAI;
+
+      lAddr->sa_gt.sag_num = lAddress.numberOfDigits;
+      int i = 0;
+
+      int lTemcount = 0;
+      if(0 == (lAddress.numberOfDigits % 2 ))
+      {
+         lTemcount = lAddress.numberOfDigits / 2;
+      }
+      else
+      {
+         lTemcount = lAddress.numberOfDigits / 2 + 1;
+      }
+
+      for(int j = 0; j < lTemcount ;)
+      {
+         lAddr->sa_gt.sag_digits[j] = 0x0F & lAddress.digits[i++];
+         lAddr->sa_gt.sag_digits[j] |= (0xF0 & (lAddress.digits[i++] << 4));
+         j++;
+      }
+
+      if(SCCP_ES_BCD_ODD == lAddress.encodingScheme)
+      {
+         lAddr->sa_gt.sag_digits[lTemcount - 1] = lAddr->sa_gt.sag_digits[lTemcount - 1] & 0x0F;
+      }
+
    }
+   else
+   {
+      lAddr->sa_flags = ACU_SCCP_SA_FLAGS_ROUTE_SSN;
+   }
+
+   // ANSI: Bit 2 (0x02) is PC Indicator, Bit 1 (0x01) is SSN Indicator
+   if(lAddress.addressIndicator & 0x02 || lAddress.pointCode != 0)
+   {
+      lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_PC;
+      lAddr->sa_pc = lAddress.pointCode;
+   }
+
+   if(lAddress.addressIndicator & 0x01 || lAddress.subsystemNumber != 0)
+   {
+      lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_SSN;
+      lAddr->sa_ssn = lAddress.subsystemNumber;
+   }
+
+   // Extract ANSI GTI value (bits 3-6)
+   int gti = (lAddress.addressIndicator >> 2) & 0x0f;
+
+   if(gti == 1) // GTI = 1 (Translation Type only)
+   {
+      lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_TT;
+      lAddr->sa_tt = lAddress.translationType;
+   }
+   else if(gti == 2 || gti == 3) // GTI = 2 or 3 (Translation Type, Numbering Plan, Encoding Scheme)
+   {
+      lAddr->sa_valid = lAddr->sa_valid | ACU_SCCP_SA_VALID_TT
+         | ACU_SCCP_SA_VALID_NP
+         | ACU_SCCP_SA_VALID_ES;
+      lAddr->sa_tt = lAddress.translationType;
+      lAddr->sa_np = lAddress.numberingPlan;
+      lAddr->sa_es = lAddress.encodingScheme;
+   }
+
+   TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
+   snprintf(lLogText, MAX_LOG_TEXT_LEN,
+         "ANSI SetAddress Debug: addressIndicator=0x%02X, sa_flags=0x%04X, sa_valid=0x%02X, sa_pc=%d, sa_ssn=%d, sa_tt=%d, sa_np=%d, sa_es=%d, gti=%d",
+         lAddress.addressIndicator, lAddr->sa_flags, lAddr->sa_valid, lAddr->sa_pc, lAddr->sa_ssn, lAddr->sa_tt, lAddr->sa_np, lAddr->sa_es, gti);
+   T(gTrace, printf("%s: %s\n", gProcessName, lLogText););
+   gLog.GenerateLog(ACUTCAP127, 2, lLogText);
 
    return true;
 }
@@ -2724,51 +3793,75 @@ BOOLEAN TcapAculab::SetAddress(acu_sccp_addr_t *lAddr,
 // METHOD      : GetAcuTcapMsgType 
 // DESCRIPTION : Get Aculab Tcap message type from application
 //               TCAP Message
-// PARAMETER   : TcapMsg lTcapMsg
+// PARAMETER   : AnsiTcapMsg lTcapMsg
 // RETURN      : acu_tcap_msg_type_t
 //-------------------------------------------------------------------------------
-acu_tcap_msg_type_t TcapAculab::GetAcuTcapMsgType(TcapMsg &lTcapMsg) 
+
+// ACU_TCAP_MSG_ANSI_QUERY  ➔  ACU_TCAP_MSG_ITU_BEGIN
+// ACU_TCAP_MSG_ANSI_QUERY_WO  ➔  ACU_TCAP_MSG_ITU_BEGIN
+// ACU_TCAP_MSG_ANSI_CONV  ➔  ACU_TCAP_MSG_ITU_CONTINUE
+// ACU_TCAP_MSG_ANSI_CONV_WO  ➔  ACU_TCAP_MSG_ITU_CONTINUE
+// ACU_TCAP_MSG_ANSI_RESPONSE  ➔  ACU_TCAP_MSG_ITU_END
+// ACU_TCAP_MSG_ANSI_ABORT  ➔  ACU_TCAP_MSG_ITU_ABORT
+// ACU_TCAP_MSG_ANSI_UNI  ➔  ACU_TCAP_MSG_ITU_UNI
+
+acu_tcap_msg_type_t TcapAculab::GetAcuTcapMsgType(AnsiTcapMsg &lTcapMsg) 
 {
    switch(lTcapMsg.tcapDlg)
    {   
-      case TCAP_BEGIN:              // = 0,
-      case TCAP_BEGIN_CONTINUE:     // = 10
+
+      //ANSI -  
+      case TCAP_ANSI_QUERY_WITH_PERMISSION:
          {
             if(mPegFlag)
                gPeg.PegEvent(PEG_TCAP_BEGIN_TX);
-
-            return ACU_TCAP_MSG_ITU_BEGIN;
+            return ACU_TCAP_MSG_ANSI_QUERY;
          }
+      case TCAP_ANSI_QUERY_WITHOUT_PERMISSION:
+         {
+            if(mPegFlag)
+               gPeg.PegEvent(PEG_TCAP_BEGIN_TX);
+            return ACU_TCAP_MSG_ANSI_QUERY_WO;
+         }
+      case TCAP_ANSI_RESPONSE :
       case TCAP_PRE_ARRANGED_END:   // = 1, // Pre arranged value should be 1 as per tdapi
       case TCAP_END_WITH_ADDRESS:   // = 9,
       case TCAP_END:                // = 2,        // basic end should have value as 2
          {
             if(mPegFlag)
                gPeg.PegEvent(PEG_TCAP_END_TX);
-            return ACU_TCAP_MSG_ITU_END;
+            return ACU_TCAP_MSG_ANSI_RESPONSE; 
          }
-      case TCAP_CONTINUE:           // = 3,
+      case TCAP_ANSI_CONVERSATION_WITH_PERMISSION:           // = 3,
          {
             if(mPegFlag)
                gPeg.PegEvent(PEG_TCAP_CONTINUE_TX);
-            return ACU_TCAP_MSG_ITU_CONTINUE;
+            return ACU_TCAP_MSG_ANSI_CONV;
 
          }
-      case TCAP_ABORT:              // = 4,
+      
+            case TCAP_ANSI_CONVERSATION_WITHOUT_PERMISSION:           // = 3,
+         {
+            if(mPegFlag)
+               gPeg.PegEvent(PEG_TCAP_CONTINUE_TX);
+            return ACU_TCAP_MSG_ANSI_CONV_WO;
+
+         }   
+      case TCAP_ANSI_ABORT:              // = 4,
          {
             if(mPegFlag)
                gPeg.PegEvent(PEG_TCAP_USER_ABORT_TX);
-            return ACU_TCAP_MSG_ITU_ABORT;
+            return ACU_TCAP_MSG_ANSI_ABORT;
 
          }
       case TCAP_RSP_TIMEOUT:        // = 5,
          {
             return ACU_TCAP_MSG_TIMEOUT;
          }
-      case TCAP_UNIDIRECTIONAL:     // = 7,
+      case TCAP_ANSI_UNI:     // = 7,
          {
 
-            return ACU_TCAP_MSG_ITU_UNI;
+            return ACU_TCAP_MSG_ANSI_UNI;
          }
       case TCAP_CONTROL:            // = 6,
       default:
@@ -2786,6 +3879,7 @@ acu_tcap_msg_type_t TcapAculab::GetAcuTcapMsgType(TcapMsg &lTcapMsg)
 // PARAMETER   : acu_tcap_msg *
 // RETURN      : EnumTcapDlg
 //-------------------------------------------------------------------------------
+/*
 EnumTcapDlg TcapAculab::GetTcapDlgType(acu_tcap_msg *lMsg)
 {
 
@@ -2794,7 +3888,6 @@ EnumTcapDlg TcapAculab::GetTcapDlgType(acu_tcap_msg *lMsg)
 
       case ACU_TCAP_MSG_TIMEOUT:
          return TCAP_RSP_TIMEOUT;
-         /* Message types generated by acu_tcap_msg_decode() */
       case ACU_TCAP_MSG_P_ABORT:
          if(mPegFlag)
             gPeg.PegEvent(PEG_TCAP_PROTOCOL_ABORT_RX);
@@ -2808,11 +3901,21 @@ EnumTcapDlg TcapAculab::GetTcapDlgType(acu_tcap_msg *lMsg)
       case ACU_TCAP_MSG_ITU_ABORT:
          return TCAP_ABORT;
 
-         /* ITU TCAP - for acu_tcap_msg_init() and set by acu_tcap_msg_decode() */
       case ACU_TCAP_MSG_ITU_UNI:
          if(mPegFlag)
             gPeg.PegEvent(PEG_TCAP_UNIDIRECTIONAL_RX);
          return TCAP_UNIDIRECTIONAL;
+
+      //ANSI -
+      case ACU_TCAP_MSG_ANSI_QUERY:
+         if(mPegFlag)
+            gPeg.PegEvent(PEG_TCAP_BEGIN_RX);
+         return TCAP_ANSI_QUERY_WITH_PERMISSION;
+      case ACU_TCAP_MSG_ANSI_QUERY_WO:
+         if(mPegFlag)
+            gPeg.PegEvent(PEG_TCAP_BEGIN_RX);
+         return TCAP_ANSI_QUERY_WITHOUT_PERMISSION;
+       //UPTO ANSI -
 
       case ACU_TCAP_MSG_ITU_BEGIN:
          if(mPegFlag)
@@ -2830,7 +3933,65 @@ EnumTcapDlg TcapAculab::GetTcapDlgType(acu_tcap_msg *lMsg)
          return TCAP_END; // Not mapped
    }    
 }
+*/
 
+
+EnumTcapDlg TcapAculab::GetTcapDlgType(acu_tcap_msg *lMsg)
+{
+
+   switch(lMsg->tm_msg_type)
+   {
+
+      case ACU_TCAP_MSG_TIMEOUT:
+         return TCAP_RSP_TIMEOUT;
+         /* Message types generated by acu_tcap_msg_decode() */
+      case ACU_TCAP_MSG_P_ABORT:
+         if(mPegFlag)
+            gPeg.PegEvent(PEG_TCAP_PROTOCOL_ABORT_RX);
+         return TCAP_ANSI_ABORT;
+
+      case ACU_TCAP_MSG_LOCAL_ABORT:  
+         if(mPegFlag)
+            gPeg.PegEvent(PEG_TCAP_USER_ABORT_RX);
+         return TCAP_ANSI_ABORT;
+
+      case ACU_TCAP_MSG_ANSI_ABORT:
+         return TCAP_ANSI_ABORT;
+
+      case ACU_TCAP_MSG_ANSI_UNI:
+         if(mPegFlag)
+            gPeg.PegEvent(PEG_TCAP_UNIDIRECTIONAL_RX);
+         return TCAP_UNIDIRECTIONAL;
+
+      case ACU_TCAP_MSG_ANSI_QUERY:
+         if(mPegFlag)
+            gPeg.PegEvent(PEG_TCAP_BEGIN_RX);
+         return TCAP_ANSI_QUERY_WITH_PERMISSION;
+
+      case ACU_TCAP_MSG_ANSI_QUERY_WO:
+         if(mPegFlag)
+            gPeg.PegEvent(PEG_TCAP_BEGIN_RX);
+         return TCAP_ANSI_QUERY_WITHOUT_PERMISSION;
+
+      case ACU_TCAP_MSG_ANSI_RESPONSE:
+         if(mPegFlag)
+            gPeg.PegEvent(PEG_TCAP_END_RX);
+         return TCAP_ANSI_RESPONSE;
+
+      case ACU_TCAP_MSG_ANSI_CONV:
+         if(mPegFlag)
+            gPeg.PegEvent(PEG_TCAP_CONTINUE_RX);
+         return TCAP_ANSI_CONVERSATION_WITH_PERMISSION;
+
+      case ACU_TCAP_MSG_ANSI_CONV_WO:
+         if(mPegFlag)
+            gPeg.PegEvent(PEG_TCAP_CONTINUE_RX);
+         return TCAP_ANSI_CONVERSATION_WITHOUT_PERMISSION;
+
+      default:
+         return TCAP_ANSI_RESPONSE; // default mapped
+   }    
+}
 //-------------------------------------------------------------------------------
 // METHOD      : SetRcvLocalAddress 
 // DESCRIPTION : Sets the Received Lcoal Address for TCAP Structure
@@ -2850,7 +4011,7 @@ void TcapAculab::SetRcvLocalAddress(acu_tcap_msg_t *rAcuTcapMsgPtr)
 // PARAMETER   : 
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
-BOOLEAN TcapAculab::HandlerMultipleComponents(TcapMsg lTcapMsg)
+BOOLEAN TcapAculab::HandlerMultipleComponents(AnsiTcapMsg lTcapMsg)
 {
    pthread_mutex_lock (&gMutexLock);
 
@@ -2888,7 +4049,7 @@ BOOLEAN TcapAculab::HandlerMultipleComponents(TcapMsg lTcapMsg)
          }
 
          memcpy(&lDialogueComp.tcapComponent[lTcapMsg.tcUserId], &lTcapMsg.tcapComponent,
-               sizeof(TcapComponent));
+               sizeof(AnsiTcapComponent));
          lDialogueComp.numberOfComponent = lDialogueComp.numberOfComponent + 1;
          lDialogueComp.totComponent = lTcapMsg.tcUserId + 1;
          lDialogueComp.lastComponentFlag = 1;
@@ -2931,7 +4092,7 @@ BOOLEAN TcapAculab::HandlerMultipleComponents(TcapMsg lTcapMsg)
          }
 
          memcpy(&lDialogueComp.tcapComponent[lTcapMsg.tcUserId], &lTcapMsg.tcapComponent,
-               sizeof(TcapComponent));
+               sizeof(AnsiTcapComponent));
 
          lDialogueComp.numberOfComponent = lDialogueComp.numberOfComponent + 1;
          lDialogueComp.totComponent = lTcapMsg.tcUserId + 1;
@@ -2978,7 +4139,7 @@ BOOLEAN TcapAculab::HandlerMultipleComponents(TcapMsg lTcapMsg)
       if(lTcapMsg.tcapComponent.lastComponent == TCAP_NOT_LAST_COMPONENT)
       {
          memcpy(&lDialogueComp.tcapComponent[lTcapMsg.tcUserId], &lTcapMsg.tcapComponent,
-               sizeof(TcapComponent));
+               sizeof(AnsiTcapComponent));
          lDialogueComp.numberOfComponent = lDialogueComp.numberOfComponent + 1;
          lDialogueComp.totComponent = lTcapMsg.tcUserId + 1;
          mDialigueComponent.insert(std::pair<UINT32, DialogueComp>(lTcapMsg.dialogueId, lDialogueComp));

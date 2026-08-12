@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody I.460 Mux: API: sm_i460mux_get_event</title>
+</head>
+<body>
+<h1>Prosody I.460 Mux: API: sm_i460mux_get_event</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_i460mux_get_event(struct sm_i460mux_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_i460mux_event_parms {
+	<a href="../apitype.html#type-tSMI460muxId">tSMI460muxId</a> <a href="#field-i460mux">i460mux</a>;					/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_I460MUX_EVENT_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+The event will be signalled when a status change occurs on the mux.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-i460mux">i460mux</a><dd>The mux.
+
+<dt><a name="field-event">event</a><dd>The event identifier
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosi460muxapi.html">Prosody I.460 Mux API</a>.
+</body>
+</html>

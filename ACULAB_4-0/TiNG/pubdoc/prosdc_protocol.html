@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Protocols</title>
+</head>
+<body>
+<h1>Prosody data communications Protocols</h1>
+<p>
+Prosody defines a data communications <em>protocol</em> as a way of
+transporting data on a timeslot. Many of the supported protocols can
+transport data which is formatted in different ways, and in Prosody the
+packaging of data into these formats is called <em>encoding</em>.
+Encodings are described in <a href="prosdc_encoding.html">Prosody Data
+Communications Encodings</a>.
+<p>
+The protocols available are:
+<ul>
+<li>raw digital data <a href="protocol_rawtx.html">transmitter</a>
+	and <a href="protocol_rawrx.html">receiver</a>
+<li><a href="protocol_v110.html">V.110</a>
+<li>V.110 RLP <a href="protocol_v110rlptx.html">transmitter</a>
+	and <a href="protocol_v110rlprx.html">receiver</a>
+<li>CW modem <a href="protocol_cwtx.html">transmitter</a>
+	and <a href="protocol_cwrx.html">receiver</a>
+<li>FSK modem <a href="protocol_fsktx.html">transmitter</a>
+	and <a href="protocol_fskrx.html">receiver</a> (e.g. V.21, V.23, etc)
+<li>V.27ter modem <a href="protocol_v27tx.html">transmitter</a>
+	and <a href="protocol_v27rx.html">receiver</a>
+<li>V.29 modem <a href="protocol_v29tx.html">transmitter</a>
+	and <a href="protocol_v29rx.html">receiver</a>
+<li>V.17 modem <a href="protocol_v17tx.html">transmitter</a>
+	and <a href="protocol_v17rx.html">receiver</a>
+<li>V.32 modem <a href="protocol_v32.html">transmitter
+	and receiver</a>
+<li><a href="protocol_ttyrx.html">TTY receiver for ITU V.18 Annex A</a>
+<li><a href="protocol_cpumon.html">CPU usage monitor</a>
+<li><a href="protocol_heapmon.html">Heap usage monitor</a>
+</ul>
+<p>
+The possible combinations of protocols and encodings are described in
+<a href="prosdc_config.html">Prosody data communications Protocols
+and Encodings</a>.
+</body>

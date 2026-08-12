@@ -1,0 +1,8 @@
+Testlib	fmtcode.o
+Testlib	cardopen.o
+libutil	generic_io.o
+Testlib	errcode_sm.o
+Testlib	error.o
+Testlib	modopen.o
+apilib
+.	echocan.o

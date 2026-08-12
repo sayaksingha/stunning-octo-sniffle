@@ -18,6 +18,7 @@
 #define SCCP_ACULAB_HDLR_H
 #include "SccpAculabApi.h"
 #include "MsuStructs.h"
+#include "MsuAnsiStructs.h"
 
 struct SccpMsgQ
 {
@@ -49,8 +50,8 @@ class SccpAculabHandler
    TEXT                mLicKey[SCCP_ACU_MAX_LIC_LEN + 1];
    UINT8               mNumofOPCs;
    
-   INT16               mDestinationA;
-   INT16               mDestinationB;
+   UINT32              mDestinationA;
+   UINT32              mDestinationB;
 
    BOOLEAN             mDestAStatus;
    BOOLEAN             mDestBStatus;

@@ -1,0 +1,137 @@
+// DESCRIPTION: IMA Encoder Record
+// GENTIME: Tue Aug  3 16:20:51 2021
+// VERS: 0x00014910 0x00007490
+// RESHINT: RESTBL 52 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x61 0x6d 0x69 0x72 0x00 0x00 0x00 0x40 0x00 0x00 0x00 0x16 0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x16 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x7d 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x49 0x10 0x00 0x00 0x74 0x90 
+(section
+".default"
+(alignment #0)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::.default" (sym ".default::@start")))
+(data))
+(section
+".data"
+(alignment #3)
+(symtab
+(defsym "_TiNG_ftbl_recima" (sym ".data::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::.data" (sym ".data::@start")))
+(data // Offset:0x0
+{0000000000000000616D697200014910FFFFFFF000000000} // Offset:0x18
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v103")) #FFFFFFE8)) // Offset:0x19
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v103")) #FFFFFFF0)) // Offset:0x1A
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v103")) #FFFFFFF8)) // Offset:0x1B
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v103"))) // Offset:0x1C
+{00000000} // Offset:0x20
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v101")) #FFFFFFE8)) // Offset:0x21
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v101")) #FFFFFFF0)) // Offset:0x22
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v101")) #FFFFFFF8)) // Offset:0x23
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v101"))) // Offset:0x24
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v102")) #FFFFFFE8)) // Offset:0x25
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v102")) #FFFFFFF0)) // Offset:0x26
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v102")) #FFFFFFF8)) // Offset:0x27
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v102"))) // Offset:0x28
+{00000024} // Offset:0x2C
+(emit (<< (& #FF000000 (sym "_RegisterOneSubtask_")) #FFFFFFE8)) // Offset:0x2D
+(emit (<< (& #FF0000 (sym "_RegisterOneSubtask_")) #FFFFFFF0)) // Offset:0x2E
+(emit (<< (& #FF00 (sym "_RegisterOneSubtask_")) #FFFFFFF8)) // Offset:0x2F
+(emit (& #FF (sym "_RegisterOneSubtask_"))) // Offset:0x30
+{00000000000000000000000000007490}))
+(section
+".rom"
+(alignment #3)
+(symtab
+(defsym "_TiNG_rtbl_recIMA" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::.rom" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v103" (+ #34 (sym ".rom::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v99" (+ #3C (sym ".rom::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v98" (+ #EE (sym ".rom::@start"))))
+(data // Offset:0x0
+{0000000000000000616D697200000040000000160000000100000016000000000000000000007D0000000000000149100000749000000000} // Offset:0x38
+(emit (<< (& #FF000000 (sym "_Msg_try_next_subtask")) #FFFFFFE8)) // Offset:0x39
+(emit (<< (& #FF0000 (sym "_Msg_try_next_subtask")) #FFFFFFF0)) // Offset:0x3A
+(emit (<< (& #FF00 (sym "_Msg_try_next_subtask")) #FFFFFFF8)) // Offset:0x3B
+(emit (& #FF (sym "_Msg_try_next_subtask"))) // Offset:0x3C
+{000700080009000A000B000C000D000E001000110013001500170019001C001F002200250029002D00320037003C00420049005000580061006B00760082008F009D00AD00BE00D100E600FD0117013301510173019801C101EE02200256029202D4031C036C03C30424048E05020583061006AB0756081208E009C30ABD0BD00CFF0E4C0FBA114C130714EE170619541BDC1EA521B6251528CA2CDF315B364B3BB941B248444F7E5771602F69CE74627FFFFFFFFFFFFFFFFFFF0002000400060008FFFFFFFFFFFFFFFF0002000400060008}))
+(section
+".text"
+(alignment #F)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v100" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::TextStart_recima" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::.text" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::DW_2" (+ #6 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::DW_3" (+ #C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::DW_5" (+ #24 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::L6" (+ #D0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::L7" (+ #13C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::L54" (+ #180 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::L37" (+ #298 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::L51" (+ #298 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::L4" (+ #2FA (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::L41" (+ #30A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::L1" (+ #320 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::L58" (+ #320 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::DW_145" (+ #326 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::DW_146" (+ #32C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::DW_147" (+ #332 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::.align_0" (+ #334 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::FuncEnd_100" (+ #334 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::Fv100_end" (+ #334 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v101" (+ #340 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::DW_151" (+ #350 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::L59" (+ #392 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::DW_170" (+ #394 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::.align_1" (+ #396 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::FuncEnd_101" (+ #396 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::Fv101_end" (+ #396 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::v102" (+ #3A0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::DW_173" (+ #3A6 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::DW_175" (+ #3B0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::DW_186" (+ #3E4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::DW_187" (+ #3E6 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::TextEnd_recima" (+ #3E8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::FuncEnd_102" (+ #3E8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recima/c/recima.eln::Fv102_end" (+ #3E8 (sym ".text::@start"))))
+(data // Offset:0x0
+{94C09620972094C09E209F203C80A0002909800490C0270A80283840A000E7EA290D80083820A0005F952D0A800614D25E913600A100666953919AC0271882E690C036CE921898C02E0F8010D323EA6A96C05C92271882D0974296C0FF4427EB9FF4569F94C8469B569F36C0A0005091FDC43800A100C1822A0C80083C40A00032E88218C4812D0F800C3680A1004091441496C0529724008100029244953680A000EFF1559624188264069345913880A000E8E927EE9FFA3880A000E9EE2F0A80043680A100ECE8E9623420A000FD4596C052D620009FFF9AC0656924E0800076D0589794C684596D3C111C489298C06D7DC381270081F83600A1007455EF616C7C7E4294983E681892F4433680A00055114716E84148929498599290C0E94149929599589290C0E84148929298519298C0D5C130} // Offset:0x135
+(emit (+ #4 (<< (& #C0000000 (+ #2FA (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #2FA (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x136
+(emit (+ #20 (<< (& #1F00 (+ #2FA (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x137
+(emit (& #FF (+ #2FA (sym ".text::@start")))) // Offset:0x138
+(emit (+ #80 (<< (& #3F000000 (+ #2FA (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x139
+(emit (<< (& #FF0000 (+ #2FA (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x13A
+{439296C0C8422080800139} // Offset:0x145
+(emit (+ (<< (& #C0000000 (+ #3C (sym ".rom::@start"))) #FFFFFFE5) (<< (& #E000 (+ #3C (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x146
+(emit (+ #20 (<< (& #1F00 (+ #3C (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x147
+(emit (& #FF (+ #3C (sym ".rom::@start")))) // Offset:0x148
+(emit (+ #80 (<< (& #3F000000 (+ #3C (sym ".rom::@start"))) #FFFFFFE8))) // Offset:0x149
+(emit (<< (& #FF0000 (+ #3C (sym ".rom::@start"))) #FFFFFFF0)) // Offset:0x14A
+{3820A000E88F27EB9FFC3AA0A0009B5738} // Offset:0x15B
+(emit (+ (<< (& #C0000000 (+ #EE (sym ".rom::@start"))) #FFFFFFE5) (<< (& #E000 (+ #EE (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x15C
+(emit (+ #20 (<< (& #1F00 (+ #EE (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x15D
+(emit (& #FF (+ #EE (sym ".rom::@start")))) // Offset:0x15E
+(emit (+ #80 (<< (& #3F000000 (+ #EE (sym ".rom::@start"))) #FFFFFFE8))) // Offset:0x15F
+(emit (<< (& #FF0000 (+ #EE (sym ".rom::@start"))) #FFFFFFF0)) // Offset:0x160
+{3807A100C35227ED9FFEC35A3480A000EBF12518812698C09B422B03800A90C098C022009FFF6E34511C3A00A10076D2571126E080002D7D3FC1F3C33555CD476E7C3F42ED1931F62E8E571598C63ECA974390C066E494C673F5C48898C790C06EBB77C76D4B96C773F50904A00498C790C06EBB77C7D54792C3766C96C773F50904A00294C3766CD54794C30904A001776C96C03D1D8008CD4666E994C7EDFC65642CDDED1898C036719FFF5715CD41FD4394C22D609FFF94C6CD4CFD436C7CF4433480A00054116CD73600A10077F141113617805890C094C2270080583482A00047113480A000571167E892C360E43483A00041113600A100571395BDD717DF1D3480A000969D57130A07A00437774713676990C094C3230380223880A00061E55D9294BD3600A100C181939D949D92D05692D4C641923640A10058D6EF3B94C0C05EC45F3420A000E83B4816E8F8E8F13680A000589084493620A000FF46FC4794C0E8F1FA483660A0009958F94992C3E8443667A0005A90985C90C03483A0009A633620A000FFC6C05694C0C457FCC73640A000FAC8F9C93480A000EFF12FFF9DD13420A000FDC5974227EE9FF4549E3688A000449D549E3480A000449527ED9FD8E7ED94C09E219F2194C0962197219F7100000000000000000000000098C0E8543C602E69806394C05A909620C94EEA545B9290C0EB48589390C0ECA8843292C3C08132} // Offset:0x367
+(emit (+ #4 (<< (& #C0000000 (sym "_tingKRTPMalloc")) #FFFFFFE5) (<< (& #E000 (sym "_tingKRTPMalloc")) #FFFFFFF8))) // Offset:0x368
+(emit (+ #20 (<< (& #1F00 (sym "_tingKRTPMalloc")) #FFFFFFF8))) // Offset:0x369
+(emit (& #FF (sym "_tingKRTPMalloc"))) // Offset:0x36A
+(emit (+ #80 (<< (& #3F000000 (sym "_tingKRTPMalloc")) #FFFFFFE8))) // Offset:0x36B
+(emit (<< (& #FF0000 (sym "_tingKRTPMalloc")) #FFFFFFF0)) // Offset:0x36C
+{2000810094C0C946E8F192C36C3098C7E95C33} // Offset:0x37F
+(emit (+ #1 (<< (& #C0000000 (sym ".text::@start")) #FFFFFFE5) (<< (& #E000 (sym ".text::@start")) #FFFFFFF8))) // Offset:0x380
+(emit (+ #20 (<< (& #1F00 (sym ".text::@start")) #FFFFFFF8))) // Offset:0x381
+(emit (& #FF (sym ".text::@start"))) // Offset:0x382
+(emit (+ #80 (<< (& #3F000000 (sym ".text::@start")) #FFFFFFE8))) // Offset:0x383
+(emit (<< (& #FF0000 (sym ".text::@start")) #FFFFFFF0)) // Offset:0x384
+{94C64891C08192C3E97892C3439196219F710000000000000000000094C0ECE9962094C0E9E8EC5C1894E748C94EE8F190C096C332} // Offset:0x3B9
+(emit (+ #4 (<< (& #C0000000 (sym "_tingKSzRTPFree")) #FFFFFFE5) (<< (& #E000 (sym "_tingKSzRTPFree")) #FFFFFFF8))) // Offset:0x3BA
+(emit (+ #20 (<< (& #1F00 (sym "_tingKSzRTPFree")) #FFFFFFF8))) // Offset:0x3BB
+(emit (& #FF (sym "_tingKSzRTPFree"))) // Offset:0x3BC
+(emit (+ #80 (<< (& #3F000000 (sym "_tingKSzRTPFree")) #FFFFFFE8))) // Offset:0x3BD
+(emit (<< (& #FF0000 (sym "_tingKSzRTPFree")) #FFFFFFF0)) // Offset:0x3BE
+{94C3210081009AC062E6C94633192000A00194C0F542F341290A801432} // Offset:0x3DB
+(emit (+ #4 (<< (& #C0000000 (sym "_SendMsgAndParms")) #FFFFFFE5) (<< (& #E000 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0x3DC
+(emit (+ #20 (<< (& #1F00 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0x3DD
+(emit (& #FF (sym "_SendMsgAndParms"))) // Offset:0x3DE
+(emit (+ #80 (<< (& #3F000000 (sym "_SendMsgAndParms")) #FFFFFFE8))) // Offset:0x3DF
+(emit (<< (& #FF0000 (sym "_SendMsgAndParms")) #FFFFFFF0)) // Offset:0x3E0
+{5892E76896219F71}))

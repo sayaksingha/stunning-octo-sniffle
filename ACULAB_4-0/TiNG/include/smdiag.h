@@ -1,0 +1,1 @@
+#include "../apilib/smdiag.h"

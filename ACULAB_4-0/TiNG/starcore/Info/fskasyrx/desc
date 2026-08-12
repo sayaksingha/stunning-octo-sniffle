@@ -1,0 +1,4 @@
+Async receiver for FSK modems. This decodes a sequence of
+characters from the data received by an FSK modem receiver.
+This is different from running async on other received data
+streams because there is no clock.

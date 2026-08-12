@@ -1,0 +1,4 @@
+-TiNGtrace
+i	inifile	string
+m	module		unsigned
+x	serialnumber	string

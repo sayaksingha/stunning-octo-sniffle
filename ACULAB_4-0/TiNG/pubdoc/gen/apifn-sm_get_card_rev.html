@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_get_card_rev</title>
+</head>
+<body>
+<h1>Prosody generic: API: sm_get_card_rev</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_get_card_rev(struct sm_card_rev_parms *<a href="#field-cardrevp">cardrevp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-cardrevp">*cardrevp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_card_rev_parms {
+	<a href="../apitype.html#type-tSMCardId">tSMCardId</a> <a href="#field-card">card</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-rev">rev[8]</a>;						/* out */
+	char <a href="#field-rev_additional">rev_additional[kSMMaxRevAddText]</a>;			/* out */
+} SM_CARD_REV_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Obsolete call - not applicable to Prosody X or Prosody S.
+<p>
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-card">card</a><dd>The card about which information is required
+
+<dt><a name="field-rev">rev</a><dd>main revision information
+
+<dt><a name="field-rev_additional">rev_additional</a><dd>additional revision information
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - if no such card exists</ul>
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

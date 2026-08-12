@@ -1,0 +1,91 @@
+	invalid length parameter
+-115	ERR_SM_BAD_DATA_LENGTH
+	an attempt to connect a datafeed has been rejected by the firmware
+-135	ERR_SM_BAD_DATAFEED_CONNECT
+	a parameter value is bad
+-101	ERR_SM_BAD_PARAMETER
+	a channel is allocated when attempting an operation that
+	requires no channels be allocated
+-121	ERR_SM_CHANNEL_ALLOCATED
+	problem accessing the device or other error not covered by a more specific code
+-1	ERR_SM_DEVERR
+	a connection to the DSP is disconnected - typically because of an incorrect security key or network problem
+-160	ERR_SM_DISCONNECTED
+	problem trying to download firmware
+-106	ERR_SM_DOWNLOAD
+	could not access a file (i.e. open/read/write etc failed)
+-104	ERR_SM_FILE_ACCESS
+	file is not in the expected format
+-105	ERR_SM_FILE_FORMAT
+	no firmware is running on a module
+-108	ERR_SM_FIRMWARE_NOT_RUNNING
+	Obsolete
+-130	ERR_SM_FIRMWARE_PROBLEM
+	Obsolete
+-125	ERR_SM_INCOMPATIBLE_APP
+	Obsolete
+-124	ERR_SM_INCOMPATIBLE_DRIVER
+	Obsolete
+-103	ERR_SM_MODULE_ACCESS
+	Obsolete
+-109	ERR_SM_MODULE_ALREADY_RUNNING
+	function or option not implemented
+-100	ERR_SM_NOT_IMPLEMENTED
+	Obsolete
+-127	ERR_SM_NOT_SAME_GROUP
+	alt_data_source channel not located on same module
+-123	ERR_SM_NOT_SAME_MODULE
+	the card is a type which does not have an associated switch driver
+-133	ERR_SM_NO_ASSOCIATED_SWITCH
+	module does not currently have capacity to buffer this data
+-113	ERR_SM_NO_CAPACITY
+	not enough data recorded yet to give to application
+-111	ERR_SM_NO_DATA_AVAILABLE
+	software requires a licence but none is available
+-128	ERR_SM_NO_LICENCE
+	no recording current on timeslot.
+-112	ERR_SM_NO_RECORD_IN_PROGRESS
+	current replay complete or aborted
+-114	ERR_SM_NO_REPLAY_IN_PROGRESS
+	a lack of resources prevents the operation from completing
+-107	ERR_SM_NO_RESOURCES
+	no suitable channel exists
+-110	ERR_SM_NO_SUCH_CHANNEL
+	Obsolete
+-120	ERR_SM_NO_SUCH_DIGIT
+	no suitable firmware is available
+-119	ERR_SM_NO_SUCH_FIRMWARE
+	the specified group does not exist
+-118	ERR_SM_NO_SUCH_GROUP
+	the specified module does not exist
+-102	ERR_SM_NO_SUCH_MODULE
+	the specified stream does not exist
+-170	ERR_SM_NO_SUCH_STREAM
+	problem trying to allocate resources (e.g. malloc())
+-131	ERR_SM_OS_RESOURCE_PROBLEM
+	problem occurred calling native operating system
+-134	ERR_SM_OS_OTHER_PROBLEM
+	no error but operation has not yet finished
+-2	ERR_SM_PENDING
+	replay or other non-interruptible job still in progress
+-116	ERR_SM_WRONG_CHANNEL_STATE
+	operation is inappropriate for this type of channel
+-117	ERR_SM_WRONG_CHANNEL_TYPE
+	firmware does not support algorithm.
+-129	ERR_SM_WRONG_FIRMWARE_TYPE
+	operation is inappropriate for this type of module
+-126	ERR_SM_WRONG_MODULE_TYPE
+	The Isolated Word Recogniser has been started with no noise model
+-150	ERR_SM_IWR_NO_NOISE
+	The Isolated Word Recogniser has been started with more than one noise model
+-151	ERR_SM_IWR_EXCESS_NOISE
+	The Isolated Word Recogniser has been started with no models
+-152	ERR_SM_IWR_NO_MODEL
+	The Isolated Word Recogniser has been started with more models than it can handle
+-153	ERR_SM_IWR_EXCESS_MODELS
+	The Isolated Word Recogniser has been started with a defective model
+-154	ERR_SM_IWR_EXCESS_STATES
+	The Isolated Word Recogniser has detected that a model being used was replaced
+-155	ERR_SM_IWR_MODEL_CHANGED
+	The Isolated Word Recogniser has detected that a model being used has been deleted
+-156	ERR_SM_IWR_MISSING

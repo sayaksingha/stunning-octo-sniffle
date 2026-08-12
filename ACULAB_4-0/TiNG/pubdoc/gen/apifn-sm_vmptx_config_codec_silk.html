@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_codec_silk</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_codec_silk</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_codec_silk(struct sm_vmptx_codec_silk_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_codec_silk_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-sample_rate">sample_rate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-internal_rate">internal_rate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-bit_rate">bit_rate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-frames_per_packet">frames_per_packet</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-packet_loss">packet_loss</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-complexity">complexity</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-use_fec">use_fec</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-use_dtx">use_dtx</a>;					/* in */
+} SM_VMPTX_CODEC_SILK_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a VMP[tx] to use the SILK codec from Skype.
+<p>
+This requires the module
+<a href="softmodindex.html#silk">silk</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to which to add this codec.
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type identifer to use with this codec (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13). Supplying a value of
+<code>-1</code> will remove any payload type configuration from the
+codec preventing its use.
+
+<dt><a name="field-sample_rate">sample_rate</a><dd>Sample rate of the audio being encoded. In the current release, this
+should be either 8000 (narrowband) or 16000 (wideband).
+
+<dt><a name="field-internal_rate">internal_rate</a><dd>Maximum sample rate used internally by the codec. Must be no greater
+than
+<a class=pref href="#field-sample_rate">sample_rate</a>
+and must also be equal to one of the standard SILK internal sample
+rate values, i.e. 8000, 12000, 16000, or 24000.
+
+<dt><a name="field-bit_rate">bit_rate</a><dd>The target bit rate which the codec should aim to produce. This value
+must be between 5000 and 100000. Recommended values are between 5000
+and 20000 for 8kHz-sampled (narrowband) signals, and between 8000 and
+30000 for 16kHz (wideband) sampling.
+
+<dt><a name="field-frames_per_packet">frames_per_packet</a><dd>The number of frames to send per packet. This value is normally one,
+which encodes 20 milliseconds per packet, but larger values could be
+used, to reduce the packet overhead at the expense of extra delay.
+
+<dt><a name="field-packet_loss">packet_loss</a><dd>An estimate of the current level of packet loss to which the encoded
+data will be subjected, as a percentage. Normally set to zero.
+
+<dt><a name="field-complexity">complexity</a><dd>The complexity of the algorithms used to encode the data: 0, 1, or 2.
+This controls the trade-off between channel count and audio quality.
+0 will give the biggest channel count; 2 will give best quality.
+
+<dt><a name="field-use_fec">use_fec</a><dd>Set to any non-zero value to include data for "forward error correction"
+(FEC) in the transmitted stream. Only recommended if really needed, as it
+reduces quality unless there is significant packet loss.
+
+<dt><a name="field-use_dtx">use_dtx</a><dd>Set to any non-zero value to suppress transmission of data during silence.
+Not recommended unless average bit rate is absolutely critical.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_condition_adjust</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_condition_adjust</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_condition_adjust(struct sm_condition_adjust_parms *<a href="#field-condp">condp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-condp">*condp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_condition_adjust_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMInputCondAdjust">enum kSMInputCondAdjust</a> {
+		<a href="#field-kSMInputCondAdjustNonLinearWithMuting">kSMInputCondAdjustNonLinearWithMuting</a>,
+		<a href="#field-kSMInputCondAdjustNonLinearWithCNG">kSMInputCondAdjustNonLinearWithCNG</a>,
+		<a href="#field-kSMInputCondAdjustAGC">kSMInputCondAdjustAGC</a>,
+		<a href="#field-kSMInputCondAdjustFixGain">kSMInputCondAdjustFixGain</a>,
+	} <a href="#field-adjust_type">adjust_type</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-adjust_value">adjust_value</a>;					/* in */
+} SM_CONDITION_ADJUST_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Adjusts the input conditioning currently being performed on a
+channel.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to which conditioning is being applied.
+
+<dt><a name="field-adjust_type">adjust_type</a><dd>What sort adjustment to perform.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMInputCondAdjustNonLinearWithMuting">kSMInputCondAdjustNonLinearWithMuting</a>
+<dd>Select whether linear or non-linear echo cancellation with muting is
+performed. This adjustment is only valid if the input
+conditioning is currently
+<a href="apifn-sm_condition_input.html#field-kSMInputCondEchoCancelation">
+kSMInputCondEchoCancelation</a>.
+The
+<a class=pref href="#field-adjust_value">adjust_value</a>
+field selects which to use, with the value zero selecting linear
+echo cancellation, and other values selecting non-linear
+cancellation with muting. Non-linear echo cancellation with muting
+suppresses the signal when it calculates that, after having the echo
+removed, there is no significant signal remaining. This mode of
+operation is suitable for large-scale conferencing and some IVR
+applications, where it is important that the signal is completely
+muted whenever the caller is not speaking. Negative values represent
+the lower limit in dBm0. Positive values cause the default value
+of -42dBm0 to be used.
+
+<dt><a name="field-kSMInputCondAdjustNonLinearWithCNG">kSMInputCondAdjustNonLinearWithCNG</a>
+<dd>Select whether linear or non-linear echo cancellation with comfort 
+noise generation is performed. This adjustment is only valid if the
+input conditioning is currently
+<a href="apifn-sm_condition_input.html#field-kSMInputCondEchoCancelation">
+kSMInputCondEchoCancelation</a>.
+The
+<a class=pref href="#field-adjust_value">adjust_value</a>
+field selects which to use, with the value zero selecting linear
+echo cancellation, and other values selecting non-linear
+cancellation with comfort noise generation (CNG). In this mode
+the echo canceller replaces any residual traces of echo with
+"comfort noise". This is most appropriate to IP gateway applications
+where background noise is desirable to maintain the illusion of
+continuity. Negative values represent the threshold in dBm0.
+Positive values cause the default value of -42dBm0 to be used.
+
+<dt><a name="field-kSMInputCondAdjustAGC">kSMInputCondAdjustAGC</a>
+<dd>Selects whether or not AGC should be enabled according to the
+<a class=pref href="#field-adjust_value">adjust_value</a>
+field (zero is disable, one is enable). If AGC is
+disabled, the signal level is modified only to cancel the
+echo. If AGC is enabled, after the echo has been removed the
+signal is adjusted by applying a gain which varies in order
+to amplify weak signals more than strong ones.
+
+<dt><a name="field-kSMInputCondAdjustFixGain">kSMInputCondAdjustFixGain</a>
+<dd>Selects, based on the
+<a class=pref href="#field-adjust_value">adjust_value</a>
+field, whether or not the AGC gain can adapt (0) or is fixed
+(1) at its current value. This can be used after the AGC gain
+factor has adjusted itself to prevent further changes.
+
+</dl>
+<dt><a name="field-adjust_value">adjust_value</a><dd>The value to use for this adjustment. The interpretation of
+this value depends on the adjustment type being performed
+with the exception of the value zero. For any particular
+adjustment type, there is a default which is used if no
+adjustment has been made. The value zero adjusts the
+conditioning back to that default.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_WRONG_CHANNEL_STATE - if channel input signal not currently being conditioned.<li>ERR_SM_BAD_PARAMETER - illegal parameter value</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

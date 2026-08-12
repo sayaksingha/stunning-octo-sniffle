@@ -1,0 +1,106 @@
+// DESCRIPTION: OKI Decoder Playback
+// GENTIME: Tue Aug  3 16:20:32 2021
+// VERS: 0x00014910 0x00007490
+// RESHINT: RESTBL 52 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x6b 0x6f 0x6c 0x70 0x00 0x00 0x00 0x20 0x00 0x00 0x00 0x12 0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x12 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x7d 0x00 0x00 0x01 0x49 0x10 0x00 0x00 0x74 0x90 
+(section
+".default"
+(alignment #0)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::.default" (sym ".default::@start")))
+(data))
+(section
+".data"
+(alignment #3)
+(symtab
+(defsym "_TiNG_ftbl_playoki" (sym ".data::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::.data" (sym ".data::@start")))
+(data // Offset:0x0
+{00000000000000006B6F6C7000014910FFFFFFF000000000} // Offset:0x18
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v99")) #FFFFFFE8)) // Offset:0x19
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v99")) #FFFFFFF0)) // Offset:0x1A
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v99")) #FFFFFFF8)) // Offset:0x1B
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v99"))) // Offset:0x1C
+{00000000} // Offset:0x20
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v98")) #FFFFFFE8)) // Offset:0x21
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v98")) #FFFFFFF0)) // Offset:0x22
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v98")) #FFFFFFF8)) // Offset:0x23
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v98"))) // Offset:0x24
+(emit (<< (& #FF000000 (sym "_NullDtor_")) #FFFFFFE8)) // Offset:0x25
+(emit (<< (& #FF0000 (sym "_NullDtor_")) #FFFFFFF0)) // Offset:0x26
+(emit (<< (& #FF00 (sym "_NullDtor_")) #FFFFFFF8)) // Offset:0x27
+(emit (& #FF (sym "_NullDtor_"))) // Offset:0x28
+{00000014} // Offset:0x2C
+(emit (<< (& #FF000000 (sym "_RegisterOneSubtask_")) #FFFFFFE8)) // Offset:0x2D
+(emit (<< (& #FF0000 (sym "_RegisterOneSubtask_")) #FFFFFFF0)) // Offset:0x2E
+(emit (<< (& #FF00 (sym "_RegisterOneSubtask_")) #FFFFFFF8)) // Offset:0x2F
+(emit (& #FF (sym "_RegisterOneSubtask_"))) // Offset:0x30
+{00000000000000000000000000007490}))
+(section
+".rom"
+(alignment #3)
+(symtab
+(defsym "_TiNG_rtbl_playOKI" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::.rom" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v99" (+ #34 (sym ".rom::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v95" (+ #3C (sym ".rom::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v96" (+ #9E (sym ".rom::@start"))))
+(data // Offset:0x0
+{00000000000000006B6F6C700000002000000012000000010000001200000000000000000000000000007D00000149100000749000000000} // Offset:0x38
+(emit (<< (& #FF000000 (sym "_Msg_try_next_subtask")) #FFFFFFE8)) // Offset:0x39
+(emit (<< (& #FF0000 (sym "_Msg_try_next_subtask")) #FFFFFFF0)) // Offset:0x3A
+(emit (<< (& #FF00 (sym "_Msg_try_next_subtask")) #FFFFFFF8)) // Offset:0x3B
+(emit (& #FF (sym "_Msg_try_next_subtask"))) // Offset:0x3C
+{001000110013001500170019001C001F002200250029002D00320037003C00420049005000580061006B00760082008F009D00AD00BE00D100E600FD0117013301510173019801C101EE02200256029202D4031C036C03C30424048E050205830610FFFFFFFFFFFFFFFF0002000400060008FFFFFFFFFFFFFFFF0002000400060008}))
+(section
+".text"
+(alignment #F)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v97" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::TextStart_playoki" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::.text" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::DW_2" (+ #6 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::DW_3" (+ #C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::DW_5" (+ #1E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::PL001" (+ #270 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::PL000" (+ #316 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::L36" (+ #350 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::L48" (+ #350 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::L37" (+ #3AC (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::L50" (+ #3AC (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::L57" (+ #3B0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::DW_128" (+ #3B6 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::DW_129" (+ #3BC (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::DW_130" (+ #3C2 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::.align_0" (+ #3C4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::FuncEnd_97" (+ #3C4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::Fv97_end" (+ #3C4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::v98" (+ #3D0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::TextEnd_playoki" (+ #412 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::FuncEnd_98" (+ #412 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playoki/c/playoki.eln::Fv98_end" (+ #412 (sym ".text::@start"))))
+(data // Offset:0x0
+{94C09620972094C09E209F209AC0290C801490C0270E805094C0EBECE7EE94C0EB6C9742FB4696C0569B27ED9FEC1F91529494C8469D569B96C046952F0A80103680A000EAEAF5C53A80A1003ACB9218EDEAEFEA3880A100D1A3EA63EF623680A10093BAED6496C0F34227EB9FF036A0A10096BD54172618833A17125B93EEECEE70539665E92718832A96C0D120CD42C1813820A000F8C62518831E3A00A0046769C082280E800436C0A0005590C4873A47A000CD4230ED8218F8523680A0004590C5F894C7FB51ED6194C0CD4BF84796C0D5C1FC48F2493820A00065E0FA4AFD4B3860A00065EEF64CF64D3820A00074D34394FF4E1D96F44F36C0A000CD48FA503A00A2012E0D8004D640C94E3600A800DE84509594C0D4C5F5533079419690C098C7D0DD32} // Offset:0x127
+(emit (+ #4 (<< (& #C0000000 (sym "_setTiNGKFault")) #FFFFFFE5) (<< (& #E000 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x128
+(emit (+ #20 (<< (& #1F00 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x129
+(emit (& #FF (sym "_setTiNGKFault"))) // Offset:0x12A
+(emit (+ #80 (<< (& #3F000000 (sym "_setTiNGKFault")) #FFFFFFE8))) // Offset:0x12B
+(emit (<< (& #FF0000 (sym "_setTiNGKFault")) #FFFFFFF0)) // Offset:0x12C
+{9AC364E030C02B0180CBF34194C0FCC8F5D33640A000C946F6CD3680A000EBECF8C736C0A000EB68F64C3680A0004593C4551F97C45E4F91EFF190C092C3EF443647A0005D97EFEB90C092C39D633A40A84461E56C30FCC8F6CD3800A0046769C456F2C93880A0006560E8ECEBEF94C7E864C3811690F4CF3860A0007F41FDCBFFCE3647A000D743FAD03820A0006760FBD1F8D296C06E7DFACACD443C20A000676939} // Offset:0x1CF
+(emit (+ (<< (& #C0000000 (+ #3C (sym ".rom::@start"))) #FFFFFFE5) (<< (& #E000 (+ #3C (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x1D0
+(emit (+ #20 (<< (& #1F00 (+ #3C (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x1D1
+(emit (& #FF (+ #3C (sym ".rom::@start")))) // Offset:0x1D2
+(emit (+ #80 (<< (& #3F000000 (+ #3C (sym ".rom::@start"))) #FFFFFFE8))) // Offset:0x1D3
+(emit (<< (& #FF0000 (+ #3C (sym ".rom::@start"))) #FFFFFFF0)) // Offset:0x1D4
+{C0B096C0EDFC2518817A3E00A00C676175D66761ED192B0380923E40A0027B610A06A004676923E0980098C09B463F} // Offset:0x203
+(emit (+ (<< (& #C0000000 (+ #9E (sym ".rom::@start"))) #FFFFFFE5) (<< (& #E000 (+ #9E (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x204
+(emit (+ #20 (<< (& #1F00 (+ #9E (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x205
+(emit (& #FF (+ #9E (sym ".rom::@start")))) // Offset:0x206
+(emit (+ #80 (<< (& #3F000000 (+ #9E (sym ".rom::@start"))) #FFFFFFE8))) // Offset:0x207
+(emit (<< (& #FF0000 (+ #9E (sym ".rom::@start"))) #FFFFFFF0)) // Offset:0x208
+{3886A00095A4210087FF94C65515F5423420A000F5C23400A804D69E3600A8003B1E800F3C00A0053D1C800777FE3D1E80083800A00C7E417FC1676938C0A000CD470904A0013400A0406B3598C07F63ED1F210380C23800B000755375D0F24996C0775777D690C03A07A00290C055156F3F67613E46A00290C00A06A0046769D747D64537D476D69AC06F7D210087FF6D7DC3B03A86A00090C0765797A477559AC622E098006C7CF7426E7C94C0F7C2CD443A00A800D79E3E1681F0C1569AC03F1D800FEDFC3D0681003E00A1013B1F8007767D7F69ED19E9FE3E60A0047E417FC13B1D80085515491B3A10A10066E9CD440907A0013400A0406BBB3FE3ED1F3800A004745375D2F2C9375777D698C16F9F56155615D7C636D7D6463600A0086D7D76543600B00877D56C7D3600B0006F7C765498C03E1781F06C7CCF473F0781003FE9EFFE4F1B38A0A000969D107C9FFB3680A100909A441794C0471297423480A000509396C0409627EF9FEC509F3688A0004098509F3880A0007652745240906C7D3800A808727B65E16E3494C6841765613400A0406C3D9F4090C090C092C8441B0290429427EF9FB0E7EF94C09E219F2194C0962197219F7100000000000000000000000098C0E8543B68356FA3745A9090C0EA545D9290C0ED48589590C0EBA894C26E346C3098C2E94435} // Offset:0x3F7
+(emit (+ #1 (<< (& #C0000000 (sym ".text::@start")) #FFFFFFE5) (<< (& #E000 (sym ".text::@start")) #FFFFFFF8))) // Offset:0x3F8
+(emit (+ #20 (<< (& #1F00 (sym ".text::@start")) #FFFFFFF8))) // Offset:0x3F9
+(emit (& #FF (sym ".text::@start"))) // Offset:0x3FA
+(emit (+ #80 (<< (& #3F000000 (sym ".text::@start")) #FFFFFFE8))) // Offset:0x3FB
+(emit (<< (& #FF0000 (sym ".text::@start")) #FFFFFFF0)) // Offset:0x3FC
+{94C24591C3E894C1C081E94A94C69F70430992C29499}))

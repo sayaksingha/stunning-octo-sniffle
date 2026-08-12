@@ -25,16 +25,20 @@ struct TcapMsgQ
    key_t    RdMsgQKey;  //Tcap Handler Q key
    key_t    WrMsgQKey;  //Tcap Decoder Q key
    key_t    RdHbQKey;   //Tcap Heart-beat Q key
+   key_t    WrSccpQKey; //TCAP to custom SCCP Q key
+   key_t    RdSccpQKey; //SCCP to custom TCAP Q key
    MsgQueue RdQ;        //Tcap Handler Q
    MsgQueue WrQ;        //Tcap decoder Q
    MsgQueue HbQ;        //Tcap Heart-beat Q
+   MsgQueue SccpWrQ;    //TCAP to SCCP Q
+   MsgQueue SccpRdQ;    //SCCP to TCAP Q
 };
 
    
 class TcapAculabHandler
 {
-   TcapMsg  mRxTcapMsg;
-   TcapMsg  mTxTcapMsg;
+   AnsiTcapMsg  mRxTcapMsg;
+   AnsiTcapMsg  mTxTcapMsg;
 
    struct timeval mStartTime;
    struct timeval mEndTime;
@@ -74,6 +78,7 @@ class TcapAculabHandler
    DlgMgr       mDlgManager;
    UINT32       mDlgTimeout;
    UINT32       mCapDlgTimeout;
+
    public:
 
    TcapAculabHandler();
@@ -83,7 +88,7 @@ class TcapAculabHandler
 
    BOOLEAN CreateMsgQ(); 
 
-   void PrintApplTcapStruct(TcapMsg &lTcapMsg,TEXT *lText);
+   void PrintApplTcapStruct(AnsiTcapMsg &lTcapMsg,TEXT *lText);
 
    BOOLEAN Init(TEXT *lCfgFile, int lSsn,int& lNoOfInstance);
 
@@ -101,23 +106,25 @@ class TcapAculabHandler
    BOOLEAN UpdateSsapStatus(const int lInstanceNo);
    BOOLEAN ReconnectSsap(int &lInstanceNo);
 
-   BOOLEAN TxMsgToApplication(TcapMsg &lTcapMsg);
+   BOOLEAN TxMsgToApplication(AnsiTcapMsg &lTcapMsg);
 
    //BOOLEAN TxMsgToStack(acu_tcap_msg_t *lMsgPtr, EnumDelFlag lDelFlag);
-   BOOLEAN TxMsgToStack(acu_tcap_msg_t *lMsgPtr);
+   BOOLEAN TxMsgToStack(acu_tcap_msg_t *lMsgPtr, AnsiTcapMsg *pTcapMsg = NULL);
 
    BOOLEAN RxMsgFromStack(acu_tcap_msg_t **lMsgPtr, int &lInstanceNo);
 
-   BOOLEAN RxMsgFromApplication(TcapMsg &lRxTcapMsg);
-   BOOLEAN WriteBackToTcapHdlrQueue(TcapMsg &lRxTcapMsg); //Added for transmit block/flow
+   BOOLEAN RxMsgFromApplication(AnsiTcapMsg &lRxTcapMsg);
+   BOOLEAN WriteBackToTcapHdlrQueue(AnsiTcapMsg &lRxTcapMsg); //Added for transmit block/flow
 
-   BOOLEAN ProcessTxMsgToStack(TcapMsg &lTcapMsg,acu_tcap_msg_t *lMsgPtr);
+   BOOLEAN ProcessTxMsgToStack(AnsiTcapMsg &lTcapMsg,acu_tcap_msg_t *lMsgPtr);
 
-   BOOLEAN ProcessRxMsgFromStack(acu_tcap_msg_t *lMsgPtr,TcapMsg &lTcapMsg, int &lInstanceId);
+   BOOLEAN ProcessRxMsgFromStack(acu_tcap_msg_t *lMsgPtr,AnsiTcapMsg &lTcapMsg, int &lInstanceId);
+   
+   BOOLEAN ProcessRxSccpMsgFromStack(void *lSccpMsgPtr, AnsiTcapMsg &lTcapMsg);
 
    UINT16 GetTotalInstanceNo();
    int    GetTransValidationKey();
-   BOOLEAN GetDlgInfoAndRestore();
+   // BOOLEAN GetDlgInfoAndRestore(); 
 
 };
 

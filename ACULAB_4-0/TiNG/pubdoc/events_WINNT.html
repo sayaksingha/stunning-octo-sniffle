@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody events on Windows</title>
+</head>
+<body>
+<h1>Prosody events on Windows</h1>
+<p>
+A Prosody event is described in <a href="events.html">Prosody events</a>.
+
+<h2 class="type-WINNT">Events on Windows NT:</h2>
+<div class="type-WINNT">
+<p>
+The <code>WaitForMultipleObjects()</code> function can be used with
+Prosody events. A tSMEventId is a <code>HANDLE</code> which can be
+used directly in the array of handles passed to this function.
+If <code>WaitForMultipleObjects()</code> indicates that the event is
+signalled, check the status of the channel (e.g. with
+<a href="gen/apifn-sm_replay_status.html">sm_replay_status()</a> if
+it is being used for replay) and read or write data if appropriate.
+<p>
+Note that <code>WaitForMultipleObjects()</code> is inherently limited
+to waiting for no more than 64 items at a time. If you need to wait
+for more (e.g. you're handling channels on trunks and have more than
+two trunks) the simplest way to do this is to have multiple threads
+(e.g. each thread might handle two trunks, needing only 60 (E1) or 48
+(T1) items).
+</div>
+
+</body>
+</html>

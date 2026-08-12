@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody DTLS processing: API: sm_dtlstx_send_packet</title>
+</head>
+<body>
+<h1>Prosody DTLS processing: API: sm_dtlstx_send_packet</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_dtlstx_send_packet(struct sm_dtlstx_send_packet_parms *<a href="#field-packetp">packetp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-packetp">*packetp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_send_packet_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* in */
+	char *<a href="#field-data">data</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-packet_length">packet_length</a>;					/* in */
+} SM_DTLSTX_SEND_PACKET_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Sends a packet using a DTLS[tx].
+<p>
+Requires the module
+<a href="softmodindex.html#dtlstx">dtlstx</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>The DTLS[tx] that will send the packet
+
+<dt><a name="field-data">data</a><dd>A pointer to the packet to be sent.
+
+<dt><a name="field-packet_length">packet_length</a><dd>The length of the packet to be sent.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<p>This function is part of the <a href="../prosdtls.html">Prosody DTLS processing API</a>.
+</body>
+</html>

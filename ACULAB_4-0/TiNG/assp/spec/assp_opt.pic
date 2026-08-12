@@ -1,0 +1,378 @@
+.PS
+h = 0.2i
+w = 3.2i
+ticklen = h / 8
+
+define b32 X [
+	box height h width w
+	line down ticklen from last box.nw + (w / 32, 0)
+	line down ticklen from last box.nw + (2 * w / 32, 0)
+	line down ticklen from last box.nw + (3 * w / 32, 0)
+	line down ticklen from last box.nw + (4 * w / 32, 0)
+	line down ticklen from last box.nw + (5 * w / 32, 0)
+	line down ticklen from last box.nw + (6 * w / 32, 0)
+	line down ticklen from last box.nw + (7 * w / 32, 0)
+	line down ticklen from last box.nw + (8 * w / 32, 0)
+	line down ticklen from last box.nw + (9 * w / 32, 0)
+	line down ticklen from last box.nw + (10 * w / 32, 0)
+	line down ticklen from last box.nw + (11 * w / 32, 0)
+	line down ticklen from last box.nw + (12 * w / 32, 0)
+	line down ticklen from last box.nw + (13 * w / 32, 0)
+	line down ticklen from last box.nw + (14 * w / 32, 0)
+	line down ticklen from last box.nw + (15 * w / 32, 0)
+	line down ticklen from last box.nw + (16 * w / 32, 0)
+	line down ticklen from last box.nw + (17 * w / 32, 0)
+	line down ticklen from last box.nw + (18 * w / 32, 0)
+	line down ticklen from last box.nw + (19 * w / 32, 0)
+	line down ticklen from last box.nw + (20 * w / 32, 0)
+	line down ticklen from last box.nw + (21 * w / 32, 0)
+	line down ticklen from last box.nw + (22 * w / 32, 0)
+	line down ticklen from last box.nw + (23 * w / 32, 0)
+	line down ticklen from last box.nw + (24 * w / 32, 0)
+	line down ticklen from last box.nw + (25 * w / 32, 0)
+	line down ticklen from last box.nw + (26 * w / 32, 0)
+	line down ticklen from last box.nw + (27 * w / 32, 0)
+	line down ticklen from last box.nw + (28 * w / 32, 0)
+	line down ticklen from last box.nw + (29 * w / 32, 0)
+	line down ticklen from last box.nw + (30 * w / 32, 0)
+	line down ticklen from last box.nw + (31 * w / 32, 0)
+
+	line up ticklen from last box.sw + (w / 32, 0)
+	line up ticklen from last box.sw + (2 * w / 32, 0)
+	line up ticklen from last box.sw + (3 * w / 32, 0)
+	line up ticklen from last box.sw + (4 * w / 32, 0)
+	line up ticklen from last box.sw + (5 * w / 32, 0)
+	line up ticklen from last box.sw + (6 * w / 32, 0)
+	line up ticklen from last box.sw + (7 * w / 32, 0)
+	line up ticklen from last box.sw + (8 * w / 32, 0)
+	line up ticklen from last box.sw + (9 * w / 32, 0)
+	line up ticklen from last box.sw + (10 * w / 32, 0)
+	line up ticklen from last box.sw + (11 * w / 32, 0)
+	line up ticklen from last box.sw + (12 * w / 32, 0)
+	line up ticklen from last box.sw + (13 * w / 32, 0)
+	line up ticklen from last box.sw + (14 * w / 32, 0)
+	line up ticklen from last box.sw + (15 * w / 32, 0)
+	line up ticklen from last box.sw + (16 * w / 32, 0)
+	line up ticklen from last box.sw + (17 * w / 32, 0)
+	line up ticklen from last box.sw + (18 * w / 32, 0)
+	line up ticklen from last box.sw + (19 * w / 32, 0)
+	line up ticklen from last box.sw + (20 * w / 32, 0)
+	line up ticklen from last box.sw + (21 * w / 32, 0)
+	line up ticklen from last box.sw + (22 * w / 32, 0)
+	line up ticklen from last box.sw + (23 * w / 32, 0)
+	line up ticklen from last box.sw + (24 * w / 32, 0)
+	line up ticklen from last box.sw + (25 * w / 32, 0)
+	line up ticklen from last box.sw + (26 * w / 32, 0)
+	line up ticklen from last box.sw + (27 * w / 32, 0)
+	line up ticklen from last box.sw + (28 * w / 32, 0)
+	line up ticklen from last box.sw + (29 * w / 32, 0)
+	line up ticklen from last box.sw + (30 * w / 32, 0)
+	line up ticklen from last box.sw + (31 * w / 32, 0)
+	] X
+
+define b29 X [
+	box height h width w * 29 / 32
+	line down ticklen from last box.nw + (w / 32, 0)
+	line down ticklen from last box.nw + (2 * w / 32, 0)
+	line down ticklen from last box.nw + (3 * w / 32, 0)
+	line down ticklen from last box.nw + (4 * w / 32, 0)
+	line down ticklen from last box.nw + (5 * w / 32, 0)
+	line down ticklen from last box.nw + (6 * w / 32, 0)
+	line down ticklen from last box.nw + (7 * w / 32, 0)
+	line down ticklen from last box.nw + (8 * w / 32, 0)
+	line down ticklen from last box.nw + (9 * w / 32, 0)
+	line down ticklen from last box.nw + (10 * w / 32, 0)
+	line down ticklen from last box.nw + (11 * w / 32, 0)
+	line down ticklen from last box.nw + (12 * w / 32, 0)
+	line down ticklen from last box.nw + (13 * w / 32, 0)
+	line down ticklen from last box.nw + (14 * w / 32, 0)
+	line down ticklen from last box.nw + (15 * w / 32, 0)
+	line down ticklen from last box.nw + (16 * w / 32, 0)
+	line down ticklen from last box.nw + (17 * w / 32, 0)
+	line down ticklen from last box.nw + (18 * w / 32, 0)
+	line down ticklen from last box.nw + (19 * w / 32, 0)
+	line down ticklen from last box.nw + (20 * w / 32, 0)
+	line down ticklen from last box.nw + (21 * w / 32, 0)
+	line down ticklen from last box.nw + (22 * w / 32, 0)
+	line down ticklen from last box.nw + (23 * w / 32, 0)
+	line down ticklen from last box.nw + (24 * w / 32, 0)
+	line down ticklen from last box.nw + (25 * w / 32, 0)
+	line down ticklen from last box.nw + (26 * w / 32, 0)
+	line down ticklen from last box.nw + (27 * w / 32, 0)
+	line down ticklen from last box.nw + (28 * w / 32, 0)
+
+	line up ticklen from last box.sw + (w / 32, 0)
+	line up ticklen from last box.sw + (2 * w / 32, 0)
+	line up ticklen from last box.sw + (3 * w / 32, 0)
+	line up ticklen from last box.sw + (4 * w / 32, 0)
+	line up ticklen from last box.sw + (5 * w / 32, 0)
+	line up ticklen from last box.sw + (6 * w / 32, 0)
+	line up ticklen from last box.sw + (7 * w / 32, 0)
+	line up ticklen from last box.sw + (8 * w / 32, 0)
+	line up ticklen from last box.sw + (9 * w / 32, 0)
+	line up ticklen from last box.sw + (10 * w / 32, 0)
+	line up ticklen from last box.sw + (11 * w / 32, 0)
+	line up ticklen from last box.sw + (12 * w / 32, 0)
+	line up ticklen from last box.sw + (13 * w / 32, 0)
+	line up ticklen from last box.sw + (14 * w / 32, 0)
+	line up ticklen from last box.sw + (15 * w / 32, 0)
+	line up ticklen from last box.sw + (16 * w / 32, 0)
+	line up ticklen from last box.sw + (17 * w / 32, 0)
+	line up ticklen from last box.sw + (18 * w / 32, 0)
+	line up ticklen from last box.sw + (19 * w / 32, 0)
+	line up ticklen from last box.sw + (20 * w / 32, 0)
+	line up ticklen from last box.sw + (21 * w / 32, 0)
+	line up ticklen from last box.sw + (22 * w / 32, 0)
+	line up ticklen from last box.sw + (23 * w / 32, 0)
+	line up ticklen from last box.sw + (24 * w / 32, 0)
+	line up ticklen from last box.sw + (25 * w / 32, 0)
+	line up ticklen from last box.sw + (26 * w / 32, 0)
+	line up ticklen from last box.sw + (27 * w / 32, 0)
+	line up ticklen from last box.sw + (28 * w / 32, 0)
+	] X
+
+define b24 X [
+	box height h width w * 24 / 32
+	line down ticklen from last box.nw + (w / 32, 0)
+	line down ticklen from last box.nw + (2 * w / 32, 0)
+	line down ticklen from last box.nw + (3 * w / 32, 0)
+	line down ticklen from last box.nw + (4 * w / 32, 0)
+	line down ticklen from last box.nw + (5 * w / 32, 0)
+	line down ticklen from last box.nw + (6 * w / 32, 0)
+	line down ticklen from last box.nw + (7 * w / 32, 0)
+	line down ticklen from last box.nw + (8 * w / 32, 0)
+	line down ticklen from last box.nw + (9 * w / 32, 0)
+	line down ticklen from last box.nw + (10 * w / 32, 0)
+	line down ticklen from last box.nw + (11 * w / 32, 0)
+	line down ticklen from last box.nw + (12 * w / 32, 0)
+	line down ticklen from last box.nw + (13 * w / 32, 0)
+	line down ticklen from last box.nw + (14 * w / 32, 0)
+	line down ticklen from last box.nw + (15 * w / 32, 0)
+	line down ticklen from last box.nw + (16 * w / 32, 0)
+	line down ticklen from last box.nw + (17 * w / 32, 0)
+	line down ticklen from last box.nw + (18 * w / 32, 0)
+	line down ticklen from last box.nw + (19 * w / 32, 0)
+	line down ticklen from last box.nw + (20 * w / 32, 0)
+	line down ticklen from last box.nw + (21 * w / 32, 0)
+	line down ticklen from last box.nw + (22 * w / 32, 0)
+	line down ticklen from last box.nw + (23 * w / 32, 0)
+
+	line up ticklen from last box.sw + (w / 32, 0)
+	line up ticklen from last box.sw + (2 * w / 32, 0)
+	line up ticklen from last box.sw + (3 * w / 32, 0)
+	line up ticklen from last box.sw + (4 * w / 32, 0)
+	line up ticklen from last box.sw + (5 * w / 32, 0)
+	line up ticklen from last box.sw + (6 * w / 32, 0)
+	line up ticklen from last box.sw + (7 * w / 32, 0)
+	line up ticklen from last box.sw + (8 * w / 32, 0)
+	line up ticklen from last box.sw + (9 * w / 32, 0)
+	line up ticklen from last box.sw + (10 * w / 32, 0)
+	line up ticklen from last box.sw + (11 * w / 32, 0)
+	line up ticklen from last box.sw + (12 * w / 32, 0)
+	line up ticklen from last box.sw + (13 * w / 32, 0)
+	line up ticklen from last box.sw + (14 * w / 32, 0)
+	line up ticklen from last box.sw + (15 * w / 32, 0)
+	line up ticklen from last box.sw + (16 * w / 32, 0)
+	line up ticklen from last box.sw + (17 * w / 32, 0)
+	line up ticklen from last box.sw + (18 * w / 32, 0)
+	line up ticklen from last box.sw + (19 * w / 32, 0)
+	line up ticklen from last box.sw + (20 * w / 32, 0)
+	line up ticklen from last box.sw + (21 * w / 32, 0)
+	line up ticklen from last box.sw + (22 * w / 32, 0)
+	line up ticklen from last box.sw + (23 * w / 32, 0)
+	] X
+
+define b16 X [
+	box height h width w / 2
+	line down ticklen from last box.nw + (w / 32, 0)
+	line down ticklen from last box.nw + (2 * w / 32, 0)
+	line down ticklen from last box.nw + (3 * w / 32, 0)
+	line down ticklen from last box.nw + (4 * w / 32, 0)
+	line down ticklen from last box.nw + (5 * w / 32, 0)
+	line down ticklen from last box.nw + (6 * w / 32, 0)
+	line down ticklen from last box.nw + (7 * w / 32, 0)
+	line down ticklen from last box.nw + (8 * w / 32, 0)
+	line down ticklen from last box.nw + (9 * w / 32, 0)
+	line down ticklen from last box.nw + (10 * w / 32, 0)
+	line down ticklen from last box.nw + (11 * w / 32, 0)
+	line down ticklen from last box.nw + (12 * w / 32, 0)
+	line down ticklen from last box.nw + (13 * w / 32, 0)
+	line down ticklen from last box.nw + (14 * w / 32, 0)
+	line down ticklen from last box.nw + (15 * w / 32, 0)
+
+	line up ticklen from last box.sw + (w / 32, 0)
+	line up ticklen from last box.sw + (2 * w / 32, 0)
+	line up ticklen from last box.sw + (3 * w / 32, 0)
+	line up ticklen from last box.sw + (4 * w / 32, 0)
+	line up ticklen from last box.sw + (5 * w / 32, 0)
+	line up ticklen from last box.sw + (6 * w / 32, 0)
+	line up ticklen from last box.sw + (7 * w / 32, 0)
+	line up ticklen from last box.sw + (8 * w / 32, 0)
+	line up ticklen from last box.sw + (9 * w / 32, 0)
+	line up ticklen from last box.sw + (10 * w / 32, 0)
+	line up ticklen from last box.sw + (11 * w / 32, 0)
+	line up ticklen from last box.sw + (12 * w / 32, 0)
+	line up ticklen from last box.sw + (13 * w / 32, 0)
+	line up ticklen from last box.sw + (14 * w / 32, 0)
+	line up ticklen from last box.sw + (15 * w / 32, 0)
+	] X
+
+define b15 X [
+	box height h width w * 15 / 32
+	line down ticklen from last box.nw + (w / 32, 0)
+	line down ticklen from last box.nw + (2 * w / 32, 0)
+	line down ticklen from last box.nw + (3 * w / 32, 0)
+	line down ticklen from last box.nw + (4 * w / 32, 0)
+	line down ticklen from last box.nw + (5 * w / 32, 0)
+	line down ticklen from last box.nw + (6 * w / 32, 0)
+	line down ticklen from last box.nw + (7 * w / 32, 0)
+	line down ticklen from last box.nw + (8 * w / 32, 0)
+	line down ticklen from last box.nw + (9 * w / 32, 0)
+	line down ticklen from last box.nw + (10 * w / 32, 0)
+	line down ticklen from last box.nw + (11 * w / 32, 0)
+	line down ticklen from last box.nw + (12 * w / 32, 0)
+	line down ticklen from last box.nw + (13 * w / 32, 0)
+	line down ticklen from last box.nw + (14 * w / 32, 0)
+
+	line up ticklen from last box.sw + (w / 32, 0)
+	line up ticklen from last box.sw + (2 * w / 32, 0)
+	line up ticklen from last box.sw + (3 * w / 32, 0)
+	line up ticklen from last box.sw + (4 * w / 32, 0)
+	line up ticklen from last box.sw + (5 * w / 32, 0)
+	line up ticklen from last box.sw + (6 * w / 32, 0)
+	line up ticklen from last box.sw + (7 * w / 32, 0)
+	line up ticklen from last box.sw + (8 * w / 32, 0)
+	line up ticklen from last box.sw + (9 * w / 32, 0)
+	line up ticklen from last box.sw + (10 * w / 32, 0)
+	line up ticklen from last box.sw + (11 * w / 32, 0)
+	line up ticklen from last box.sw + (12 * w / 32, 0)
+	line up ticklen from last box.sw + (13 * w / 32, 0)
+	line up ticklen from last box.sw + (14 * w / 32, 0)
+	] X
+
+define b13 X [
+	box height h width w * 13 / 32
+	line down ticklen from last box.nw + (w / 32, 0)
+	line down ticklen from last box.nw + (2 * w / 32, 0)
+	line down ticklen from last box.nw + (3 * w / 32, 0)
+	line down ticklen from last box.nw + (4 * w / 32, 0)
+	line down ticklen from last box.nw + (5 * w / 32, 0)
+	line down ticklen from last box.nw + (6 * w / 32, 0)
+	line down ticklen from last box.nw + (7 * w / 32, 0)
+	line down ticklen from last box.nw + (8 * w / 32, 0)
+	line down ticklen from last box.nw + (9 * w / 32, 0)
+	line down ticklen from last box.nw + (10 * w / 32, 0)
+	line down ticklen from last box.nw + (11 * w / 32, 0)
+
+	line up ticklen from last box.sw + (w / 32, 0)
+	line up ticklen from last box.sw + (2 * w / 32, 0)
+	line up ticklen from last box.sw + (3 * w / 32, 0)
+	line up ticklen from last box.sw + (4 * w / 32, 0)
+	line up ticklen from last box.sw + (5 * w / 32, 0)
+	line up ticklen from last box.sw + (6 * w / 32, 0)
+	line up ticklen from last box.sw + (7 * w / 32, 0)
+	line up ticklen from last box.sw + (8 * w / 32, 0)
+	line up ticklen from last box.sw + (9 * w / 32, 0)
+	line up ticklen from last box.sw + (10 * w / 32, 0)
+	line up ticklen from last box.sw + (11 * w / 32, 0)
+	] X
+
+define b12 X [
+	box height h width w * 12 / 32
+	line down ticklen from last box.nw + (w / 32, 0)
+	line down ticklen from last box.nw + (2 * w / 32, 0)
+	line down ticklen from last box.nw + (3 * w / 32, 0)
+	line down ticklen from last box.nw + (4 * w / 32, 0)
+	line down ticklen from last box.nw + (5 * w / 32, 0)
+	line down ticklen from last box.nw + (6 * w / 32, 0)
+	line down ticklen from last box.nw + (7 * w / 32, 0)
+	line down ticklen from last box.nw + (8 * w / 32, 0)
+	line down ticklen from last box.nw + (9 * w / 32, 0)
+	line down ticklen from last box.nw + (10 * w / 32, 0)
+
+	line up ticklen from last box.sw + (w / 32, 0)
+	line up ticklen from last box.sw + (2 * w / 32, 0)
+	line up ticklen from last box.sw + (3 * w / 32, 0)
+	line up ticklen from last box.sw + (4 * w / 32, 0)
+	line up ticklen from last box.sw + (5 * w / 32, 0)
+	line up ticklen from last box.sw + (6 * w / 32, 0)
+	line up ticklen from last box.sw + (7 * w / 32, 0)
+	line up ticklen from last box.sw + (8 * w / 32, 0)
+	line up ticklen from last box.sw + (9 * w / 32, 0)
+	line up ticklen from last box.sw + (10 * w / 32, 0)
+	] X
+
+define b8 X [
+	box height h width w * 8 / 32
+	line down ticklen from last box.nw + (w / 32, 0)
+	line down ticklen from last box.nw + (2 * w / 32, 0)
+	line down ticklen from last box.nw + (3 * w / 32, 0)
+	line down ticklen from last box.nw + (4 * w / 32, 0)
+	line down ticklen from last box.nw + (5 * w / 32, 0)
+	line down ticklen from last box.nw + (6 * w / 32, 0)
+	line down ticklen from last box.nw + (7 * w / 32, 0)
+
+	line up ticklen from last box.sw + (w / 32, 0)
+	line up ticklen from last box.sw + (2 * w / 32, 0)
+	line up ticklen from last box.sw + (3 * w / 32, 0)
+	line up ticklen from last box.sw + (4 * w / 32, 0)
+	line up ticklen from last box.sw + (5 * w / 32, 0)
+	line up ticklen from last box.sw + (6 * w / 32, 0)
+	line up ticklen from last box.sw + (7 * w / 32, 0)
+	] X
+
+define b5 X [
+	box height h width w * 5 / 32
+	line down ticklen from last box.nw + (w / 32, 0)
+	line down ticklen from last box.nw + (2 * w / 32, 0)
+	line down ticklen from last box.nw + (3 * w / 32, 0)
+	line down ticklen from last box.nw + (4 * w / 32, 0)
+
+	line up ticklen from last box.sw + (w / 32, 0)
+	line up ticklen from last box.sw + (2 * w / 32, 0)
+	line up ticklen from last box.sw + (3 * w / 32, 0)
+	line up ticklen from last box.sw + (4 * w / 32, 0)
+	] X
+
+define b1 X [
+	box height h width w / 32
+	] X
+
+SRC: b16 "source"
+DST: b16 with .nw at SRC.ne "dest"
+
+LEN: b16 with .nw at SRC.sw "len"
+CKSM: b16 with .w at LEN.e "cksm"
+
+arc from CKSM.se to DST.ne radius .15i
+move to DST.se + (w / 32 * 3, 0)
+"UDP"
+
+CID: b32 with .nw at LEN.sw "cid"
+
+SEQ: b32 with .nw at CID.sw "SEQ"
+
+ACK: b32 with .nw at SEQ.sw "ACK"
+
+TXTS: b32 with .nw at ACK.sw "TXTS"
+
+REFTS: b32 with .nw at TXTS.sw "REFTS"
+
+ECE: b1 with .nw at REFTS.sw "E" "C" "E"
+CWR: b1 with .w at ECE.e "C" "W" "R"
+NS: b1 with .w at CWR.e "N" "S"
+RES: b13 with .w at NS.e "reserved"
+OPTLEN: b16 with .w at RES.e "OPTLEN"
+
+OPT: b16 with .nw at ECE.sw "OPT"
+COPT: [ box height h width w/32 invis ] with .nw at OPT.nw "C"
+SOPT: [ box height h width w/32 invis ] with .w at COPT.e "S"
+OPTDATA: b16 with .w at OPT.e "OPTDATA..."
+
+box height h * 4 width w with .nw at OPT.sw "user data"
+
+arc from OPTDATA.se to OPTLEN.ne radius .2i
+move to OPTLEN.se + (w / 32, 0)
+"*"
+
+.PE

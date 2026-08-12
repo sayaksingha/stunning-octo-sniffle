@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: diagnostic programs: int2text</title>
+</head>
+<body>
+<h1>Prosody installation guide: diagnostic programs: int2text</h1>
+<p>
+This program converts a file from a sequence of 32-bit numbers (such
+as is produced by <a href="test_cpumon.html">cpumon</a>) into a text
+listing of the numbers in decimal with one number per line. This format
+is human readable and can also be used by non-Prosody programs, for
+example, gnuplot (see <a href="http://www.gnuplot.info">www.gnuplot.info</a>).
+<p>
+Go to directory $(TiNG)/diag/int2text.
+<p>
+This is a standalone program that requires no Prosody facilities, so
+you can run it on a system which does not have Prosody installed.
+<p>
+Run <code>int2text</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/int2text</span> or
+<span class="type-WINNT">gen-WINNT_V6/int2text</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+
+<table border>
+<tr>
+	<td><code>-i</code> infile
+		<td>Specifies the file to read. If this option is
+		omitted, reads standard input.
+
+<tr>
+	<td><code>-o</code> outfile
+		<td>Specifies the output file. If this option is
+		omitted, writes to standard output.
+
+</table>
+<p>
+For example,
+<pre>
+	gen-LINUX_V6/int2text -i cpudat.32 -o cpudat.text
+</pre>
+<p>
+converts the data in file <code>cpudat.32</code> into text and saves
+it in <code>cpudat.text</code>.
+<p>
+The source code for this program is provided (int2text.c).
+<hr>
+<p>
+This is one of the <a href="install_diag.html">Prosody diagnostic
+programs </a>.
+</body>
+</html>

@@ -25,11 +25,13 @@ obj/SccpAculabHandler.o : src/SccpAculabHandler.cc include/SccpAculabHandler.h \
  /home/mram/cvs/ss7/src/include/MsuStructs.h \
  /home/mram/cvs/ss7/src/include/Ss7Structs.h \
  /home/mram/cvs/ss7/src/ss7util/include/Ss7BerEncDec.h \
+ /home/mram/cvs/ss7/src/include/TcapStructs.h \
  /home/mram/cvs/ss7/src/include/TcapStructs.h include/SccpAculabUtil.h \
  include/SccpAculabConstDef.h \
  /home/mram/cvs/ss7/src/include/SS7LogCodes.h \
  /home/mram/cvs/Thirdparty//src/ACULAB/include/sccp_api.h \
- /home/mram/cvs/Thirdparty//src/ACULAB/include/sccp_synch.h
+ /home/mram/cvs/Thirdparty//src/ACULAB/include/sccp_synch.h \
+ include/MsuAnsiStructs.h
 obj/SccpAculabHandlerMain.o : src/SccpAculabHandlerMain.cc \
  include/SccpAculabHandler.h include/SccpAculabApi.h \
  /home/tayana/cvs/util/src//peg/include/PegApi.h \
@@ -58,8 +60,10 @@ obj/SccpAculabHandlerMain.o : src/SccpAculabHandlerMain.cc \
  /home/mram/cvs/ss7/src/include/MsuStructs.h \
  /home/mram/cvs/ss7/src/include/Ss7Structs.h \
  /home/mram/cvs/ss7/src/ss7util/include/Ss7BerEncDec.h \
+ /home/mram/cvs/ss7/src/include/TcapStructs.h \
  /home/mram/cvs/ss7/src/include/TcapStructs.h include/SccpAculabUtil.h \
  include/SccpAculabConstDef.h \
  /home/mram/cvs/ss7/src/include/SS7LogCodes.h \
  /home/mram/cvs/Thirdparty//src/ACULAB/include/sccp_api.h \
- /home/mram/cvs/Thirdparty//src/ACULAB/include/sccp_synch.h
+ /home/mram/cvs/Thirdparty//src/ACULAB/include/sccp_synch.h \
+ include/MsuAnsiStructs.h

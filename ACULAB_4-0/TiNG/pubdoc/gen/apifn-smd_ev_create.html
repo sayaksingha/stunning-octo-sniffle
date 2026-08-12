@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: smd_ev_create</title>
+</head>
+<body>
+<h1>Prosody generic: API: smd_ev_create</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int smd_ev_create(<a href="../apitype.html#type-tSMEventId">tSMEventId</a> *<a href="#field-eventId">eventId</a>, <a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channelId">channelId</a>, int <a href="#field-eventType">eventType</a>, int <a href="#field-eventChannelBinding">eventChannelBinding</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-eventId">eventId</a>
+<dd>
+The created event
+<dt><a name="field-channelId">channelId</a>
+<dd>
+The channel that this event will be associated with
+<dt><a name="field-eventType">eventType</a>
+<dd>
+The type of the event to create. One of these values:
+<code>kSMEventTypeReadData</code>,
+<code>kSMEventTypeWriteData</code>, or
+<code>kSMEventTypeRecog</code>.
+<dt><a name="field-eventChannelBinding">eventChannelBinding</a>
+<dd>
+Indicator of whether the event is for 'any channel' use or a
+single specific channel. One of the following values:
+<code>kSMChannelSpecificEvent</code>,
+<code>kSMChannelSpecificEventNonIdle</code>, or
+<code>kSMAnyChannelEvent</code>.
+</dl>
+<h2>Description</h2>
+<p>
+Creates an operating system event object suitable for use with
+a specific channel indicated by
+<a class=pref href="#field-channelId">channelId</a>
+(the parameter
+<a class=pref href="#field-eventChannelBinding">eventChannelBinding</a>
+must be set to <code>kSMChannelSpecificEvent</code> in this
+case) or, alternatively, creates an operating system event object for
+collective use by all nominated channels (in which case
+<a class=pref href="#field-channelId">channelId</a>
+must be set to <code>kSMNullChannelId</code> and
+<a class=pref href="#field-eventChannelBinding">eventChannelBinding</a>
+to <code>kSMAnyChannelEvent</code>).
+
+<div class="version-TiNG">
+	<span class=header-TiNG>Only on Prosody version 2 (TiNG):</span>
+See the document
+<a href="../anychan.html">Prosody TiNG: any channel operation</a>
+for how to use 'any channel' events.
+<p>
+An application which waits on a channel-specific event will be woken
+whenever the channel is ready for servicing. This includes whenever
+an operation on the channel may have a status change to report, as
+well as whenever there is no operation in progress on the channel
+(because the channel is ready to start a new operation).
+<p>
+An application which waits on an 'any channel' event will be woken
+when any of the channels which have been associated with that
+event are ready for servicing. In this case a channel which has no
+operation in progress is not considered to be ready for
+servicing. This is because 'any channel' events are provided for
+backward compatibility with Prosody version 1, which had this
+behaviour.
+<p>
+Note that an application may sometimes be woken even though no
+status change is found. This happens in certain cases where the
+API library discovers when checking the status that the change is
+not of a type appropriate to report to the application (which may
+be because it related to a facility not currently in use or because
+it is only for internal purposes within the library).
+
+</div>
+<p>
+The
+<a class=pref href="#field-eventType">eventType</a>
+parameter indicates which type of event should be created, see
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event()</a>
+API call description for more details.
+<p>
+An identifier for the new event object is stored in the location
+pointed at by
+<a class=pref href="#field-eventId">eventId</a>.
+You can wait on the event as described in
+<a href="apifn-smd_ev_wait.html">smd_ev_wait()</a>.
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_NO_RESOURCES - if event could not be created<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

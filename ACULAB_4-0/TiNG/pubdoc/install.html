@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide</title>
+</head>
+<body>
+<h1>Prosody installation guide</h1>
+<p>
+This document covers the steps required to install a
+<a href="index.html">Prosody TiNG</a>
+distribution and run basic tests to ensure that everything is working
+correctly.
+
+<h2>Getting Prosody onto your system</h2>
+<p>
+Normally, the Prosody package is installed using the Aculab Installer
+Tool (AIT), which has its own documentation. If you obtain it in
+another form (such as a special package sent by e-mail from Aculab),
+see <a href="packaging.html">Prosody TiNG packaging</a> for the parts
+that might be supplied.
+<p>
+<strong>Note:</strong> whether you use the AIT or some other method,
+make a note of where on your system you install Prosody. If other
+people will be using Prosody on the system, make sure you pass on this
+information to them.
+
+<h2>The directory structure</h2>
+<p>
+In the documentation for Prosody, references to a file or
+directory are often in the form:
+<pre>
+	$(TiNG)/directory/
+	$(TiNG)/dir/file
+</pre>
+<p>
+The name <code>$(TiNG)</code> is used to refer to the directory
+created when installing Prosody. This is usually a directory called TiNG
+in the Aculab root directory <code>$(ACULAB_ROOT)</code>.
+<p>
+Some of the test programs use the APIs provided by the switch
+driver and the call driver, which come in separate packages. If you
+fetch them using the AIT, they will be put in directories beside the
+Prosody directory.  Prebuilt TiNG libraries may be found in the
+<code>$(ACULAB_ROOT)/lib</code> directory.
+<p>
+If you do unpack things yourself, make sure you use this layout. The
+structure used inside the <code>$(TiNG)</code> directory is described
+in <a href="layout.html">Prosody: layout of the distribution</a>.
+<p>
+
+<h2>The environment for Prosody</h2>
+<p>
+Prosody uses one environment variable. This allows components such as
+scripts to come in only one variant but work successfully across all
+operating systems. This environment variable is
+<code>TiNGTARGET</code> and should be set as follows:
+<div class="type-LINUX">
+<p>
+<em>For Linux only:</em>
+Set <code>TiNGTARGET</code> to the value
+<code>LINUX_V6</code> for 32 bit applications or <code>LINUX_V6_AMD64</code> for 64 bit applications. For example, use the shell commands:
+<pre>
+	export TiNGTARGET=LINUX_V6
+</pre>
+</div>
+<div class="type-QNX">
+<p>
+<em>For QNX only:</em>
+Set <code>TiNGTARGET</code> to the value
+<code>QNX_PPC</code> to build for QNX on Power PC, or the value
+<code>QNX_X86</code> to build for QNX on x86. For example, use the shell
+commands:
+<pre>
+	export TiNGTARGET=QNX_PPC
+</pre>
+</div>
+<div class="type-WINNT">
+<p>
+<em>For Windows only:</em>
+Set the environment variable <code>TiNGTARGET</code> to the value
+<code>WINNT_V6</code> for 32 bit applications or <code>WINNT_V6_AMD64</code> for 64 bit applications. For example, at a DOS prompt, use:
+<pre>
+	set "TiNGTARGET=WINNT_V6"
+</pre>
+Note that <code>TiNGTARGET</code> contains a lowercase
+<code>i</code>, so the quotes are necessary to prevent it being
+converted into a capital letter. It does not appear to be possible to
+set the environment variable from the control panel, because it changes the
+name into all capitals.
+</div>
+
+<h2>Using Prosody</h2>
+<p>
+There are two main ways to use Prosody:
+<ul>
+	<li>Run an application which uses Prosody
+	<li>Develop an application which uses Prosody
+</ul>
+<p>
+Note that unlike earlier Prosody cards which used a device driver, the TiNG elements of Prosody S and Prosody X are accessed remotely over an IP network, thus no Prosody specific device driver is required.
+However a driver is still required for card management puposes, switching and signalling (call control). 
+<p>
+Normally, if you are developing an application on a system you also need to run it on
+that system, but it's obviously possible to build an application on one
+system and run it on another, in which case the development system does
+not need to run the card driver, and you can skip down to
+<a href="#prepbuild">Preparing to build applications</a>. 
+
+<h2>Getting the driver running</h2>
+<p>
+The driver must be configured and started. This is done differently
+on each of the supported operating systems:
+<ul>
+	<li class="type-LINUX">On Linux, the <code>dacpinst</code>
+	script gathers the configuration information and builds the
+	<code>aculab_dacp</code> script, which starts the driver.
+	These are covered in a separate installation guide.
+	<li class="type-WINNT">On Microsoft Windows, the Aculab
+	Install Tool configures and installs the driver. See its
+	documentation for further details.
+</ul>
+<p>
+As soon as the driver is running, you can run test programs to verify
+the installation is correct. If you are installing Prosody to develop
+applications, you can build some of the test programs that come with
+Prosody; if you are only running pre-built applications, use whatever
+test programs that were supplied with them.
+
+<h2><a name="prepbuild">Preparing to build applications</a></h2>
+<p>
+Before building applications, you should build various libraries,
+tools, and test programs. They can be built using only command-line
+tools, as described in these steps:
+<ul>
+	<li> <a href="install_prerequisites.html">check the list of prerequisites</a>
+	<li> <a href="install_build1.html">first-time build</a>
+	<li> <a href="install_buildrest.html">building software components</a>
+</ul>
+<p>
+<div class="type-WINNT">Alternatively, but only on Microsoft Windows,
+they can be built using <a href="vsproj.html">Visual Studio project
+files</a> which are supplied with Prosody.
+</div>
+
+<h2>Testing a typical installation</h2>
+<p>
+Normally, Prosody is installed on a system to allow development of 
+software that uses Prosody. Appropriate testing for this situation
+consists of building test programs and running them. Since the
+previous step, <em>Preparing to build applications</em>, builds all
+the necessary programs, all that remains is to run them.
+
+<h3>Testing Prosody S and Prosody X</h3>
+<p>
+For Prosody S and Prosody X, the suggested test is to play an RTP
+stream and record it. The test programs to do this are
+<a href="test_rtpplay.html">rtpplay</a> and
+<a href="test_rtprec.html">rtprec</a>.
+Here is one way you can test recording:
+<ul>
+	<li>Perform setup - Download Prosody firmware
+	<li>Run <a href="test_rtprec.html">rtprec</a>, which will
+	record the RTP stream. It prints the port number on which it
+	is listening
+	<li>Run <a href="test_rtpplay.html">rtpplay</a>, which will
+	play the test signal.
+</ul>
+<p>
+For example, given:
+<ul>
+	<li>The Prosody card is at address 10.0.0.1
+	<li>The security key for the Prosody card is <code>sFVHnQX3szQ</code>
+	<li>Firmware has been downloaded for A-law play and record 
+</ul>
+<p>
+then this command would set up the receiver:
+<pre>
+	rtprec -x x:10.0.0.1/sFVHnQX3szQ -L 10.0.0.1 -m 8 -c alaw -Fa rec.alaw
+</pre>
+<p>
+when it runs it prints a message reporting the port number it has been
+allocated. For example,
+"<code>RTP port = 10.0.0.1:16388, RTCP port = 16389</code>". The RTP port
+is the one to which the rtpplay must send its data, so it would be set
+up like this to play the file "test.alaw":
+<pre>
+	rtpplay -x x:10.0.0.1/sFVHnQX3szQ -m 8 -c alaw -Fa -d 10.0.0.1 -p 16388 test.alaw 
+</pre>
+
+<h2>Distributing applications that use Prosody</h2>
+<p>
+If you distribute applications that use Prosody, make sure you
+provide documentation describing the firwmare they need, and any
+other information that may be needed to diagnose problems. If the
+applications are intended to be run on a system without development
+tools (i.e. a C compiler, at least) ensure your package includes
+pre-built copies of any Prosody test and diagnostic programs that may
+be needed.

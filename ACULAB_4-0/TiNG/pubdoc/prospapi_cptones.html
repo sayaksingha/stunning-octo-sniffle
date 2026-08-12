@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+
+<title>Prosody speech processing: pre-loaded call progress tones</title>
+</head>
+<body>
+<h1>Prosody speech processing: pre-loaded call progress tones</h1>
+<p>
+The following table lists the call progress tones that are
+recognisable by default,
+along with their corresponding identifiers (that may be returned by calls
+to <a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a>.
+
+<p><table border>
+<tr>
+	<th>Id
+	<th>Sequence (Id, min mS, max mS)...
+	<th>Description
+
+<tr>
+<td>1
+	<td>(1, 5000, none)
+		<td>Unobtainable U.K.
+
+<tr>
+<td rowspan=3>2
+	<td>(1, 300, 450), (0, 300, 450), (1, 300, 450), (0, 300, 450),
+		<td>Busy Tone U.K.
+
+<tr>
+	<td>(1, 352, 608), (0, 352, 608), (1, 352, 608),
+		<td>Busy Tone E.C.
+
+<tr>
+	<td>(6, 400, 600), (0, 400, 600), (6, 400, 600), (0, 400, 600),
+		<td>Busy Tone U.S.
+
+<tr>
+<td>3
+	<td>(1, 320, 480), (0, 420, 630), (1, 270, 180), (0, 280, 420)
+		<td>Path Engaged Tone (U.K)
+
+<tr>
+<td rowspan=6>4
+	<td>(1, 320, 480), (0, 160, 240), (1, 320, 480)
+		<td>Ring Tone (U.K.)
+
+<tr>
+	<td>(1, 320, 480), (0, 1600, 2400), (1, 320, 480)
+		<td>Ring Tone (U.K.)
+
+<tr>
+	<td>(1, 300, 480), (7, 0, 32), (0, 160, 240), (7, 0, 32), (1, 300, 480)
+		<td>Ring Tone (U.K.)
+
+<tr>
+	<td>(1, 300, 480), (7, 0, 32), (0, 1600, 2400), (7, 0, 32), (1, 300, 480)
+		<td>Ring Tone (U.K.)
+
+<tr>
+	<td>(1, 800, 1200), (0, 1600, none)
+		<td>Ring Tone (E.C./U.S)
+
+<tr>
+	<td>(1, 1600, 2400), (0, 4800, 3600)
+		<td>Long Ring Tone (U.S.)
+
+<tr>
+<td rowspan=5>5
+	<td>(4, 260, 400), (0, 0, 32), (3, 260, 400), (0, 0, 32), (2, 260, 400),
+		<td>Special Information Tone
+
+<tr>
+	<td>(4, 304, 456), (0, 0, 32), (3, 304, 456), (0, 0, 32), (2, 304, 456), 
+		<td>Special Information Tone (NC)
+
+<tr>
+	<td>(4, 304, 456), (0, 0, 32), (3, 219, 329), (0, 0, 32), (2, 219, 329), 
+		<td>Special Information Tone (IC)
+
+<tr>
+	<td>(4, 304, 456), (0, 0, 32), (3, 219, 329), (0, 0, 32), (2, 304, 456), 
+		<td>Special Information Tone (VC)
+
+<tr>
+	<td>(4, 304, 456), (0, 0, 32), (3, 304, 456), (0, 0, 32), (2, 219, 329), 
+		<td>Special Information Tone (RO)
+
+<tr>
+<td>6
+	<td>(8, 416, 576), (0, 2240, 3456)
+		<td>Fax CNG
+
+<tr>
+<td>7
+	<td>(9, 2592, 4000)
+		<td>Fax CED
+
+<tr>
+<td>8
+	<td>(7, 3000, none), 
+		<td>Dial tone
+
+<tr>
+<td>9
+	<td>(6, 200, 300), (0, 200, 300), (6, 200, 300), (0, 200, 300)
+		<td>ReOrder (fast busy)
+
+<tr>
+<td>11
+	<td>(1, 184, 276), (0, 0, 32), (5, 184, 276)
+		<td>U.S. Intercept signal
+
+</table>
+<p>
+<a name="enumcptones"></a>
+The ids in the sequence definitions listed above relate to the <a href="prospapi_intones.html#preloadedintones">pre-loaded input tone set for call progress and fax</a> and are enumerated 
+as follows:
+<table border>
+<tr>
+<th>Tone<th>Purpose
+
+<tr>
+<td>0<td>Silence
+
+<tr>
+<td>1<td>350, 400, 425, 440, 450, and 480 Hz
+
+<tr>
+<td>2<td>913.8, 950, and 985.2 Hz (for SIT)
+
+<tr>
+<td>3<td>1370.6, 1400, 1428.5 Hz (for SIT)
+
+<tr>
+<td>4<td>1776.7 and 1800 Hz (for SIT)
+
+<tr>
+<td>5<td>620 Hz (for U.S. intercept)
+
+<tr>
+<td>6<td>480 + 620 Hz (for U.S. busy/reorder)
+
+<tr>
+<td>7<td>a dual tone consisting of the same frequencies as 1 above (e.g. 350 + 440 for dial tone)
+
+<tr>
+<td>8<td>1100 Hz (for fax CNG)
+
+<tr>
+<td>9<td>2100 Hz (for fax CED)
+
+</table>
+<p>
+
+</body>
+</html>

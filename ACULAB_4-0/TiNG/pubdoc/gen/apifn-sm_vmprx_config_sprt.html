@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_config_sprt</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_config_sprt</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_config_sprt(struct sm_vmprx_config_sprt_parms *<a href="#field-configp">configp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_config_sprt_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+} SM_VMPRX_CONFIG_SPRT_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configure the association of a VMP[rx] with a SPRT end point. If
+<a class=pref href="#field-payload_type">payload_type</a>
+is <code>-1</code> then
+<a class=pref href="#field-sprt">sprt</a>
+can be <code>kSMNullSPRTId</code>, otherwise it must be a value created
+by a call to
+<a href="apifn-sm_sprt_create.html">sm_sprt_create()</a>.
+<p>
+This requires the module
+<a href="softmodindex.html#sprt">sprt</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to be associated with a SPRT endpoint
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type identifer to use for SPRT packets (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13). Supplying a value of
+<code>-1</code> will remove any payload type configuration from the 
+SPRT end point, preventing its use.
+
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point that will handle SPRT packets
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

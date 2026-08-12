@@ -1,0 +1,121 @@
+	Prosody I.460 Mux
+secname sort
+
+	Create an I.460 Mux
+apifn	sm_i460mux_create
+params	sm_i460mux_create_parms createp
+	The created mux.
+field	tSMI460muxId i460mux out
+	A value obtained from
+fnref   sm_open_module
+	which indicates the module on which the mux is to be created.
+field   tSMModuleId module in
+unstruct
+	Creates an I.460 Mux.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+error   ERR_SM_NO_RESOURCES - if no suitable output channel free
+error   ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified
+
+	Destroy an I.460 Mux
+apifn	sm_i460mux_destroy
+	The mux to destroy. Must have been previously created by a call to
+fnref	sm_i460mux_create
+	.
+param	tSMI460muxId mux
+	Destroys an I.460 Mux.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Connect a datafeed to an input of an I.460 MUX.
+apifn	sm_i460mux_datafeed_connect
+params	sm_i460mux_datafeed_connect_parms datafeedp
+	The datafeed object to be connected. 
+field	tSMDatafeedId data_source in
+	The mux to connect the datafeed to.
+field	tSMI460muxId i460mux in
+	The mux input to which the datafeed has been connected.
+field	tSMI460InputId input_id out
+unstruct
+	Connect a datafeed to one of the inputs of the I.460 mux.
+	Up to eight datafeeds may be connected to a single I.460 mux.
+	The datafeed is assumed to be carrying a datastream that has already been 
+	uprated by being masked into the correct bit(s) of each octet. This can 
+	be achieved by using the datatx firmware module, configured with an 
+	appropriate i460_mask. It is up to the user to ensure that the masks 
+	used by different datafeeds connected to the same I.460 mux do not overlap.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+error   ERR_SM_NO_RESOURCES - no free inputs available
+
+	Disconnect a datafeed to an I.460 MUX.
+apifn	sm_i460mux_datafeed_disconnect
+params	sm_i460mux_datafeed_disconnect_parms datafeedp
+	The mux to disconnect the datafeed from.
+field	tSMI460muxId i460mux in
+	The input of the mux to be disconnected.
+field   tSMI460InputId input_id in
+unstruct
+	Disconnect a datafeed on one of the inputs of the I.460 mux.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Get an event for the I.460 mux
+apifn	sm_i460mux_get_event
+params	sm_i460mux_event_parms eventp
+	The mux.
+field	tSMI460muxId i460mux in
+	The event identifier
+field	tSMEventId event out
+unstruct
+	The event will be signalled when a status change occurs on the mux.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Fetch status info on I.460 mux
+apifn	sm_i460mux_status
+params	sm_i460mux_status_parms statusp
+	The mux.
+field	tSMI460muxId i460mux in
+	The status.
+enumstart kSMI460muxStatus
+	The mux is running
+enum	kSMI460muxStatusRunning
+	The mux is not running
+enum	kSMI460muxStatusStopped
+enumend status out
+unstruct
+	returns the status of the I.460 mux.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Get datafeed from I.460 MUX.
+apifn	sm_i460mux_get_datafeed
+params	sm_i460mux_datafeed_parms datafeedp
+	The mux from which to obtain a datafeed.
+field	tSMI460muxId i460mux in
+	The datafeed object associated with the I.460 mux.
+field	tSMDatafeedId datafeed out
+unstruct
+	Request a datafeed identifier from an I.460 mux.
+	This identifier can subsequently used in a call to 
+fnref	sm_tdmtx_datafeed_connect
+	or
+fnref	sm_channel_datafeed_connect.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+

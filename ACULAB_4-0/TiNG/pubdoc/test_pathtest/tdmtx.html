@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>pathtest tdmtx</title>
+</head>
+<body>
+<h1>pathtest tdmtx</h1>
+
+<h2>Status codes</h2>
+<p>
+The tdmtx operations do not report status, so no status is shown.
+
+<h2>Settings</h2>
+<p>
+The only setting used by <code>tdmtx</code> is the timeslot which is
+specified in the form:
+<pre>
+ts S:T:F
+</pre>
+<p>
+where S is the stream
+number, T is the timeslot number, and F is the data format. The formats
+available are:
+<table>
+<tr><th>a<td>A law
+<tr><th>u<td>mu law
+<tr><th>d<td>data
+</table>
+<hr>
+<p>
+This is a command understood by the <a href="pathtest.html">pathtest</a>
+test program.

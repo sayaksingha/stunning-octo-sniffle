@@ -1,0 +1,180 @@
+			Driver installation on NT
+			-------------------------
+
+The driver installation procedure is not yet integrated with that used
+for other Aculab products. Instead, separate programs are provided
+for installation and removal of the driver.
+
+File names used in this document are relative to the $(TiNG)/test
+directory.
+
+
+1) Plugging in the card
+
+There is no special preparation required before plugging in a PCI or
+Compact PCI card.
+
+If you are installing a Prosody ISA card (the S2 card) or a Basic Rate
+card (the BR8 card), it is probably best to first install the standard
+Prosody driver (as described in the document "Prosody ISA Card
+Installation Instructions" (file S2INST.PDF) or "Basic Rate Card Prosody
+Module Installation Instructions" (file BRINST.PDF) depending on which
+card is being used - these documents are available from
+http://www.aculab.com in the Acrobat PDF archive).  This ensures that
+there are no conflicts. Alternatively, you can check for a free I/O area
+using the "Windows NT diagnostics" program ("Resources" tab, "I/O Port"
+button), set the card for the appropriate base address, and plug
+it in (with the machine switched off of course!).
+
+If the standard Aculab speech processing driver is installed, you need
+to stop it. However if you don't know what I/O address an ISA card has
+been set to, use "Windows NT diagnostics" to find out what resources are
+assigned to "AculabSpeech" as this is easier than getting the card out
+of the machine and working it out from the switches.
+
+To stop the standard driver from "Control Panel" run "Devices"
+select "AculabSpeech", Select "Stop" button, select "Startup" button,
+and set it to "Manual".
+
+
+
+2) Configuration
+
+Edit the file TiNGpar with any text editor (e.g. notepad) and
+change any parameters as necessary. The format of this file is farily
+obvious from the supplied example, but an exact description is also
+provided as follows.
+
+Each line in this file is interpreted separately, though
+lines which configure a single card are kept together to make it
+easier to understand.
+
+Blank lines and lines starting with a hash (#) symbol are ignored.
+
+All other lines consist of a value and a key. The value can be in
+decimal (the default) or hex (if it starts with "0x"). The keys all
+start with a prefix, which specifies which card is being configured,
+and the name of the key. For example, the line:
+
+	0x354	S2Card0\ISAIOBaseAddress0
+
+configures the I/O address of the first S2 card to be 0x354 (decimal
+852). To configure the second card, the prefix would be "S2Card1".
+The third would be "S2Card2" etc. 
+
+The types of card which are currently possible are:
+	S2Card0		the Prosody ISA S2 card
+	BR8Card0	the Basic Rate card (4 or 8 lines with Prosody)
+	P1Card0		the Prosody PCI P1 or CompactPCI C1 card
+
+The values which must be configured are:
+	S2Card0\ISAIoBaseaddress0
+
+	BR8Card0\ISAIoBaseaddress
+	BR8Card0\ISAInterruptNumber
+	BR8Card0\ISASharedPhysicalAddress
+	BR8Card0\CardInterruptTerminatsion
+	BR8Card0\SwitchCardNumber
+
+	P1Card0\SwitchCardNumber
+
+These are explained below:
+
+S2Card0\ISAIOBaseAddress0
+	This is the I/O address of the card. It must also be set on
+	the card by setting the DIP switches appropriately. This is
+	the value which would be used with the "-p" option on the
+	standard Prosody driver.
+
+S2Card0\ISAExclusivePhysicalAddress
+	This is the address for the memory window. The standard
+	driver configures this with the "-x" option. If this value is
+	omitted (or specified as zero) the driver will ask NT for a
+	suitable area of memory, so it is not normally necessary to
+	set this value except to avoid a conflict with another
+	device. Note that a shared memory window is not currently
+	possible.
+
+S2Card0\ISAInterruptNumber
+	This specifies the interrupt to use. The standard
+	driver configures this with the "-i" option. If this value is
+	omitted (or specified as zero) the driver will ask NT for a
+	suitable interrupt number, so it is not normally necessary to
+	set this value except to avoid a conflict with another device
+	or to force an interrupt to be shared with another device.
+
+S2Card0\S2CardInterruptTermination
+	This value must be '1' unless this card shares an interrupt
+	with any other cards, in which case exactly one of the cards
+	must set it to '1' and the rest must set it to '0'. If the
+	interrupt is automatically assigned it is not shared, so this
+	value must be specifed as '1'.
+
+
+BR8Card0\ISAIOBaseAddress
+	This is the I/O address of the card. It must also be set on
+	the card by setting the DIP switches appropriately. This is
+	the value which would be used with the "-p" option on the
+	standard Prosody driver.
+
+BR8Card0\ISASharedPhysicalAddress
+	This is the address for the memory window. The standard
+	driver configures this with the "-w" option. Note that the shared
+	memory window must be the same as is configured for the call
+	control driver which controls this card.
+
+BR8Card0\ISAInterruptNumber
+	This is the interrupt number to use. The standard
+	driver configures this with the "-i" option. Note that this
+	value must be the same as is configured for the call
+	control driver which controls this card.
+
+BR8Card0\CardInterruptTermination
+	This value must be '1' unless this card shares an interrupt
+	with any other cards, in which case exactly one of the cards
+	must set it to '1' and the rest must set it to '0'.
+
+BR8Card0\SwitchCardNumber
+	This value is used to calculate the value that
+	sm_channel_info() uses when returning the number of the card for
+	passing to te switch driver. The standard driver configures an
+	equivalent value with the "-p" option.
+
+
+P1Card0\SwitchCardNumber
+	This value is used to calculate the value that
+	sm_channel_info() uses when returning the number of the card for
+	passing to te switch driver. The standard driver configures an
+	equivalent value with the "-p" option.
+	Note that the name of this key will soon change to incorporate
+	the card serial number, because it is not possible to guarantee
+	in what order PCI cards will be enumerated.
+
+
+Note that for the S2 card by default the driver asks the NT operating
+system to allocate the IRQ number, DMA channel, and memory range and
+these only need to be manually specified when NT allocates values which
+cannot be used (e.g. on some machines the BIOS disables these resources
+and NT doesn't know that they are not usable).
+
+
+
+3) Installing and starting the driver
+
+Run startacu.bat. If you get an error message:
+	StartService error (487): Attempt to access invalid address
+then the IO address specified in the TiNGpar file is already in use
+(possibly by the standard Aculab speech processing driver).
+
+This uses the installation program ../util/gen-WINNT/drvinst which
+can install an arbitrary driver.
+
+
+
+4) Stopping and removing the driver 
+
+Run stopacu.bat.
+
+This uses the driver removal program ../util/gen-WINNT/servdel which 
+can be used to delete any NT driver or service by
+specifying its name.

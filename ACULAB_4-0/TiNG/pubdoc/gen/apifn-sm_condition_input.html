@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_condition_input</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_condition_input</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_condition_input(struct sm_condition_input_parms *<a href="#field-condp">condp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-condp">*condp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_condition_input_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-reference">reference</a>;					/* in */
+	<a name="enum-kSMInputCondRef">enum kSMInputCondRef</a> {
+		<a href="#field-kSMInputCondRefNone">kSMInputCondRefNone</a>,
+		<a href="#field-kSMInputCondRefUseInput">kSMInputCondRefUseInput</a>,
+		<a href="#field-kSMInputCondRefUseOutput">kSMInputCondRefUseOutput</a>,
+	} <a href="#field-reference_type">reference_type</a>;					/* in */
+	<a name="enum-kSMInputCond">enum kSMInputCond</a> {
+		<a href="#field-kSMInputCondNone">kSMInputCondNone</a>,
+		<a href="#field-kSMInputCondEchoCancelation">kSMInputCondEchoCancelation</a>,
+	} <a href="#field-conditioning_type">conditioning_type</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-conditioning_param">conditioning_param</a>;				/* in */
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-alt_data_dest">alt_data_dest</a>;				/* in */
+	<a name="enum-kSMInputCondAltDest">enum kSMInputCondAltDest</a> {
+		<a href="#field-kSMInputCondAltDestNone">kSMInputCondAltDestNone</a>,
+		<a href="#field-kSMInputCondAltDestInput">kSMInputCondAltDestInput</a>,
+		<a href="#field-kSMInputCondAltDestOutput">kSMInputCondAltDestOutput</a>,
+	} <a href="#field-alt_dest_type">alt_dest_type</a>;						/* in */
+	int <a href="#field-ectest_type">ectest_type</a>;					/* in */
+	float <a href="#field-ectest_gain">ectest_gain</a>;					/* in */
+	int <a href="#field-ectest_delay">ectest_delay</a>;					/* in */
+	unsigned <a href="#field-ectest_flen">ectest_flen</a>;					/* in */
+	float <a href="#field-ectest_filt">*ectest_filt</a>;					/* in */
+} SM_CONDITION_INPUT_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Applies or disables conditioning to the signal input to channel
+<a class=pref href="#field-channel">channel</a>
+with respect to reference signal on channel
+<a class=pref href="#field-reference">reference</a>.
+The input signal to be conditioned is called the
+<em>primary</em>.
+The reference may either be the input to a channel or the output
+from a channel. In particular, it can be the output from
+<a class=pref href="#field-channel">channel</a>
+(but not its input). Note that Prosody switching functions (such
+as
+<a href="apifn-sm_switch_channel_input.html">sm_switch_channel_input()</a>
+or
+<a href="apifn-sm_channel_datafeed_connect.html">sm_channel_datafeed_connect()</a>)
+must not be used on a reference while it is in use.
+<p>
+If input signal conditioning is enabled, the conditioned version
+of the input is generated and is directed to one of several places.
+<ul>
+<li>If
+<a class=pref href="#field-alt_dest_type">alt_dest_type</a>
+is
+<a class=pref href="#field-kSMInputCondAltDestNone">kSMInputCondAltDestNone</a>
+then when other speech
+processing functions such as conferencing or recording are
+performed on
+<a class=pref href="#field-channel">channel</a>,
+the conditioned version of the input signal will be used.
+<li>If
+<a class=pref href="#field-alt_dest_type">alt_dest_type</a>
+is
+<a class=pref href="#field-kSMInputCondAltDestInput">kSMInputCondAltDestInput</a>
+then when such speech processing functions are performed on
+<a class=pref href="#field-alt_data_dest">alt_data_dest</a>,
+the conditioned version of the input signal
+will be used. (If
+<a href="apifn-sm_condition_input.html">sm_condition_input()</a>
+is used on such a channel, the result is undefined).
+<li>If
+<a class=pref href="#field-alt_dest_type">alt_dest_type</a>
+is
+<a class=pref href="#field-kSMInputCondAltDestOutput">kSMInputCondAltDestOutput</a>
+then the conditioned signal appears as the output from the channel
+<a class=pref href="#field-alt_data_dest">alt_data_dest</a>,
+which may be the same channel as
+<a class=pref href="#field-channel">channel</a>.
+</ul>
+<p>
+Note that Prosody switching functions (such as
+<a href="apifn-sm_switch_channel_output.html">sm_switch_channel_output()</a>
+or
+<a href="apifn-sm_channel_datafeed_connect.html">sm_channel_datafeed_connect()</a>)
+must not be used on the destination while echo cancellation is
+being performed.
+<p>
+All channels specified by
+<a class=pref href="#field-channel">channel</a>,
+<a class=pref href="#field-alt_data_dest">alt_data_dest</a>,
+and
+<a class=pref href="#field-reference">reference</a>
+will need to be processed by the same module. This can be
+ensured through the use of
+<a href="apifn-sm_channel_alloc_placed.html">sm_channel_alloc_placed()</a>
+<p>
+The two commonest configurations are:
+<dl>
+<dt>Cancelling the echo from a prompt being played
+<dd>
+In this situation you use one channel, playing the prompt on it,
+using its output as the reference (so
+<a class=pref href="#field-reference">reference</a>
+=
+<a class=pref href="#field-channel">channel</a>
+and
+<a class=pref href="#field-reference_type">reference_type</a>
+=
+<a class=pref href="#field-kSMInputCondRefUseOutput">kSMInputCondRefUseOutput</a>),
+and recording its input.
+<dt>Stand alone echo cancellation
+<dd>
+Here you want to send the conditioned signal to an external
+destination, rather than recording it. You need at least two
+channels because you need two inputs - one for the
+<em>primary</em> and one for the <em>reference</em> - and one
+output, while a single Prosody channel can have at most one
+input and one output. One way to arrange this is to have
+<a class=pref href="#field-channel">channel</a>,
+whose input is the primary, be specified as the output (i.e.
+<a class=pref href="#field-alt_data_dest">alt_data_dest</a>
+=
+<a class=pref href="#field-channel">channel</a>
+and
+<a class=pref href="#field-alt_dest_type">alt_dest_type</a>
+=
+<a class=pref href="#field-kSMInputCondAltDestOutput">kSMInputCondAltDestOutput</a>),
+with a different channel being used for
+<a class=pref href="#field-reference">reference</a>.
+</dl>
+
+<div class="version-Ps">
+	<span class=header-Ps>Only on Prosody S:</span>
+Not supported by Prosody S.
+
+</div>
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel on whose input conditioning is to be performed.
+
+<dt><a name="field-reference">reference</a><dd>The reference channel, if any, which is to be used for
+conditioning.
+
+<dt><a name="field-reference_type">reference_type</a><dd>What sort of reference to use.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMInputCondRefNone">kSMInputCondRefNone</a>
+<dd>No reference signal.
+
+<dt><a name="field-kSMInputCondRefUseInput">kSMInputCondRefUseInput</a>
+<dd>Use reference input signal.
+
+<dt><a name="field-kSMInputCondRefUseOutput">kSMInputCondRefUseOutput</a>
+<dd>Use reference output signal.
+
+</dl>
+<dt><a name="field-conditioning_type">conditioning_type</a><dd>The type of conditioning to perform.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMInputCondNone">kSMInputCondNone</a>
+<dd>Disable input conditioning. This also disables any
+redirection of a signal such as may have been set up using
+<a class=pref href="#field-alt_data_dest">alt_data_dest</a>.
+
+<dt><a name="field-kSMInputCondEchoCancelation">kSMInputCondEchoCancelation</a>
+<dd>Remove echo from the input with respect to the specified reference
+signal.
+Requires the modules
+<a href="softmodindex.html#echocan">echocan</a>
+and
+<a href="softmodindex.html#passthru">passthru</a>
+to have been downloaded.
+
+</dl>
+<dt><a name="field-conditioning_param">conditioning_param</a><dd>Unused.
+
+<dt><a name="field-alt_data_dest">alt_data_dest</a><dd>A channel to receive the resulting conditioned signal, if any
+form of conditioning is enabled.
+
+<dt><a name="field-alt_dest_type">alt_dest_type</a><dd>What kind of alternative destination to use.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMInputCondAltDestNone">kSMInputCondAltDestNone</a>
+<dd>Conditioned signal not redirected - conditioned signal replaces
+signal input to
+<a class=pref href="#field-channel">channel</a>.
+
+<dt><a name="field-kSMInputCondAltDestInput">kSMInputCondAltDestInput</a>
+<dd>Conditioned signal replaces signal input to
+<a class=pref href="#field-alt_data_dest">alt_data_dest</a>.
+
+<dt><a name="field-kSMInputCondAltDestOutput">kSMInputCondAltDestOutput</a>
+<dd>Conditioned signal replaces signal being output on
+<a class=pref href="#field-alt_data_dest">alt_data_dest</a>.
+
+</dl>
+<dt><a name="field-ectest_type">ectest_type</a><dd>For Aculab use only: selects an echo cancellation test mode.
+If non-zero, creates simulated echo.
+This is not part of the official API and may be changed
+arbitrarily.
+
+<dt><a name="field-ectest_gain">ectest_gain</a><dd>For Aculab use only: the amount of signal to mix in as
+simulated echo. Only used when
+<a class=pref href="#field-ectest_type">ectest_type</a>
+is 1.
+
+<dt><a name="field-ectest_delay">ectest_delay</a><dd>For Aculab use only: the delay (in samples) for the
+simulated echo. Only used when
+<a class=pref href="#field-ectest_type">ectest_type</a>
+is 1.
+
+<dt><a name="field-ectest_flen">ectest_flen</a><dd>For Aculab use only: the length of the echo generation
+filter. Only used when
+<a class=pref href="#field-ectest_type">ectest_type</a>
+is 2.
+
+<dt><a name="field-ectest_filt">ectest_filt</a><dd>For Aculab use only: the echo generation filter. Only used when
+<a class=pref href="#field-ectest_type">ectest_type</a>
+is 2.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - illegal parameter value</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

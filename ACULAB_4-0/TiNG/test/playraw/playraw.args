@@ -1,0 +1,6 @@
+-TiNGtrace
+f	fileprefix	string
+o	outtimeslot	timeslot
+m	module		unsigned
+n	numchan		unsigned
+x	serialnumber	string

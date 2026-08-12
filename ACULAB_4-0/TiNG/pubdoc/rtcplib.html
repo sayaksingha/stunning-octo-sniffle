@@ -1,0 +1,413 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody RTCP library</title>
+</head>
+<body>
+<h1>Prosody RTCP library</h1>
+<p>
+The Prosody RTCP library contains source code which parses RTCP summary
+reports and RTCP packets as defined in
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a> and
+<a href="http://www.ietf.org/rfc/rfc3556.txt">IETF RFC 3556</a>.
+There are several kinds of function in the library:
+<ul>
+<li><a href="#buf">buffering functions</a> which help with the
+accumulation of RTCP packets from data returned using the Prosody
+function <code>sm_rtcphand_get_data()</code>
+<li><a href="#parse_pkt">packet parsing functions</a> which analyse a packet
+<li><a href="#parse_summary">summary report parsing functions</a> which analyse a summary report
+<li><a href="#show">display functions</a> which demonstrate how to use
+the parsing functions by printing out the parsed packet
+</ul>
+
+<h1><a name="buf">Buffering functions</a></h1>
+<p>
+These functions are in <code>rtcplib/rtcp_accumulate.[ch]</code> and
+operate on a <code>RTCP_BUFFER</code>. The typical use is:
+<ol>
+<li><code>rtcp_buffer_init()</code> - initialise the buffer
+<li><code>rtcp_buffer_needed()</code> - find out how much data is
+required before a packet could be ready
+<li>if no more is needed, parse the packet
+<li><code>rtcp_buffer_end()</code> - get a pointer to the end of the
+data already in the buffer
+<li>fetch data into the buffer, up to the amount required
+<li><code>rtcp_buffer_append()</code> - update the buffer to include
+the newly fetched data
+<li><code>rtcp_buffer_needed()</code> - check if we have a whole RTCP
+packet yet - if not fetch more data until we do
+<li>parse the packet
+<li><code>rtcp_buffer_type()</code> - find out the type of RTCP
+packet which is ready for parsing
+<li><code>rtcp_buffer_data()</code> - get a pointer to the data in
+the RTCP packet which is ready for parsing
+<li>parse the RTCP data and handle it as required
+<li><code>rtcp_buffer_discard()</code> - discard the current RTCP packet
+<li>go back to check if more data is needed
+</ol>
+<p>
+<img src="gen/rtcp_acc.png" alt="diagram of RTCP accumulation">
+
+<h2><code>void rtcp_buffer_init(RTCP_BUFFER *bp);</code></h2>
+<p>
+Initialises a <code>RTCP_BUFFER</code>. Any previous contents are
+lost. This function must be used on a buffer before any other buffering
+function is used on the buffer.
+
+<h2><code>unsigned rtcp_buffer_space(RTCP_BUFFER *bp);</code></h2>
+<p>
+Returns the amount of space (in octets) available in the buffer. This
+is the maximum space that can be used. The user can use this value to
+control appending data to a buffer, if the goal is to perform as few
+appends as possible, or the function
+<code>rtcp_buffer_needed()</code> can be used to control appending,
+which may result in more appends, but means that data may be moved
+around to accommodate appends which leave more than one packet in the
+buffer.
+
+<h2><code>unsigned char *rtcp_buffer_end(RTCP_BUFFER *bp);</code></h2>
+<p>
+Returns a pointer to the end of the data currently in the buffer.
+More data should be appended starting at this location.
+
+<h2><code>void rtcp_buffer_append(RTCP_BUFFER *rb, unsigned size);</code></h2>
+<p>
+Indicates that <code>size</code> octets of data has been appended to
+the buffer starting at the location returned by <code>unsigned char
+*rtcp_buffer_end(RTCP_BUFFER *bp);</code>.
+
+<h2><code>unsigned rtcp_buffer_needed(RTCP_BUFFER *bp);</code></h2>
+<p>
+Returns the amount of data that must be appended to the buffer before
+a whole RTCP packet may be available. Note that this is the amount
+which is guaranteed to be needed - it is not guaranteed to be
+sufficient. Once some data has been appended, further use of this
+function will use a partial analysis of the data to determine if more
+data is needed.
+
+<h2><code>int rtcp_buffer_type(RTCP_BUFFER *bp);</code></h2>
+<p>
+Returns a Prosody RTCP buffer type code. The function
+<code>rtcp_buffer_needed()</code> must have indicated that no more
+data is needed.
+
+<h2><code>unsigned char *rtcp_buffer_data(RTCP_BUFFER *bp);</code></h2>
+<p>
+Returns a pointer to the start of the data in the buffer. The function
+<code>rtcp_buffer_needed()</code> must have indicated that no more
+data is needed. The pointer points to the first octet of data after
+the type and length fields (as defined by
+<code>sm_rtcphand_get_data()</code>).
+
+<h2><code>void rtcp_buffer_discard(RTCP_BUFFER *bp);</code></h2>
+<p>
+Causes the current RTCP packet to be discarded. The function
+<code>rtcp_buffer_needed()</code> must have indicated that no more
+data is needed.
+
+<h1><a name="parse_pkt">Parsing functions for RTCP packets</a></h1>
+<p>
+This is a collection of functions in <code>rtcplib/rtcp_parser.[ch]</code>
+which parse various parts of RTCP packets. They can be used on RTCP data
+retrieved from Prosody RTCP handlers through
+<code>sm_rtcphand_get_data()</code>, but they can also be used on RTCP
+packets from any other source. Parsing of RTCP data (formatted as it
+would be in a RTCP packet) starts with <code>rtcp_analyse()</code>.
+<p>
+<img src="gen/rtcp_ana.png" alt="diagram of RTCP analysis">
+<p>
+Where the XR analysis is:
+<p>
+<img src="gen/rtcp_ana_xr.png" alt="diagram of RTCP XRanalysis">
+
+<h2><code>int rtcp_analyse(RTCP *rtcp_out, unsigned char *rtcp);</code></h2>
+<p>
+Analyses RTCP data pointed to by <code>rtcp</code>, putting the
+result in <code>rtcp_out</code> which has these fields:
+<ul>
+<li><code>v</code> - the RTCP version from the RTCP packet
+<li><code>p</code> - padding flag from the RTCP packet
+<li><code>count</code> - remaining bits in first octet in the RTCP
+packet. This name is a compromise since these bits are given different
+names in each packet type, such as <code>RC</code> in RR packets,
+<code>SC</code> in SR packets etc.
+<li><code>pt</code> - the packet type field from the RTCP packet
+<li><code>length</code> - the length field from the RTCP packet
+<li><code>start</code> - the start of the RTCP packet. This field is
+simply the <code>rtcp</code> parameter, but is needed by other
+parsing functions.
+<li><code>end</code> - the end of the RTCP data, based on the length
+field in the packet.
+</ul>
+<p>
+After using this function, you should check that the length reported
+is reasonable (i.e. within the data you are analysing), and use the
+<code>pt</code> field to decide which function to use to perform
+further parsing: <code>rtcp_analyse_sr()</code>,
+<code>rtcp_analyse_rr()</code>,
+<code>rtcp_analyse_sdes()</code>,
+<code>rtcp_analyse_bye()</code>, or
+<code>rtcp_analyse_app()</code>.
+
+<h2><code>int rtcp_analyse_sr(RTCP_SR *sr, RTCP *rtcp);</code></h2>
+<p>
+Analyses an RTCP SR packet, putting the result in <code>sr</code>.
+<code>rtcp</code> must point at a structure filled in by
+<code>rtcp_analyse()</code>. The result has these fields, which are
+merely the values carried by the RTCP packet fields of the same name:
+<ul>
+<li><code>ssrc</code> - SSRC of sender
+<li><code>ntp_timestamp</code> - NTP timestamp (64 bits)
+<li><code>rtp_timestamp</code> -  RTP timestamp
+<li><code>senders_packet_count</code> - Sender's packet count
+<li><code>senders_octet_count</code> - Sender's octet count
+</ul>
+<p>
+RTCP SR packets also contain report blocks and profile-specific
+extensions, which are analysed individually.
+
+<h2><code>int rtcp_analyse_sr_report_block(RTCP_SR_REPORT_BLOCK *rb, unsigned block_index, RTCP *rtcp);</code></h2>
+<p>
+Analyses a report block in an RTCP SR packet, putting the result in
+<code>rb</code>. <code>block_index</code> is the (zero-based) index
+of the block to be analysed. <code>rtcp</code> must point at a structure
+filled in by <code>rtcp_analyse()</code>. The result has these fields,
+which are merely the values carried by the RTCP packet fields of the
+same name:
+<ul>
+<li><code>ssrc</code> - the SSRC of this source
+<li><code>fraction_lost</code> - the fraction lost (0..255)
+<li><code>packets_lost</code> - cumlative number of packets lost
+<li><code>ehsnr</code> - extended highest sequence number received
+<li><code>jitter</code> - interarrival jitter
+<li><code>lsr</code> - last SR
+<li><code>dlsr</code> - delay since last SR
+</ul>
+<p>
+The <code>block_index</code> must be less than
+<code>rtcp-&gt;count</code>.
+
+<h2><code>int rtcp_get_sr_pse(unsigned char **ptr, unsigned *len, RTCP *rtcp);</code></h2>
+<p>
+Retrieves profile-specific extension data from an RTCP SR packet,
+putting the address of the data into <code>*ptr</code>, and its
+length into <code>*len</code>. If there is no profile-specific data
+in the packet, <code>*len</code> will be zero. <code>rtcp</code> must
+point at a structure filled in by <code>rtcp_analyse()</code>.
+
+<h2><code>int rtcp_analyse_rr(RTCP_RR *rr, RTCP *rtcp);</code></h2>
+<p>
+Analyses an RTCP RR packet, putting the result in <code>rr</code>.
+<code>rtcp</code> must point at a structure filled in by
+<code>rtcp_analyse()</code>. The result has these fields, which are
+merely the values carried by the RTCP packet fields of the same name:
+<ul>
+<li><code>ssrc</code> - SSRC of packet sender
+</ul>
+<p>
+RTCP RR packets also contain report blocks and profile-specific
+extensions, which are analysed individually.
+
+<h2><code>int rtcp_analyse_rr_report_block(RTCP_RR_REPORT_BLOCK *rb, unsigned block_index, RTCP *rtcp);</code></h2>
+<p>
+Analyses a report block in an RTCP RR packet, putting the result in
+<code>rb</code>. <code>block_index</code> is the (zero-based) index
+of the block to be analysed. <code>rtcp</code> must point at a structure
+filled in by <code>rtcp_analyse()</code>. The result has these fields,
+which are merely the values carried by the RTCP packet fields of the
+same name:
+<ul>
+<li><code>ssrc</code> - the SSRC of this source
+<li><code>fraction_lost</code> - the fraction lost (0..255)
+<li><code>packets_lost</code> - cumlative number of packets lost
+<li><code>ehsnr</code> - extended highest sequence number received
+<li><code>jitter</code> - interarrival jitter
+<li><code>lsr</code> - last SR
+<li><code>dlsr</code> - delay since last SR
+</ul>
+<p>
+The <code>block_index</code> must be less than
+<code>rtcp-&gt;count</code>.
+
+<h2><code>int rtcp_get_rr_pse(unsigned char **ptr, unsigned *len, RTCP *rtcp);</code></h2>
+<p>
+Retrieves profile-specific extension data from an RTCP RR packet,
+putting the address of the data into <code>*ptr</code>, and its
+length into <code>*len</code>. If there is no profile-specific data
+in the packet, <code>*len</code> will be zero. <code>rtcp</code> must
+point at a structure filled in by <code>rtcp_analyse()</code>.
+
+<h2><code>int rtcp_analyse_sdes(RTCP_SDES_CHUNK *op, RTCP *rtcp);</code></h2>
+<p>
+Prepares the <code>RTCP_SDES_CHUNK</code> pointed to by <code>op</code>
+to retrieve chunks and items. <code>rtcp</code> must point at a
+structure filled in by <code>rtcp_analyse()</code>. The function
+<code>rtcp_analyse_sdes_next_chunk()</code> must be used to
+retrieve the first chunk.
+
+<h2><code>int rtcp_analyse_sdes_next_chunk(RTCP_SDES_CHUNK *op, RTCP *rtcp);</code></h2>
+<p>
+Updates the <code>RTCP_SDES_CHUNK</code> pointed to by
+<code>op</code> to refer to the next chunk in the RTCP SDES packet.
+This function must not be called more often than once for each chunk
+in the packet (the number of chunks is indicated by
+<code>rtcp-&gt;count</code>). When this function returns, the following
+fields in the <code>RTCP_SDES_CHUNK</code> have been filled in:
+<ul>
+<li><code>ssrc_csrc</code> - the SSRC/CSRC identifier from the chunk
+</ul>
+<p>
+The function <code>rtcp_analyse_sdes_next_item()</code> must be
+used to retrieve the first item in this chunk.
+
+<h2><code>int rtcp_analyse_sdes_next_item(RTCP_SDES_CHUNK *op);</code></h2>
+<p>
+Updates the <code>RTCP_SDES_CHUNK</code> pointed to by
+<code>op</code> to refer to the next iten in the current chunk in the
+RTCP SDES packet. When this function returns, the following fields in the
+<code>RTCP_SDES_CHUNK</code> have been filled in:
+<ul>
+<li><code>item_type</code> - the item type code (e.g. CNAME=1)
+<li><code>item_data</code> - a pointer to the item data
+<li><code>item_length</code> - the length of the item data in octets
+</ul>
+<p>
+If there is no further item, the item type will be zero and the
+<code>item_data</code> and <code>item_length</code> fields are
+undefined. In this case, if there are further chunks in the RTCP SDES
+packet, <code>rtcp_analyse_sdes_next_chunk()</code> must be used to
+move on to the next chunk.
+
+<h2><code>int rtcp_analyse_bye(RTCP_BYE *bye, RTCP *rtcp);</code></h2>
+<p>
+Analyses an RTCP BYE packet, putting the result in <code>bye</code>.
+<code>rtcp</code> must point at a structure filled in by
+<code>rtcp_analyse()</code>. The result has these fields:
+<ul>
+<li><code>reason_text</code> - the reason for leaving specified in
+the packet
+<li><code>reason_length</code> - the length of the reason text
+</ul>
+<p>
+RTCP BYE packets also contain SSRC/CSRC values which are analysed
+individually with <code>rtcp_analyse_bye_ssrc_csrc()</code>
+
+<h2><code>int rtcp_analyse_bye_ssrc_csrc(RTCP_BYE_SSRC_CSRC *op, unsigned itemno, RTCP *rt cp);</code></h2>
+<p>
+Analyses one SSRC/CSRC value in an RTCP BYE packet, putting the
+result in <code>*op</code>. <code>itemno</code> is the (zero-based)
+index of the value to retrieve. <code>rtcp</code> must point at a structure
+filled in by <code>rtcp_analyse()</code>. The result has these fields:
+<ul>
+<li><code>ssrc_csrc</code> - the SSRC/CSRC value
+</ul>
+<p>
+The <code>itemno</code> must be less than <code>rtcp-&gt;count</code>.
+
+<h2><code>int rtcp_analyse_app(RTCP_APP *app, RTCP *rtcp);</code></h2>
+<p>
+Analyses an RTCP APP packet, putting the result in <code>*app</code>.
+<code>rtcp</code> must point at a structure filled in by
+<code>rtcp_analyse()</code>. The result has these fields:
+<ul>
+<li><code>ssrc_csrs</code> - SSRC/CSRC field from the packet
+<li><code>name</code> - the name field from the packet
+<li><code>data</code> - pointer to the application -dependent data
+<li><code>data_length</code> - length of the application -dependent data
+</ul>
+<p>
+RTCP SR packets also contain report blocks and profile-specific
+extensions, which are analysed individually.
+
+<h1><a name="parse_summary">Parsing functions for RTCP summary reports</a></h1>
+<p>
+This is a collection of functions in <code>rtcplib/rtcp_parser.[ch]</code>
+which parse various parts of RTCP summary reports. They can be used on RTCP data
+retrieved from Prosody RTCP handlers through
+<code>sm_rtcphand_get_data()</code>.
+Parsing of Prosody summary reports starts with
+<code>rtcp_analyse_summary()</code>.
+
+<h2><code>int rtcp_analyse_summary(RTCP_SUMMARY *rtcp_out, unsigned char *rtcp);</code></h2>
+<p>
+Analyses a summary report generated by Prosody pointed to by
+<code>rtcp</code>, putting the result in <code>rtcp_out</code> which has
+these fields:
+<ul>
+<li><code>type</code> - the type of summary report
+<li><code>start</code> - the start of the RTCP packet. This field is
+simply the <code>rtcp</code> parameter, but is needed by other
+parsing functions.
+<li><code>end</code> - the end of the RTCP data, based on the length
+field in the packet.
+</ul>
+<p>
+After using this function, you should use the <code>type</code> field to
+decide which function to use to perform further parsing:
+<code>rtcp_analyse_summary_rx()</code> or
+<code>rtcp_analyse_summary_tx()</code>.
+<p>
+<img src="gen/rtcp_ana_sum.png" alt="diagram of RTCP summary analysis">
+
+<h2><code>int rtcp_analyse_summary_rx(RTCP_SUMMARY_RX *rb, RTCP *rtcp);</code></h2>
+<p>
+Analyses Prosody RX summary report, putting the result in
+<code>rb</code>. <code>rtcp</code> must point at a structure filled in
+by <code>rtcp_analyse_summary()</code>. The result has these fields:
+<ul>
+<li><code>ssrc</code> - SSRC of sender
+<li><code>jitter</code> - jitter observed from this sender multiplied by 16, in TSU
+<li><code>expected</code> - number of packets expected from this sender 
+<li><code>seen</code> - number of packets seen from this sender
+<li><code>discarded</code> - number of packets discarded from this sender
+</ul>
+
+<h2><code>int rtcp_analyse_summary_tx(RTCP_SUMMARY_TX *rb, RTCP *rtcp);</code></h2>
+<p>
+Analyses Prosody TX summary report, putting the result in
+<code>rb</code>. <code>rtcp</code> must point at a structure filled in
+by <code>rtcp_analyse_summary()</code>. The result has these fields:
+<ul>
+<li><code>ssrc</code> - SSRC of destination
+<li><code>packetsSent</code> - packet sent to this destination
+<li><code>octetsSent</code> - octets sent to this destination
+</ul>
+
+
+<h1><a name="show">Display functions</a></h1>
+<p>
+These functions, in <code>rtcplib/rtcp_show.[ch]</code>, print out the
+contents of RTCP packets, which may be useful itself, but also show how
+the RTCP parsing functions can be used.
+
+<h2><code>unsigned show_rtcp(FILE *outf, unsigned char *dp, unsigned length);</code></h2>
+<p>
+Prints to <code>outf</code> a description of the RTCP packet pointed
+to by <code>dp</code>. The <code>length</code> is checked to ensure
+that the RTCP packet does not extend past the data pointed to by
+<code>dp</code>. This function returns the number of octets contained
+in the RTCP packet, which may be useful in displaying a sequence of
+RTCP packets.
+
+<h2><code>void show_rtcp_summary(FILE *outf, unsigned char *dp, unsigned length);</code></h2>
+<p>
+Prints to <code>outf</code> a description of the Prosody summary report
+pointed to by <code>dp</code> of length <code>length</code>. Since a
+Prosody summary report may contain a list of items, this function
+prints all items found in the report.
+
+<h2><code>void show_prosody_rtcp(FILE *outf, RTCP_BUFFER *rb);</code></h2>
+<p>
+Prints to <code>outf</code> a description of RTCP data accumulated in
+the buffer <code>rb</code>. <code>rtcp_buffer_needed()</code> must
+have reported that no more data is needed in this buffer.
+<hr>
+<p>
+The RTCP library is distributed with
+<a href="index.html">Prosody</a>.
+
+</body>
+</html>

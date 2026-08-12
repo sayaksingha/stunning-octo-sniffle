@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<link rel=stylesheet type="text/css" href="evapi.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ACTIVE_JOB::handler</title>
+<body>
+
+<h1>ACTIVE_JOB: handler - callback for when an event is triggered</h1>
+
+<h2>Name</h2>
+
+<p>
+Since this is a callback function, you are free to name it
+whatever you want. A pointer to this callback function must be
+stored in the field <a href="ACTIVE_JOB.html"><code>ACTIVE_JOB</code></a><code>::handler</code>.
+
+<p>
+For conveniece, we will refer to this function as <em><code><em>my_handler</em>()</code></em> within this
+documentation.
+
+<h2>Synopsis</h2>
+
+<pre>#include &quot;eventset.h&quot;</pre>
+
+<pre>int <em>my_handler</em>(ACTIVE_JOB * acp)</pre>
+
+<h2>Description</h2>
+
+<p>
+The user-supplied callback function, here called <em><code><em>my_handler</em>()</code></em>, will be called
+in the context of the <a href="EVENTSET.html"><em>worker thread</em></a>
+whenever the corresponding <a href="ACTIVE_JOB.html"><code>ACTIVE_JOB</code></a><code>::event</code>
+is triggered.
+
+<h2>Return value</h2>
+
+<p>
+This function must return one of:
+
+<ul>
+    <li>zero, to retain the event in the <a href="EVENTSET.html">EVENT_SET</a>.
+    <li>non-zero, to remove the event from the <a         href="EVENTSET.html">EVENT_SET</a>.
+</ul>
+
+<p>
+Returning non-zero is equivalent to the <a href="EVENTSET.html"><em>management thread</em></a> calling <a href="eventset_delete.html"><code>eventset_delete()</code></a>.
+
+<h2>See also</h2>

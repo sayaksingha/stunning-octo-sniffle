@@ -1,0 +1,5 @@
+Allows data to be passed to an application running on the
+controlling host. This module is needed for nearly all types
+of record and data communications transmission. On Prosody X it 
+is linked into the kernel image and thus always loaded for you 
+when the kernel is loaded.

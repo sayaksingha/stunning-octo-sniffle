@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody SPRT end point: API: sm_sprt_read_message</title>
+</head>
+<body>
+<h1>Prosody SPRT end point: API: sm_sprt_read_message</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_sprt_read_message(struct sm_sprt_read_message_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_read_message_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	char *<a href="#field-message">message</a>;						/* inout */
+	int <a href="#field-max_length">max_length</a>;						/* in */
+	int <a href="#field-length">length</a>;						/* out */
+} SM_SPRT_READ_MESSAGE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Reads a message from a SPRT end point
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point from which to read the message
+
+<dt><a name="field-message">message</a><dd>A pointer to the buffer to store the read message
+
+<dt><a name="field-max_length">max_length</a><dd>The maximum length of the message data
+
+<dt><a name="field-length">length</a><dd>The length of the message data
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prossprt.html">Prosody SPRT end point API</a>.
+</body>
+</html>

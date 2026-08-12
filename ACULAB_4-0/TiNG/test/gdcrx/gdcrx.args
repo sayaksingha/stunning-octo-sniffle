@@ -1,0 +1,34 @@
+-TiNGtrace
+Id	dest_ip		string
+Is	source_ip	string
+Ip	dest_port	unsigned
+Iq	source_port	unsigned
+
+t	timeslot	timeslot
+m	module		unsigned
+o	outfile		string
+f	format		string
+U	useevent	bool
+
+p	patlen		unsigned
+
+e	encoding	string
+u	modulation	string
+
+d	databits	unsigned
+C	crcsize		unsigned
+c	crc		unsigned
+l	min_flags	unsigned
+O	min_ones	unsigned
+
+Ans	answer		bool
+s	standard	string
+M	markfreq	float
+S	spacefreq	float
+B	bitrate		unsigned
+x	serialnumber	string
+Fon	carrier_on	unsigned
+Foff	carrier_off	unsigned
+
+Tb	xferbits	signed
+Tt	xfertimeout	unsigned

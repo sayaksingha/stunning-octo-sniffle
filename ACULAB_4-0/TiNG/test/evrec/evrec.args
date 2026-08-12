@@ -1,0 +1,7 @@
+-TiNGtrace
+F	format		string
+n	numchan		unsigned
+P	per_mod		unsigned
+q	max_silence	unsigned
+t	timeslot	timeslot
+x	serialnumber	string

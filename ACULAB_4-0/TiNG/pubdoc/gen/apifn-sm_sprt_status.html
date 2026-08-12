@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody SPRT end point: API: sm_sprt_status</title>
+</head>
+<body>
+<h1>Prosody SPRT end point: API: sm_sprt_status</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_sprt_status(struct sm_sprt_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_status_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	<a name="enum-kSMSPRTStatus">enum kSMSPRTStatus</a> {
+		<a href="#field-kSMSPRTStatusRunning">kSMSPRTStatusRunning</a>,
+		<a href="#field-kSMSPRTStatusStopped">kSMSPRTStatusStopped</a>,
+		<a href="#field-kSMSPRTStatusMessage">kSMSPRTStatusMessage</a>,
+	} <a href="#field-status">status</a>;						/* out */
+} SM_SPRT_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+returns the status of the SPRT end point.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point.
+
+<dt><a name="field-status">status</a><dd>The status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMSPRTStatusRunning">kSMSPRTStatusRunning</a>
+<dd>The SPRT end point is running
+
+<dt><a name="field-kSMSPRTStatusStopped">kSMSPRTStatusStopped</a>
+<dd>The SPRT end point is not running
+
+<dt><a name="field-kSMSPRTStatusMessage">kSMSPRTStatusMessage</a>
+<dd>The SPRT end point has a message to be read
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prossprt.html">Prosody SPRT end point API</a>.
+</body>
+</html>

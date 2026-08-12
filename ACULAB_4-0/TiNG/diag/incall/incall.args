@@ -1,0 +1,3 @@
+p	portlist	string
+t	timeslotlist	string
+x	serialnumber	string

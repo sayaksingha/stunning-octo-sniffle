@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody application note: Live Speaker Detection</title>
+</head>
+<body>
+<h1>Prosody application note: Live Speaker Detection</h1>
+<h2>Contents</h2>
+<ul>
+<li><a href="#intro">Introduction</a>
+<li><a href="#basic">Basic Concepts</a>
+<li><a href="#active">Classifying a segment as silent or active</a>
+<li><a href="#glitch">Classifying a segment as a glitch</a>
+<li><a href="#sptone">Classifying a segment as speech or tone</a>
+<li><a href="#timing">Evaluating the significance of a sequence of segments</a>
+<li><a href="#summary">Summary</a>
+<li><a href="#recommended">Recommended parameter values</a>
+	<ul>
+	<li><a href="#en">English</a>
+	<li><a href="#kr">Korean</a>
+	</ul>
+</ul>
+<h2><a name="intro">Introduction</a></h2>
+<p>
+This application note describes the live speaker detection (LSD) signal 
+categorisation algorithm. It gives a broad understanding of how the algorithm 
+works and some guidance as to the purpose of each parameter that controls it. 
+It does not give sufficient information to allow the parameters to be 
+adjusted. The algorithm has been thoroughly tested and optimised against 
+a large database of recordings of english speaking real-world telephone calls. Good accuracy is 
+therefore very likely if used as shipped in an english language environment but note that country
+specific telephone answering custom and practice may mean the parameters have to be tuned. If an 
+improvement in accuracy is required then please contact Aculab support in the first instance.
+<p>
+The live speaker detection algorithm attempts to classify an input signal as 
+either coming from a human answering a phone call (a live speaker) or as a 
+signal coming from some kind of automatic call answering mechanism (an 
+answering machine for example).
+<p>
+The parameters are modified by using the Prosody speech API
+<a href="gen/apifn-sm_adjust_catsig_module_params.html">sm_adjust_catsig_module_params()</a>,
+with <code>catsig_alg_id</code> set to
+<code>kBESPCatSigAlgLiveSpeaker</code>.
+<p>
+The detector itself is started by the 
+<a href="gen/apifn-sm_catsig_listen_for.html">sm_catsig_listen_for()</a>
+function, with its <code>catsig_alg_id</code> set to
+<code>kBESPCatSigAlgLiveSpeaker</code>.
+
+<h2><a name="basic">Basic Concepts</a></h2>
+<p>
+When live speakers answer the phone and hear silence they are likely to respond 
+in a certain way, for example "Hello...... hello......". The algorithm looks 
+for the difference between this response and that of typical answering 
+machines, for example "Hello this is Fred and Wilma's house. Sorry, we're not 
+in at the moment...". Thus it important that the caller is not played any prompt 
+for the duration of the signal categorisation attempt.
+<p>
+The algorithm works by analysing 3 properties of the signal:
+
+<ul>
+<li>Energy (i.e. loudness)
+<li>Tonal quality (as opposed to voice-like quality)
+<li>Timing (i.e. duration of sections of signal with different quality)
+</ul>
+
+<p>
+The algorithm categorises the signal according to the following
+assumptions (any entity denoted [] may be skipped):
+
+<dl>
+<dt>A live speaker's signal consists of:
+<dd>
+[silence] [tone(s)] [silence] [glitch] [silence] short_speech long_silence [speech]
+
+<dt>An answering machine signal consists of:
+<dd>
+[silence] [tone(s)] [silence] [glitch] [silence] long_speech
+</dl>
+
+<p>
+Any other sequence is uncategorised.
+
+<p>
+Thus the signal consists of segments which are of one of four types:
+silence, tone, glitch, or speech.
+
+<p>
+The energy of the signal is used to identify silence. The other possible
+segments are distinguished by further processing. The following sections
+explain the stages of processing and the parameters available for each stage.
+
+<h2><a name="active">Classifying a segment as silent or active</a></h2>
+<p>
+This is done using the same method as is used by the Prosody conferencing
+algorithms to detect when people are speaking. See the documentation for
+<a href="gen/apifn-sm_conf_prim_adj_tracking.html">sm_conf_prim_adj_tracking()</a>
+for an explanation of this method. The <code>speech_thresh</code> and
+<code>min_noise_level</code> values that are used for live speaker
+detection are adjustable. Their <code>parameter_id</code> codes are:
+<p>
+<table border>
+<tr><th>speech_thresh<td><code>kSMBESPCatSigParamF_speech_thresh</code>
+<tr><th>min_noise_level<td><code>kSMBESPCatSigParamF_min_Lmin</code>
+</table>
+<p>
+In addition, two others parameters are used:
+<code>kSMBESPCatSigParamF_Lmin_decay</code>. This controls the rate
+at which the noise estimate is updated.
+<code>kSMBESPCatSigParamF_initial_Lmax</code>. This controls the initial setting
+used for expected max speech power prior to measurements made on first speech ecountered.
+<p>
+The signal is immediately classified as active as soon
+as its energy is above the threshold. However, speech and tone
+segments are allowed to have short periods where the energy is below
+the threshold. The detector decides that the segment has ended and a
+silent segment has begun only when the energy persists below the
+threshold for long enough. This delays the detection of silence a
+little. This delay is controlled by the parameter
+<code>kSMBESPCatSigParamI_delay_time</code>.
+
+<h2><a name="glitch">Classifying a segment as a glitch</a></h2>
+<p>
+A segment is considered a <em>glitch</em> if it is active (i.e. not
+silent) but for only a very short time. A signal that is active for a
+longer time is further classified as speech or tone. The parameter
+<code>kSMBESPCatSigParamI_glitch_count</code> is the maximum time
+that a signal may be active to be considered a glitch.
+<p>
+A segment is also classified as a glitch if it is active for less
+than <code>kSMBESPCatSigParamI_min_valid_count</code> and it occurs
+less than <code>kSMBESPCatSigParamI_min_valid_period_count</code>
+from the point where the first speech segment starts.
+
+<h2><a name="sptone">Classifying a segment as speech or tone</a></h2>
+<p>
+Active segments are classified as speech or tone by a simple
+algorithm that counts the number of alternations. An alternation is
+where the samples change direction, and speech has frequent
+alternations. Here are examples showing the alternations in a sample
+of speech and a tone.
+
+<p>
+<table>
+<tr><th>Example of speech<th>Example of tone
+<tr>
+<td><img src="gen/speech.png" alt="Diagram of alternations in speech signal">
+<td><img src="gen/tone.png" alt="Diagram of alternations in tone">
+</table>
+
+<p>
+As you can see, the speech sample has 20 alternations while the tone
+has only six. This provides a very simple and fast way to distinguish
+between speech and tones. It is not perfect - since the number of alternations
+in a pure tone depends on the frequency of the tone so for high
+frequency tones, this method falsely reports speech. However, all
+call-progress tones are low frequencies (which is a consequence of
+them being chosen to avoid the frequencies used by DTMF tones, which
+are all high), so the method is effective for the purpose of live
+speaker detection.
+<p>
+Classification into 'speech' or 'tone' is controlled by several
+parameters. There are two thresholds:
+<code>kSMBESPCatSigParamI_max_valid_tone_count</code>, which is the
+maximum number of alternations that a tone may have, and
+<code>kSMBESPCatSigParamI_min_valid_speech_count</code>, which is the
+minimum number of alternations that speech may have. To avoid
+mis-classification of a segment, the detector waits for the signal to
+have been active for the period specified by
+<code>kSMBESPCatSigParamI_qualify_count</code> before attempting to
+classify it as speech or tone. Furthermore, after classifying it, the
+signal is monitored to see if it changes from speech to tone or vice
+versa. Every <code>kSMBESPCatSigParamI_alter_duration</code> the signal
+is checked and if the number of alternations is in the opposite range
+then the algorithm considers that the original segment has ended and one
+of the opposite type has started. As a further protection against
+mis-classification, classification is deferred while the signal has
+excessive DC bias. This is because clicks tend to have significant DC
+bias, especially longer clicks, which are likely to be long enough to reach
+<code>kSMBESPCatSigParamI_qualify_count</code>.
+DC bias is measured by counting the number of
+positive samples and the number of negative samples and declaring
+excessive DC bias if the difference between these values is too big.
+This is controlled by
+<code>kSMBESPCatSigParamI_threshold_samp_cnt</code>, which is the
+maximum difference permitted. Here is an example of a click:
+
+<table>
+<tr><th>Part of click<th>Whole click (32 times longer)
+<tr>
+<td><img src="gen/click-detail.png" alt="diagram of alternations in click">
+<td><img src="gen/click.png" alt="diagram of alternations in click">
+</table>
+<p>
+You can see that, although the part of the click shown has 23
+alternations, it has such as large DC bias that it is entirely positive.
+The whole click (about a quarter of a second) shows the bias applies 
+until the click has decayed away to silence.
+
+<h2><a name="timing">Evaluating the significance of a sequence of segments</a></h2>
+<p>
+As explained in the <a href="#basic">Basic Concepts</a> section above,
+a live speaker is recognised when the signal contains a short segment of
+speech followed by a long silence, while an answering machine signal
+contains more speech (which can appear as several short segments or
+one long one). Having decided what segments occur in the incoming
+signal, the detector uses the durations of the segments to decide if it
+has identified a live speaker or an answering machine. After the
+first speech segment it looks for one of two conditions.
+If there is silence of at least
+<code>kSMBESPCatSigParamI_min_period_off</code> and there are no
+more than <code>kSMBESPCatSigParamI_max_off_count</code> gaps in the
+speech, then the signal is declared to be from a live speaker.
+Alternatively, if this first condition is not met
+within <code>kSMBESPCatSigParamI_period_time</code> from the
+start of the speech, then it is declared to be from an answering
+machine. This allows for an answering machine that has a message
+followed by a tone.
+
+<h2><a name="summary">Summary</a></h2>
+<p>
+The parameters available are:
+
+<table>
+<tr><th>Parameter<th>Meaning
+<tr><td><code>kSMBESPCatSigParamF_min_Lmin</code>
+	<td>minimum signal energy that is permitted for noise
+<tr><td><code>kSMBESPCatSigParamF_Lmin_decay</code>
+	<td>the rate at which the noise estimate is updated
+<tr><td><code>kSMBESPCatSigParamF_initial_Lmax</code>
+	<td>initial estimate of max expected speech energy
+<tr><td><code>kSMBESPCatSigParamF_speech_thresh</code>
+	<td>the relative amount by which a signal must be above the
+	minimum noise to be considered active
+<tr><td><code>kSMBESPCatSigParamI_min_valid_period_count</code>
+	<td>the period, from the start of the first segment of
+	speech, in which any segment shorter than
+	<code>kSMBESPCatSigParamI_min_valid_count</code> is
+	considered to be a glitch
+<tr><td><code>kSMBESPCatSigParamI_min_valid_count</code>
+	<td>the minimum duration for the first speech segment
+<tr><td><code>kSMBESPCatSigParamI_glitch_count</code>
+	<td>the minimum duration for any speech segment
+<tr><td><code>kSMBESPCatSigParamI_qualify_count</code>
+	<td>the amount of signal that is required to determine
+	whether an active segment is speech or tone 
+<tr><td><code>kSMBESPCatSigParamI_alter_duration</code>
+	<td>the duration between checks to see if a speech or tone segment
+	has changed into one of the opposite type
+<tr><td><code>kSMBESPCatSigParamI_max_valid_tone_cnt</code>
+	<td>the maximum rate of alternations allowed in a a tone
+	segment
+<tr><td><code>kSMBESPCatSigParamI_min_valid_speech_cnt</code>
+	<td>the minimum rate of alternations allowed in a a speech
+	segment
+<tr><td><code>kSMBESPCatSigParamI_threshold_samp_cnt</code>
+	<td>the maximum DC bias allowed in the portion of a signal
+	that makes a segmnent be classified as speech or tone
+<tr><td><code>kSMBESPCatSigParamI_delay_time</code>
+	<td>the amount of time for which the signal must be silent
+	for an active segment to be considered to have finished
+<tr><td><code>kSMBESPCatSigParamI_period_time</code>
+	<td>the maximum time allowed for detection, measured from
+	the start of the first valid speech segment
+<tr><td><code>kSMBESPCatSigParamI_max_off_count</code>
+	<td>the maximum number of gaps permitted in speech from a
+	live speaker
+<tr><td><code>kSMBESPCatSigParamI_min_period_off</code>
+	<td>the minimum silence required after the speech from a live
+	speaker
+</table>
+
+<h2><a name="recommended">Recommended parameter values</a></h2>
+<h3><a name="en">Parameter values for English</a></h3>
+<p>
+The default parameter values have been designed for use with English
+speakers. They are:
+<table>
+<tr><td><code>kSMBESPCatSigParamF_min_Lmin</code>
+	<td>10108.0
+<tr><td><code>kSMBESPCatSigParamF_Lmin_decay</code>
+	<td>1.0008
+<tr><td><code>kSMBESPCatSigParamF_initial_Lmax</code>
+	<td>1e8
+<tr><td><code>kSMBESPCatSigParamF_speech_thresh</code>
+	<td>0.01
+<tr><td><code>kSMBESPCatSigParamI_min_valid_period_count</code>
+	<td>152
+<tr><td><code>kSMBESPCatSigParamI_min_valid_count</code>
+	<td>112
+<tr><td><code>kSMBESPCatSigParamI_glitch_count</code>
+	<td>48
+<tr><td><code>kSMBESPCatSigParamI_qualify_count</code>
+	<td>24
+<tr><td><code>kSMBESPCatSigParamI_alter_duration</code>
+	<td>160
+<tr><td><code>kSMBESPCatSigParamI_max_valid_tone_cnt</code>
+	<td>48
+<tr><td><code>kSMBESPCatSigParamI_min_valid_speech_cnt</code>
+	<td>64
+<tr><td><code>kSMBESPCatSigParamI_threshold_samp_cnt</code>
+	<td>360
+<tr><td><code>kSMBESPCatSigParamI_delay_time</code>
+	<td>112
+<tr><td><code>kSMBESPCatSigParamI_period_time</code>
+	<td>1480
+<tr><td><code>kSMBESPCatSigParamI_max_off_count</code>
+	<td>16
+<tr><td><code>kSMBESPCatSigParamI_min_period_off</code>
+	<td>600
+</table>
+<h3><a name="kr">Parameter values for Korean</a></h3>
+<p>
+Here is an example set of alternative parameter values for use with Korean.
+They are:
+<table>
+<tr><td><code>kSMBESPCatSigParamF_min_Lmin</code>
+	<td>12129.6
+<tr><td><code>kSMBESPCatSigParamF_Lmin_decay</code>
+	<td>1.001
+<tr><td><code>kSMBESPCatSigParamF_initial_Lmax</code>
+	<td>1e8
+<tr><td><code>kSMBESPCatSigParamF_speech_thresh</code>
+	<td>0.01
+<tr><td><code>kSMBESPCatSigParamI_min_valid_period_count</code>
+	<td>240
+<tr><td><code>kSMBESPCatSigParamI_min_valid_count</code>
+	<td>80
+<tr><td><code>kSMBESPCatSigParamI_glitch_count</code>
+	<td>48
+<tr><td><code>kSMBESPCatSigParamI_qualify_count</code>
+	<td>24
+<tr><td><code>kSMBESPCatSigParamI_alter_duration</code>
+	<td>80
+<tr><td><code>kSMBESPCatSigParamI_max_valid_tone_cnt</code>
+	<td>64
+<tr><td><code>kSMBESPCatSigParamI_min_valid_speech_cnt</code>
+	<td>48
+<tr><td><code>kSMBESPCatSigParamI_threshold_samp_cnt</code>
+	<td>360
+<tr><td><code>kSMBESPCatSigParamI_delay_time</code>
+	<td>112
+<tr><td><code>kSMBESPCatSigParamI_period_time</code>
+	<td>2640
+<tr><td><code>kSMBESPCatSigParamI_max_off_count</code>
+	<td>48
+<tr><td><code>kSMBESPCatSigParamI_min_period_off</code>
+	<td>680
+</table>
+<p>
+For other languages it may be necessary to obtain a representative database of signals
+to determine suitable set of parameters. please contact Aculab support for advice.
+

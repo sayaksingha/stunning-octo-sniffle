@@ -1,0 +1,7 @@
+Tone detection. Used by
+<a href="apifn-sm_listen_for.html">sm_listen_for()</a>
+for tone detection and by
+<a href="apifn-sm_record_start.html">sm_record_start()</a>
+for tone suppression in recordings.
+If this module has not been downloaded, no tones will be
+detected and tones will remain in recordings.

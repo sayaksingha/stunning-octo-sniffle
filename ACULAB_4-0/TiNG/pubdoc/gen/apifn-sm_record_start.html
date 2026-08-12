@@ -1,0 +1,604 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_record_start</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_record_start</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_record_start(struct sm_record_parms *<a href="#field-recordp">recordp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-recordp">*recordp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_record_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-alt_data_source">alt_data_source</a>;				/* in */
+	<a href="apifn-sm_replay_start.html#enum-kSMDataFormat">enum kSMDataFormat</a> <a href="#field-type">type</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-silence_elimination">silence_elimination</a>;				/* in */
+	<a href="apifn-sm_listen_for.html#enum-kSMToneDetection">enum kSMToneDetection</a> <a href="#field-tone_elimination_mode">tone_elimination_mode</a>;		/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-tone_elimination_set_id">tone_elimination_set_id</a>;			/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-max_octets">max_octets</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-max_elapsed_time">max_elapsed_time</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-max_silence">max_silence</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-agc">agc</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-volume">volume</a>;						/* in */
+	<a name="enum-kSMRecordAltSource">enum kSMRecordAltSource</a> {
+		<a href="#field-kSMRecordAltSourceDefault">kSMRecordAltSourceDefault</a>,
+		<a href="#field-kSMRecordAltSourceInput">kSMRecordAltSourceInput</a>,
+		<a href="#field-kSMRecordAltSourceOutput">kSMRecordAltSourceOutput</a>,
+	} <a href="#field-alt_data_source_type">alt_data_source_type</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-sampling_rate">sampling_rate</a>;					/* in */
+	double <a href="#field-min_noise_level">min_noise_level</a>;					/* in */
+	double <a href="#field-grunt_threshold">grunt_threshold</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-grunt_holdoff">grunt_holdoff</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-max_initial_silence">max_initial_silence</a>;				/* in */
+} SM_RECORD_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This call starts a new recording job using the specified
+<a class=pref href="#field-channel">channel</a>.
+<p>
+Normally
+<a class=pref href="#field-alt_data_source">alt_data_source</a>
+is set to <code>kSMNullChannelId</code> and the data that will
+be recorded will be that switched to this input channel. If
+however
+<a class=pref href="#field-alt_data_source">alt_data_source</a>
+is set to the channel id of another existing channel, then the
+data source for the recording will be determined by the value of
+<a class=pref href="#field-alt_data_source_type">alt_data_source_type</a>.
+Note that the channel specified in
+<a class=pref href="#field-alt_data_source">alt_data_source</a>
+must not be reconfigured while this recording is in progress. When
+<a class=pref href="#field-alt_data_source_type">alt_data_source_type</a>
+selects the output of a channel, the output datafeed from that channel
+must be referenced by calling
+<a href="apifn-sm_channel_get_datafeed.html">sm_channel_get_datafeed()</a>
+(or the legacy
+<a href="apifn-sm_switch_channel_output.html">sm_switch_channel_output()</a>
+), before starting the recording.
+<p>
+The PCM data received will be encoded into buffers in the format
+specified by the
+<a class=pref href="#field-type">type</a>
+parameter which is a value from same range of values
+permitted in the
+<a href="apifn-sm_replay_start.html#field-type">type</a>
+parameter of
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a>.
+<p>
+<a name="reccompat">Note that, for compatibility</a> with earlier
+releases of Prosody, many other values are permitted for the
+<a class=pref href="#field-type">type</a>
+field. These compatibility values specify a combination of
+data type and sampling rate. When one of these is used in
+the
+<a class=pref href="#field-type">type</a>
+field, the
+<a class=pref href="#field-sampling_rate">sampling_rate</a>
+field must be zero, and the actual rate used will be as
+listed here. They are:
+<p>
+<table border>
+<tr>
+	<th rowspan=2>compatibility code</th>
+	<th colspan=2>new code</th>
+</tr>
+<tr>
+	<th>type</th>
+	<th>sampling rate</th>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHzALawPCM</td>
+	<td>kSMDataFormatALawPCM</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHzULawPCM</td>
+	<td>kSMDataFormatULawPCM</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHzOKIADPCM</td>
+	<td>kSMDataFormatOKIADPCM</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHzACUBLKPCM</td>
+	<td>kSMDataFormatACUBLKPCM</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat6KHzALawPCM</td>
+	<td>kSMDataFormatALawPCM</td>
+	<td>6000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat6KHzULawPCM</td>
+	<td>kSMDataFormatULawPCM</td>
+	<td>6000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat6KHzOKIADPCM</td>
+	<td>kSMDataFormatOKIADPCM</td>
+	<td>6000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat6KHzACUBLKPCM</td>
+	<td>kSMDataFormatACUBLKPCM</td>
+	<td>6000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHz16bitMono</td>
+	<td>kSMDataFormat16bit</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHz8bitMono</td>
+	<td>kSMDataFormat8bit</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHzSigned8bitMono</td>
+	<td>kSMDataFormatSigned8bit</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormatIMAADPCM</td>
+	<td>kSMDataFormatIMAADPCM</td>
+	<td>8000</td>
+</tr>
+</table>
+<p>
+<p>
+Any form of record requires the module
+<a href="softmodindex.html#inchan">inchan</a>
+to have been downloaded in addition to the module 
+that is required for the specific type of record, and any
+module required for the sampling rate:
+<p>
+<table border>
+<tr>
+	<th>record type</th>
+	<th>extra firmware required</th>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatALawPCM">kSMDataFormatALawPCM</a>
+	</td>
+	<td>
+<a href="softmodindex.html#recA">recA</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatULawPCM">kSMDataFormatULawPCM</a>
+	</td>
+	<td>
+<a href="softmodindex.html#recmu">recmu</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatOKIADPCM">kSMDataFormatOKIADPCM</a>
+	</td>
+	<td>
+<a href="softmodindex.html#recoki">recoki</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatACUBLKPCM">kSMDataFormatACUBLKPCM</a>
+	</td>
+	<td>
+<a href="softmodindex.html#recablk">recablk</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatSigned8bit">kSMDataFormatSigned8bit</a>
+	</td>
+	<td>
+<a href="softmodindex.html#rec8b">rec8b</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormat8bit">kSMDataFormat8bit</a>
+	</td>
+	<td>
+<a href="softmodindex.html#recms8b">recms8b</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormat16bit">kSMDataFormat16bit</a>
+	</td>
+	<td>
+<a href="softmodindex.html#rec16b">rec16b</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatIMAADPCM">kSMDataFormatIMAADPCM</a>
+	</td>
+	<td>
+<a href="softmodindex.html#recima">recima</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatSpeex">kSMDataFormatSpeex</a>
+	</td>
+	<td>
+<a href="softmodindex.html#speexrp">speexrp</a>
+	</td>
+</tr>
+</table>
+<p>
+The sampling rate firmware:
+<table border>
+<tr>
+	<th>sampling rate</th>
+	<th>extra firmware required</th>
+</tr>
+<tr> <td> 8000 </td> <td> - </td> </tr>
+<tr> <td> 6000 </td> <td>
+<a href="softmodindex.html#sixkin">sixkin</a>
+</td> </tr>
+<tr> <td> 11000 </td> <td>
+<a href="softmodindex.html#8_to_11">8_to_11</a>
+</td> </tr>
+</table>
+<p>
+See
+<a href="../an-speechdataformats.html">Prosody application note: speech processing replay and record data formats</a>
+for more details on data formats supported by
+Prosody and their appropriate use.
+<p>
+The
+<a class=pref href="#field-volume">volume</a>
+parameter is the change in volume compared to the level of
+the data (i.e. set this to <code>-6</code> to attenuate by
+6dB). If AGC and volume are both applied, the change in volume
+requested is applied after AGC.
+<p>
+The
+<a class=pref href="#field-agc">agc</a>
+parameter controls whether automatic gain control is applied to
+the recorded data. If
+<a class=pref href="#field-agc">agc</a>
+is non-zero then automatic gain control is applied. Even if this
+is the case, the recording level is still governed by volume.
+The behaviour of the AGC algorithm may be controlled by changing
+its parameters, see
+<a href="apifn-sm_record_agc_adjust_settings.html">sm_record_agc_adjust_settings()</a>
+for more details.
+<p>
+The recorded data may be retrieved by the application through
+periodic calls to
+<a href="apifn-sm_get_recorded_data.html">sm_get_recorded_data()</a>.
+The amount of data recorded is determined by the termination
+criteria specified in the parameters:
+<p><table>
+<tr><td>
+<a class=pref href="#field-max_octets">max_octets</a>
+</td>
+<td>max octets of data to record, 0 if no limit</td></tr>
+<tr><td>
+<a class=pref href="#field-max_elapsed_time">max_elapsed_time</a>
+</td>
+<td>max recording period in mS, 0 if no limit</td></tr>
+<tr><td>
+<a class=pref href="#field-max_silence">max_silence</a>
+</td>
+<td>max period of silence in mS before recording terminated, 0
+if no limit (see also
+<a class=pref href="#field-max_initial_silence">max_initial_silence</a>
+)</td></tr>
+</table>
+<p>
+and also by the function
+<a href="apifn-sm_record_abort.html">sm_record_abort()</a>
+which will terminate a recording directly.
+<p>
+If an event has been previously associated with a channel (see
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event()</a>),
+then the driver will notify the application with that event
+whenever (for that channel):
+<ul>
+<li>recorded data becomes newly available for collection by
+<a href="apifn-sm_get_recorded_data.html">sm_get_recorded_data()</a>
+<li>
+recorded data remains available for collection by
+<a href="apifn-sm_get_recorded_data.html">sm_get_recorded_data()</a>
+<li>recording terminates due to one of the termination
+criteria being met</li>
+</ul>
+<p>
+The channel is reserved for recording until
+<a href="apifn-sm_record_status.html">sm_record_status()</a>
+returns the status
+<a href="apifn-sm_record_status.html#field-kSMRecordStatusComplete">
+kSMRecordStatusComplete</a>. No other recording activity can
+take place on the channel during this time.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to perform the record.
+
+<dt><a name="field-alt_data_source">alt_data_source</a><dd><code>kSMNullChannelId</code>, or another
+channel whose input or output is to be recorded. If this
+specifies a channel, that channel must not be reconfigured
+while recording is taking place.
+
+<dt><a name="field-type">type</a><dd>The format in which to record. (See the main text above for
+<a href="#reccompat">compatibility codes</a> that can also be
+used in this field.)
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDataFormatNone">kSMDataFormatNone</a>
+<dd>Special value for test purposes only. This indicates that the
+channel should prepare as if it was about to play or record
+data, but not actually transfer any data.
+
+<dt><a name="field-kSMDataFormatALawPCM">kSMDataFormatALawPCM</a>
+<dd>G.711 A-law. This uses 8 bits per sample.
+
+<dt><a name="field-kSMDataFormatULawPCM">kSMDataFormatULawPCM</a>
+<dd>G.711 mu-law. This uses 8 bits per sample.
+
+<dt><a name="field-kSMDataFormatOKIADPCM">kSMDataFormatOKIADPCM</a>
+<dd>A 4-bit coding scheme.
+
+<dt><a name="field-kSMDataFormatACUBLKPCM">kSMDataFormatACUBLKPCM</a>
+<dd>This format is obsolete, as cards fitted with SHARC DSPs are no longer supported.
+It has never been implemented for Prosody X cards.
+
+<dt><a name="field-kSMDataFormat16bit">kSMDataFormat16bit</a>
+<dd>16-bit linear coding, where each sample is a signed value
+(-32768 to 32767). The first octet of each sample is the less
+significant one.
+
+<dt><a name="field-kSMDataFormat8bit">kSMDataFormat8bit</a>
+<dd>8-bit unsigned linear coding, where each sample is an unsigned value
+(0 to 255). This is Microsoft's 8-bit format.
+
+<dt><a name="field-kSMDataFormatSigned8bit">kSMDataFormatSigned8bit</a>
+<dd>8-bit linear coding, where each sample is a signed value (-128 to 127).
+
+<dt><a name="field-kSMDataFormatIMAADPCM">kSMDataFormatIMAADPCM</a>
+<dd>A 4-bit coding scheme standardised by the Interactive Multimedia
+Association (IMA).
+
+<dt><a name="field-kSMDataFormatSpeex">kSMDataFormatSpeex</a>
+<dd>A patent and royalty-free speech compression codec. Use of the functions
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a>
+and
+<a href="apifn-sm_record_start.html">sm_record_start()</a>
+only allows playback and recording using the default "narrowband" Speex
+configuration. Other operating modes and parameters will be made available
+via new API calls.
+
+</dl>
+<dt><a name="field-silence_elimination">silence_elimination</a><dd>The maximum duration (in mS) of silence to record. Silences longer
+than this are truncated to this length. The value zero disables
+silence elimination.
+Requires the module
+<a href="softmodindex.html#grunt">grunt</a>.
+
+<dt><a name="field-tone_elimination_mode">tone_elimination_mode</a><dd>What types of tones to eliminate from the recording. This
+allows the same tone detection as
+<a href="apifn-sm_listen_for.html">sm_listen_for()</a>.
+Requires the module
+<a href="softmodindex.html#td">td</a>
+unless the value is
+<a href="apifn-sm_listen_for.html#field-kSMToneDetectionNone">
+kSMToneDetectionNone</a>.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMToneDetectionNone">kSMToneDetectionNone</a>
+<dd>Simple tones never recognised.
+
+<dt><a name="field-kSMToneDetectionNoMinDuration">kSMToneDetectionNoMinDuration</a>
+<dd>Simple tone detection enabled, no minimum period. If
+the correct frequencies are detected with the correct
+signal to noise ratio, twist, etc. for however short a
+duration, the tone is considered to be present and is
+recognised. 
+
+<dt><a name="field-kSMToneDetectionMinDuration64">kSMToneDetectionMinDuration64</a>
+<dd>Simple tone detection enabled, tone must be valid
+for minimum period to be detected. If the tone is valid
+for 64mS it will definitely be detected. Tones of
+shorter duration between 32mS and 64mS may be detected
+but cannot be guaranteed. The minimum duration of a tone can
+be increased by setting the parameter
+<a href="apifn-sm_adjust_input_tone_set.html#field-kAdjustToneSetIntParamIdMinOnTime">kAdjustToneSetIntParamIdMinOnTime</a>
+with
+<a href="apifn-sm_adjust_input_tone_set.html">sm_adjust_input_tone_set()</a>.
+
+<dt><a name="field-kSMToneDetectionMinDuration40">kSMToneDetectionMinDuration40</a>
+<dd>This mode uses a slightly more complex algorithm for
+analysing duration of a valid tone, and enables robust
+detection of tones with duration as short as 40mS.
+
+<dt><a name="field-kSMToneEndDetectionNoMinDuration">kSMToneEndDetectionNoMinDuration</a>
+<dd>This mode is like
+<a class=pref href="#field-kSMToneDetectionNoMinDuration">kSMToneDetectionNoMinDuration</a>
+but application notified when end of tone detected.
+
+<dt><a name="field-kSMToneEndDetectionMinDuration64">kSMToneEndDetectionMinDuration64</a>
+<dd>This mode is like
+<a class=pref href="#field-kSMToneDetectionMinDuration64">kSMToneDetectionMinDuration64</a>
+but application notified when end of tone detected.
+
+<dt><a name="field-kSMToneEndDetectionMinDuration40">kSMToneEndDetectionMinDuration40</a>
+<dd>This mode is like
+<a class=pref href="#field-kSMToneDetectionMinDuration40">kSMToneDetectionMinDuration40</a>
+but application notified when end of tone detected.
+
+<dt><a name="field-kSMToneLenDetectionNoMinDuration">kSMToneLenDetectionNoMinDuration</a>
+<dd>This mode is like
+<a class=pref href="#field-kSMToneEndDetectionNoMinDuration">kSMToneEndDetectionNoMinDuration</a>
+but returns additional tone duration information to application.
+
+<dt><a name="field-kSMToneLenDetectionMinDuration64">kSMToneLenDetectionMinDuration64</a>
+<dd>This mode is like
+<a class=pref href="#field-kSMToneEndDetectionMinDuration64">kSMToneEndDetectionMinDuration64</a>
+but returns additional tone duration information to application.
+
+<dt><a name="field-kSMToneLenDetectionMinDuration40">kSMToneLenDetectionMinDuration40</a>
+<dd>This mode is like
+<a class=pref href="#field-kSMToneEndDetectionMinDuration40">kSMToneEndDetectionMinDuration40</a>
+but returns additional tone duration information to application.
+
+<dt><a name="field-kSMToneDetectionAsListenFor">kSMToneDetectionAsListenFor</a>
+<dd>This mode is only valid when specified in the parameters for
+<a href="apifn-sm_record_start.html">sm_record_start()</a>
+and a tone detection mode is currently active on the same
+channel, started by
+<a href="apifn-sm_listen_for.html">sm_listen_for()</a>.
+Any tones detected on the same channel as the recording
+will be eliminated from the recorded data.
+
+</dl>
+<dt><a name="field-tone_elimination_set_id">tone_elimination_set_id</a><dd>The tone set to use (only relevant if
+<a class=pref href="#field-tone_elimination_mode">tone_elimination_mode</a>
+is not
+<a href="apifn-sm_listen_for.html#field-kSMToneDetectionNone">
+kSMToneDetectionNone</a>). See
+<a href="apifn-sm_listen_for.html">sm_listen_for()</a>
+for details of how to select an input tone set.
+
+<dt><a name="field-max_octets">max_octets</a><dd>The maximum amount of data to record. The value zero indicates
+no maximum.
+
+<dt><a name="field-max_elapsed_time">max_elapsed_time</a><dd>The maximum duration of the recording in mS. The value zero
+indicates no maximum.
+Requires the module
+<a href="softmodindex.html#timerx">timerx</a>.
+
+<dt><a name="field-max_silence">max_silence</a><dd>The maximum silence permitted (in mS). The value zero indicates
+no maximum. Silences longer than this cause the recording to
+terminate.
+Requires the module
+<a href="softmodindex.html#grunt">grunt</a>.
+
+<dt><a name="field-agc">agc</a><dd>Indicator of whether automatic gain control is to be enabled.
+(non-zero) or not (zero).
+Requires the module
+<a href="softmodindex.html#gainbg">gainbg</a>.
+
+<dt><a name="field-volume">volume</a><dd>The desired adjustment to the volume (dB). The range of gain
+supported is at least +8 to -22 dB,
+Requires the module
+<a href="softmodindex.html#gainbg">gainbg</a>.
+
+<dt><a name="field-alt_data_source_type">alt_data_source_type</a><dd>If an
+<a class=pref href="#field-alt_data_source">alt_data_source</a>
+channel is specified, which kind of data associated with that
+channel should be recorded.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMRecordAltSourceDefault">kSMRecordAltSourceDefault</a>
+<dd>If
+<a class=pref href="#field-alt_data_source">alt_data_source</a>
+is an input only channel, then data switched to this channel
+input will be recorded, otherwise the data being generated on this channel output
+will be recorded (this feature is normally used to record
+conferenced outputs).
+This value is deprecated since it is equivalent to either
+<a class=pref href="#field-kSMRecordAltSourceInput">kSMRecordAltSourceInput</a>
+or
+<a class=pref href="#field-kSMRecordAltSourceOutput">kSMRecordAltSourceOutput</a>
+which could be used instead.
+
+<dt><a name="field-kSMRecordAltSourceInput">kSMRecordAltSourceInput</a>
+<dd>Data switched to
+<a class=pref href="#field-alt_data_source">alt_data_source</a>
+input will be recorded.
+This value is deprecated since several channels can take input
+from the same timeslot and that is a more straightforward way of
+achieving the same result.
+
+<dt><a name="field-kSMRecordAltSourceOutput">kSMRecordAltSourceOutput</a>
+<dd>Data generated on
+<a class=pref href="#field-alt_data_source">alt_data_source</a>
+output will be recorded.
+
+</dl>
+<dt><a name="field-sampling_rate">sampling_rate</a><dd>The sampling rate at which to record the data. Currently supported
+values are:
+<ul>
+<li>0 - record at the rate reported via
+<a href="apifn-sm_record_status.html">sm_record_status()</a>.
+<li>8000 - the typical rate for telephony, since it is the rate at
+	which telephone networks themselves operate.
+<li>6000 - a rate which reduces file sizes at the cost of lower
+	quality.
+<li>11000 - a rate convenient for use with typical PC soundcards.
+	This is sufficiently close to a quarter of the rate used
+	by CDs (44100 Hz) that the difference is not significant,
+	allowing almost universal compatibility with cheap PC
+	soundcards which can handle 11025 Hz sampling.
+</ul>
+Note that when you specify a non-zero value here, this function
+assumes that the source of the data to be recorded is providing
+data at 8000 samples per second. The use of data at other rates is
+not supported and will cause the data to be recorded at an incorrect
+sampling rate. Consequently, the use of a non-zero value in this
+field is deprecated.
+
+<dt><a name="field-min_noise_level">min_noise_level</a><dd>The minimum level, in dBm0, that the noise estimate of the grunt detector may
+reach. The default is -55 dBm0. Only used if
+<a class=pref href="#field-silence_elimination">silence_elimination</a>
+or
+<a class=pref href="#field-max_silence">max_silence</a>
+are non zero.
+Requires the module
+<a href="softmodindex.html#grunt">grunt</a>.
+
+<dt><a name="field-grunt_threshold">grunt_threshold</a><dd>The threshold, in dB, above the noise estimate of the grunt detector at
+which a signal is considered present. The default is 15 dB. Only used if
+<a class=pref href="#field-min_noise_level">min_noise_level</a>
+is non zero.
+Requires the module
+<a href="softmodindex.html#grunt">grunt</a>.
+
+<dt><a name="field-grunt_holdoff">grunt_holdoff</a><dd>The period, in ms, following start of speech, to disable updating the estimate of the background noise energy
+(a non-zero period, typically 1000ms, can be required when long periods of uninterrupted speech are expected).
+Requires the module
+<a href="softmodindex.html#grunt">grunt</a>.
+
+<dt><a name="field-max_initial_silence">max_initial_silence</a><dd>If both 
+<a class=pref href="#field-max_silence">max_silence</a>
+and this parameter are non-zero, then this parameter specifies the maximum period of silence allowed, in ms, prior 
+to start of speech, whereas the max_silence timeout will now specify maximum period of silence allowed subsequent to the start of speech.
+Requires the module
+<a href="softmodindex.html#grunt">grunt</a>.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_WRONG_CHANNEL_STATE - if already recording<li>ERR_SM_WRONG_CHANNEL_TYPE - if attempt to record using output channel<li>ERR_SM_NOT_SAME_MODULE - alt_data_source channel not located on same module</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

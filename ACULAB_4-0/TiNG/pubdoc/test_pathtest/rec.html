@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>pathtest rec</title>
+</head>
+<body>
+<h1>pathtest rec</h1>
+
+<h2>Status codes</h2>
+<p>
+The status codes printed by rec operations are:
+<table>
+<tr><th><code>.</code><td>Idle
+<tr><th><code>S</code><td>Starting
+<tr><th><code>N</code><td>No data
+<tr><th><code>L</code><td>Put last, not yet completed
+<tr><th><code>D</code><td>Complete, retrieving remaining data
+<tr><th><code>*</code><td>Got data
+<tr><th><code>u</code><td>Overrun
+<tr><th><code>-</code><td>Completed
+</table>
+
+<h2>Settings</h2>
+<p>
+These are the settings used by <code>rec</code>:
+
+<h3><code>agc</code> N</h3>
+<p>
+Enables (non-zero) or disables (zero) AGC.
+
+<h3><code>file</code> NAME</h3>
+<p>
+Specifies a file into which the data read from the rec operation will be
+saved. Each rec writes to its file independently, so if more than one
+used the same file, they will overwrite each other's data. The name may
+be specified as the value zero, to indicate that no file is to be used,
+or as a string in double-quotes ("). A quoted string is interpreted as
+in C.
+
+<h3><code>format</code> FMT</h3>
+<p>
+The format of the recorded data. A list of the formats is printed if
+a question-mark (?) is given for the format.
+
+<h3><code>gain</code> N</h3>
+<p>
+The gain to use for AGC. This setting is only used when adjusting a
+running record operation.
+
+<h3><code>rate</code> N</h3>
+<p>
+The data sampling rate of the recorded data.
+
+<h3><code>threshold</code> N</h3>
+<p>
+The transfer threshold to use.
+
+<h3><code>vol</code> N</h3>
+<p>
+The volume adjustment to use.
+<hr>
+<p>
+This is a command understood by the <a href="pathtest.html">pathtest</a>
+test program.

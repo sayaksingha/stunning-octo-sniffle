@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_destroy</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_destroy</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_destroy(<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-vmptx">vmptx</a>
+<dd>
+A tSMVMPtxId that has been prevously created by a call to 
+<a href="apifn-sm_vmptx_create.html">sm_vmptx_create()</a>.
+</dl>
+<h2>Description</h2>
+<p>
+Destroys
+<a class=pref href="#field-vmptx">vmptx</a>
+and invalidates the tSMVMPtxId. Normally, a VMP[tx] will only be destroyed 
+when it is in the stopped state. If the VMP[tx] is not in the stopped 
+state, it will be implicitly stopped. It is an error to refer to a VMP[tx] 
+once it has been destroyed.
+<p>
+If a call to
+<a href="apifn-sm_vmptx_create.html">sm_vmptx_create()</a>
+completes successfully,
+<a href="apifn-sm_vmptx_stop.html">sm_vmptx_stop()</a>
+should be used to stop to the VMP[tx] and move it into the stopped state.
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

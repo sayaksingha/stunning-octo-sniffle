@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: simultaneous use of Prosody by multiple processes</title>
+</head>
+<body>
+<h1>Prosody application note: simultaneous use of Prosody by multiple processes</h1>
+<p>
+Multiple processes can use the Prosody API simultaneously. If two
+processes never use the same Prosody processor module, then they will be
+unaware of each other (unless, of course they interact through other
+shared resources, such as timeslots on the H.100 bus), because
+Prosody has no resources shared between modules.
+<p>
+If two processes do access the same module:
+<ul>
+<li>each process must seperately open the module
+<li>API handles for objects obtained by one process must not be used by the other process 
+<li>care must be taken that only one of the processes outputs to a given TDM Tx timeslot
+</ul>
+<p>
+<h2>Module settings that are not shared</h2>
+<p>
+Settings on this list are private to each process, so the setting
+made by one process for a module does not affect the setting for other
+processes using the same module.
+<ul>
+<li>All parameter adjustments performed on individual channels.
+<li>Input component frequencies, tones, and tone sets.
+<li>Input call progess tones.
+<li>Output component frequencies and tones.
+<li>Parameter adjustments controlled by
+<a href="gen/apifn-sm_adjust_input_tone_set.html">sm_adjust_input_tone_set()</a>.
+<li>Parameter adjustments controlled by
+<a href="gen/apifn-sm_adjust_catsig_module_params.html">sm_adjust_catsig_module_params()</a>.
+</ul>
+<p>
+Note that all the above resources are kept in the API library, so, 
+in addition to permitting different processes to have different configurations, 
+it means that generally these items are only limited by the size of the application's memory.
+<hr>
+<p>
+<small>Document reference: AN 1399</small>
+
+</body>
+</html>

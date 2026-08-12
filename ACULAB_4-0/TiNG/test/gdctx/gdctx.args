@@ -1,0 +1,24 @@
+-TiNGtrace
+t	timeslot	timeslot
+m	module		unsigned
+i	inifile		string
+
+L	local_ip	string
+p	patlen		unsigned
+
+e	encoding	string
+u	modulation	string
+
+C	crcsize		unsigned
+c	crc		unsigned
+
+X	stopbits	unsigned
+d	databits	unsigned
+
+s	standard	string
+M	markfreq	float
+S	spacefreq	float
+B	bitrate		unsigned
+P	power		float
+
+x	serialnumber	string

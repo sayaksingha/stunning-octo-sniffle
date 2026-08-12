@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_sample_rate</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_sample_rate</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_sample_rate(struct sm_vmptx_sample_rate_parms *<a href="#field-sample_ratep">sample_ratep</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-sample_ratep">*sample_ratep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_sample_rate_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-sample_rate">sample_rate</a>;					/* in */
+} SM_VMPTX_SAMPLE_RATE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Allows an application to confgure the sample rate for input to a
+VMP[tx]. If no rate is configured, it defaults to 8000 samples
+per second. Some codecs (for example, PCMA - the G.711 A-law codec)
+can run at any sampling rate, other codecs are designed to run
+only at specific sampling rates. While the VMP[tx] will attempt
+to run the codec at the specified rate, running a codec at a
+non-standard sampling rate may result in unsatisfactory performance.
+<p>
+Note that any data supplied to the VMP[tx] at the wrong sampling
+rate will be ignored. This allows the sampling rate to be
+changed without encoding a burst of data at the wrong rate.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to be configured
+
+<dt><a name="field-sample_rate">sample_rate</a><dd>The sample rate in samples per second. The default is 8000.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

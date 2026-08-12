@@ -1,0 +1,13 @@
+Testlib	error.o
+Testlib	cardlist.o
+Testlib	modlist.o
+.	rtpplay.o
+Testlib	eventset.o
+libutil	random.o
+Testlib	fmtcode.o
+libutil	generic_io.o
+Testlib	errcode_sm.o
+apilib
+Testlib	perthread_trace.o
+Testlib	rtpclerk_cli.o
+Testlib	rtptx_codec.o

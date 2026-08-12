@@ -1,0 +1,102 @@
+// DESCRIPTION: CPU Monitor
+// GENTIME: Tue Aug  3 16:18:02 2021
+// VERS: 0x00014910 0x00007490
+// RESHINT: RESTBL 52 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x6d 0x75 0x70 0x63 0x00 0x00 0x00 0x40 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x40 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x49 0x10 0x00 0x00 0x74 0x90 
+(section
+".default"
+(alignment #0)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::.default" (sym ".default::@start")))
+(data))
+(section
+".data"
+(alignment #3)
+(symtab
+(defsym "_TiNG_ftbl_cpumon" (sym ".data::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::.data" (sym ".data::@start"))
+(defsym "_TASK_CPUMON" (+ #40 (sym ".data::@start"))))
+(data // Offset:0x0
+{00000000000000006D75706300014910FFFFFF0000000000} // Offset:0x18
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::v101")) #FFFFFFE8)) // Offset:0x19
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::v101")) #FFFFFFF0)) // Offset:0x1A
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::v101")) #FFFFFFF8)) // Offset:0x1B
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::v101"))) // Offset:0x1C
+{00000000} // Offset:0x20
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::v100")) #FFFFFFE8)) // Offset:0x21
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::v100")) #FFFFFFF0)) // Offset:0x22
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::v100")) #FFFFFFF8)) // Offset:0x23
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::v100"))) // Offset:0x24
+(emit (<< (& #FF000000 (sym "_NullDtor_")) #FFFFFFE8)) // Offset:0x25
+(emit (<< (& #FF0000 (sym "_NullDtor_")) #FFFFFFF0)) // Offset:0x26
+(emit (<< (& #FF00 (sym "_NullDtor_")) #FFFFFFF8)) // Offset:0x27
+(emit (& #FF (sym "_NullDtor_"))) // Offset:0x28
+{00000030} // Offset:0x2C
+(emit (<< (& #FF000000 (sym "_RegisterOneFtbl_")) #FFFFFFE8)) // Offset:0x2D
+(emit (<< (& #FF0000 (sym "_RegisterOneFtbl_")) #FFFFFFF0)) // Offset:0x2E
+(emit (<< (& #FF00 (sym "_RegisterOneFtbl_")) #FFFFFFF8)) // Offset:0x2F
+(emit (& #FF (sym "_RegisterOneFtbl_"))) // Offset:0x30
+{00000000000000000000000000007490000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000}))
+(section
+".rom"
+(alignment #3)
+(symtab
+(defsym "_TiNG_rtbl_cpumon" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::.rom" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::v101" (+ #34 (sym ".rom::@start"))))
+(data // Offset:0x0
+{00000000000000016D757063000000400000000000000001000000000000004000000000000000000000000000014910000074900000E192} // Offset:0x38
+(emit (<< (& #FF000000 (sym "_Msg_addsub")) #FFFFFFE8)) // Offset:0x39
+(emit (<< (& #FF0000 (sym "_Msg_addsub")) #FFFFFFF0)) // Offset:0x3A
+(emit (<< (& #FF00 (sym "_Msg_addsub")) #FFFFFFF8)) // Offset:0x3B
+(emit (& #FF (sym "_Msg_addsub"))) // Offset:0x3C
+{00008031} // Offset:0x40
+(emit (<< (& #FF000000 (sym "_Msg_dead")) #FFFFFFE8)) // Offset:0x41
+(emit (<< (& #FF0000 (sym "_Msg_dead")) #FFFFFFF0)) // Offset:0x42
+(emit (<< (& #FF00 (sym "_Msg_dead")) #FFFFFFF8)) // Offset:0x43
+(emit (& #FF (sym "_Msg_dead"))) // Offset:0x44
+{00000000} // Offset:0x48
+(emit (<< (& #FF000000 (sym "_Msg_try_subtasks")) #FFFFFFE8)) // Offset:0x49
+(emit (<< (& #FF0000 (sym "_Msg_try_subtasks")) #FFFFFFF0)) // Offset:0x4A
+(emit (<< (& #FF00 (sym "_Msg_try_subtasks")) #FFFFFFF8)) // Offset:0x4B
+(emit (& #FF (sym "_Msg_try_subtasks")))))
+(section
+".text"
+(alignment #F)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::v99" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::TextStart_cpumon" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::.text" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::DW_2" (+ #8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::DW_3" (+ #E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::DW_5" (+ #1E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::L3" (+ #AA (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::DW_38" (+ #B0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::DW_39" (+ #B6 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::DW_40" (+ #BC (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::.align_0" (+ #BE (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::FuncEnd_99" (+ #BE (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::Fv99_end" (+ #BE (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::v100" (+ #C0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::TextEnd_cpumon" (+ #E4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::FuncEnd_100" (+ #E4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/cpumon/c/cpumon.eln::Fv100_end" (+ #E4 (sym ".text::@start"))))
+(data // Offset:0x0
+{96C060E49620972094C09E209F2096C0EEE82709806096C0E7E92500805496C0F541280B801498C0CB4E32} // Offset:0x2B
+(emit (+ #4 (<< (& #C0000000 (sym "_memset")) #FFFFFFE5) (<< (& #E000 (sym "_memset")) #FFFFFFF8))) // Offset:0x2C
+(emit (+ #20 (<< (& #1F00 (sym "_memset")) #FFFFFFF8))) // Offset:0x2D
+(emit (& #FF (sym "_memset"))) // Offset:0x2E
+(emit (+ #80 (<< (& #3F000000 (sym "_memset")) #FFFFFFE8))) // Offset:0x2F
+(emit (<< (& #FF0000 (sym "_memset")) #FFFFFFF0)) // Offset:0x30
+{96C05F9327E89FA096C0CB4627E89FF490C0EB505A9390C02A0C82E8159432} // Offset:0x4F
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x50
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x51
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x52
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x53
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x54
+{F54396C0C68227EB9FA496C0539327EC9FF498C03CEB8218C584F04396C0439B2F0D802296C04C9B27E99FA00593E8EE97BD3F19808064E990C092C3ED4292C3559592C3F558F0D82469CA40800BEA445C9290C09C6327EF9FA0E7EF94C09E219F2194C0962197219F7100009AC06C30E85434} // Offset:0xC7
+(emit (+ #1 (<< (& #C0000000 (sym ".text::@start")) #FFFFFFE5) (<< (& #E000 (sym ".text::@start")) #FFFFFFF8))) // Offset:0xC8
+(emit (+ #20 (<< (& #1F00 (sym ".text::@start")) #FFFFFFF8))) // Offset:0xC9
+(emit (& #FF (sym ".text::@start"))) // Offset:0xCA
+(emit (+ #80 (<< (& #3F000000 (sym ".text::@start")) #FFFFFFE8))) // Offset:0xCB
+(emit (<< (& #FF0000 (sym ".text::@start")) #FFFFFFF0)) // Offset:0xCC
+{5B9090C02B09802293B90903A080939994C0E9769F704491}))

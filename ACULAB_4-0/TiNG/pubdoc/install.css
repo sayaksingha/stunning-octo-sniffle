@@ -1,0 +1,13 @@
+@import url(TiNG.css);
+
+.trace {
+	background-color:silver;
+}
+
+.big {
+	font-size: x-large;
+}
+
+dt {
+	font-weight: bold;
+}

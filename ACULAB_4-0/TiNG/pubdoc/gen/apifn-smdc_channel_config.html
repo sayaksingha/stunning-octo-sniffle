@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody data communications: API: smdc_channel_config</title>
+</head>
+<body>
+<h1>Prosody data communications: API: smdc_channel_config</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int smdc_channel_config(struct smdc_channel_config_parms *<a href="#field-configp">configp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_channel_config_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-protocol">protocol</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-config_length">config_length</a>;					/* in */
+	void <a href="#field-config_data">*config_data</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-encoding">encoding</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-encoding_config_length">encoding_config_length</a>;				/* in */
+	void <a href="#field-encoding_config_data">*encoding_config_data</a>;				/* in */
+} SMDC_CHANNEL_CONFIG_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a channel (or half a channel) for data communications
+using a specified
+<a class=pref href="#field-protocol">protocol</a>
+and preparing it to transfer data encoded
+according to the
+<a class=pref href="#field-encoding">encoding</a>
+type over that protocol.
+<p>
+For details of what protocols and encodings are available,
+and the format of their configuration data,
+see the document <a href="../prosdc_config.html">Prosody Data
+Communcations Protocols and Encodings</a>.
+<p>
+Channels can have two halves: an input half and an output half.
+A protocol may occupy either or both of these. It is possible
+to configure a channel for two protocols if one is input-only
+and the other is output-only. In that case the channel
+operates as if it were two separate channels, one for each
+direction.
+<p>
+The input half of a channel is reserved for this data communications
+configuration until
+<a href="apifn-smdc_rx_status.html">smdc_rx_status()</a>
+returns the status
+<a href="apifn-smdc_rx_status.html#field-kSMDCRxStatusFinished">
+kSMDCRxStatusFinished</a>. No other activity can take place
+on the input half of the channel during this time.
+<p>
+The output half of a channel is reserved for this data communications
+configuration until
+<a href="apifn-smdc_tx_status.html">smdc_tx_status()</a>
+returns the status
+<a href="apifn-smdc_tx_status.html#field-kSMDCTxStatusFinished">
+kSMDCTxStatusFinished</a>. No other activity can take place
+on the output half of the channel during this time.
+<p>
+While the output half of a channel is configured for data
+communications, a write event associated with this channel
+using
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event()</a>
+will be set while the channel is ready to accept more data or
+there may be a status change to report.
+See
+<a href="apifn-smdc_tx_control.html">smdc_tx_control()</a>
+for details of how this works. When an application discovers
+that this event is set, it may check the status using
+<a href="apifn-smdc_tx_status.html">smdc_tx_status()</a>.
+However, an application may simply try
+<a href="apifn-smdc_tx_data.html">smdc_tx_data()</a>
+immediately and check status when it refuses to accept data.
+<p>
+While the input half of a channel is configured for data
+communications, a read event associated with this channel
+using
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event()</a>
+will be set while the channel is ready to allow data to be
+read or there may be a status change to report.
+See
+<a href="apifn-smdc_rx_control.html">smdc_rx_control()</a>
+for details of how this works. When an application discovers
+that this event is set, it should attempt to read data using
+<a href="apifn-smdc_rx_data.html">smdc_rx_data()</a>.
+See its description to see how this interacts with status
+changes.
+<p>
+Requires firmware modules applicable to protocol and encoding to have been downloaded.
+See <a href="../prosdc_config.html">Prosody Data
+Communcations Protocols and Encodings</a>
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to configure.
+
+<dt><a name="field-protocol">protocol</a><dd>The desired data communications protocol. The value zero
+(kSMDCProtocolNone) is reserved and guaranteed never to select a
+valid protocol.
+
+<dt><a name="field-config_length">config_length</a><dd>The length of the protocol-specific configuration data pointed
+to by
+<a class=pref href="#field-config_data">config_data</a>.
+
+<dt><a name="field-config_data">config_data</a><dd>Protocol-specific configuration data.
+
+<dt><a name="field-encoding">encoding</a><dd>The desired encoding for data transferred with the selected
+protocol.
+
+<dt><a name="field-encoding_config_length">encoding_config_length</a><dd>The length of the encoding-specific configuration data pointed
+to by
+<a class=pref href="#field-encoding_config_data">encoding_config_data</a>
+
+<dt><a name="field-encoding_config_data">encoding_config_data</a><dd>Encoding-specific configuration data.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - a parameter value is bad<li>ERR_SM_WRONG_CHANNEL_STATE - channel is already busy</ul>
+<hr>
+<p>This function is part of the <a href="../prosdc.html">Prosody data communications API</a>.
+</body>
+</html>

@@ -1,0 +1,120 @@
+// DESCRIPTION: Heap Monitor
+// GENTIME: Tue Aug  3 16:19:27 2021
+// VERS: 0x00014910 0x00007490
+// RESHINT: RESTBL 52 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x6f 0x6d 0x70 0x68 0x00 0x00 0x00 0x40 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x40 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x49 0x10 0x00 0x00 0x74 0x90 
+(section
+".default"
+(alignment #0)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::.default" (sym ".default::@start")))
+(data))
+(section
+".data"
+(alignment #3)
+(symtab
+(defsym "_TiNG_ftbl_heapmon" (sym ".data::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::.data" (sym ".data::@start"))
+(defsym "_TASK_HEAPMON" (+ #40 (sym ".data::@start"))))
+(data // Offset:0x0
+{00000000000000006F6D706800014910FFFFFF0000000000} // Offset:0x18
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::v102")) #FFFFFFE8)) // Offset:0x19
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::v102")) #FFFFFFF0)) // Offset:0x1A
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::v102")) #FFFFFFF8)) // Offset:0x1B
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::v102"))) // Offset:0x1C
+{00000000} // Offset:0x20
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::v101")) #FFFFFFE8)) // Offset:0x21
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::v101")) #FFFFFFF0)) // Offset:0x22
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::v101")) #FFFFFFF8)) // Offset:0x23
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::v101"))) // Offset:0x24
+(emit (<< (& #FF000000 (sym "_NullDtor_")) #FFFFFFE8)) // Offset:0x25
+(emit (<< (& #FF0000 (sym "_NullDtor_")) #FFFFFFF0)) // Offset:0x26
+(emit (<< (& #FF00 (sym "_NullDtor_")) #FFFFFFF8)) // Offset:0x27
+(emit (& #FF (sym "_NullDtor_"))) // Offset:0x28
+{00000030} // Offset:0x2C
+(emit (<< (& #FF000000 (sym "_RegisterOneFtbl_")) #FFFFFFE8)) // Offset:0x2D
+(emit (<< (& #FF0000 (sym "_RegisterOneFtbl_")) #FFFFFFF0)) // Offset:0x2E
+(emit (<< (& #FF00 (sym "_RegisterOneFtbl_")) #FFFFFFF8)) // Offset:0x2F
+(emit (& #FF (sym "_RegisterOneFtbl_"))) // Offset:0x30
+{00000000000000000000000000007490000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000}))
+(section
+".rom"
+(alignment #3)
+(symtab
+(defsym "_TiNG_rtbl_heapmon" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::.rom" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::v102" (+ #34 (sym ".rom::@start"))))
+(data // Offset:0x0
+{00000000000000016F6D7068000000400000000000000001000000000000004000000000000000000000000000014910000074900000E192} // Offset:0x38
+(emit (<< (& #FF000000 (sym "_Msg_addsub")) #FFFFFFE8)) // Offset:0x39
+(emit (<< (& #FF0000 (sym "_Msg_addsub")) #FFFFFFF0)) // Offset:0x3A
+(emit (<< (& #FF00 (sym "_Msg_addsub")) #FFFFFFF8)) // Offset:0x3B
+(emit (& #FF (sym "_Msg_addsub"))) // Offset:0x3C
+{00008031} // Offset:0x40
+(emit (<< (& #FF000000 (sym "_Msg_dead")) #FFFFFFE8)) // Offset:0x41
+(emit (<< (& #FF0000 (sym "_Msg_dead")) #FFFFFFF0)) // Offset:0x42
+(emit (<< (& #FF00 (sym "_Msg_dead")) #FFFFFFF8)) // Offset:0x43
+(emit (& #FF (sym "_Msg_dead"))) // Offset:0x44
+{00000000} // Offset:0x48
+(emit (<< (& #FF000000 (sym "_Msg_try_subtasks")) #FFFFFFE8)) // Offset:0x49
+(emit (<< (& #FF0000 (sym "_Msg_try_subtasks")) #FFFFFFF0)) // Offset:0x4A
+(emit (<< (& #FF00 (sym "_Msg_try_subtasks")) #FFFFFFF8)) // Offset:0x4B
+(emit (& #FF (sym "_Msg_try_subtasks")))))
+(section
+".text"
+(alignment #F)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::v100" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::TextStart_heapmon" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::.text" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::DW_2" (+ #8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::DW_3" (+ #E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::DW_5" (+ #1E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::L3" (+ #D8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::DW_46" (+ #DE (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::DW_47" (+ #E4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::DW_48" (+ #EA (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::.align_0" (+ #EC (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::FuncEnd_100" (+ #EC (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::Fv100_end" (+ #EC (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::v101" (+ #F0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::TextEnd_heapmon" (+ #114 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::FuncEnd_101" (+ #114 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/heapmon/c/heapmon.eln::Fv101_end" (+ #114 (sym ".text::@start"))))
+(data // Offset:0x0
+{96C060E49620972094C09E209F2096C0EFE8270C806096C0E7EC2500805496C0F541280D801498C0CD4E32} // Offset:0x2B
+(emit (+ #4 (<< (& #C0000000 (sym "_memset")) #FFFFFFE5) (<< (& #E000 (sym "_memset")) #FFFFFFF8))) // Offset:0x2C
+(emit (+ #20 (<< (& #1F00 (sym "_memset")) #FFFFFFF8))) // Offset:0x2D
+(emit (& #FF (sym "_memset"))) // Offset:0x2E
+(emit (+ #80 (<< (& #3F000000 (sym "_memset")) #FFFFFFE8))) // Offset:0x2F
+(emit (<< (& #FF0000 (sym "_memset")) #FFFFFFF0)) // Offset:0x30
+{96C05E9527E89FA0CD4690C0ED501B95CD4E32} // Offset:0x43
+(emit (+ #4 (<< (& #C0000000 (sym "_kheapRoom")) #FFFFFFE5) (<< (& #E000 (sym "_kheapRoom")) #FFFFFFF8))) // Offset:0x44
+(emit (+ #20 (<< (& #1F00 (sym "_kheapRoom")) #FFFFFFF8))) // Offset:0x45
+(emit (& #FF (sym "_kheapRoom"))) // Offset:0x46
+(emit (+ #80 (<< (& #3F000000 (sym "_kheapRoom")) #FFFFFFE8))) // Offset:0x47
+(emit (<< (& #FF0000 (sym "_kheapRoom")) #FFFFFFF0)) // Offset:0x48
+{2B0880BC94C0CD46F04390C05B9532} // Offset:0x57
+(emit (+ #4 (<< (& #C0000000 (sym "_kheapRoom")) #FFFFFFE5) (<< (& #E000 (sym "_kheapRoom")) #FFFFFFF8))) // Offset:0x58
+(emit (+ #20 (<< (& #1F00 (sym "_kheapRoom")) #FFFFFFF8))) // Offset:0x59
+(emit (& #FF (sym "_kheapRoom"))) // Offset:0x5A
+(emit (+ #80 (<< (& #3F000000 (sym "_kheapRoom")) #FFFFFFE8))) // Offset:0x5B
+(emit (<< (& #FF0000 (sym "_kheapRoom")) #FFFFFFF0)) // Offset:0x5C
+{2B08819C27E89FF8009032} // Offset:0x67
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x68
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x69
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x6A
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x6B
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x6C
+{27E89FF432} // Offset:0x71
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x72
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x73
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x74
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x75
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x76
+{96C0F04327E89FF896C0C58227ED9FA496C0569527EB9FF49AC03AEE8218C58827E89FF8069D409096C04B9D2E0C802296C0459527E99FA094C097BCE8EF3F19808064E990C092C3EC4292C35C9492C3FC58F5D826E9CA45800BEA445C9290C09C6327EF9FA0E7EF94C09E219F2194C0962197219F71000000009AC06C30E85432} // Offset:0xF7
+(emit (+ #1 (<< (& #C0000000 (sym ".text::@start")) #FFFFFFE5) (<< (& #E000 (sym ".text::@start")) #FFFFFFF8))) // Offset:0xF8
+(emit (+ #20 (<< (& #1F00 (sym ".text::@start")) #FFFFFFF8))) // Offset:0xF9
+(emit (& #FF (sym ".text::@start"))) // Offset:0xFA
+(emit (+ #80 (<< (& #3F000000 (sym ".text::@start")) #FFFFFFE8))) // Offset:0xFB
+(emit (<< (& #FF0000 (sym ".text::@start")) #FFFFFFF0)) // Offset:0xFC
+{5B9090C02B08802291B80901A080919894C0E8769F704290}))

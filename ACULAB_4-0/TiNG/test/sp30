@@ -1,0 +1,28 @@
+#!/bin/sh
+./kl -r $*
+	# play
+./lm outchan $*
+./lm gainbg $*
+./lm playA $*
+./lm playmu $*
+./lm playoki $*
+./lm playablk $*
+./lm fast $*
+./lm slow $*
+./lm sixkout $*
+	# record
+./lm inchan $*
+./lm recA $*
+./lm recmu $*
+./lm recoki $*
+./lm recablk $*
+./lm sixkin $*
+./lm timerx $*
+	# detections
+./lm td $*
+./lm grunt $*
+	# generation
+./lm tonegen $*
+	# conferencing
+./lm conf $*
+	# not provided: pulse detection

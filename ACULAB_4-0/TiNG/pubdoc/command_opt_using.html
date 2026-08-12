@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Using the automatic option parser in your own programs</title>
+</head>
+<body>
+<h1>Using the automatic option parser in your own programs</h1>
+<p>
+This is how you can make your own programs handle options using a
+standard option parser just like all of the
+<a href="howto_test.html">test programs</a> supplied with
+Prosody.
+<h2>Your program code</h2>
+<p>
+The option parser is generated from a file which lists the options
+required. To use it, you need some code like this in your program:
+<pre>
+	static const char version[] = "v1.2";
+
+	#include "gen/ansplay.args.i"
+
+	int main(int argc, char **argv)
+	{
+	 		/* <- your normal declarations here */
+	 ARGS_DECL
+	 		/* <- possibly more normal declarations */
+	 (void) argc;
+	 if (ARGS_CALL || !*argv || argv[1]) {
+		fprintf(stderr, "Usage: %s" ARGS_USAGE " file\n", progname);
+		return 1;
+	 }
+			 /* use the options by referring to arg.OPTIONNAME */
+</pre>
+<p>
+So how does this work? 
+<dl>
+<dt>The <code>#include</code>
+<dd>This is the automatically generated parser itself. See below for
+how to build it.
+<dt>ARGS_DECL
+<dd>
+This declares anything needed. In particular, it declares a structure
+called <code>arg</code> into which all the option values will be stored.
+<dt>ARGS_CALL
+<dd>
+This is where the actual parsing takes place. As well as interpreting
+any options, it moves <code>argv</code> to the first non-option.
+Since this would lose the name of the program (which was in
+<code>argv[0]</code>) it copies the program name into the variable
+<code>progname</code>. In the example, the program expects to have a
+file name as its only non-option argument. Therefore the "<code>if
+(...</code>" tests for a parsing error (<code>ARGS_CALL</code> returns
+a non-zero value if the options are syntactically invalid), and then
+tests to make sure that there is exactly one argument remaining (by
+checking for the null pointer which is always the last entry in
+<code>argv</code>).
+<dt>ARGS_USAGE
+<dd>
+This is a string which is built up from all the options. When
+printing a usage message this ensures that it correctly describes all
+the options. Since it is constructed automatically, no differences
+can creep in between the message and the options actually available.
+<dt><code>arg.</code>optionname
+<dd>
+When <code>ARGS_CALL</code> has returned successfully, all the option
+values are in the <code>arg</code> structure. For example, if you
+have an option "<code>-v 6</code>" which is the <code>volume</code>
+option, then <code>arg.volume</code> will be six. The names of the
+fields are the long option names which are also used in the usage
+message, so a program with such a volume option would have "...
+<code>-v volume</code> ..." in its usage message.
+</dl>
+<h2>The option specification</h2>
+<p>
+You also need the file which specifies the options. Here is an example.
+It's the argument specification for
+<a href="test_ansplay.html">ansplay</a>.
+<pre>
+	-TiNGtrace
+	a	agc		unsigned
+	F	format		string
+	s	speed		signed
+	t	timeslot	timeslot
+	v	volume		signed
+</pre>
+<p>
+The usage message is:
+<pre>
+	Usage: ansplay [--version] [-a agc] [-F format] [-s speed] [-t timeslot] [-v volume] file
+</pre>
+<p>
+As you can see, there are five normal options, the special
+"<code>-version</code>" option, and the special
+"<code>-TiNGtrace</code> n" option (which is not listed).
+<p>
+Each line specifies one option. Normally, the first column shows the
+name of each option. The next column gives a longer name to it. This
+name is used in the "usage" message and as the name of the field in
+the <code>arg</code> structure. The third column says what kind of
+option it is. There are five kinds of options:
+<table border>
+<tr>
+<th>type<th>meaning
+
+<tr>
+<td>bool
+	<td>A boolean option. This takes no value, so it is either
+	present or absent. The value in the <code>arg</code> field is
+	zero if the option was omitted, non-zero otherwise.
+
+<tr>
+<td>unsigned
+	<td>An unsigned number. The value associated with this option
+	will be returned in an <code>unsigned long</code>.
+
+<tr>
+<td>signed
+	<td>A signed number. The value associated with this option
+	will be returned in a <code>long</code>.
+
+<tr>
+<td>string
+	<td>An arbitrary string. The value associated with this option
+	will be returned in a <code>char *</code>. Note that this is
+	the only option whose presence can be detected by the
+	application, since the NULL string is returned if the option
+	is omitted.
+
+<tr>
+<td>timeslot
+	<td>A timeslot specification. This uses the type
+	<code>MVIP</code> which you must define. It must be a
+	structure with three fields: <code>stream</code>,
+	<code>timeslot</code>, and <code>type</code>. If the user
+	invokes the command with a timeslot option whose value is
+	<code>1:2:u</code> then these fields will be set to
+	<code>1</code>, <code>2</code>, and
+	<code>kSMTimeslotTypeMuLaw</code> respectively. The values
+	used in the <code>type</code> field are:
+	<table border>
+	<tr>
+		<th><code>type</code><th>letter specified<th>Meaning
+	
+	<tr>
+		<td>kSMTimeslotTypeALaw<td align=center>a<td>A-law
+	
+	<tr>
+		<td>kSMTimeslotTypeMuLaw<td align=center>u<td>mu-law
+	
+	<tr>
+		<td>kSMTimeslotTypeData<td align=center>r<td>raw
+	
+	</table>
+
+</table>
+<p>
+The first line in the example argument specification specifies the special
+option "<code>-TiNGtrace</code>". This option is treated differently
+from all the others because the code generated to handle it does
+everything required. The program does not need to know when it is
+used. When used, this option controls API tracing by setting the
+global variable <code>TiNGtrace</code> to the value specified with
+the option.
+<h2>Building the parser</h2>
+<p>
+Run the perl script $(TiNG)/libutil/mkargs.pl passing it the name of
+the file in which you put the option specification. It will print out
+some C code which implements the option parsing. For example:
+<pre>
+	perl ../libutil/mkargs.pl ansplay.args >gen/ansplay.args.i
+</pre>
+<p>
+You can use any name you like for the output file, but in Prosody
+the extension "<code>.i</code>" is used for C code which is
+<code>#include</code>d into another file, while "<code>.h</code>" is
+used only for declarations.
+<p>
+That's it.
+</body>
+</html>

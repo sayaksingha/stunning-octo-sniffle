@@ -1,0 +1,5 @@
+libutil	complx.o
+libutil	iir.o
+libutil	alaw.o
+.	fskrx.o
+libutil	floio.o

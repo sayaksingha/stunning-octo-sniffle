@@ -1,0 +1,5 @@
+Replay at speeds over 100%. The speed is selected by
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a> or
+<a href="apifn-sm_replay_adjust.html">sm_replay_adjust()</a>.
+If this module has not been downloaded, the replay will play
+at normal speed.

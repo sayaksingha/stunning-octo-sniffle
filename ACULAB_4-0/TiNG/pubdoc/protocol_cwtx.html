@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Protocols: CW tx</title>
+</head>
+<body>
+<h1>Prosody data communications Protocols: CW tx</h1>
+<p>
+CW is 'continuous wave' which is a method of transmitting
+data using a tone. Binary data is encoded by sending either silence
+or a tone. A tone represents a space (zero) bit, while silence
+represents a mark (one) bit. The name
+<em>continuous wave</em> comes from the world of radio
+communications. It may seem strange that a signalling system that
+starts and stops a tone can be called <em>continuous</em> but the
+name was introduced when radio communications was moving from the
+spark transmitters (which produce a burst of broad spectrum radio
+noise) to transmitters using oscillators and which therefore could
+transmit a continuous carrier at a single frequency - hence the name.
+<p>
+This protocol implements the transmitter for CW. Since it is only a
+transmitter, it only uses the output half of a channel. Typically the
+input half is configured for <a href="protocol_cwrx.html">CW rx</a>.
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic
+<a href="prosdc.html">data communications documentation</a>.
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_cw.h"</code> to get the
+	appropriate declarations.
+<p>
+	The protocol value is <code>kSMDCProtocolCWtx</code>.
+<p>
+	The config_data pointer must point to one of these structs:
+<pre>
+	typedef struct smdc_cw_config_parms {
+		unsigned long <a href="#speed">speed</a>;
+		float <a href="#space_frequency">space_frequency</a>;
+		unsigned long <a href="#rx_carrier_off_mS">rx_carrier_off_mS</a>;
+		unsigned long <a href="#set_power">set_power</a>;
+		float <a href="#user_power">user_power</a>;
+	} SMDC_CW_CONFIG_PARMS;
+</pre>
+<p>
+	<a name="speed">'<code>speed</code>'</a> is the data rate in
+	bits per second.
+<p>
+	<a name="space_frequency">'<code>space_frequency</code>'</a> is
+	the frequency, in Hz, of the tone used to encode space ('0')
+	bits.
+<p>
+	<a name="rx_carrier_off_mS">'<code>rx_carrier_off_mS</code>'</a>
+	is not used and applies only to CW reception.
+<p>
+	<a name="set_power">'<code>set_power</code>'</a>
+	indicates whether to use the default power for transmissions
+	(when zero) or to use a user-specified power level
+	(non-zero). The user-specified power level is given in the
+	<code>user_power</code> field.
+<p>
+	<a name="user_power">'<code>user_power</code>'</a> is the
+	power level (in dBm0) to use for transmissions. This field must
+	be zero if the <code>set_power</code> field is zero to
+	indicate that the default should be used..
+<p>
+	This protocol can use these encodings:
+	<a href="encoding_sync.html">SYNC</a>,
+	<a href="encoding_async.html">ASYNC</a>, and
+	<a href="encoding_hdlc.html">HDLC</a>.
+	Note that since a CW signal contains no clock information, if
+	SYNC or HDLC encodings are used the data must contain enough
+	transitions between carrier and silence (i.e. no long runs of only
+	zeros or only ones) to allow the receiver to keep locked onto
+	the bit rate. It is the user's responsibility to determine the
+	capabilities of the receiver and to ensure that sufficient
+	transitions occur in the data.
+<p>
+	The firmware modules <a href="gen/softmodindex.html#cwtx">cwtx</a>
+	and <a href="gen/softmodindex.html#outchan">outchan</a> must have
+	been downloaded.
+
+<h3><a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a></h3>
+<p>
+	[note] No control is implemented as this protocol has no initial
+	handshake and has no concept of a carrier which can be on or off
+	while not sending data.
+<p>
+	The <a href="gen/apifn-smdc_line_control.html#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>
+	command is supported by this protocol.
+
+<h3><a href="gen/apifn-smdc_line_status.html">smdc_line_status()</a></h3>
+
+<h3><a href="gen/apifn-smdc_tx_status.html">smdc_tx_status()</a></h3>
+<p>
+	[note] 'flow' is not useful since there is no flow
+	control mechanism.
+
+<h3><a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a></h3>
+<p>
+	The only notification implemented is
+	<a href="gen/apifn-smdc_tx_control.html#field-kSMDCTxCtlNotifyOnCapacity">kSMDCTxCtlNotifyOnCapacity</a>.
+<p>
+	When setting the capacity, it is necessary to specify a
+	value one greater than the value required. i.e. to get notified
+	when space is available for at least 32 bytes, set the capacity
+	to 33 or greater.
+
+<h3><a href="gen/apifn-smdc_rx_status.html">smdc_rx_status()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	input half of a channel.
+
+<h3><a href="gen/apifn-smdc_rx_control.html">smdc_rx_control()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	input half of a channel.
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	input half of a channel.
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+</body>

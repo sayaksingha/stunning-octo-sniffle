@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_set_csrc</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_set_csrc</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_set_csrc(struct sm_vmptx_set_csrc_parms *<a href="#field-csrcp">csrcp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-csrcp">*csrcp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_set_csrc_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	unsigned <a href="#field-repeat_delay">repeat_delay</a>;					/* in */
+	unsigned <a href="#field-packet_count">packet_count</a>;					/* in */
+	<a name="enum-kSMVMPTxCSRCType">enum kSMVMPTxCSRCType</a> {
+		<a href="#field-kSMVMPTxCSRCTypeArray">kSMVMPTxCSRCTypeArray</a>,
+		<a href="#field-kSMVMPTxCSRCTypeList">kSMVMPTxCSRCTypeList</a>,
+	} <a href="#field-type">type</a>;							/* in */
+	union {
+		struct {
+			int <a href="#field-u-csrc_array-num_csrc">num_csrc</a>;				/* in */
+			int *<a href="#field-u-csrc_array-csrc">csrc</a>;				/* in */
+		} <a href="#field-u-csrc_array">csrc_array</a>;					/* in */
+		struct {
+			<a href="../apitype.html#type-tSMVMPTxCSRCListId">tSMVMPTxCSRCListId</a> <a href="#field-u-csrc_list-csrc_list_id">csrc_list_id</a>;	/* in */
+			int <a href="#field-u-csrc_list-exclude_ssrc">exclude_ssrc</a>;			/* in */
+			int <a href="#field-u-csrc_list-ssrc">ssrc</a>;				/* in */
+		} <a href="#field-u-csrc_list">csrc_list</a>;					/* in */
+	} <a href="#field-u">u</a>;							/* in */
+} SM_VMPTX_SET_CSRC_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Sets the CSRC list to be sent in the RTP packets.
+<p>
+When
+<a class=pref href="#field-type">type</a>
+is
+<a class=pref href="#field-kSMVMPTxCSRCTypeArray">kSMVMPTxCSRCTypeArray</a>,
+the CSRC list is specified using
+<a class=pref href="#field-u-csrc_array-num_csrc">num_csrc</a>
+and
+<a class=pref href="#field-u-csrc_array-csrc">csrc</a>.
+If
+<a class=pref href="#field-u-csrc_array-num_csrc">num_csrc</a>
+is zero then no CSRC list will be sent.
+<p>
+When
+<a class=pref href="#field-type">type</a>
+is
+<a class=pref href="#field-kSMVMPTxCSRCTypeList">kSMVMPTxCSRCTypeList</a>,
+the field
+<a class=pref href="#field-u-csrc_list-csrc_list_id">csrc_list_id</a>
+must be a list object created using
+<a href="apifn-sm_vmptx_create_csrc_list.html">sm_vmptx_create_csrc_list()</a>,
+or <code>kSMNullVMPTxCSRCListId</code> to clear the CSRC list.
+Any changes to the list object will automatically be reflected in 
+the RTP packets being sent.	Where this VMP[tx] has a corresponding 
+VMP[rx], the appropriate SSRC can be excluded from the CSRC list 
+of the RTP packets sent by this VMP[tx]. When the field
+<a class=pref href="#field-u-csrc_list-exclude_ssrc">exclude_ssrc</a>
+is non-zero, the SSRC passed in
+<a class=pref href="#field-u-csrc_list-ssrc">ssrc</a>
+will not be included in the CSRC list of RTP packets sent by this VMP[tx] 
+even if it is included in the CSRC list object.
+The list object and vmptx must have been allocated
+on the same <code>tSMModuleId</code>.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to be configured
+
+<dt><a name="field-repeat_delay">repeat_delay</a><dd>The minimum delay (in ms) between blocks of packets with the CSRC list 
+included. A	delay of zero means every packet will include the CSRC list.
+
+<dt><a name="field-packet_count">packet_count</a><dd>The number of packets in each block to include the CSRC list.
+
+<dt><a name="field-type">type</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMVMPTxCSRCTypeArray">kSMVMPTxCSRCTypeArray</a>
+<dd>The CSRC list is specified as an array.
+
+<dt><a name="field-kSMVMPTxCSRCTypeList">kSMVMPTxCSRCTypeList</a>
+<dd>The CSRC list is specified using a CSRC list object.
+
+</dl>
+<dt><a name="field-u">u</a><dd>
+
+<dl>
+<dt><a name="field-u-csrc_array">csrc_array</a><dd>This field is only valid if
+<a class=pref href="#field-type">type</a>
+is
+<a class=pref href="#field-kSMVMPTxCSRCTypeArray">kSMVMPTxCSRCTypeArray</a>.
+
+
+<dl>
+<dt><a name="field-u-csrc_array-num_csrc">num_csrc</a><dd>The number of CSRCs in the array
+
+<dt><a name="field-u-csrc_array-csrc">csrc</a><dd>A pointer to an array of CSRCs
+
+</dl>
+<dt><a name="field-u-csrc_list">csrc_list</a><dd>This field is only valid if
+<a class=pref href="#field-type">type</a>
+is
+<a class=pref href="#field-kSMVMPTxCSRCTypeList">kSMVMPTxCSRCTypeList</a>.
+
+
+<dl>
+<dt><a name="field-u-csrc_list-csrc_list_id">csrc_list_id</a><dd>The CSRC list to use
+
+<dt><a name="field-u-csrc_list-exclude_ssrc">exclude_ssrc</a><dd>An indicator of whether to exclude the SSRC from CSRC list
+
+<dt><a name="field-u-csrc_list-ssrc">ssrc</a><dd>The SSRC to exclude from CSRC list
+
+</dl>
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

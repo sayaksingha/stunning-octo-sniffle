@@ -1,0 +1,24 @@
+-TiNGtrace
+a	map		unsigned
+C	catsig_alg	unsigned
+c	cptone		unsigned
+T	type		string
+g	grunt		unsigned
+Gt	grunt_threshold		float
+Gl	grunt_min_noise_level	float
+h	onhook	bool
+Hl	onhook_lowpower	float
+Hh	onhook_highpower	float
+Hs	onhook_softpower	float
+Hv	onhook_convlat	float
+Hc	onhook_cr	float
+Ht	onhook_tr	float
+Hd	onhook_dur unsigned
+m	module		unsigned
+o	tonemode	unsigned
+s	toneset		unsigned
+t	timeslot	timeslot
+R	reftimeslot	timeslot
+Len	lang_english	bool
+Lkr	lang_korean	bool
+x	serialnumber    string

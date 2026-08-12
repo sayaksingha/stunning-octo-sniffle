@@ -1,0 +1,271 @@
+	Prosody SPRT end point
+secname sort
+
+	Create an SPRT end point
+apifn	sm_sprt_create
+params	sm_sprt_create_parms createp
+	The created SPRT end point.
+field	tSMSPRTId sprt out
+	A value obtained from
+fnref   sm_open_module
+	Indicates the module on which the SPRT end point is to be created.
+field   tSMModuleId module in
+unstruct
+	Creates an SPRT end point.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+error   ERR_SM_NO_RESOURCES - if no suitable output channel free
+error   ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified
+
+	Destroy an SPRT end point
+apifn	sm_sprt_destroy
+	The SPRT end point to destroy. Must have been previously created by a call to
+fnref	sm_sprt_create.
+param	tSMSPRTId sprt
+	Destroys an SPRT end point.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Configure the SPRT end point using IPv4
+apifn	sm_sprt_config
+params	sm_sprt_config_parms configp
+	The SPRT end point to configure.
+field	tSMSPRTId sprt in
+	The SOCKADDR_IN structure specifying the destination IP address and port 
+	of the remote SPRT end point. A struct SOCKADDR_IN must be configured with 
+	an address family, an IP address and a port. Note that most operating 
+	systems define this structure such that fields are in network byte order. 
+	The structure must be correctly cast such that an IP V4 address is 
+	specified. 
+field	SOCKADDR_IN dest in
+	The SOCKADDR_IN structure specifying the source IP address and port 
+	of the local SPRT end point. A struct SOCKADDR_IN must be configured with 
+	an address family, an IP address and a port. Note that most operating 
+	systems define this structure such that fields are in network byte order. 
+	The structure must be correctly cast such that an IP V4 address is 
+	specified. This should match the values returned by the VMP[rx] receiving
+	the SPRT packets.
+field	SOCKADDR_IN src in
+	The payload type of the SPRT packets.
+field	int payload_type in
+unstruct
+	Configures the destination of the transmitted SPRT packets and the
+	payload type identifier to use in those packets.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Configure the SPRT end point using IPv6
+apifn	sm_sprt_config_ipv6
+params	sm_sprt_config_ipv6_parms configp
+	The SPRT end point to configure.
+field	tSMSPRTId sprt in
+	The SOCKADDR_IN6 structure specifying the destination IPv6 address and port 
+	of the remote SPRT end point. A struct SOCKADDR_IN6 must be configured with 
+	an address family, an IP address and a port. Note that most operating 
+	systems define this structure such that fields are in network byte order. 
+field	SOCKADDR_IN6 dest in
+	The SOCKADDR_IN6 structure specifying the source IPv6 address and port 
+	of the local SPRT end point. A struct SOCKADDR_IN6 must be configured with 
+	an address family, an IP address and a port. Note that most operating 
+	systems define this structure such that fields are in network byte order. 
+	This should match the values returned by the VMP[rx] receiving
+	the SPRT packets.
+field	SOCKADDR_IN6 src in
+	The payload type of the SPRT packets.
+field	int payload_type in
+unstruct
+	Configures the destination of the transmitted SPRT packets and the
+	payload type identifier to use in those packets.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Configure the reliable channels of the SPRT end point
+apifn	sm_sprt_config_reliable_channel
+params	sm_sprt_config_reliable_channel_parms configp
+	The SPRT end point to configure.
+field	tSMSPRTId sprt in
+	The channel to be configured
+field	int channel in
+	The window size for the channel
+field	int window_size in
+	The value for timer TA01 in milliseconds
+field	int timer_TA01 in
+	The value for timer TA02 in milliseconds
+field	int timer_TA02 in
+	The value for timer TR03 in milliseconds
+field	int timer_TR03 in
+unstruct
+	Configures the settings for one of the reliable SPRT channels. Hence
+ref	channel
+	must be either 1 or 2.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Configure which SPRT channel is used for data
+apifn	sm_sprt_config_data_channel
+params	sm_sprt_config_data_channel_parms configp
+	The SPRT end point to configure.
+field	tSMSPRTId sprt in
+	The channel to use for data
+field	int data_channel in
+	The maximum length of the payload on the data channel
+field	int max_payload_length in
+	The data maximum latency
+field	int max_latency in
+unstruct
+	Configures the channel used for data by the SPRT end point. The default
+	is channel 3, but can be either 1 or 3.
+	<p>
+	A packet is filled with the data passed in via the datafeed and is sent 
+	when it has reached the
+ref	max_payload_length
+	or it has had data for
+ref	max_latency
+	milliseconds.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Configure the SPRT end point data format
+apifn	sm_sprt_config_data_format
+params	sm_sprt_config_data_format_parms configp
+	The SPRT end point to configure.
+field	tSMSPRTId sprt in
+	The data direction to configure
+enumstart	kSMSPRTDataDirection
+enum	kSMSPRTDataDirectionTx
+enum	kSMSPRTDataDirectionRx
+enumend	direction in
+	The data format to be used
+enumstart	kSMSPRTDataFormat 
+enum	kSMSPRTDataFormatNone
+enum	kSMSPRTDataFormatIOctet
+enum	kSMSPRTDataFormatIOctetCS
+enum	kSMSPRTDataFormatIRawOctet
+enumend	format in
+unstruct
+	Configures the data formats used.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Get an event for the SPRT end point
+apifn	sm_sprt_get_event
+params	sm_sprt_get_event_parms eventp
+	The SPRT end point.
+field	tSMSPRTId sprt in
+	The event identifier
+field	tSMEventId event out
+unstruct
+	the event will be signalled when a status change occurs on the SPRT end point.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Fetch status info on a SPRT end point
+apifn	sm_sprt_status
+params	sm_sprt_status_parms statusp
+	The SPRT end point.
+field	tSMSPRTId sprt in
+	The status.
+enumstart kSMSPRTStatus
+	The SPRT end point is running
+enum	kSMSPRTStatusRunning
+	The SPRT end point is not running
+enum	kSMSPRTStatusStopped
+	The SPRT end point has a message to be read
+enum	kSMSPRTStatusMessage
+enumend status out
+unstruct
+	returns the status of the SPRT end point.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+
+	Connect a datafeed to an SPRT end point
+apifn	sm_sprt_datafeed_connect
+params	sm_sprt_datafeed_connect_parms datafeedp
+	The datafeed acting as a source of data
+field	tSMDatafeedId data_source in
+	The SPRT end point that will receive the data
+field	tSMSPRTId sprt in
+unstruct
+	Connects a datafeed to a SPRT end point.
+	<p>
+	Requires the module
+modref	datafeed
+	to have been downloaded.
+explain
+	0
+retval
+
+	Obtain a datafeed from a SPRT end point
+apifn	sm_sprt_get_datafeed
+params	sm_sprt_get_datafeed_parms datafeedp
+	The SPRT end point from which to obtain a datafeed
+field	tSMSPRTId sprt in
+	The datafeed object associated with the output channel
+field	tSMDatafeedId datafeed out
+unstruct
+	Request a datafeed identifier from a SPRT end point.
+	It is valid until the SPRT end point is destroyed.
+	Datafeed connections can only be made between objects allocated
+	on the same <code>tSMModuleId</code>.
+	<p>
+	Requires the module
+modref	datafeed
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Send a message via a SPRT end point
+apifn	sm_sprt_send_message
+params	sm_sprt_send_message_parms datafeedp
+	The SPRT end point from which to send the message
+field	tSMSPRTId sprt in
+	A pointer to the message to be sent
+field	char* message in sprt_message_tx
+	The length of the message data
+field	int length in
+unstruct
+	Send a SPRT packet with the message data as the payload
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Read a message from a SPRT end point
+apifn	sm_sprt_read_message
+params	sm_sprt_read_message_parms datafeedp
+	The SPRT end point from which to read the message
+field	tSMSPRTId sprt in
+	A pointer to the buffer to store the read message
+field	char* message inout sprt_message_rx
+	The maximum length of the message data
+field	int max_length in
+	The length of the message data
+field	int length out
+unstruct
+	Reads a message from a SPRT end point
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+

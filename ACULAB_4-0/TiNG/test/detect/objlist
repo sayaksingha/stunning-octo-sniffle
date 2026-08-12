@@ -1,0 +1,8 @@
+.	detect.o
+Testlib	error.o
+Testlib	cardlist.o
+Testlib	errcode_sm.o
+Testlib	modlist.o
+apilib
+call
+switch

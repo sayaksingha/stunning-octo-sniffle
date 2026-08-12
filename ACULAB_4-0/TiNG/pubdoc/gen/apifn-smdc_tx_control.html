@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody data communications: API: smdc_tx_control</title>
+</head>
+<body>
+<h1>Prosody data communications: API: smdc_tx_control</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int smdc_tx_control(struct smdc_tx_control_parms *<a href="#field-controlp">controlp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-controlp">*controlp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_tx_control_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCTxCtl">enum kSMDCTxCtl</a> {
+		<a href="#field-kSMDCTxCtlDiscard">kSMDCTxCtlDiscard</a>,
+		<a href="#field-kSMDCTxCtlNotifyOnCapacity">kSMDCTxCtlNotifyOnCapacity</a>,
+		<a href="#field-kSMDCTxCtlNotifyOnEmpty">kSMDCTxCtlNotifyOnEmpty</a>,
+		<a href="#field-kSMDCTxCtlNoNotifyOnEmpty">kSMDCTxCtlNoNotifyOnEmpty</a>,
+		<a href="#field-kSMDCTxCtlFinish">kSMDCTxCtlFinish</a>,
+	} <a href="#field-cmd">cmd</a>;							/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-capacity">capacity</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-blocking">blocking</a>;					/* in */
+} SMDC_TX_CONTROL_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Performs a control operation on the output half of a data
+communications channel.
+<p>
+If the
+<a class=pref href="#field-cmd">cmd</a>
+field holds
+<a class=pref href="#field-kSMDCTxCtlNotifyOnCapacity">kSMDCTxCtlNotifyOnCapacity</a>,
+the criterion is set for determining when the output half of
+the channel is ready.
+A channel is ready when there is space to buffer the amount of
+data specified by 
+<a class=pref href="#field-capacity">capacity</a>.
+It ceases to be ready when the space falls below this value.
+When the output half of a channel is ready:
+<ul>
+<li>a call to 
+<a href="apifn-smdc_tx_data.html">smdc_tx_data()</a>
+will not block
+<li>the associated event (if any) is signalled
+</ul>
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The data communication channel.
+
+<dt><a name="field-cmd">cmd</a><dd>The operation to perform.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCTxCtlDiscard">kSMDCTxCtlDiscard</a>
+<dd>Attempt to discard all data which has been buffered but has
+not yet been sent.
+
+<dt><a name="field-kSMDCTxCtlNotifyOnCapacity">kSMDCTxCtlNotifyOnCapacity</a>
+<dd>Set the parameter which controls when this output reports
+that there is capacity for more data. The value is taken from
+the
+<a class=pref href="#field-capacity">capacity</a>
+field.
+Also
+enable notification of the presence of capacity. The blocking
+indicator is also set from the
+<a class=pref href="#field-blocking">blocking</a>
+field.
+
+<dt><a name="field-kSMDCTxCtlNotifyOnEmpty">kSMDCTxCtlNotifyOnEmpty</a>
+<dd>Reserved value.
+
+<dt><a name="field-kSMDCTxCtlNoNotifyOnEmpty">kSMDCTxCtlNoNotifyOnEmpty</a>
+<dd>Reserved value.
+
+<dt><a name="field-kSMDCTxCtlFinish">kSMDCTxCtlFinish</a>
+<dd>Indicate that there is no more data to be sent and that the
+transmitter should cease transmission when it has sent any
+data currently buffered. The channel's tx status becomes
+<a href="apifn-smdc_tx_status.html#field-kSMDCTxStatusFinishing">
+kSMDCTxStatusFinishing</a> and any associated event will no
+longer be set by space being available for more data. It is
+an error to attempt to send more data after using this command.
+
+</dl>
+<dt><a name="field-capacity">capacity</a><dd>The capacity (in octets) for the notification threshold. Only
+valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCTxCtlNotifyOnCapacity">kSMDCTxCtlNotifyOnCapacity</a>.
+If this value is greater than zero, notification occurs when
+that number of octets of space is available. If it is less
+than zero, notification occurs when the amount of buffered
+data falls below that value. For example, the value
+<code>-128</code> means that notification is to happen
+when only 128 octets of data is waiting to be sent.
+If it is zero, then any associated event will only be set when 
+<a href="apifn-smdc_tx_status.html">smdc_tx_status()</a>
+needs to be called.
+See also the document <a href="../an-data_transfer.html">Prosody
+application note: considerations for data transfer
+thresholds</a>.
+
+<dt><a name="field-blocking">blocking</a><dd>This field is currently ignored.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosdc.html">Prosody data communications API</a>.
+</body>
+</html>

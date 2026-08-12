@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_sec_module</title>
+</head>
+<body>
+<h1>Prosody generic: API: sm_sec_module</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_sec_module(struct sm_sec_module_parms *<a href="#field-module_parmsp">module_parmsp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-module_parmsp">*module_parmsp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sec_module_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module_id">module_id</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-exclude_data_to_module">exclude_data_to_module</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-exclude_data_from_module">exclude_data_from_module</a>;			/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-key_id">key_id</a>;						/* in */
+	char *<a href="#field-context">context</a>;						/* in */
+	<a href="../apitype.html#type-tSMSecCallback">tSMSecCallback</a> <a href="#field-encdec">encdec</a>;					/* in */
+} SM_SEC_MODULE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Sets up encrypted communication with module.  Must be used in conjunction 
+with a compatible external encryption library, for example
+kmlib3des.
+If encryption is required, this function must be invoked immediately after 
+calling
+<a href="apifn-sm_open_module.html">sm_open_module()</a>.
+Requires an encryption capable kernel to be running on the module.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-module_id">module_id</a><dd>An id for an open module previously obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+
+<dt><a name="field-exclude_data_to_module">exclude_data_to_module</a><dd>If non-zero causes bulk data (e.g. replay data) sent to module to be 
+excluded from encryption.
+
+<dt><a name="field-exclude_data_from_module">exclude_data_from_module</a><dd>If non-zero causes bulk data (e.g. record data) sent from module to be 
+excluded from encryption.
+
+<dt><a name="field-key_id">key_id</a><dd>An id from an external encryption library used to identify a previously 
+agreed key for use with this module.
+
+<dt><a name="field-context">context</a><dd>The context from an external encryption library used by TiNG library in 
+callbacks.
+
+<dt><a name="field-encdec">encdec</a><dd>The callback with type void (*)(tSM_INT,tSM_INT,void*,tSM_UT8*) from an 
+external encryption library used by TiNG library to encrypt and decrypt 
+messages.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_NO_SUCH_MODULE - if no such module exists</ul>
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

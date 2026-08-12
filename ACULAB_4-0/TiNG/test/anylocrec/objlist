@@ -1,0 +1,8 @@
+Testlib	error.o
+Testlib	eventset.o
+.	anylocrec.o
+Testlib	fmtcode.o
+Testlib	errcode_sm.o
+Testlib	cardlist.o
+Testlib	modlist.o
+apilib

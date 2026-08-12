@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody WAV BFILE: API: sm_replay_wav_bf_get_type</title>
+</head>
+<body>
+<h1>Prosody WAV BFILE: API: sm_replay_wav_bf_get_type</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_replay_wav_bf_get_type(char *<a href="#field-filename">filename</a>, int *<a href="#field-replay_type">replay_type</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-filename">filename</a>
+<dd>
+The name of a WAV file.
+<dt><a name="field-replay_type">replay_type</a>
+<dd>
+The address of where the data type code is to be saved.
+</dl>
+<h2>Description</h2>
+<p>
+Given name of existing WAV file, returns in
+<a class=pref href="#field-replay_type">replay_type</a>
+Prosody API data format type id that would be used by
+<a href="apifn-sm_replay_start.html">sm_replay_start</a>.
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem reading file</ul>
+<hr>
+<p>This function is part of the <a href="../highapi_bf_wavfile.html">Prosody WAV BFILE API</a>.
+</body>
+</html>

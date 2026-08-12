@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody generic</title>
+</head>
+<body>
+<h1>Prosody generic</h1>
+<p>
+The generic part of Prosody consists of
+<a href="gen/prosgen-index.html">functions</a> which implement
+functionality, such as channel
+allocation, which are common to all types of processing that may be
+performed by Prosody.
+<h2>The programming interface</h2>
+<p>
+The declarations for this API are in <code>apilib/smdrvr.h</code>
+and applications using this API must be linked with the
+appropriate library - see <a href="howto_buildapp.html#linking">Linking an application with the TiNG library</a>
+
+<h3>Initialisation</h3>
+<p>
+	From time to time new features are added to this API. This may
+	require new fields to be added to structures. A mechanism is
+	available to ensure that this does not cause any problems for
+	code developed prior to the addition. This is achieved by
+	defining all new fields such that the value zero selects
+	backward compatible behaviour. To take advantage of this,
+	structures should be cleared before use. For example,
+
+<pre>
+	SM_CHANNEL_ALLOC_PLACED_PARMS ap;
+	memset(&amp;ap, 0, sizeof(ap));
+	ap.type = kSMChannelTypeFullDuplex;
+		... etc
+</pre>
+
+<p>
+	This ensures that if a new field is ever added to this
+	structure the new field is not left uninitialised.
+
+<h3>Return values</h3>
+<p>
+	The list of error codes that a function can return is only a
+	list of typical errors. If a function is described as returning
+	a <a href="gen/error.html">standard error</a> then it can return
+	any such error. Also, when the description of a function says
+	that it can return a particular error code (for example,
+	ERR_SM_FIRMWARE_NOT_RUNNING), this does not mean that the
+	function guarantees to detect this error condition in all
+	circumstances. It merely means that if it does detect this
+	error condition, then this is the code it will return.
+<p>
+	There are situations where a successful call to a function causes
+	an error condition to occur on a Prosody module, such as a request 
+	that requires a firmware module which has not been loaded. In these 
+	cases, the error condition is reported through a subsequent function 
+	call. This is usually a status function that is associated with 
+	the object which has caused the error. Some error conditions are 
+	more general. For example, a failure in communication with a 
+	Prosody module can be reported though any function call which 
+	refers to objects on that module.
+
+<h3>Details of functions</h3>
+<p><a href="gen/prosgen-index.html">API details by function</a>
+<hr>
+<p>
+This API is part of <a href="index.html">Prosody</a>.
+</body>
+</html>

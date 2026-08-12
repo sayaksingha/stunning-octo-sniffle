@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>BFILE library: bferror() - buffered file error status</title>
+</head>
+<body>
+<h1>BFILE library: bferror() - buffered file error status</h1>
+<h2>Name</h2>
+<p>
+bferror() - buffered file error status
+
+<h2>Synopsis</h2>
+<p>
+<pre>
+#include "bfile.h"
+
+int bferror(BFILE *<a name="bfp">bfp</a>);
+</pre>
+
+<h2>Decription</h2>
+<p>
+The <code>bferror()</code> function reports the last error,
+<code>0</code> if none.
+This also clears the error.
+
+<h2>Return value</h2>
+<p>
+Returns the current error value for this <code>BFILE</code>.
+
+<h2>See also</h2>
+<p>
+<a href="bfile_ctor.html">bfile(), bfile_dtor()</a>.
+
+<hr>
+<p>
+This function is part of the <a href="bfile.html">BFILE library</a>.
+</body>
+</html>

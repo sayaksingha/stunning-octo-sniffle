@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody H.223 Mux: API: sm_h223mux_add_entry</title>
+</head>
+<body class=version-Prel>
+<h1>Prosody H.223 Mux: API: sm_h223mux_add_entry</h1>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_h223mux_add_entry(struct sm_h223mux_add_entry_parms *<a href="#field-entryp">entryp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-entryp">*entryp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_add_entry_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a name="enum-kSMH223muxTableEntryDirection">enum kSMH223muxTableEntryDirection</a> {
+		<a href="#field-kSMH223muxTableEntryDirectionTransmit">kSMH223muxTableEntryDirectionTransmit</a>,
+		<a href="#field-kSMH223muxTableEntryDirectionReceive">kSMH223muxTableEntryDirectionReceive</a>,
+	} <a href="#field-direction">direction</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-entry_number">entry_number</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-descriptor_len">descriptor_len</a>;					/* in */
+	char *<a href="#field-descriptor">descriptor</a>;					/* in */
+} SM_H223MUX_ADD_ENTRY_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This function will add an entry to the multiplex table.  The entry may be transmit or receive.
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to add the table entry to.
+
+<dt class=version-Prel><a name="field-direction">direction</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The logical channel direction.
+
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxTableEntryDirectionTransmit">kSMH223muxTableEntryDirectionTransmit</a>
+<dd>Table entry relates to transmit direction.
+
+<dt><a name="field-kSMH223muxTableEntryDirectionReceive">kSMH223muxTableEntryDirectionReceive</a>
+<dd>Table entry relates to receive direction.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-entry_number">entry_number</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The multiplex table entry number
+
+<dt class=version-Prel><a name="field-descriptor_len">descriptor_len</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The length of the descriptor in octets.
+
+<dt class=version-Prel><a name="field-descriptor">descriptor</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The multiplex entry descriptor as defined in ITU-T H.223 Table 2.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosh223api.html">Prosody H.223 Mux API</a>.
+</body>
+</html>

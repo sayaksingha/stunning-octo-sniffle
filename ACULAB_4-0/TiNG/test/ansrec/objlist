@@ -1,0 +1,14 @@
+.	ansrec.o
+Testlib	error.o
+Testlib	errcode_sm.o
+Testlib	cardlist.o
+Testlib	checkrec.o
+Testlib	fmtcode.o
+Testlib	modlist.o
+Testlib	watchl1.o
+apilib
+call
+libutil	bfile.o
+libutil	bfopen.o
+libutil	vseprintf.o
+switch

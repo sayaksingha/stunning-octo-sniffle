@@ -1,0 +1,7 @@
+Testlib	error.o
+.	vmwitest.o
+Testlib	errcode_sm.o
+Testlib	cardopen.o
+Testlib	modopen.o
+adsilib	adsilib.o
+apilib

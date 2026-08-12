@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody Audio Video Format (AVF): API: sm_avfrec_start</title>
+</head>
+<body class=version-deprecated>
+<h1>Prosody Audio Video Format (AVF): API: sm_avfrec_start</h1>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_avfrec_start(struct sm_avfrec_start_parms *<a href="#field-avfsp">avfsp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-avfsp">*avfsp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfrec_start_parms {
+	<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-avfrec">avfrec</a>;					/* in */
+	<a name="enum-kSMAVFInputType">enum kSMAVFInputType</a> {
+		<a href="#field-kSMAVFInputAVFVideo">kSMAVFInputAVFVideo</a>,
+		<a href="#field-kSMAVFInputAVFAudio">kSMAVFInputAVFAudio</a>,
+		<a href="#field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>,
+	} <a href="#field-src_type">src_type</a>;						/* in */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u_src_type-audio-payload_type">payload_type</a>;			/* in */
+			<a href="apifn-sm_avfplay_start.html#enum-kSMAudioDataFormat">enum kSMAudioDataFormat</a> <a href="#field-u_src_type-audio-dest_type">dest_type</a>;	/* in */
+			union {
+				struct {
+					<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u_src_type-audio-u_dest_type-amrnb-bitrate">bitrate</a>;	/* in */
+					<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u_src_type-audio-u_dest_type-amrnb-vad_enable">vad_enable</a>;	/* in */
+				} <a href="#field-u_src_type-audio-u_dest_type-amrnb">amrnb</a>;			/* in */
+			} <a href="#field-u_src_type-audio-u_dest_type">u_dest_type</a>;				/* in */
+		} <a href="#field-u_src_type-audio">audio</a>;					/* in */
+	} <a href="#field-u_src_type">u_src_type</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-hbuf_size">hbuf_size</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-test_mode">test_mode</a>;					/* in */
+} SM_AVFREC_START_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Starts the necessary tasks on the module for record of AVF-encapsulated
+video or audio.
+<p>
+If
+<a class=pref href="#field-src_type">src_type</a>
+is set to 
+<a class=pref href="#field-kSMAVFInputAVFVideo">kSMAVFInputAVFVideo</a>
+once the AVF recorder has been started, it will not emit any AVF frames
+to the host until it has received an AVF frame containing a video
+I-Frame. This helps to ensure that when the resulting video is rendered
+- e.g. by a 3GP file player - the video starts cleanly. When recording
+both audio and video,
+<a href="apifn-sm_avfrec_sync.html">sm_avfrec_sync()</a>
+can be used to help achieve lipsync even when the video AVF stream to
+the host starts some time after the audio AVF stream.
+<p>
+Note that, unlike most tasks, an AVF recorder can input different types
+of data - e.g. AVF AMR-NB audio stream, AVF H.263 video stream, etc. -
+dependant on how it is started. It is the application writer's
+responsibility to ensure that the task (e.g. VMP[rx]) to which the AVF
+rec's datafeed is connected is able to generate this data.
+<p>
+Note: The unions in in the above struct are used to allow future expansion.
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfrec">avfrec</a>	(Deprecated)
+<dd class=version-deprecated>A tSMAVFrecId that has been prevously created by a call to 
+<a href="apifn-sm_avfrec_create.html">sm_avfrec_create()</a>.
+
+<dt class=version-deprecated><a name="field-src_type">src_type</a>	(Deprecated)
+<dd class=version-deprecated>The type of data expected as input from the datafeed.
+
+<div class=version-deprecated>
+One of these values:
+<dl>
+<dt><a name="field-kSMAVFInputAVFVideo">kSMAVFInputAVFVideo</a>
+<dd>Expect AVF-encapsulated video frames.
+
+<dt><a name="field-kSMAVFInputAVFAudio">kSMAVFInputAVFAudio</a>
+<dd>Expect AVF-encapsulated audio frames.
+
+<dt><a name="field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>
+<dd>Expect linear audio, converting the supplied AVF-encapsulated audio frames'
+payload using the audio encoder specified in the
+<a class=pref href="#field-u_src_type-audio-dest_type">dest_type</a>
+field.
+
+</dl>
+</div>
+<dt class=version-deprecated><a name="field-u_src_type">u_src_type</a>	(Deprecated)
+<dd class=version-deprecated>
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u_src_type-audio">audio</a><dd>This struct is valid only if
+<a class=pref href="#field-src_type">src_type</a>
+is
+<a class=pref href="#field-kSMAVFInputAVFAudio">kSMAVFInputAVFAudio</a>
+or
+<a class=pref href="#field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>
+
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u_src_type-audio-payload_type">payload_type</a><dd>The payload type which should be used in the output AVF. Note that on 
+AVF replay the payload type in the AVF is ignored so, in general, the 
+value supplied here is irrelevant. However if, for instance, the resulting 
+file was to be output using a streaming server, the payload type may well 
+be used. This value is ignored unless
+<a class=pref href="#field-src_type">src_type</a>
+is
+<a class=pref href="#field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>
+as it is only in this case that the AVF frames are constructed in the tasks
+started by this function.
+
+<dt><a name="field-u_src_type-audio-dest_type">dest_type</a><dd>This specifies the type of audio to be output - i.e. the encoder to be run
+on the input linear audio. It is ignored unless
+<a class=pref href="#field-src_type">src_type</a>
+is set to
+<a class=pref href="#field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>
+
+One of these values:
+<dl>
+<dt><a name="field-kSMAudioDataFormatALawPCM">kSMAudioDataFormatALawPCM</a>
+<dd>G.711 A-law. This uses 8 bits per sample.
+
+<dt><a name="field-kSMAudioDataFormatULawPCM">kSMAudioDataFormatULawPCM</a>
+<dd>G.711 mu-law. This uses 8 bits per sample.
+
+<dt><a name="field-kSMAudioDataFormatAMRNB">kSMAudioDataFormatAMRNB</a>
+<dd>AMR-NB. The sampling rate must be 8000Hz.
+
+<dt><a name="field-kSMAudioDataFormat16bit">kSMAudioDataFormat16bit</a>
+<dd>16-bit linear coding, where each sample is a signed value (-32768 to 32767). The first octet of each sample is the less significant one.
+
+<dt><a name="field-kSMAudioDataFormat8bit">kSMAudioDataFormat8bit</a>
+<dd>8-bit unsigned linear coding, where each sample is an unsigned value (0 to 255). This is Microsoft's 8-bit format.
+
+</dl>
+<dt><a name="field-u_src_type-audio-u_dest_type">u_dest_type</a><dd>
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u_src_type-audio-u_dest_type-amrnb">amrnb</a><dd>This struct is valid only if
+<a class=pref href="#field-u_src_type-audio-dest_type">dest_type</a>
+is
+<a class=pref href="#field-kSMAudioDataFormatAMRNB">kSMAudioDataFormatAMRNB</a>
+and is ignored unless
+<a class=pref href="#field-src_type">src_type</a>
+is set to
+<a class=pref href="#field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>
+
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u_src_type-audio-u_dest_type-amrnb-bitrate">bitrate</a><dd>The speed to use in bits per second. It must be one of the speeds which 
+the AMR codec can encode, which are: 4750, 5150, 5900, 6700, 7400, 7950, 
+10200, and 12200. 
+
+<dt><a name="field-u_src_type-audio-u_dest_type-amrnb-vad_enable">vad_enable</a><dd>Whether to enable the Voice Activity Detector.
+
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+</div>
+<dt class=version-deprecated><a name="field-hbuf_size">hbuf_size</a>	(Deprecated)
+<dd class=version-deprecated>This must be set to the desired size of the record's buffer on the module in
+bytes. For audio records 8188 is generally a suitable value. For video
+records the value depends on the video content but MUST be comfortably larger
+than the largest AVF frame to be recorded. If set to 0, for
+<a class=pref href="#field-src_type">src_type</a>
+<a class=pref href="#field-kSMAVFInputAVFAudio">kSMAVFInputAVFAudio</a>
+the assumed size is 8188, and for
+<a class=pref href="#field-src_type">src_type</a>
+<a class=pref href="#field-kSMAVFInputAVFVideo">kSMAVFInputAVFVideo</a>
+the assumed size is 32764. This value is ignored if
+<a class=pref href="#field-src_type">src_type</a>
+is
+<a class=pref href="#field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>
+and, in this case, a default buffer size is used as for regular audio
+record. Note that in order to achieve optimum memory allocation on the
+Prosody X platform, this value should generally be a power of two, minus 4.
+
+<dt class=version-deprecated><a name="field-test_mode">test_mode</a>	(Deprecated)
+<dd class=version-deprecated>For Aculab use only: sets the test mode. Must be set to 0 for normal operation.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosvid.html">Prosody Audio Video Format (AVF) API</a>.
+</body>
+</html>

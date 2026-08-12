@@ -1,0 +1,8 @@
+-TiNGtrace
+a	sastype		unsigned
+h	onhook		bool
+m	module		unsigned
+n	onmsg		bool
+s	sdmf		bool
+t	timeslot	timeslot
+x	serialnumber	string

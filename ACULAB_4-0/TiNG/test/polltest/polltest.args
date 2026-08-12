@@ -1,0 +1,17 @@
+-TiNGtrace
+A	txcapacity	signed
+0	syncstart	bool
+C	crcsize		unsigned
+P	protocol	string
+S	sync		unsigned
+c	check		unsigned
+f	fileprefix	string
+i	intimeslot	timeslot
+m	module		unsigned
+n	numchan		unsigned
+o	outtimeslot	timeslot
+p	patsize		unsigned
+r	crc		unsigned
+s	speed		unsigned
+X	maxrx		unsigned
+x	serialnumber	string

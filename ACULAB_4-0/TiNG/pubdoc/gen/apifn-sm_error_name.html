@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_error_name</title>
+</head>
+<body>
+<h1>Prosody generic: API: sm_error_name</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+char *sm_error_name(struct sm_error_name_parms *<a href="#field-errp">errp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-errp">*errp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_error_name_parms {
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-code">code</a>;						/* in */
+	char <a href="#field-name">name[80]</a>;						/* out */
+} SM_ERROR_NAME_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Generates a name for the supplied Prosody error code. The name is
+one of the <a href="error.html">standard names</a>, unless the
+error code is unrecognised, in which case a suitable representation
+is used.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-code">code</a><dd>The error code whose name is required.
+
+<dt><a name="field-name">name</a><dd>The generated name.
+
+</dl>
+<h2>Returns</h2>
+<p>Returns the address of the
+<a class=pref href="#field-name">name</a>
+field in the supplied parameter structure. This allows the function
+return value to be used as a parameter to another function call.
+For example:
+<pre>
+printf("Error calling sm_replay_start(): %s\n", sm_error_name(&amp;e));
+</pre>
+<p>
+Since this is never null, it can be safely used immediately.
+.
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

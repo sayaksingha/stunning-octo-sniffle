@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_get_datafeed</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_get_datafeed</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_get_datafeed(struct sm_vmprx_datafeed_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_datafeed_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* out */
+} SM_VMPRX_DATAFEED_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Request a datafeed identifier from a VMP[rx]. This identifer can 
+subsequently be used in a call to any of the
+<code>*_datafeed_connect()</code> functions
+to connect the output from the VMP[rx] to a destination.
+It is valid until the VMP[rx] is destroyed.
+Datafeed connections can only be made between objects allocated
+on the same <code>tSMModuleId</code>.
+<p>
+Requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] from which to obtain a datafeed
+
+<dt><a name="field-datafeed">datafeed</a><dd>The datafeed object associated with the VMP[rx]
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

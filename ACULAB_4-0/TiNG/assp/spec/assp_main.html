@@ -1,0 +1,923 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>A Protocol for Asymmetric High Load</title>
+</head>
+<body>
+<h1>A Protocol for Asymmetric High Load</h1>
+<p>
+As described in
+<a href="assp_req.html">Asymmetric High Load Protocol Requirements</a>,
+we need a protocol which embodies these principles:
+<ul>
+<li>Avoid unnecessary traffic
+<li>Permit varied timeliness for re-transmissions
+<li>Minimise CPU time
+	<ul>
+	<li> in transmitting application
+	<li> in transmitting host
+	<li> in intermediate routers
+	<li> in receiving host
+	<li> in receiving application
+	</ul>
+<li>Avoid breaking up chunks of data (as seen by application)
+<li>Permit Extensions
+<li>Allow operation across low bandwidth, high latency links.
+<li>Good addressibility
+<li>Must be implementable
+</ul>
+<p>
+The reqirement to avoid breaking up data means that it is not a stream
+protocol like TCP, but since there is no need to preserve boundaries,
+it can merge data when convenient, leading to us calling it a semi-stream
+protocol. Since its other main requirement is handling of asymmetry,
+we'll call it the <strong>Asymmetric Semi-Stream Protocol</strong>, or
+<strong>ASSP</strong>.
+<p>
+The requirement for implementability means that it will run over UDP
+as this allows implementations to run in user mode on popular
+operating systems without having to examine irrelevant packets. In
+particular, an implementation need only listen on one UDP port.
+<p>
+Because of the similarity to the requirements of TCP, it's worth
+looking at <a href="assp_comptcp.html">TCP Packet contents and
+their relevance to ASSP</a>. An equivalent review of SCTP packet
+contents is provided as <a href="assp_compsctp.html">SCTP Packet
+contents and their relevance to ASSP</a>.
+<p>
+The remainder of this document covers the specification of ASSP. Note
+that the protocol is defined solely in terms of packets received, the
+interpretation of those packets and packets sent. The interaction with
+the local user of ASSP is an entirely local issue and outside the
+scope of the protocol itself. Where this specification appears to
+describe local actions (e.g. 'connect()') it means that the packets
+sent as a result of the local action should be interpreted as if such an
+action has taken place - not that it is a constraint on implementation.
+
+<h2>Packet format</h2>
+<p>
+The packet fields and their meanings are described in 
+<a href="assp_packet_format.html">ASSP packet format</a>.
+
+<h2>Overall Protocol states</h2>
+<p>
+The protocol states used and the transitions which can be made are
+defined in <a href="assp_states.html">Protocol states for ASSP</a>.
+
+<h2>Opening the connection</h2>
+<p>
+The two hosts which form a connection will be referred to as 'the
+client' and 'the server'. When the
+client wants to open a connection, it chooses four values at random,
+<code>S0</code>, <code>A0</code>, <code>T0</code>, and <code>R0</code>,
+sends a request to the server asking for a cookie setting SEQ to
+<code>S0</code>, ACK to <code>A0</code>, TXTS to <code>T0</code>,
+and REFTS to <code>R0</code>. The server replies with a cookie.
+Re-transmissions of the cookie request differ only
+in that the TXTS field is advanced appropriately for each one. The
+packet carrying the cookie has SEQ set to <code>A0</code>, ACK set to
+<code>S0</code>,
+TXTS set to <code>R0</code>, and REFTS to <code>T0 + V</code>,
+where <code>V</code> is a the number of client clock ticks that elapsed
+between the first transmission of the request for the cookie and the
+transmission of the copy which is causing the reply. The client then
+sends a SYN quoting this cookie. When this is received by the server,
+the server decides whether or not to accept the connection. If it
+accepts the connection it allocates the resources for it and
+acknowledges the SYN in the normal way. (Note that it does not send a
+SYN itself, unlike TCP). The client needs to use a timeout and
+re-transmit the request for a cookie until it gets a reply. Since the
+SYN is the first sequenced packet, the normal timeout and
+re-transmission rules for sequenced packets apply. If a server
+decides not to accept a connection, it must send a RST.
+<table border>
+<tr><th>SEQ<th>ACK<th>TXTS<th>REFTS<th>from client<th>from server<th>notes
+<tr>
+	<td><code>S0</code>
+	<td><code>A0</code>,
+	<td><code>T0</code>
+	<td><code>R0</code>,
+	<td>GETCOOKIE
+	<td>
+	<td>lost
+<tr>
+	<td><code>S0</code>
+	<td><code>A0</code>,
+	<td><code>T0+V</code>
+	<td><code>R0</code>,
+	<td>GETCOOKIE
+	<td>
+	<td>a re-transmission which arrives
+<tr>
+	<td><code>A0</code>
+	<td><code>S0</code>,
+	<td><code>R0</code>
+	<td><code>T0+V</code>,
+	<td>
+	<td>USECOOKIE
+	<td>reply to successful re-transmission
+<tr>
+	<td><code>S0</code>
+	<td><code>A0</code>,
+	<td><code>T0+V+W</code>
+	<td><code>R0</code>,
+	<td>SYN+COOKIE
+	<td>
+	<td>using reply received at T0+V+W
+<tr>
+	<td><code>S0</code>
+	<td><code>A0</code>,
+	<td><code>T0+V+W+X</code>
+	<td><code>R0</code>,
+	<td>SYN+COOKIE
+	<td>
+	<td>a re-transmission of SYN
+</table>
+<p> If a client has sent a SYN and receives a new cookie, it must
+re-send the SYN using the new cookie.
+<p>
+If a server receives a SYN with a cookie which was previously valid
+but has passed a time limit of validity, it may reply with a
+replacement cookie or it may reject the connection with a RST. The
+intent here is to address the situation which occurs because the RTT to
+the client is longer than the valid lifetime of a normal cookie. In
+the absence of such a provision, clients with a RTT longer than the
+normal cookie lifetime would be unable to connect at all. However it
+is not yet clear what should be the exact basis used by a server for
+deciding whether or not to issue a replacement cookie, so the only
+provision made here is for the client to work correctly if the server
+does replace the cookie.
+<p>
+Note that checking a cookie for staleness is typically just a
+comparison, while validation requires a more time-consuming
+cryptographic check, so a server may be able to optimise cookie
+handling by checking the age of a cookie first and not bothering to
+validate cookies which are too old.
+<p>
+The request for a cookie and the reply containing the cookie must
+both have the ACKLESS option. This is partly because they have the
+right semantics - no separate ACK is required because they trigger
+responses which will carry the ACK, and partly to avoid a subtle
+problem. Suppose the cookie reply is duplicated in the network, and
+the SYN is lost. Then the client would see the duplicate cookie as a
+stale packet, send an ack, which the server would get in CLOSED state,
+causing it to send a RST and clear the connection.
+<!-- FIXME: conflicts with requirement to send  ACK
+for stale ACKLESS packets -->
+
+<h2>Detecting broken connections</h2>
+<p>
+When the protocol calls for re-transmissions, an implementation should
+indicate failure of the connection if an excessive number of
+re-transmissions occurs. There is no default keepalive, since an
+unused connection shouldn't consume network resources. 
+
+<h2>TCB</h2>
+<p>
+A connection has associated state which is collectively known as the
+<em>Transmission Control Block</em> or TCB. The TCB contains:
+<ul>
+	<li>transmitter values, <code>SND</code>
+	<ul>
+		<li><code>NXTSEQ</code> - the next SEQ number
+		available
+		<li><code>UNA</code> - the oldest unacknowledged sequence
+		number
+		<li><code>BASETS</code> - the random base from which out outgoing TXTS fields are offset
+	</ul>
+	<li>receiver values, <code>RCV</code>
+	<ul>
+		<li><code>NXT</code> - the oldest SEQ number not
+		yet received
+		<li><code>LASTTXTS</code> - the most recent TXTS value received
+		<li><code>LASTREFTS</code> - the most recent REFTS value received
+		<li><code>MAXTXTS</code> - the TXTS value received which represents the latest time
+		<li><code>MAXRXTIM</code> - the time at which the last packet was received
+	</ul>
+	<li>RTT values, <code>RTT</code>
+	<ul>
+		<li><code>MINRTT</code> - minimum RTT experienced on
+		this connection
+		<li><code>AVRTT</code> - estimated mean RTT
+		<li><code>RTTVAR</code> - estimated RTT variance
+	</ul>
+	<li>fast ACK RTT values, <code>FRTT</code>
+	These are the same as for ordinary ACKs.
+	<li>congestion avoidance values, <code>CA</code>
+	<ul>
+		<li><code>CWND</code> - congestion window: number of
+		packets permitted to be in transit [RFC 2581]
+		<li><code>ALPHA</code> - lower threshold on
+		outstanding packets - constant 1 [Vegas]
+		<li><code>BETA</code> - upper threshold on
+		outstanding packets - constant 3 [Vegas]
+		<li><code>SSTHRESH</code> - slow start threshold [RFC
+		2581]
+		<li><code>FLIGHTSIZE</code> - packets in the network
+	</ul>
+	<li>congestion recovery values, <code>CR</code>
+	<ul>
+		<li><code>RHLEN</code> - rate-halving length - number
+		of packets which must be acked before rate halving
+		finishes
+	</ul>
+</ul>
+
+<h2>Received packet classification</h2>
+<p>
+Each received packet is classified as being alien, valid, or
+erroneous.
+<p>
+Alien packets are those which could not belong to this connection.
+An alien packet which is an ACKLESS RST is completely ignored. All
+others are ignored except that an isolated reply of ACKLESS RST is sent.
+<p>
+Erroneous packets are those which are not alien, but have been sent by a
+buggy implementation. They are handled as for alien packets with
+the addition that they cause a transition to RST-WAIT state unless the
+connection is already in RST-WAIT, TIME_WAIT or CLOSED. Depending on
+the order in which checks are performed, some erroneous packets might be
+treated as if merely stale.
+<p>
+Valid packets are those which are neither alien nor erroneous. The
+sequenced and non-sequenced information in valid packets is
+handled separately, and each is further classified as fresh and stale.
+Here are examples of each combination:
+<table border>
+<tr><th>Sequenced<th>Non-sequenced<th>Example
+<tr><td>Fresh<td>Fresh<td>A new packet carrying new data
+<tr><td>Fresh<td>Stale<td>A packet carrying new data which has
+arrived out-of-order
+<tr><td>Stale<td>Fresh<td>A re-transmission of data which we already
+received
+<tr><td>Stale<td>Stale<td>A re-transmission of data which arrived
+out-of-order
+</table>
+<p>
+If the non-sequenced information in a packet is stale, it is ignored
+and only the sequenced information is processed. Since the non-sequenced
+options in a packet always supersede options in earlier packets, it
+would be pointless to handle them in packets delivered out of sequence.
+<p>
+Packets with stale sequenced information must cause an ACK to be sent.
+Note that this is a case in which an ACK must be sent even if the
+ACKLESS option is present in the stale packet.
+<!-- FIXME: conflicts with COOKIE ACKLESS description -->
+<p>
+Fresh information can sometimes cause some form of response but not always.
+
+<h3>Pakcet classification and handling depending on protocol state</h3>
+<p>
+In the CLOSED state all packets are alien, except those containing a
+GETCOOKIE or valid and acceptable SYN.
+<p>
+Note that this relies on the sender waiting for the SYN to be acked
+before sending more packets as, if some later packet arrived before
+the SYN, it would provoke a RST.
+This is automatically achieved by the congestion window
+being set to one during initialisation, which forces the sender of the SYN
+to wait for its acknowledgement before sending more data. If some
+application requires the ability to send multiple packets before
+getting its SYN acknowledged, this could be supported by requiring
+them all to carry the cookie. However the usefulness of this does not
+seem to justify the extra complexity.
+<p>
+In the WAIT-COOKIE state all packets are alien except those with
+correct SEQ, ACK, TXTS, and REFTS fields, which are fresh. If the
+GETCOOKIE has been transmitted for the last V timer ticks, these fields
+must be as follows:
+<ul>
+<li>SEQ = S0
+<li>ACK = A0
+<li>TXTS = R0
+<li>T0 &lt;= REFTS &lt;= T0+V
+</ul>
+<p>
+In the other states, various tests as described in
+<a href="assp_tscheck.html">ASSP: Timestamp checks on the validity of packets</a>
+are applied to each received packet until we can decide its classification.
+<p>
+Delivery of data from a packet and the handling of sequenced options is
+controlled by the SEQ field. A sender's SEQ sequence numbering space
+might look like this:
+<pre>
+	    1      2      3   4   5  6   7  8  9     10
+	XXXXXXXX*******------***-----**-----**ooooYYYYYYYY
+		|  A   |  B  |C | D  |E|  F |G| H |
+		^
+	     SND.UNA
+</pre>
+<p>
+The regions are:
+<ul>
+	<li>1 - packets which have been fully acknowledged.
+	<li>2, 4, 6, 8 - packets which have been sent and not
+	acknowledged.
+	<li> 3, 5, 7 - packets which have been sent and selectively
+	acknowledged.
+	<li>9 - packets for which we have permission to send but
+	which we have not yet sent (presumably because the user has
+	not supplied the data).
+	<li>10 - packets which fall outside the regions previously
+	indicated as Want-To-Receive and which, therefore, can not be
+	sent until an updated WTR is received.
+</ul>
+<p>
+The last valid WTR/DNS list received would have been <code>A, B, C, D,
+E, F, G, H</code> (i.e. WTR=A, DNS=B, WTR=C, etc). The sender is
+entitled to retransmit packets in regions 2, 4, 6, and 8, and to send
+new packets in region 9. No other data packets should be sent.
+<p>
+The sequenced information in a packet is fresh if
+<pre>
+	RCV.NXT <= SEQ < RCV.NXT + RCV.WINDOW
+</pre>
+<p>
+otherwise it is stale because either the sender is sending us stuff
+without permission or we're getting re-transmissions based on
+out of date ACKs.
+<p>
+An example of an erroneous packet is a packet with data which follows
+a FIN (i.e. received in CLOSE-WAIT, LAST-ACK, or TIME-WAIT states).
+
+<h2>RTT estimates</h2>
+<p>
+The RTT estimate is updated for each packet arriving which
+acknowlegdes new data. There are two ways new data can be
+acknowledged: by appearing on the DNS list for the first time, or by
+the ACK value advancing over data which did not previously appear on
+a DNS list. The REFTS field indicates which transmission of data is
+causing the acknowledgement, so the RTT, <code>m</code>, is calculated
+and we update the estimated RTT as follows (updating FRTT if the
+outbound packet was marked as a fast ack packet):
+<pre>
+	ERR = m - RTT.AVRTT
+	RTT.AVRTT += ERR / 8
+	RTT.RTTVAR  += (abs(ERR) - RTT.RTTVAR)/4
+</pre>
+<p>
+The first RTT measurement is obtained by the client from the time
+taken to receive a cookie, while the server obtains it by putting a
+timestamp in the cookie and measuring the time between sending the
+cookie and getting the SYN. The first measurement sets the estimates to:
+<pre>
+	RTT.AVRTT = m
+	RTT.RTTVAR = m / 2
+</pre>
+<p>
+Fast ack packets have an RTT independent of that for normal
+packets. This is because they do not account for delayed ack (because
+that's not allowed) and they do not account for any processing delays
+at the receiver (which is a special form of delayed ack). Note that
+the SYN packet is a fast ack packet, and its RTT estimate can be used
+to reduce the initial RTT estimate for normal data packets from three
+seconds (a suitable value is the SYN RTT plus 500 mS to account for
+delayed ack). Similarly, when the packets being acknowledged are
+not fastack packets, the fastack RTT may be updated to the value
+<p>
+The clock used to measure RTT must be of suitable resolution. Many
+CPUs provide a very high resolution clock in a register which can be
+read in only a few instructions. This may be suitable unless a
+multi-CPU system might have independent and unrelated clocks for each
+CPU.
+<p>
+Note that packets which are sent with the ACKLESS option do not
+trigger normal replies, so they should not normally be used to measure
+RTT as this would be measuring the performance of the remote data
+processing code and not the network or protocol response times.
+
+<h2>Data transfer</h2>
+<p>
+When valid packets containing data arrive in the RST-WAIT state, they are
+discarded. In other states, they are delivered to the local
+user. Typically the delivery is done sequentially, requiring out of
+order packets to be queued and only delivering one copy of duplicates.
+Acknowledgments follow these rules:
+<ul>
+	<li>An ACK <em>may</em> be sent upon reception of any data
+	<li>An ACK is never necessary in response to ACKLESS data
+	<li>An ACK is always necessary in response to FASTACK
+	<li>An ACK should be sent if non-ACKLESS data has not been
+	acknowledged within a short time of it arriving (which should
+	be no more than 500 mS)
+	<li>An ACK should be sent if sufficient non-ACKLESS data has
+	not been acknowledged
+</ul>
+<p>
+Typically this means that ACKLESS data triggers no ACK, FASTACK data
+triggers an instant ACK, and other data triggers an ACK after either a
+timeout or a predefined number of packets have arrived (which should
+be two, since delaying it too long will result in spurious
+re-transmissions).
+
+<h2>Congestion avoidance</h2>
+<p>
+Congestion avoidance is essential and may be implemented by using any
+algorithm which is no more aggressive than the standard TCP algorithm.
+A method based on TCP Vegas is described here. This has the desireable
+property of attempting to avoid congestion completely, unlike TCP Reno
+which deliberately causes congestion by its congestion window probing.
+Reno style probing is particularly harmful when we want to provide
+minimal delay because as it opens the congestion window it grows the
+queues in the network, increasing the perceived latency. This also
+means that the re-transmission timers must be conservative to
+avoid provoking re-transmissions due simply to the increase in
+latency, which prevents timely re-transmission of the packet which is
+eventually lost due to the congestion provoked.
+<p>
+Note, however, that TCP measures congestion windows in octets, while
+ASSP counts packets, so factors of MSS appear in descriptions of TCP
+congestion control which do not apply to ASSP.
+<p>
+In principle, two independent congestion avoidance schemes might be
+needed: one in terms of total bandwidth used, and another in terms of
+number of packets. This is because the bottleneck might be either
+caused by the bitrate of a link or, when the links are high speed, by
+the number of packets per second that a receiver can handle. In
+practice, these are closely related, since the maximum data rate is
+simply the number of packets per second multiplied by the maximum
+number of octets per packet (ignoring bandwidth used in headers and
+pure ACKs, just as TCP does).
+<p>
+All transmissions of data prevent <code>CA.FLIGHTSIZE</code> from
+exceeding <code>CA.CWND</code>. <code>CA.FLIGHTSIZE</code> is
+incremented for each data packet transmitted and decremented as the fate of
+each packet becomes known (i.e. delivered or lost). This ensures that
+the correct number of packets is present in the network at all times.
+<p>
+For each ACK received fully acknowledging <code>N</code> packets, we perform:
+<pre>
+	DIFF = CA.FLIGHTSIZE * (m - CA.MINRTT) / m;
+	if (!CR.RHLEN && CA.FLIGHTSIZE + 1 &gt;= CA.CWND) {
+		if (CA.CWND < CA.SSTHRESH && DIFF < 1) {
+			CA.CWND += N;		// exponential increase
+		} else {
+			if (DIFF < CA.ALPHA) {
+					// linear increase
+				CA.CWND += N / CA.CWND / CA.FLIGHTSIZE;
+			} else if (DIFF > CA.BETA) {
+					// linear decrease
+				CA.CWND -= N / CA.CWND / CA.FLIGHTSIZE;
+			}
+		}
+	}
+</pre>
+<p>
+where <code>m</code> is the measured RTT. This algorithm is
+essentially that of TCP Vegas, except modified to work when applied
+for every ACK instead of once per RTT. Furthermore, when a connection has been
+idle (no data in transit) for longer than the estimated RTT, we set
+<code>CA.CWND</code> to 1 to avoid flooding the network with a burst of
+data as the connection resumes sending. In fact, it might be a good
+idea to decay the congestion window gradually to avoid generating a
+burst of packets if data is generated in a bursty manner.
+<p>
+In addition to the above, we also need to decrease
+<code>CA.FLIGHTSIZE</code> to account for packets which were in
+transit and which are now either fully acked or listed as DNS in the
+WTR/DNS option (and, therefore, have presumably arrived).
+<p>
+Optionally, an implementation may spread transmissions triggered by
+acknowledgements. This handles the situation where a single ACK
+acnowledges multiple packets, which (in the absence of other
+limitations) would permit this number of new packets to be transmitted
+immediately. A sender may wish to spread these out so that they are
+approximately evenly spaced, based on the estimated arrival time of
+the next ack (i.e. if we send two packets and get an ack for both
+after 200 mS, then instead of sending two immediately we could send
+one now and the next after 100 mS).
+<p>
+The <code>CA.CWND</code> may be limited to be no less that
+<code>1</code> (equivalent to the TCP behaviour), or values less than
+one can be used to slow down transmission to a rate of less than one
+packet per RTT.
+<p>
+When <code>CA.CWND</code> grows above <code>CA.FLIGHTSIZE + 1</code>
+and there is no more data to send, reduce it to <code>CA.FLIGHTSIZE +
+1</code>.
+
+
+
+<h2>Congestion recovery</h2>
+<p>
+Since we take care to avoid causing congestion, if it occurs it must
+mean that a network overload has occurred. Therefore, in addition to
+reducing our transmission rate, we must allow the backlog to clear. In
+effect this means we should halve our congestion window. To do this
+smoothly we use rate halving. This means we continue to use the ack
+clock, but send only one packet for every two which are acknowledged.
+This persists until we have seen the acknowledgements for the data
+which were in transit at the time the congestion was detected. To
+achieve this, upon detection of congestion (whether explicitly by ECN or
+implicitly by packet loss), set
+<pre>
+	CA.CWND = CA.FLIGHTSIZE
+	CA.RHLEN = CA.FLIGHTSIZE
+	CA.SSTHRESH = CA.FLIGHTSIZE / 2
+</pre>
+<p>
+On reception of an ACK which acknowledges <code>N</code> packets:
+<pre>
+	if (CA.RHLEN) {
+		if (CA.RHLEN < N) {
+			CA.CWND -= CA.RHLEN / 2;
+			CA.RHLEN = 0;
+		} else {
+			CA.CWND -= N / 2;
+			CA.RHLEN -= N;
+		}
+	}
+</pre>
+
+<h2>Loss recovery</h2>
+<p>
+Since this protocol uses congestion avoidance to prevent packet loss
+caused by congestion, if a packet is lost it must be caused by either
+corruption of a packet (making it fail some kind of checksum test and
+be discarded) or significant overloading of some device anywhere on the
+end-to-end path. Since it is impossible to distinguish between these, we
+treat both as if they were caused by overload. Consequently, when packet
+loss is detected we perform congestion recovery. This will eventually
+cause the re-transmission of the lost packet.
+<p>
+There is no equivalent to TCP's fast retransmit because we can start
+using the new congestion window immediately. Without selective
+acknowledgements TCP's congestion window gets stuck, falsely counting
+packets which have arrived at the receiver but cannot be acknowledged
+because of the missing one causing a hole in the sequence space.
+<p>
+An implementation should set a limit on the maximum number of
+re-transmissions it is willing to peform before considering a
+connection to have failed. If a connection fails for this reason, it
+is handled as if abort() had been called.
+
+<h2>Re-transmission timeouts</h2>
+<p>
+There are two timeout values for a packet: one which triggers
+re-transmission in the absence of a response (RToT), and one
+which triggers re-transmission in the presence of a response failing
+to acknowledge it (RToC).
+<p>
+For all data packets, RToC starts out at:
+<code>FRTT.AVRTT + 4 * FRTT.RTTVAR</code> after the time of
+transmission.
+<p>
+For FASTACK packets, RToT is the same as RToC, for ACKLESS packets,
+the RToT is essentially infinite, and for other packets it is
+<code>RTT.AVRTT + 4 * RTT.RTTVAR</code> after the time of
+transmission.
+<p>
+An implementation must not re-transmit a packet unless either its RToT
+or its RToC timeout has expired.
+<p>
+While the timeout for a particular packet may be based on the RTT
+estmate from any time during which the packet is
+unacknowledged (i.e. an implementation might record the time of
+transmission and re-compute RToC every time an acknowledgement is
+processed), it is best to use the latest value as this takes
+into account changing network conditions. In particular, when a packet
+is transmitted, its timeout should be set according to the current RTT
+estimate. Then, if this timeout occurs, it should be re-checked
+against the newest RTT estimate and only considered lost if it fails
+the revised check. This extra check should take very little extra time
+since it only occurs when the original timeout says that the packet
+might be lost, but it is valuable in preventing unnecessary
+transmissions when the RTT increases. If there is a gradual increae in
+RTT, this extra check can prevent all unnecessary retransmissions,
+while if there is a sudden increase, it will prevent re-transmissions
+of packets due to be acknowledged after the first delayed ACK arrives
+(which is still used to update the RTT measurement as it unambiguously
+identifies which transmission of which packet it was triggered by).
+<p>
+There appears to be no need for a re-transmission backoff. It seems
+that it is needed in TCP because RTT estimates cannot be updated from
+re-transmitted segments, leading to no other way to handle an increase
+in RTT.
+
+<h2>Closing the connection</h2>
+<h3>Orderly close</h3>
+<p>
+When there is no more data to send, a packet with a FIN option (also
+itself called a FIN packet) is sent. Note that this option may be
+used together with a SYN option and data to provide a datagram-like
+request.
+
+<h3>Abrupt close</h3>
+<p>
+A connection may be terminated abruptly by the local user. This can
+occur when explictly requested with the abort() action, or implicitly
+whenever there is local received data unprocessed and the local user
+becomes incapable of processing it (for example, an application uses a
+Unix-style shutdown() or close() call to disallow further receives).
+When an abrupt close occurs, a RST is sent with the FASTACK option
+and the protocol moves to the RST-WAIT state. The RST used is
+re-transmitted using the FACTACK timeout until an RST is received
+acknowledging it. No packet other than RSTs are sent in the RST-WAIT
+state. In particular, transmitted data which has not been acknowledged
+is not re-transmitted. However, incoming packets other than RSTs may be
+processed so that the local user can be informed of delivery of
+outstanding transmitted data. Any data received in the RST-WAIT state
+is discarded, as is any data which had already been received but had
+not yet been delivered. The acknowledgement of a RST must be a RST with
+the ACKLESS option.
+<p>
+A connection can also be abruptly closed by the reception of a RST
+packet. This can happen if a variety of errors occur. When a RST is
+received, all data which has already been received but not yet
+delivered is discarded.
+<h4>Theory of abrupt close</h4>
+<p>
+One of the goals of an abrupt close is to allow the connection to be
+re-established. Consequently it is important that a re-established
+connection does not re-use sequence numbers which have recently been
+used. This is achieved by the RST carrying the current SEQ number,
+which therefore cannot have been used as the SEQ value of a packet
+carrying data, and the recipient of the RST using this value to update
+its RCV.NXT value. If this value is S, we know that the old
+connection used SEQ values &lt; S while a re-established connection
+will use values &gt;= S, so no value appears in both. The requirement
+for a RST to be acknowledged ensures that both ends agree on the SEQ
+values for both directions at which the connection can be
+re-established. When an abrupt close is initiated from both ends
+simultaneously, it proceeds as in this example:
+<table border>
+<tr><th colspan=4>-&gt;<th colspan=4>&lt;-
+<tr><th>action<th>SEQ<th>ACK<th>type<th>SEQ<th>ACK<th>type<th>action
+<tr><td>send P1<td>A<td>B<td>data
+<tr><td><td><td><td><td>B<td>A<td>data<td>send Q1
+<tr><td>send P2<td>A+1<td>B<td>data
+<tr><td><td><td><td><td>B+1<td>A<td>data<td>send Q2
+<tr><td>send P3<td>A+2<td>B<td>data
+<tr><td><td><td><td><td>A<td>B<td>data<td>receive P1: deliver data
+<tr><td><td><td><td><td>B+2<td>A+1<td>data<td>send Q3: ack for P1
+<tr><td><td><td><td><td>B+2<td>A+1<td>RST FASTACK<td>send Q4
+<tr><td>send P4<td>A+3<td>B<td>RST FASTACK
+<tr><td><td><td><td><td>A+1<td>B<td>data<td>receive P2: ignore
+<tr><td>receive Q1: ignore<td>B<td>A<td>data
+<tr><td>receive Q2: ignore<td>B+1<td>A<td>data
+<tr><td>receive Q3: ignore<td>B+2<td>A+1<td>data
+<tr><td><td><td><td><td>A+2<td>B<td>data<td>receive P3: ignore
+<tr><td><td><td><td><td>A+3<td>B<td>RST FASTACK<td>receive P4 
+<tr><td><td><td><td><td>B+2<td>A+3<td>RST ACKLESS<td>send Q5
+<tr><td>receive Q4<td>B+2<td>A+1<td>RST FASTACK
+<tr><td>send P5<td>A+3<td>B+2<td>RST ACKLESS
+<tr><td>receive Q5<td>B+2<td>A+3<td>RST ACKLESS
+<tr><td><td><td><td><td>A+3<td>B+2<td>RST ACKLESS<td>receive P5
+</table>
+<p>
+At the end of this exchance, both ends agree that the sequence
+numbers are <code>A+3</code> and <code>B+2</code> so a
+re-establishment will start from a suitable point.
+<p>
+Note that, after a re-establishment, old duplicates of the RST
+packets may be received. Consequently, a RST must be ignored if its
+SEQ value is before the first SEQ value of a connection.
+
+<h3>After closing a connection</h3>
+<p>
+When the connection reaches the TIME-WAIT state, a timeout is started
+which guards against both loss of the last packet (the ACK of the last
+FIN) and delayed packets in the network. Therefore while a connection is
+in the TIME-WAIT state, the reception of a fresh packet must restart the
+TIME-WAIT timeout (the only possible fresh packet is a re-transmission
+of the FIN, indicating that our ACK was probably lost).
+
+<h2>Explicit Congestion Notification</h2>
+<p>
+ECN, as specified in RFC 3168, may be used. Several methods could be
+used to negotiate its use. An option could be defined which is used with
+SYN and which causes another option to appear in the acknowledgement.
+No such option is currently defined.
+<p>
+The packet containing the GETCOOKIE could be marked on transmission with
+the ECN field set to CE, which causes the acknowledgement to indicate
+ECE, proving that the receiver handles ECN. Note that this is harmless
+with regard to congestion control since the sender of the GETCOOKIE is
+about to start with a minimal congestion window anyway. This is the
+currently recommended method for enabling ECN.
+<p>
+Alternatively, the proposal to use an ECN-nonce may be followed. This
+would avoid the need to explicitly negotiate the use of ECN.
+
+
+<h2>Miscellaneous</h2>
+
+<h3>Minimal examples</h3>
+<p>
+The fewest packets that can be sent in the lifetime of a connection is
+achieved with this pattern:
+<table border>
+<tr><th>Client sends</th><th>Server sends</th></tr>
+<tr><td>GETCOOKIE</td><td>-</td></tr>
+<tr><td>-</td><td>USECOOKIE+FIN</td></tr>
+</table>
+<p>
+This can hardly be called a connection at all. It is only possible
+where the connection is used to get a very brief response from a
+server and where the server doesn't need to get any data from the
+client. An example of this is the standard TCP test service
+<em>daytime</em> which, when you connect to it, sends the current time
+and immediately closes the connection. Since the client has no data,
+and therefore nothing to be acknowledged, there is no need to establish
+the connection with SYN.
+<p>
+If the client needs to send a little data, we can have:
+<p>
+<table border>
+<tr><th>Client sends</th><th>Server sends</th></tr>
+<tr><td>GETCOOKIE</td><td>-</td></tr>
+<tr><td>-</td><td>USECOOKIE+FIN</td></tr>
+<tr><td>COOKIE+SYN+FIN</td><td>-</td></tr>
+<tr><td>-</td><td>ACK</td></tr>
+</table>
+<p>
+Obviously the server can only include the FIN with the cookie if the
+only data it needs to send can be computed from the GETCOOKIE (i.e.
+it's either a fixed response, does not depend on the client [such as
+the 'daytime' service], or is a trivial response [such as a brief
+message telling the client what IP address they appear to be using]).
+<p>
+A more general packet sequence is:
+<p>
+<table border>
+<tr><th>Client sends</th><th>Server sends</th></tr>
+<tr><td>GETCOOKIE</td><td>-</td></tr>
+<tr><td>-</td><td>USECOOKIE</td></tr>
+<tr><td>COOKIE+SYN</td><td>-</td></tr>
+<tr><td>data</td><td>data</td></tr>
+<tr><td>FIN</td><td>-</td></tr>
+<tr><td>-</td><td>FIN</td></tr>
+<tr><td>ACK</td><td>-</td></tr>
+</table>
+
+<h3>Record based data</h3>
+<p>
+Although ASSP does not support record boundaries, as with TCP it is
+simple to add such support.
+
+<h3>Out of order delivery</h3>
+<p>
+ASSP, like TCP, permits out of order delivery.
+
+<h3>Units of flow control</h3>
+<p>
+Unlike other protocols, ASSP handles flow control only in terms of
+packets. As well as being easier to handle in some respects, it also
+enhances efficiency. If receiver buffering is done in terms of bytes,
+then the data from each incoming packet must be copied into the
+buffer, whereas if it is done in terms of packets, the original
+incoming packet may be retained until the data is processed. This is
+because network interfaces normally receive using DMA into buffers
+which are pre-allocated to a fixed size and consume the same
+amount of memory regardless of the size of the packets.
+
+<h3>Rationale</h3>
+<p>
+Some extra information giving reasons behind some of this design is
+available in <a href="assp_rationale.html">ASSP rationale</a>.
+
+<h2>Future work</h2>
+<p>
+There are many possible extensions which it would be premature to
+attempt to include at this stage. This section lists some suggestions.
+
+<h3>Transaction support</h3>
+<p>
+T/TCP still appears to suffer from performance, correctness, or security
+issues, so it would be premature to include such functionality in ASSP
+at this time. However since it is implemented as TCP options, at some
+future time it should be possible to add equivalent functionality to ASSP.
+<p>
+One possible way to support transactions is to have cookies which have
+a reasonably long lifetime. This allows the client to send a packet
+with SYN, data and FIN, and get another such packet in reply. However
+this conflicts with the normal requirement to keep cookie lifetimes
+short both to defend against an attacker who collects cookies over a
+period in order to mount a later attack, and to allow the TIME-WAIT
+state to be shortened without permitting stale SYN packets to be
+mistaken for valid ones (though this may not be a problem in a
+transaction environment since transactions may have a higher-level
+defence against replayed transactions).
+
+<h3>Sending data before the SYN is acknowledged</h3>
+<p>
+Normal data packets cannot be sent before the SYN is acknowledged because if
+the SYN was lost, they would arrive before the server has left the
+CLOSED state, so they would provoke RSTs and clear the connection. One
+possible way to avoid this is to make all packets carry the cookie
+until the client gets an acknowledgment for the SYN. This alone may be too
+awkward for the server to handle as if it receives any packet other
+than the SYN it doesn't know how many earlier packets it must wait for
+(so it cannot set up a normal TCB because it doesn't know what to use
+for RCV.NEXT). This might be addressed by making packets
+carry both the cookie and an option which carries the initial
+SEQ and TXTS values of the first packet until the first such packet
+is acknowledged. This effectively makes every
+packet carry a copy of the SYN packet,
+guaranteeing that it arrives no later than any data packet.
+
+<h3>RTT estimation</h3>
+<p>
+Note that the actual RTT for normal packets is the path RTT plus the
+added delay caused by delayed ack. We have a good estimate for the
+path RTT in FRTT, so in princple we could derive a better RTT estimate
+for normal packets by measuring the additional delay beyond that
+estimated by FRTT.
+
+<h3>RTO backoff</h3>
+<p>
+There may be a need to provide the effect of RTO backoff to handle
+severe congestion. Some of the effect occurs anyway as a side effect
+of the congestion window closing when assuming packet loss, but there
+may be a need for further action when the congestion window has closed
+to the point where only one packet is in transit. However, is is
+possible that it would be better to address this by making the
+congestion control mechanism go below a window size of one where it
+would require a pause between packets, effectively limiting the
+sending rate to less than one in transit at a time.
+
+<h3>Cookie lifetimes</h3>
+<p>
+While it is tempting to try adding mechanisms to extend the lifetime of
+cookies, this usually defeats the purpose of limiting their validity in
+the first place. The time limit is there to ensure that an attacker
+cannot collect long lifetime cookies and use them all at once to cause
+an overload, so if the server provides a mechanism which causes it to
+issue long lifetime cookies for legitimate clients, an attacking client
+can use the same mechanism. Note that the server cannot record who is
+asking for cookies in an attempt to prevent one client form hoarding
+many of them, as that introduces server state for every cookie,
+defeating the entire purpose of cookies which is to prevent resource
+exhaustion arising when a malicious client spoofs connection requests
+from multiple sources.
+<p>
+One possible way around this dilemma is for the client to specify a
+requested cookie lifetime and for the server to limit the rate at which
+it will issue cookies of each lifetime. For example, the server might be
+willing to issue 100 cookies per second with a lifetime of two seconds,
+10 with a lifetime of twenty seconds and one with a lifetime of two
+minutes. This would limit the rate at which they can be redeemed to
+100*2 + 10*20 + 120 = 520 per second. The state needed to record this is
+fixed in size, since it's merely a set of counts, so the worst a
+malicious client can do is to ask for so many long-lifetime cookies that
+no legitimate clients can get any. This would successfully deny
+service to some clients, but not those whose RTT from the server was
+within the normal cookie lifetime.
+<p>
+The value of such provisions is, however, questionable. A client can
+perform essentially the same attack by opening connections and not
+using them as by hoarding cookies and then using them all at once.
+Both attacks merely require the client to be able to get replies from
+the server.
+
+<h3>Path MTU issues</h3>
+<p>
+The typical path MTU discovery method (having a datagram dropped by a
+router and receiving notification via ICMP) is somewhat unsatisfactory
+for a protocol like ASSP which wants to get maximum performance. Such
+dropped packets waste time with re-transmissions. A much better
+scheme would be for receivers to report if they had to re-assemble
+fragments, along with the maximum fragment size which arrived. This
+gets the data there faster at the cost of possibly delaying the use of
+the reduced MTU. Unfortunately, IP stacks may not provide any way for
+a receiver to detect that a received datagram has been re-assembled,
+and in IPv6 routers do not perform fragmentation, leaving the choice
+between incurring unnecessary delay by having to re-transmit rejected
+datagrams and suffering reduced performance by not using the actual
+MTU.
+
+<h3>Re-establishment</h3>
+<p>
+After a FIN has been received, in principle a connection could be
+re-established by a SYN. This is because the SYN would be validated by
+having the correct SEQ value and checkable TXTS, REFTS, and ACK
+fields. However there are various difficult issues to handle such as
+the race between the server finishing TIME-WAIT (and therefore losing
+the state needed to validate the SYN) and the client sending the SYN,
+and how such re-establishment can be usefully communicated to the
+local user without ambiguity or further race conditions.
+<p>
+However, re-establishment can occur in a fairly straigtforward
+manner by re-establishing with GETCOOKIE. In this case, if the
+neither end has finished the TIME-WAIT timeout, the client's "random"
+values are those from the end of the old connection, and the
+connection safely resumes. If both ends have finished TIME-WAIT, it's
+just like any new connection. If the server has finished TIME-WAIT,
+it doesn't know that the client's initial values are a continuation
+of an existing connection, so everything proceeds as for a new
+connection. And finally, the only interesting case: if the client has
+finished TIME-WAIT, but the server has not, then the random values
+are not acceptable to the server. In this case, the server should
+ignore the incoming packet, which will be re-transmitted later, when
+the server's TIME-WAIT timer has expired. Since the server and client
+use the same TIME-WAIT timeout value, the interval between one end's
+timeout expiring and the other end's timeout expiring must be of the
+order of a RTT, so one re-transmission of the GETCOOKIE should be
+sufficient to re-establish the connection.
+
+<h2>Sample implementation</h2>
+<p>
+A <a href="assp_impl.html">sample implementation</a> is available.
+
+</body>
+</html>

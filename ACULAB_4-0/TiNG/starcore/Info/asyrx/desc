@@ -1,0 +1,3 @@
+Async receive. This is used to implement the async encoding
+in a receive protocol. It decodes a stream of digital data
+into a sequence of characters.

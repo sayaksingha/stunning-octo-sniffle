@@ -1,0 +1,342 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody DTLS library</title>
+</head>
+<body>
+<h1>Prosody Datagram Transport Layer Security (DTLS) library</h1>
+<p>
+The Prosody DTLS library contains source code which can be integrated
+into an application and used in combination with Prosody and
+an OpenSSL library installed on the system to obtain cipher keys for encrypting/authenticating 
+audio conveyed in SRTP packets.
+<p>
+The DTLS protocol and its use with SRTP is described in:
+<a href="http://www.ietf.org/rfc/rfc5764.txt">IETF RFC 5764</a> and
+<a href="http://www.ietf.org/rfc/rfc4347.txt">IETF RFC 4347</a>.
+<p>
+Use of DTLS is a UDP based alternative to the coneyance of cipher keys within SIP/SDP sent over a TLS
+session. Use of DTLS for this purpose is normal for WebRTC sessions.
+<p>
+A sequence of Prosody DTLS library calls will invoke a DTLS handshake with a peer entity
+and on successful completion will result in two 240 bit (30 octet) vectors of combined master key and salt 
+being made available to the application. These buffers can be passed to TiNG RTP authenication/encryption 
+API calls (which will use a key derivation function to extract HMAC and AES keys from this data).
+<p>
+The API is made up of the following calls:
+<ul>
+<li><a href="#dtlslib_init"><code>dtlslib_init</code></a> Initialise use of OpenSSL/DTLS framework for use by application
+<li><a href="#dtlslib_free"><code>dtlslib_free</code></a> Terminate use of OpenSSL by application
+<li><a href="#dtlslib_create_cert"><code>dtlslib_create_cert</code></a> Create a certificate to be used in handshake
+<li><a href="#dtlslib_get_cert_fingerprint"><code>dtlslib_get_cert_fingerprint</code></a> Get a fingerprint for certificate
+<li><a href="#dtlslib_free_cert"><code>dtlslib_free_cert</code></a> Terminate use of certificate
+<li><a href="#dtlslib_create_session"><code>dtlslib_create_session</code></a> Configure and prepare resources for DTLS handshake
+<li><a href="#dtlslib_free_session"><code>dtlslib_free_session</code></a> Release resourcers associated with handshake
+<li><a href="#dtlslib_start_handshake"><code>dtlslib_start_handshake</code></a> Initiate handshake packet exchange
+<li><a href="#dtlslib_continue"><code>dtlslib_continue</code></a> On packet arrival or timeout, perform next protocol action
+<li><a href="#dtlslib_get_timeout_ms"><code>dtlslib_get_timeout_ms</code></a> Determine how long to await response to last packet sent
+<li><a href="#dtlslib_get_remote_fingerprint"><code>dtlslib_get_remote_fingerprint</code></a> Obtain fingerprint of peer entity's certificate
+<li><a href="#dtlslib_extract_srtp_keys"><code>dtlslib_extract_srtp_keys</code></a> Upon handshake completion, obtain cipher key data
+</ul>
+The application will need to provide a set of packet handling functions for the library to use when sending and receiving DTLS UDPs. An example is provided, 
+other formulations may be necessary for particular application architectures. Typically DTLS UDPs are received on the same (VMPRx) UDP port as RTP packets. The TiNG API 
+provides facilities to obtain DTLS UDPs that arrive on the VMPRx port, and to transmit DTLS UDPs. The example packet handling functions illustrate this.
+<p>
+A typical application sequence would be:
+<ul>
+<li>Initialise library using <a href="#dtlslib_init"><code>dtlslib_init</code></a>.
+<li>Create a suitable certificate using <a href="#dtlslib_create_cert"><code>dtlslib_create_cert</code></a>.
+<li>Obtain fingerprint for certificate to include in SDP based signalling using <a href="#dtlslib_get_cert_fingerprint"><code>dtlslib_get_cert_fingerprint</code></a>.
+<li>Create a VMPRx to determine local RTP port
+<li>Perform SDP based signalling to obtain details of peer address and port. A fingerprint for peer certificate should be included in SDP from peer.
+<li>Set up UDP endpoint for DTLS packets targeting a TiNG DTLSTx at peer RTP port.
+<li>Create DTLS session using <a href="#dtlslib_create_session"><code>dtlslib_create_session</code></a>.
+<li>Start DTLS handshake using <a href="#dtlslib_start_handshake"><code>dtlslib_start_handshake</code></a>.
+<li>Continue handshake on packet arrival events or timeouts using <a href="#dtlslib_continue"><code>dtlslib_continue</code></a> until completed or maximum permitted time has elapsed.
+<li>If handshake successful, obtain fingerprint for remote certificate using <a href="#dtlslib_get_remote_fingerprint"><code>dtlslib_get_remote_fingerprint</code></a> and verify it matches that received in SDP for peer.
+<li>If fingerprint verification OK, extract SRTP keys from DTLS session using <a href="#dtlslib_extract_srtp_keys"><code>dtlslib_extract_srtp_keys</code></a> and setup VMPTx/VMPRx with this key material.
+<li>Secure audio may now be exchanged with peer.
+<li>The DTLS session and certificate objects may be freed using <a href="#dtlslib_free_session"><code>dtlslib_free_session</code></a> and 
+<a href="#dtlslib_free_cert"><code>dtlslib_free_cert</code></a> when no longer required.
+<li>If no further DTLS activity is to occur for the application, invoke <a href="#dtlslib_free"><code>dtlslib_free</code></a>.
+</ul>
+
+<p>
+<h1>Integration into application</h1>
+The Prosody DTLS library API is designed to fit into an event driven application structure which initiates the next DTLS 
+action upon a packet arrival or non-arrival of a packet within a time limit.
+
+<h2><a name="exampleapp">Example application code</a></h1>
+An example application is provided in &quot;dtlslib/examples/handshake.c&quot;. This acts as a server, awaiting a DTLS Client Hello, 
+then proceeds with the handshake and subsequent encryption configuration for VMPTx and VMPRx objects. It uses the 
+<a href="#tingudpstack">Example TiNG based UDP packet handling functions</a> to send/receive the DTLS UDPs via ProsodyS.
+
+<h2><a name="buf">Packet Handling Functions</a></h1>
+The Prosody DTLS library layers over the OpenSSL library which in turn is layered over a Basic I/O abstraction (BIO) to send and receive UDPs.
+The Prosody DTLS library has a BIO implementation that uses callback functions and a UDP endpoint context provided by the application to send/receive these packets.
+<p>
+A non-blocking UDP endpoint is required. Typically it would provide a packet arrival notification
+mechanism that could be used with a timeout or timer queue. Two callback functions, as described below, must be provided to be passed to <code>dtlslib_create_session</code>.
+<h3>callback: <a name="dtlslib_send_data_cb">dtlslib_send_data_cb</a></h3>
+<code>typedef int (*dtlslib_send_data_cb)(void* ctx, const char* data, unsigned len)</code>
+<p>
+This callback is used by the Prosody DTLS library to implement the underlying BIO_write primitive of the OpenSSL protocol stack.
+<p>The <code>ctx</code> context parameter is that supplied by the application upon invoking <code>dtlslib_create_session</code> and identifies the UDP endpoint.
+<p>
+The callback should queue a UDP for transmission to the peer DTLS entity associated with the endpoint, having for payload the <code>len</code> octets 
+pointed at by <code>data</code>, and return the value <code>len</code> to indicate the number of octets sent in the UDP. 
+<h3>callback: <a name="dtlslib_read_data_cb">dtlslib_read_data_cb</a></h3>
+<code>typedef int (*dtlslib_read_data_cb)(void* ctx, char* data, unsigned max_len)</code>
+<p>
+This callback is used by the Prosody DTLS library to implement the underlying BIO_read primitive of the OpenSSL protocol stack.
+<p>
+The <code>ctx</code> context parameter is that supplied by the application upon invoking <code>dtlslib_create_session</code> and identifies the UDP endpoint.
+<p>
+If a UDP packet is immediately available, its payload should be copied into the buffer pointed at by <code>data</code>.
+A maximum of <code>max_len</code> octets may be copied. The length of data actually copied should be returned.
+<p>
+If no UDP packet is immediately available, zero should be returned.
+<p>
+<h3><a name="tingudpstack">Example TiNG based packet handling functions</a></h3>
+<p>
+The TiNG primitives described in <a href="gen/prosdtls-index.html">Prosody DTLS processing API</a> provide functions to collect 
+DTLS UDPs arriving at a Prosody managed RTP port and pass down DTLS UDPs to be transmitted by a Prosody module.
+Example UDP packet handling functions built over these primitives are provided in &quot;dtlslib/udp&quot;</code>.
+
+The following entry points are provided:
+<ul>
+<li><code>psDTLSSocketInitLib</code> Initialise library
+<li><code>psDTLSSocketDtorLib</code> Indicate use of library finished
+<li><code>psDTLSSocketCreate</code> Gain access to UDP socket in Prosody module
+<li><code>psDTLSSocketDestroy</code> Release access to UDP socket in Prosody module
+<li><code>psDTLSSocketConfigIPv4</code> Set IPv4 target address for UDP socket
+<li><code>psDTLSSocketConfigIPv6</code> Set IPv6 target address for UDP socket
+<li><code>psDTLSSocketSetLimitTime</code> Set time limit for whole DTLS handshake
+<li><code>psDTLSSocketPoll</code> Routine to await DTLS packet or indicate timeout
+<li><code>psDTLSSocketSend</code> A UDP sender that can passed to <a href="#dtlslib_create_session"><code>dtlslib_create_session</code></a>
+<li><code>psDTLSSocketRcv</code> A UDP receiver that can be passed to <a href="#dtlslib_create_session"><code>dtlslib_create_session</code></a>
+</ul>
+An example of use can be seen in the DTLS <a href="#exampleapp">example application</a>.
+
+<h3>DTLS Logging and Debug</h3>
+<p>
+if &quot;dtlslib.c&quot; is compiled with PRINT_ERRORS defined, then errors from OpenSSL error queue will be written to stdout.
+<p>
+If &quot;dtlslib.c&quot; is compiled with LOG_ERRORS defined, then errors from OpenSSL error queue and the Prosody DTLS library are reported 
+through logging functions:
+<ul>
+<li><code>LogModuleError</code> Log an error from SSL error queue or other serious error preventing handshake from proceeding
+<li><code>LogModuleWarning</code> Log a warning
+<li><code>LogModuleDebugMax</code> Low level debugging output
+<li><code>LogModuleInfo</code> Informational message
+</ul>
+These logging functions may be provided by the application to fit in with its own logging scheme. A simple implementation
+directing the output to stdout is provided in &quot;dtlslib/logging/log.c&quot;.
+<p>
+if &quot;dtlslib.c&quot; is compiled with DTLSLIB_SSL_DEBUG defined then OpenSSL packet read and write calls will be dumped to stdout.
+
+
+<h1><a name="dtlsapi">Prosody DTLS Library API Calls</a></h1>
+These functions are in &quot;dtlslib/dtlslib.c&quot;.
+
+<h2><a name="dtlslib_init"><code>dtlslib_init</code></a></h2>
+<code>dtlslib* dtlslib_init(unsigned char* session_context, unsigned int session_context_len)</code>
+<h3>Parameters</h3>
+<dl>
+<dt>session_context<dd>Data to distinguish application use of OpenSSL from others (passed to SSL_set_session_id_context) - this might typically be text 
+name of application but can be any sequence of octets up to length SSL_MAX_SSL_SESSION_ID_LENGTH.
+<dt>session_context_len<dd>Length of above octet sequence.
+</dl>
+<h3>Description</h3>
+<p>
+Initialises OpenSSL library and create new SSL_CTX framework for DTLS connections with profile set up for SRTP_AES128_CM_SHA1_80 or SRTP_AES128_CM_SHA1_32.
+<h3>Returns</h3>
+<p>
+pointer to allocated dtlslib if call completed successfully, otherwise NULL pointer.
+
+<h2><a name="dtlslib_free"><code>dtlslib_free</code></a></h2>
+<code>void dtlslib_free(dtlslib* lib)</code>
+<h3>Parameters</h3>
+<dl>
+<dt>lib<dd>library reference returned by dtlslib_init
+</dl>
+<h3>Description</h3>
+<p>
+Frees resources associated with use of OpenSSL.
+
+<h2><a name="dtlslib_create_cert"><code>dtlslib_create_cert</code></a></h2>
+<code>dtlslib_cert* dtlslib_create_cert(enum dtlslib_hash_type ht, int bits, int serial, long lifetime_seconds, const unsigned char* country, const unsigned char* common_name)</code>
+<h3>Parameters</h3>
+<dl>
+<dt>ht<dd>Indicate X.509 signature algorithm (message digest) to use.
+<dt>bits<dd>Modulus bits required for certificate associated RSA key pair (should be >= 1024 for secure key pair)
+<dt>serial<dd>X.509 certificate serial number or set to -1 to use random number.
+<dt>lifetime_seconds<dd>Lifetime in seconds of X.509 certificate.
+<dt>country<dd>NULL or set to two letter country code for X.509 certificate.
+<dt>common_name<dd>common name for X.509 certificate (a server name, for instance, could be used here)
+</dl>
+<h3>Description</h3>
+<p>
+Creates public/private keypair and encodes public key as X.509 certificate to be conveyed to peer in DTLS handshakes.
+The bits parameter determines the strength of encryption used for handshake - typically set to 2048 for WebRTC use. 
+The ht parameter would typically be set to sign the certificate using SHA256 algorithm (dtlslib_hash_type_sha_256).
+<h3>Returns</h3>
+<p>
+Pointer to allocated dtlslib_cert if call completed successfully, NULL otherwise.
+
+<h2><a name="dtlslib_get_cert_fingerprint"><code>dtlslib_get_cert_fingerprint</code></a></h2>
+<code>int dtlslib_get_cert_fingerprint(dtlslib_cert* c, char* dest, unsigned int dest_len)</code>
+<h3>Parameters</h3>
+<dl>
+<dt>c<dd>Pointer to certificate created by dtlslib_create_cert.
+<dt>dest<dd>Pointer to buffer to receive text of certificate fingerprint.
+<dt>dest_len<dd>Length of above buffer. 
+</dl>
+<h3>Description</h3>
+<p>
+Writes a zero terminated text fingerprint string, suitable for inclusion into SDP, of public key in supplied X.509 certificate.
+<h3>Returns</h3>
+<p>
+Length of fingerprint text (excluding terminating zero), or 0 if supplied buffer not long enough to hold fingerprint, or -1 if fingerprint could not be generated.
+
+<h2><a name="dtlslib_free_cert"><code>dtlslib_free_cert</code></a></h2>
+<code>void dtlslib_free_cert(dtlslib_cert* c)</code>
+<h3>Parameters</h3>
+<dl>
+<dt>c<dd>Certificate pointer returned by earlier call to dtlslib_create_cert.
+</dl>
+<h3>Description</h3>
+<p>
+Frees memory resources associated with certificate.
+
+<h2><a name="dtlslib_create_session"><code>dtlslib_create_session</code></a></h2>
+<code>dtlslib_session* dtlslib_create_session(dtlslib* lib, dtlslib_cert* c, dtlslib_send_data_cb send_cb, void* send_ctx, dtlslib_read_data_cb read_cb, void* read_ctx)</code>
+<h3>Parameters</h3>
+<dl>
+<dt>lib<dd>Library reference as returned by dtlslib_init.
+<dt>c<dd>Certificate pointer returned by earlier call to dtlslib_create_cert.
+<dt>send_cb<dd>Send UDP packet callback routine - see <a href="#dtlslib_send_data_cb">here</a> for details.
+<dt>send_ctx<dd>Context passed to send packet callback routine.
+<dt>read_cb<dd>Receive UDP packet callback routine - see <a href="#dtlslib_read_data_cb">here</a> for details.
+<dt>read_ctx<dd>Context passed to receive packet callback routine.
+</dl>
+<h3>Description</h3>
+<p>
+Initialises resources to be used in DTLS handshake using supplied certificate and UDP send/receive instance.
+The peer port and IP address are transparent to library (normally stored in a send UDP packet context to be
+used by sender callback).
+<h3>Returns</h3>
+<p>
+Pointer to newly allocated DTLS session structure containing a session cookie and other DTLS related items.
+
+<h2><a name="dtlslib_free_session"><code>dtlslib_free_session</code></a></h2>
+<code>void dtlslib_free_session(dtlslib_session* sess)</code>
+<h3>Parameters</h3>
+<dl>
+<dt>sess<dd>Session pointer as returned by dtlslib_create_session.
+</dl>
+<h3>Description</h3>
+<p>
+Frees resources and memory associated with DTLS session.
+
+<h2><a name="dtlslib_start_handshake"><code>dtlslib_start_handshake</code></a></h2>
+<code>int dtlslib_start_handshake(dtlslib_session* sess, int is_server)</code>
+<h3>Parameters</h3>
+<dl>
+<dt>sess<dd>Session pointer as returned by dtlslib_create_session.
+<dt>is_server<dd>If non-zero, application role is server, otherwise client.
+</dl>
+<h3>Description</h3>
+<p>
+If application is client, invoking this call will initiate handshake through 
+sending of first client hello.
+<p>
+If application is server, invoking this call will wait for and respond to first received DTLS
+packet of a handshake (should be DTLS client hello).
+<h3>Returns</h3>
+<p>
+-1 if error stopped handshake from being initiated.
+0 if handshake underway.
+1 if handshake now complete.
+
+<h2><a name="dtlslib_continue"><code>dtlslib_continue</code></a></h2>
+<code>int dtlslib_continue(dtlslib_session* sess)</code>
+<h3>Parameters</h3>
+<dl>
+<dt>sess<dd>Session pointer as returned by dtlslib_create_session.
+</dl>
+<h3>Description</h3>
+<p>
+This function is invoked by an application subsequent to dtlslib_start_handshake
+upon event of new packet arrival (or non arrival timeout). It processes this event 
+and performs the next action of the DTLS handshake.
+<p>
+<h3>Returns</h3>
+<p>
+-1 if error stopped handshake from being completed.
+0 if handshake underway.
+1 if handshake now complete.
+
+<h2><a name="dtlslib_get_timeout_ms"><code>dtlslib_get_timeout_ms</code></a></h2>
+<code>int dtlslib_get_timeout_ms(dtlslib_session* sess)</code>
+This function is invoked by an application subsequent to dtlslib_start_handshake
+or dtlslib_continue in order to determine the time within which a response packet is expected.
+The returned millisecond count should be used to generate a timeout event in case of non-arrival
+of a packet.
+<p>
+<h3>Returns</h3>
+<p>
+If -1 is returned, this indicates an indefinite timeout.
+Otherwise return value is timeout in milliseconds.
+
+<h2><a name="dtlslib_get_remote_fingerprint"><code>dtlslib_get_remote_fingerprint</code></a></h2>
+<code>int dtlslib_get_remote_fingerprint(dtlslib_session* sess, enum dtlslib_hash_type ht, char* dest, unsigned int dest_len)</code>
+<h3>Parameters</h3>
+<dl>
+<dt>sess<dd>Session pointer as returned by dtlslib_create_session.
+<dt>ht<dd>Hash type.
+<dt>dest<dd>Pointer to buffer to receive fingerprint text.
+<dt>dest_len<dd>Length of above buffer.
+</dl>
+<h3>Description</h3>
+<p>
+Writes a zero terminated text fingerprint string, suitable for comparing with that received in SDP, of public key in certificate received
+from peer during DTLS handshake. The hash type of the peer certificate will have been indicated in received SDP.
+<h3>Returns</h3>
+<p>
+Length of fingerprint text (excluding terminating zero), or 0 if supplied buffer not long enough to hold fingerprint, or -1 if fingerprint could not be generated.
+
+<h2><a name="dtlslib_extract_srtp_keys"><code>dtlslib_extract_srtp_keys</code></a></h2>
+<code>int dtlslib_extract_srtp_keys(dtlslib_session* sess, enum dtlslib_srtp_mode* mode, char* srtp_tx_key, char* srtp_rx_key)</code>
+<h3>Parameters</h3>
+<dl>
+<dt>sess<dd>Session pointer as returned by dtlslib_create_session.
+<dt>mode<dd>Pointer to location where mode will be written.
+<dt>srtp_tx_key<dd>Pointer to 30 octet buffer to receive encoding cipher key material.
+<dt>srtp_rx_key<dd>Pointer to 30 octet buffer to receive decoding cipher key material.
+</dl>
+<h3>Description</h3>
+<p>
+Writes a value into mode indicating type of authentication tag associated with cipher keys:
+<ul>
+<li>dtlslib_srtp_mode_AES_CM_128_HMAC_SHA1_80 - 80 bit authentication tag
+<li>dtlslib_srtp_mode_AES_CM_128_HMAC_SHA1_32 - 32 bit authentication tag
+</ul>
+Writes into srtp_tx_key SRTP_MASTER_KEY_KEY_LEN+SRTP_MASTER_KEY_SALT_LEN octets of encoding cipher key material.
+Writes into srtp_rx_key SRTP_MASTER_KEY_KEY_LEN+SRTP_MASTER_KEY_SALT_LEN octets of decoding cipher key material.
+<h3>Returns</h3>
+<p>
+0 if cipher key material written, -1 otherwise.
+
+<p>
+<h1><a name="buf">OpenSSL Compatibility</a></h1>
+The Prosody DTLS source library may be built against OpenSSL 1.0 (link with ssleay32.lib and libeay32.lib) or OpenSSL 1.1
+(link with libssl.lib and libcrypto.lib).
+<p>
+The DTLS library is distributed with
+<a href="index.html">Prosody</a>.
+</body>
+</html>
+

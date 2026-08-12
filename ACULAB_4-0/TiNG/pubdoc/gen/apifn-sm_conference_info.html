@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody high level conferencing: API: sm_conference_info</title>
+</head>
+<body>
+<h1>Prosody high level conferencing: API: sm_conference_info</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_conference_info(struct sm_conference_info_parms *<a href="#field-parms">parms</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-parms">*parms</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_conference_info_parms {
+	<a href="../apitype.html#type-tSMConference">tSMConference</a> <a href="#field-conf">conf</a>;					/* in */
+	int <a href="#field-activeChannelCount">activeChannelCount</a>;					/* out */
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> *<a href="#field-activeChannelList">activeChannelList</a>;			/* in */
+} SM_CONFERENCE_INFO_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Return list of input channel identifiers corresponding to those
+input channels belonging to participants in the conference that
+are currently active (i.e currently speaking).
+<p>
+The parameter
+<a class=pref href="#field-activeChannelList">activeChannelList</a>
+must point to an area of memory large enough to contain an array
+of <code>N</code> values of type tSMChannelId where
+<code>N</code> is the maximum possible
+no. of participants in the conference.
+<p>
+On return,
+<a class=pref href="#field-activeChannelCount">activeChannelCount</a>
+will be set to the no. of input channel identifiers written by
+the call to
+<a class=pref href="#field-activeChannelList">activeChannelList</a>,
+each identifier in this list being the input channel id of an
+active participant in the conference.
+If a conference has only one member it will never report that
+member as being active.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-conf">conf</a><dd>A conference created with
+<a href="apifn-sm_conference_create.html">sm_conference_create()</a>.
+
+<dt><a name="field-activeChannelCount">activeChannelCount</a><dd>The number of channels currently active in this conference.
+
+<dt><a name="field-activeChannelList">activeChannelList</a><dd>A pointer to where to store the list of channels currently active
+on this conference.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - invalid active channel list</ul>
+<hr>
+<p>This function is part of the <a href="../highapi_conf.html">Prosody high level conferencing API</a>.
+</body>
+</html>

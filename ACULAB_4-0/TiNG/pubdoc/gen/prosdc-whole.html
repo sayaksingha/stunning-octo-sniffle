@@ -1,0 +1,2570 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody data communications: API</title>
+</head>
+<body>
+<h1>Prosody data communications: API</h1>
+<p>
+The following functions are provided by the
+<a href="../prosdc.html">Prosody data communications API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr>
+	<td><a href="#smdc_channel_config">smdc_channel_config()</a>
+	<td>&nbsp;
+	<td>Configure a channel (or half a channel) for data communications
+
+	<tr>
+	<td><a href="#smdc_line_control">smdc_line_control()</a>
+	<td>&nbsp;
+	<td>Perform a general control operation on a data communications channel
+
+	<tr>
+	<td><a href="#smdc_line_control_v34">smdc_line_control_v34()</a>
+	<td>&nbsp;
+	<td>Perform a general control operation on a V.34 data communications channel
+
+	<tr>
+	<td><a href="#smdc_line_status">smdc_line_status()</a>
+	<td>&nbsp;
+	<td>Check general status on a data communications channel
+
+	<tr>
+	<td><a href="#smdc_line_status_v34">smdc_line_status_v34()</a>
+	<td>&nbsp;
+	<td>Check general status on a V.34 data communications channel
+
+	<tr>
+	<td><a href="#smdc_rx_config_t38">smdc_rx_config_t38()</a>
+	<td>&nbsp;
+	<td>Configure a channel's input for T.38 data communications
+
+	<tr>
+	<td><a href="#smdc_rx_config_v34">smdc_rx_config_v34()</a>
+	<td>&nbsp;
+	<td>Configure a channel's input for V.34 data communications
+
+	<tr>
+	<td><a href="#smdc_rx_control">smdc_rx_control()</a>
+	<td>&nbsp;
+	<td>Perform a control operation on the input half of a data communications channel
+
+	<tr>
+	<td><a href="#smdc_rx_data">smdc_rx_data()</a>
+	<td>&nbsp;
+	<td>Read data from a channel configured for data communications
+
+	<tr>
+	<td><a href="#smdc_rx_encoding">smdc_rx_encoding()</a>
+	<td>&nbsp;
+	<td>Configure the receive encoding used by a channel for data communications
+
+	<tr>
+	<td><a href="#smdc_rx_status">smdc_rx_status()</a>
+	<td>&nbsp;
+	<td>Check the status of the input half of a data communication
+channel.
+
+	<tr>
+	<td><a href="#smdc_rx_status_t38">smdc_rx_status_t38()</a>
+	<td>&nbsp;
+	<td>Check the status of the input half of a T.38 data communication
+channel.
+
+	<tr>
+	<td><a href="#smdc_rx_stop">smdc_rx_stop()</a>
+	<td>&nbsp;
+	<td>Stop the receive data communications protocol on a channel.
+
+	<tr>
+	<td><a href="#smdc_stop">smdc_stop()</a>
+	<td>&nbsp;
+	<td>Stop data communications protocols on a channel.
+
+	<tr>
+	<td><a href="#smdc_tx_config_t38">smdc_tx_config_t38()</a>
+	<td>&nbsp;
+	<td>Configure a channel's output for T.38 data communications
+
+	<tr>
+	<td><a href="#smdc_tx_config_v34">smdc_tx_config_v34()</a>
+	<td>&nbsp;
+	<td>Configure a channel's output for V.34 data communications
+
+	<tr>
+	<td><a href="#smdc_tx_control">smdc_tx_control()</a>
+	<td>&nbsp;
+	<td>Perform a control operation on the output half of a data communications channel
+
+	<tr>
+	<td><a href="#smdc_tx_data">smdc_tx_data()</a>
+	<td>&nbsp;
+	<td>Write data to a channel configured for data communications
+
+	<tr>
+	<td><a href="#smdc_tx_encoding">smdc_tx_encoding()</a>
+	<td>&nbsp;
+	<td>Configure the transmit encoding used by a channel for data communications
+
+	<tr>
+	<td><a href="#smdc_tx_status">smdc_tx_status()</a>
+	<td>&nbsp;
+	<td>Check the status of the output half of a data communication
+channel.
+
+	<tr>
+	<td><a href="#smdc_tx_stop">smdc_tx_stop()</a>
+	<td>&nbsp;
+	<td>Stop the transmit data communications protocol on a channel.
+
+	<tr>
+	<td><a href="#smdc_tx_tone_indicator_t38">smdc_tx_tone_indicator_t38()</a>
+	<td>&nbsp;
+	<td>Sends a T.38 tone indicator on the output half of a T.38 data
+communication channel
+
+	<tr>
+	<td><a href="#smdc_tx_v34_indicator_t38">smdc_tx_v34_indicator_t38()</a>
+	<td>&nbsp;
+	<td>Sends a T.38 v34 indicator on the output half of a T.38 data
+communication channel
+
+	<tr>
+	<td><a href="#smdc_tx_v34_line_control_t38">smdc_tx_v34_line_control_t38()</a>
+	<td>&nbsp;
+	<td>Control a channel's output for V34 over T.38 data communications
+
+</table>
+<p>
+This document is also available as
+<a href="prosdc-index.html">separate pages for each function</a>.
+<hr>
+<h2><a name="smdc_channel_config">Prosody data communications: API: smdc_channel_config</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_channel_config(struct smdc_channel_config_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_channel_config_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-protocol">protocol</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-config_length">config_length</a>;					/* in */
+	void <a href="#field-config_data">*config_data</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-encoding">encoding</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-encoding_config_length">encoding_config_length</a>;				/* in */
+	void <a href="#field-encoding_config_data">*encoding_config_data</a>;				/* in */
+} SMDC_CHANNEL_CONFIG_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures a channel (or half a channel) for data communications
+using a specified
+<a class=pref href="#field-protocol">protocol</a>
+and preparing it to transfer data encoded
+according to the
+<a class=pref href="#field-encoding">encoding</a>
+type over that protocol.
+<p>
+For details of what protocols and encodings are available,
+and the format of their configuration data,
+see the document <a href="../prosdc_config.html">Prosody Data
+Communcations Protocols and Encodings</a>.
+<p>
+Channels can have two halves: an input half and an output half.
+A protocol may occupy either or both of these. It is possible
+to configure a channel for two protocols if one is input-only
+and the other is output-only. In that case the channel
+operates as if it were two separate channels, one for each
+direction.
+<p>
+The input half of a channel is reserved for this data communications
+configuration until
+<a href="#smdc_rx_status">smdc_rx_status()</a>
+returns the status
+<a href="#field-kSMDCRxStatusFinished">
+kSMDCRxStatusFinished</a>. No other activity can take place
+on the input half of the channel during this time.
+<p>
+The output half of a channel is reserved for this data communications
+configuration until
+<a href="#smdc_tx_status">smdc_tx_status()</a>
+returns the status
+<a href="#field-kSMDCTxStatusFinished">
+kSMDCTxStatusFinished</a>. No other activity can take place
+on the output half of the channel during this time.
+<p>
+While the output half of a channel is configured for data
+communications, a write event associated with this channel
+using
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event()</a>
+will be set while the channel is ready to accept more data or
+there may be a status change to report.
+See
+<a href="#smdc_tx_control">smdc_tx_control()</a>
+for details of how this works. When an application discovers
+that this event is set, it may check the status using
+<a href="#smdc_tx_status">smdc_tx_status()</a>.
+However, an application may simply try
+<a href="#smdc_tx_data">smdc_tx_data()</a>
+immediately and check status when it refuses to accept data.
+<p>
+While the input half of a channel is configured for data
+communications, a read event associated with this channel
+using
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event()</a>
+will be set while the channel is ready to allow data to be
+read or there may be a status change to report.
+See
+<a href="#smdc_rx_control">smdc_rx_control()</a>
+for details of how this works. When an application discovers
+that this event is set, it should attempt to read data using
+<a href="#smdc_rx_data">smdc_rx_data()</a>.
+See its description to see how this interacts with status
+changes.
+<p>
+Requires firmware modules applicable to protocol and encoding to have been downloaded.
+See <a href="../prosdc_config.html">Prosody Data
+Communcations Protocols and Encodings</a>
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to configure.
+
+<dt><a name="field-protocol">protocol</a><dd>The desired data communications protocol. The value zero
+(kSMDCProtocolNone) is reserved and guaranteed never to select a
+valid protocol.
+
+<dt><a name="field-config_length">config_length</a><dd>The length of the protocol-specific configuration data pointed
+to by
+<a class=pref href="#field-config_data">config_data</a>.
+
+<dt><a name="field-config_data">config_data</a><dd>Protocol-specific configuration data.
+
+<dt><a name="field-encoding">encoding</a><dd>The desired encoding for data transferred with the selected
+protocol.
+
+<dt><a name="field-encoding_config_length">encoding_config_length</a><dd>The length of the encoding-specific configuration data pointed
+to by
+<a class=pref href="#field-encoding_config_data">encoding_config_data</a>
+
+<dt><a name="field-encoding_config_data">encoding_config_data</a><dd>Encoding-specific configuration data.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - a parameter value is bad<li>ERR_SM_WRONG_CHANNEL_STATE - channel is already busy</ul>
+<hr>
+<h2><a name="smdc_line_control">Prosody data communications: API: smdc_line_control</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_line_control(struct smdc_line_control_parms *<a href="#field-controlp">controlp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-controlp">*controlp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_line_control_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCLineCtlCmd">enum kSMDCLineCtlCmd</a> {
+		<a href="#field-kSMDCLineCtlCmdInitiatorConnect">kSMDCLineCtlCmdInitiatorConnect</a>,
+		<a href="#field-kSMDCLineCtlCmdResponderConnect">kSMDCLineCtlCmdResponderConnect</a>,
+		<a href="#field-kSMDCLineCtlCmdDisconnect">kSMDCLineCtlCmdDisconnect</a>,
+		<a href="#field-kSMDCLineCtlCmdAssertRTS">kSMDCLineCtlCmdAssertRTS</a>,
+		<a href="#field-kSMDCLineCtlCmdUnassertRTS">kSMDCLineCtlCmdUnassertRTS</a>,
+		<a href="#field-kSMDCLineCtlCmdSetAux">kSMDCLineCtlCmdSetAux</a>,
+		<a href="#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>,
+		<a href="#field-kSMDCLineCtlCmdSuspend">kSMDCLineCtlCmdSuspend</a>,
+		<a href="#field-kSMDCLineCtlCmdResume">kSMDCLineCtlCmdResume</a>,
+		<a href="#field-kSMDCLineCtlCmdResumeMonitorCarrier">kSMDCLineCtlCmdResumeMonitorCarrier</a>,
+		<a href="#field-kSMDCLineCtlCmdRetrain">kSMDCLineCtlCmdRetrain</a>,
+	} <a href="#field-cmd">cmd</a>;							/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-aux_mask">aux_mask</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-aux_toggle">aux_toggle</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-shorttrain">shorttrain</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-tep">tep</a>;						/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-prefix_bitlength">prefix_bitlength</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-prefix_data">*prefix_data</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-suffix_bitlength">suffix_bitlength</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-suffix_data">*suffix_data</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-retrain_speed">retrain_speed</a>;					/* in */
+} SMDC_LINE_CONTROL_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Perform a command on the halves of a channel which have been
+configured for data communications. If the channel has been
+configured with independent input and output halves, the
+operation requested by
+<a class=pref href="#field-cmd">cmd</a>
+is performed separately on both. It is an error to attempt to
+perform a command on a protocol which does not implement it.
+<p>
+If a protocol has an auxiliary configuration value, the
+<a class=pref href="#field-aux_mask">aux_mask</a>
+and
+<a class=pref href="#field-aux_toggle">aux_toggle</a>
+fields are used by the
+<a class=pref href="#field-kSMDCLineCtlCmdSetAux">kSMDCLineCtlCmdSetAux</a>
+command to modify this value as shown in this table:
+<table border>
+<tr>
+	<th>bit in aux_mask</th>
+	<th>bit in aux_toggle</th>
+	<th>effect on configuration bit</th>
+</tr>
+<tr>	<td>0</td> <td>0</td> <td>clear it</td>	</tr>
+<tr>	<td>0</td> <td>1</td> <td>set it</td>	</tr>
+<tr>	<td>1</td> <td>0</td> <td>leave it unchanged</td>	</tr>
+<tr>	<td>1</td> <td>1</td> <td>invert it</td>	</tr>
+</table>
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel which has been configured for data communications.
+
+<dt><a name="field-cmd">cmd</a><dd>The control operation to perform.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCLineCtlCmdInitiatorConnect">kSMDCLineCtlCmdInitiatorConnect</a>
+<dd>Initiate the connection handshake required by the configured
+protocol. If the protocol distinguishes between an originator
+(or caller) and a responder (or answerer), then act as the
+originator.
+
+<dt><a name="field-kSMDCLineCtlCmdResponderConnect">kSMDCLineCtlCmdResponderConnect</a>
+<dd>For a protocol which distinguishes between an originator
+(or caller) and a responder (or answerer), initiate the
+connection handshake acting as responder.
+
+<dt><a name="field-kSMDCLineCtlCmdDisconnect">kSMDCLineCtlCmdDisconnect</a>
+<dd>Initiate the disconnection procedures for the configured
+protocol.
+
+<dt><a name="field-kSMDCLineCtlCmdAssertRTS">kSMDCLineCtlCmdAssertRTS</a>
+<dd>For a protocol which uses a carrier or equivalent mechanism,
+turn on the carrier. If there is more than one way to do this
+(e.g. a long or a short training sequence) then the field
+<a class=pref href="#field-shorttrain">shorttrain</a>
+selects the one to use. If a protocol specification requires RTS
+to be used, the Prosody implementation may provide automatic
+RTS. Automatic RTS control is triggered when data is presented
+for transmission without RTS being asserted. The protocol acts
+as if RTS had been asserted, sends the data, and acts as if RTS
+was then deasserted.
+
+<dt><a name="field-kSMDCLineCtlCmdUnassertRTS">kSMDCLineCtlCmdUnassertRTS</a>
+<dd>For a protocol which uses a carrier or equivalent mechanism,
+turn off the carrier. The effect of this command is delayed
+while the transmitter sends data which is queued.
+
+<dt><a name="field-kSMDCLineCtlCmdSetAux">kSMDCLineCtlCmdSetAux</a>
+<dd>For a protocol which has auxiliary configuration, modify the
+current configuration value by ANDing with
+<a class=pref href="#field-aux_mask">aux_mask</a>
+and XORing
+<a class=pref href="#field-aux_toggle">aux_toggle</a>.
+
+<dt><a name="field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>
+<dd>Set the bit patterns to be used as a prefix and a suffix on
+transmissions.
+The prefix is set to
+<a class=pref href="#field-prefix_bitlength">prefix_bitlength</a>
+bits of data at
+<a class=pref href="#field-prefix_data">prefix_data</a>
+and the suffix is set to
+<a class=pref href="#field-suffix_bitlength">suffix_bitlength</a>
+bits of data at
+<a class=pref href="#field-suffix_data">suffix_data</a>.
+These are arbitrary sequences
+of bits which are added when the normal data has
+been encoded and, therefore, are not affected by the
+type of encoding in use. The prefix is sent as soon as the
+protocol is ready to transmit (which is typically when the
+<a class=pref href="#field-kSMDCLineCtlCmdAssertRTS">kSMDCLineCtlCmdAssertRTS</a>
+command is issued), and the suffix is sent just before the
+carrier is turned off (which is typically when the
+<a class=pref href="#field-kSMDCLineCtlCmdUnassertRTS">kSMDCLineCtlCmdUnassertRTS</a>
+command is issued). If a protocol has no RTS control, the
+prefix is sent as soon as possible, and the suffix is never
+sent. If the protocol permits RTS to be turned on
+automatically when data is ready to be sent, then the prefix
+is sent as soon as there is data ready to be sent and the suffix
+is sent when there is no remaining data to be sent. See the
+documentation for each protocol to determine which protocols
+support this feature.
+Requires the module
+<a href="softmodindex.html#prefsuf">prefsuf</a>.
+
+<dt><a name="field-kSMDCLineCtlCmdSuspend">kSMDCLineCtlCmdSuspend</a>
+<dd>Suspend modem receiver. The modem no longer processes the incoming
+signal. This command is only valid for the modem types which
+state they support it.
+
+<dt><a name="field-kSMDCLineCtlCmdResume">kSMDCLineCtlCmdResume</a>
+<dd>Resume modem receiver. The modem must have been suspended with
+<a class=pref href="#field-kSMDCLineCtlCmdSuspend">kSMDCLineCtlCmdSuspend</a>
+and it now resumes processing the incoming
+signal. Typically, this allows the modem to make use of a shorter
+training sequence as some of the signal analysis saved when the
+modem was suspended can be re-used.
+
+<dt><a name="field-kSMDCLineCtlCmdResumeMonitorCarrier">kSMDCLineCtlCmdResumeMonitorCarrier</a>
+<dd>Resume modem receiver but only for purposes of monitoring signal 
+following a previous loss of synchronisation. The modem must have 
+been suspended with 
+<a class=pref href="#field-kSMDCLineCtlCmdSuspend">kSMDCLineCtlCmdSuspend</a>
+when the previous loss of carrier occurred and it is now resumed 
+but solely to monitor the nature/energy of following signal. The 
+application will notified with a carrier on and carrier off 
+notification if what looks like an additional segment of modem 
+modulated signal is present - so an application can determine where 
+modem modulated signal ended following any dropout. Demodulated data 
+will not be supplied. Typically, this allows the application to avoid 
+a timeout following a fax modem dropout.
+The modem must be suspended again, using
+<a class=pref href="#field-kSMDCLineCtlCmdSuspend">kSMDCLineCtlCmdSuspend</a>,
+before 
+<a class=pref href="#field-kSMDCLineCtlCmdResume">kSMDCLineCtlCmdResume</a>
+is used to resume wait for a shorter training sequence.
+
+<dt><a name="field-kSMDCLineCtlCmdRetrain">kSMDCLineCtlCmdRetrain</a>
+<dd>Initiate a modem retrain. This command is only valid for the modem types 
+which state they support it.
+
+</dl>
+<dt><a name="field-aux_mask">aux_mask</a><dd>A bitmask used with the
+<a class=pref href="#field-kSMDCLineCtlCmdSetAux">kSMDCLineCtlCmdSetAux</a>
+command.
+
+<dt><a name="field-aux_toggle">aux_toggle</a><dd>A bitmask used with the
+<a class=pref href="#field-kSMDCLineCtlCmdSetAux">kSMDCLineCtlCmdSetAux</a>
+command.
+
+<dt><a name="field-shorttrain">shorttrain</a><dd>Select whether the protocol should use short training
+(non-zero) or long training (zero). Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdAssertRTS">kSMDCLineCtlCmdAssertRTS</a>.
+
+<dt><a name="field-tep">tep</a><dd>Indicator of whether the transmitter should use <em>Talker
+Echo Protection</em> tone (non-zero) or not (zero). Only valid
+when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdAssertRTS">kSMDCLineCtlCmdAssertRTS</a>.
+
+<dt><a name="field-prefix_bitlength">prefix_bitlength</a><dd>The number of bits in the prefix. Must be zero or a multiple of 8.
+Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>.
+
+<dt><a name="field-prefix_data">prefix_data</a><dd>The prefix to be used with transmission.
+Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>.
+The data is sent least significant bit first, and any extra
+bits in the last word are ignored.
+
+<dt><a name="field-suffix_bitlength">suffix_bitlength</a><dd>The number of bits in the suffix. Must be zero or a multiple of 8.
+Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>.
+
+<dt><a name="field-suffix_data">suffix_data</a><dd>The suffix to be used with transmission.
+Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>.
+The data is sent least significant bit first, and any extra
+bits in the last word are ignored.
+
+<dt><a name="field-retrain_speed">retrain_speed</a><dd>The speed to retrain to.
+Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdRetrain">kSMDCLineCtlCmdRetrain</a>.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - configured protocol does not support this command</ul>
+<hr>
+<h2><a name="smdc_line_control_v34">Prosody data communications: API: smdc_line_control_v34</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_line_control_v34(struct smdc_line_control_v34_parms *<a href="#field-controlp">controlp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-controlp">*controlp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_line_control_v34_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCV34LineCtlCmd">enum kSMDCV34LineCtlCmd</a> {
+		<a href="#field-kSMDCV34LineCtlCmdRetrain">kSMDCV34LineCtlCmdRetrain</a>,
+		<a href="#field-kSMDCV34LineCtlCmdRenegotiateUp">kSMDCV34LineCtlCmdRenegotiateUp</a>,
+		<a href="#field-kSMDCV34LineCtlCmdRenegotiateDown">kSMDCV34LineCtlCmdRenegotiateDown</a>,
+		<a href="#field-kSMDCV34LineCtlCmdEnablePrimary">kSMDCV34LineCtlCmdEnablePrimary</a>,
+		<a href="#field-kSMDCV34LineCtlCmdEnableControl">kSMDCV34LineCtlCmdEnableControl</a>,
+		<a href="#field-kSMDCV34LineCtlCmdBitrateTx">kSMDCV34LineCtlCmdBitrateTx</a>,
+		<a href="#field-kSMDCV34LineCtlCmdBitrateRx">kSMDCV34LineCtlCmdBitrateRx</a>,
+	} <a href="#field-cmd">cmd</a>;							/* in */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-bitrate-min_bitrate">min_bitrate</a>;			/* in */
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-bitrate-max_bitrate">max_bitrate</a>;			/* in */
+		} <a href="#field-u-bitrate">bitrate</a>;					/* in */
+	} <a href="#field-u">u</a>;							/* in */
+} SMDC_LINE_CONTROL_V34_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Perform a command on a channel which has been configured for V.34 data
+communications.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel which has been configured for data communications.
+
+<dt><a name="field-cmd">cmd</a><dd>The control operation to perform.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCV34LineCtlCmdRetrain">kSMDCV34LineCtlCmdRetrain</a>
+<dd>Initiate a full retrain procedure on the line, negotiating the best
+new data rate for the primary channel.
+
+<dt><a name="field-kSMDCV34LineCtlCmdRenegotiateUp">kSMDCV34LineCtlCmdRenegotiateUp</a>
+<dd>Performs a short renegotiation procedure to increase the data rate on
+the primary channel. This is typically done when the
+<tt>snr_status</tt> parameter of
+<a href="#smdc_line_status_v34">smdc_line_status_v34()</a>
+is greater than zero.
+
+<dt><a name="field-kSMDCV34LineCtlCmdRenegotiateDown">kSMDCV34LineCtlCmdRenegotiateDown</a>
+<dd>Performs a short renegotiation procedure to decrease the data rate on
+the primary channel. This is typically done when the
+<tt>snr_status</tt> parameter of
+<a href="#smdc_line_status_v34">smdc_line_status_v34()</a>
+is less than zero.
+
+<dt><a name="field-kSMDCV34LineCtlCmdEnablePrimary">kSMDCV34LineCtlCmdEnablePrimary</a>
+<dd>Switches the modem to transmit on the primary channel. Both
+originating and answering modem must send this command at the
+appropriate time, as negotiated by a higher-level protocol. This
+message is only available on the half-duplex V.34 modem; the
+full-duplex modem always runs on the primary channel.
+
+<dt><a name="field-kSMDCV34LineCtlCmdEnableControl">kSMDCV34LineCtlCmdEnableControl</a>
+<dd>Switches the modem to transmit on the control channel.  Both
+originating and answering modem must send this command at the
+appropriate time, as negotiated by a higher-level protocol. This
+message is only available on the half-duplex V.34 modem; the
+full-duplex modem always runs on the primary channel. The
+half-duplex modem is using the control channel when it first returns
+control to the user after negotiation.
+
+<dt><a name="field-kSMDCV34LineCtlCmdBitrateTx">kSMDCV34LineCtlCmdBitrateTx</a>
+<dd>Change the bitrate limits on the transmitter.
+
+<dt><a name="field-kSMDCV34LineCtlCmdBitrateRx">kSMDCV34LineCtlCmdBitrateRx</a>
+<dd>Change the bitrate limits on the receiver.
+
+</dl>
+<dt><a name="field-u">u</a><dd>
+
+<dl>
+<dt><a name="field-u-bitrate">bitrate</a><dd>This field is only valid if the cmd is
+<a class=pref href="#field-kSMDCV34LineCtlCmdBitrateTx">kSMDCV34LineCtlCmdBitrateTx</a>
+or
+<a class=pref href="#field-kSMDCV34LineCtlCmdBitrateRx">kSMDCV34LineCtlCmdBitrateRx</a>.
+
+
+<dl>
+<dt><a name="field-u-bitrate-min_bitrate">min_bitrate</a><dd>The minimum bitrate to negotiate for the primary channel, in bits/second.
+
+<dt><a name="field-u-bitrate-max_bitrate">max_bitrate</a><dd>The maximum bitrate to negotiate for the primary channel, in bits/second.
+
+</dl>
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - configured protocol does not support this command</ul>
+<hr>
+<h2><a name="smdc_line_status">Prosody data communications: API: smdc_line_status</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_line_status(struct smdc_line_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_line_status_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCLinkStatus">enum kSMDCLinkStatus</a> {
+		<a href="#field-kSMDCLinkStatusNotConnected">kSMDCLinkStatusNotConnected</a>,
+		<a href="#field-kSMDCLinkStatusConnecting">kSMDCLinkStatusConnecting</a>,
+		<a href="#field-kSMDCLinkStatusConnected">kSMDCLinkStatusConnected</a>,
+		<a href="#field-kSMDCLinkStatusDisconnecting">kSMDCLinkStatusDisconnecting</a>,
+	} <a href="#field-link_status">link_status</a>;						/* out */
+	<a name="enum-kSMDCLineRxStatus">enum kSMDCLineRxStatus</a> {
+		<a href="#field-kSMDCRxStatusNoCarrier">kSMDCRxStatusNoCarrier</a>,
+		<a href="#field-kSMDCRxStatusCarrierPresent">kSMDCRxStatusCarrierPresent</a>,
+		<a href="#field-kSMDCRxStatusReceivingData">kSMDCRxStatusReceivingData</a>,
+	} <a href="#field-rx_status">rx_status</a>;						/* out */
+	<a name="enum-kSMDCLineTxStatus">enum kSMDCLineTxStatus</a> {
+		<a href="#field-kSMDCTxStatusSilent">kSMDCTxStatusSilent</a>,
+		<a href="#field-kSMDCTxStatusSendingCarrier">kSMDCTxStatusSendingCarrier</a>,
+		<a href="#field-kSMDCTxStatusSendingData">kSMDCTxStatusSendingData</a>,
+	} <a href="#field-tx_status">tx_status</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-tx_cts">tx_cts</a>;						/* out */
+} SMDC_LINE_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This function is deprecated in favour of using
+<a href="#smdc_rx_status">smdc_rx_status()</a>
+and
+<a href="#smdc_tx_status">smdc_tx_status()</a>.
+<p>
+Reports the status of a channel used for data communications.
+If its input half has not been configured for data
+communications, then the field
+<a class=pref href="#field-rx_status">rx_status</a>
+will contain the value
+<a class=pref href="#field-kSMDCRxStatusNoCarrier">kSMDCRxStatusNoCarrier</a>,
+otherwise it indicates status of the input half of the channel.
+Note that it is not normally appropriate to distinguish between
+<a class=pref href="#field-kSMDCRxStatusCarrierPresent">kSMDCRxStatusCarrierPresent</a>
+and
+<a class=pref href="#field-kSMDCRxStatusReceivingData">kSMDCRxStatusReceivingData</a>
+since protocols can typically switch between them very
+quickly and the system only reports approximately to avoid
+the status changing very rapidly.
+<p>
+If the channel's output half has not been configured for data
+communications, then the field
+<a class=pref href="#field-tx_status">tx_status</a>
+will contain the value
+<a class=pref href="#field-kSMDCTxStatusSilent">kSMDCTxStatusSilent</a>,
+otherwise it indicates the output half status. Note that it is
+not normally appropriate to distinguish between
+<a class=pref href="#field-kSMDCTxStatusSendingCarrier">kSMDCTxStatusSendingCarrier</a>
+and
+<a class=pref href="#field-kSMDCTxStatusSendingData">kSMDCTxStatusSendingData</a>
+since protocols can typically switch between them very
+quickly and the system only reports approximately to avoid
+the status changing very rapidly.
+<p>
+The overall channel status is reported in
+<a class=pref href="#field-link_status">link_status</a>.
+Where the input half and output half have been configured
+with independent protocols, the status is reported as
+<a class=pref href="#field-kSMDCLinkStatusConnected">kSMDCLinkStatusConnected</a>
+if either is connected. The status
+<a class=pref href="#field-kSMDCLinkStatusNotConnected">kSMDCLinkStatusNotConnected</a>
+is reported only if both have finished data communications.
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel which has been configured for data communications.
+
+<dt><a name="field-link_status">link_status</a><dd>The channel status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCLinkStatusNotConnected">kSMDCLinkStatusNotConnected</a>
+<dd>The channel has finished with data communications. When this
+status is reported, the channel reverts to the idle state
+that it was in before
+<a href="#smdc_channel_config">smdc_channel_config()</a>
+was used. Therefore it can be re-configured or used for
+another purpose and a subsequent call to
+<a href="#smdc_line_status">smdc_line_status()</a>
+will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+
+<dt><a name="field-kSMDCLinkStatusConnecting">kSMDCLinkStatusConnecting</a>
+<dd>Channel is waiting to connect. Either the appropriate command
+(<a href="#field-kSMDCLineCtlCmdInitiatorConnect">kSMDCLineCtlCmdInitiatorConnect</a>
+or
+<a href="#field-kSMDCLineCtlCmdResponderConnect">kSMDCLineCtlCmdResponderConnect</a>)
+has not yet been used in a call to
+<a href="#smdc_line_control">smdc_line_control()</a>
+or the connection handshake procedures have not yet completed.
+
+<dt><a name="field-kSMDCLinkStatusConnected">kSMDCLinkStatusConnected</a>
+<dd>Connection handshake procedures have been completed or are not
+applicable.
+
+<dt><a name="field-kSMDCLinkStatusDisconnecting">kSMDCLinkStatusDisconnecting</a>
+<dd>The channel is in the process of disconnecting.
+
+</dl>
+<dt><a name="field-rx_status">rx_status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMDCRxStatusNoCarrier">kSMDCRxStatusNoCarrier</a>
+<dd>The input half is not receiving a meaningful signal.
+
+<dt><a name="field-kSMDCRxStatusCarrierPresent">kSMDCRxStatusCarrierPresent</a>
+<dd>The input half is receiving a meaningful signal, but it does
+not contain data.
+
+<dt><a name="field-kSMDCRxStatusReceivingData">kSMDCRxStatusReceivingData</a>
+<dd>The input half is receiving a meaningful signal, and it contains
+data.
+
+</dl>
+<dt><a name="field-tx_status">tx_status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMDCTxStatusSilent">kSMDCTxStatusSilent</a>
+<dd>The output half is not sending any signal.
+
+<dt><a name="field-kSMDCTxStatusSendingCarrier">kSMDCTxStatusSendingCarrier</a>
+<dd>The output half is sending a signal which does not contain
+data (e.g. a carrier or framing pattern).
+
+<dt><a name="field-kSMDCTxStatusSendingData">kSMDCTxStatusSendingData</a>
+<dd>The output half is sending a signal which contains data.
+
+</dl>
+<dt><a name="field-tx_cts">tx_cts</a><dd>Indicator of whether the transmitter is ready to transmit
+(non-zero) or not (zero).
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_line_status_v34">Prosody data communications: API: smdc_line_status_v34</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_line_status_v34(struct smdc_line_status_v34_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_line_status_v34_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="#enum-kSMDCLinkStatus">enum kSMDCLinkStatus</a> <a href="#field-link_status">link_status</a>;			/* out */
+	<a href="#enum-kSMDCLineRxStatus">enum kSMDCLineRxStatus</a> <a href="#field-rx_status">rx_status</a>;			/* out */
+	<a href="#enum-kSMDCLineTxStatus">enum kSMDCLineTxStatus</a> <a href="#field-tx_status">tx_status</a>;			/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-control_bitrate">control_bitrate</a>;				/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-primary_bitrate">primary_bitrate</a>;				/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-snr_status">snr_status</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-fdx_rx_bitrate">fdx_rx_bitrate</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-fdx_tx_bitrate">fdx_tx_bitrate</a>;					/* out */
+} SMDC_LINE_STATUS_V34_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Reports the status of a channel used for data communications with the
+V.34 protocol. V.34 is a full-duplex modem so both the input and
+output halves of the channel must have been configured for data
+communications.
+<p>
+The field
+<a class=pref href="#field-rx_status">rx_status</a>
+will indicate the status of the input half of the channel.
+Note that it is not normally appropriate to distinguish between
+<a class=pref href="#field-kSMDCRxStatusCarrierPresent">kSMDCRxStatusCarrierPresent</a>
+and
+<a class=pref href="#field-kSMDCRxStatusReceivingData">kSMDCRxStatusReceivingData</a>
+since protocols can typically switch between them very
+quickly and the system only reports approximately to avoid
+the status changing very rapidly.
+<p>
+The field
+<a class=pref href="#field-tx_status">tx_status</a>
+will indicate the output half status. Note that it is
+not normally appropriate to distinguish between
+<a class=pref href="#field-kSMDCTxStatusSendingCarrier">kSMDCTxStatusSendingCarrier</a>
+and
+<a class=pref href="#field-kSMDCTxStatusSendingData">kSMDCTxStatusSendingData</a>
+since protocols can typically switch between them very
+quickly and the system only reports approximately to avoid
+the status changing very rapidly.
+<p>
+The overall channel status is reported in
+<a class=pref href="#field-link_status">link_status</a>.
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel which has been configured for data communications.
+
+<dt><a name="field-link_status">link_status</a><dd>The channel status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCLinkStatusNotConnected">kSMDCLinkStatusNotConnected</a>
+<dd>The channel has finished with data communications. When this
+status is reported, the channel reverts to the idle state
+that it was in before
+<a href="#smdc_channel_config">smdc_channel_config()</a>
+was used. Therefore it can be re-configured or used for
+another purpose and a subsequent call to
+<a href="#smdc_line_status">smdc_line_status()</a>
+will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+
+<dt><a name="field-kSMDCLinkStatusConnecting">kSMDCLinkStatusConnecting</a>
+<dd>Channel is waiting to connect. Either the appropriate command
+(<a href="#field-kSMDCLineCtlCmdInitiatorConnect">kSMDCLineCtlCmdInitiatorConnect</a>
+or
+<a href="#field-kSMDCLineCtlCmdResponderConnect">kSMDCLineCtlCmdResponderConnect</a>)
+has not yet been used in a call to
+<a href="#smdc_line_control">smdc_line_control()</a>
+or the connection handshake procedures have not yet completed.
+
+<dt><a name="field-kSMDCLinkStatusConnected">kSMDCLinkStatusConnected</a>
+<dd>Connection handshake procedures have been completed or are not
+applicable.
+
+<dt><a name="field-kSMDCLinkStatusDisconnecting">kSMDCLinkStatusDisconnecting</a>
+<dd>The channel is in the process of disconnecting.
+
+</dl>
+<dt><a name="field-rx_status">rx_status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMDCRxStatusNoCarrier">kSMDCRxStatusNoCarrier</a>
+<dd>The input half is not receiving a meaningful signal.
+
+<dt><a name="field-kSMDCRxStatusCarrierPresent">kSMDCRxStatusCarrierPresent</a>
+<dd>The input half is receiving a meaningful signal, but it does
+not contain data.
+
+<dt><a name="field-kSMDCRxStatusReceivingData">kSMDCRxStatusReceivingData</a>
+<dd>The input half is receiving a meaningful signal, and it contains
+data.
+
+</dl>
+<dt><a name="field-tx_status">tx_status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMDCTxStatusSilent">kSMDCTxStatusSilent</a>
+<dd>The output half is not sending any signal.
+
+<dt><a name="field-kSMDCTxStatusSendingCarrier">kSMDCTxStatusSendingCarrier</a>
+<dd>The output half is sending a signal which does not contain
+data (e.g. a carrier or framing pattern).
+
+<dt><a name="field-kSMDCTxStatusSendingData">kSMDCTxStatusSendingData</a>
+<dd>The output half is sending a signal which contains data.
+
+</dl>
+<dt><a name="field-control_bitrate">control_bitrate</a><dd>In half-duplex mode, the currently-negotiated data rate of the control 
+channel, in bits/second. This value will be zero before the rate has been
+negotiated, while the modem is in state
+<a class=pref href="#field-kSMDCLinkStatusConnecting">kSMDCLinkStatusConnecting</a>.
+
+<dt><a name="field-primary_bitrate">primary_bitrate</a><dd>In half-duplex mode, the currently-negotiated data rate of the primary 
+channel, in bits/second. This value will be zero before the rate has been
+negotiated, while the modem is in state
+<a class=pref href="#field-kSMDCLinkStatusConnecting">kSMDCLinkStatusConnecting</a>.
+
+<dt><a name="field-snr_status">snr_status</a><dd>A value representing the signal-to-noise ratio on the line, as an
+arbitrary integer representing quality. Numbers less than zero
+indicate a low SNR and indicate that it may be advisable to reduce the
+data rate. Numbers greater than zero indicate that the data rate could
+be safely increased.
+
+<dt><a name="field-fdx_rx_bitrate">fdx_rx_bitrate</a><dd>In full-duplex mode, the currently-negotiated receive data rate of the 
+primary channel, in bits/second. This value will be zero before the rate 
+has been negotiated, while the modem is in state
+<a class=pref href="#field-kSMDCLinkStatusConnecting">kSMDCLinkStatusConnecting</a>.
+
+<dt><a name="field-fdx_tx_bitrate">fdx_tx_bitrate</a><dd>In full-duplex mode, the currently-negotiated transmit data rate of the 
+primary channel, in bits/second. This value will be zero before the rate 
+has been negotiated, while the modem is in state
+<a class=pref href="#field-kSMDCLinkStatusConnecting">kSMDCLinkStatusConnecting</a>.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_rx_config_t38">Prosody data communications: API: smdc_rx_config_t38</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_rx_config_t38(struct smdc_rx_config_t38_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_rx_config_t38_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-PreCorrigendum">PreCorrigendum</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-Protocol">Protocol</a>;					/* in */
+} SMDC_RX_CONFIG_T38_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures a channel's input for data communications
+using the T.38 protocol.
+<p>
+The input half of a channel is reserved for this data communications
+configuration until
+<a href="#smdc_rx_status_t38">smdc_rx_status_t38()</a>
+returns the status
+<a href="#field-kSMDCRxT38StatusFinished">
+kSMDCRxT38StatusFinished</a>. No other activity can take place
+on the input half of the channel during this time.
+<p>
+While the input half of a channel is configured for data
+communications, a read event associated with this channel
+using
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event()</a>
+will be set while the channel is ready to allow data to be
+read or there may be a status change to report.
+See
+<a href="#smdc_rx_control">smdc_rx_control()</a>
+for details of how this works. When an application discovers
+that this event is set, it should attempt to read data using
+<a href="#smdc_rx_data">smdc_rx_data()</a>.
+See its description to see how this interacts with status
+changes.
+<p>
+Requires the module
+<a href="softmodindex.html#ifprx">ifprx</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to configure.
+
+<dt><a name="field-PreCorrigendum">PreCorrigendum</a><dd>Selects the version of T.38 to use. Non-zero selects the
+pre-Corrigendum (1998) version, zero selects the updated version
+(2002).
+
+<dt><a name="field-Protocol">Protocol</a><dd>A value from Table 4/T.38 which is used in packets indicating which
+kind of modulation is being described. Incoming packets are discarded
+if they are incompatible with the value selected.
+The value 
+<code>kSMDCT38ProtocolAll</code> may be used to allow all received
+data to be read. In this case,
+<a href="#smdc_rx_status_t38">smdc_rx_status_t38()</a>
+will report the protocol being received and all data read will be in 
+the appropriate format until a new protocol is reported.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - a parameter value is bad<li>ERR_SM_WRONG_CHANNEL_STATE - channel is already busy</ul>
+<hr>
+<h2><a name="smdc_rx_config_v34">Prosody data communications: API: smdc_rx_config_v34</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_rx_config_v34(struct smdc_rx_config_v34_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_rx_config_v34_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCV34Duplex">enum kSMDCV34Duplex</a> {
+		<a href="#field-kSMDCV34HalfDuplex">kSMDCV34HalfDuplex</a>,
+		<a href="#field-kSMDCV34FullDuplex">kSMDCV34FullDuplex</a>,
+	} <a href="#field-duplex">duplex</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-min_bitrate">min_bitrate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_bitrate">max_bitrate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-v8fsk_metric">v8fsk_metric</a>;					/* in */
+} SMDC_RX_CONFIG_V34_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures a channel's input for data communications using the V.34
+protocol. The V.34 modem operates in a duplex manner (even when
+<a class=pref href="#field-duplex">duplex</a>
+is
+<a class=pref href="#field-kSMDCV34HalfDuplex">kSMDCV34HalfDuplex</a>),
+so
+<a class=pref href="#field-channel">channel</a>
+must be a full-duplex channel and its output half must also be
+configured using
+<a href="#smdc_tx_config_v34">smdc_tx_config_v34()</a>.
+<p>
+The channel input is reserved for this data communications
+configuration until
+<a href="#smdc_line_status_v34">smdc_line_status_v34()</a>
+returns the status
+<a href="#field-kSMDCLinkStatusNotConnected">
+kSMDCLinkStatusNotConnected</a>. No other activity can take place
+on the channel during this time.
+<p>
+While the input half of a channel is configured for data
+communications, a read event associated with this channel
+using
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event()</a>
+will be set while the channel is ready to allow data to be
+read or there may be a status change to report.
+See
+<a href="#smdc_rx_control">smdc_rx_control()</a>
+for details of how this works. When an application discovers
+that this event is set, it should attempt to read data using
+<a href="#smdc_rx_data">smdc_rx_data()</a>.
+See its description to see how this interacts with status
+changes.
+<p>
+Requires the module
+<a href="softmodindex.html#v34fdx">v34fdx</a>
+to have been downloaded if configuring for full duplex operation.
+<p>
+Requires the module
+<a href="softmodindex.html#v34">v34</a>
+to have been downloaded if configuring for half duplex operation.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to configure.
+
+<dt><a name="field-duplex">duplex</a><dd>Selects full-duplex or half-duplex operation. The transmitter and
+receiver must both be configured with the same value for this
+parameter.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCV34HalfDuplex">kSMDCV34HalfDuplex</a>
+<dd>Configures the channel for half-duplex. Only one channel may transmit
+at the full modem speed at a time, or both may transmit on a much
+slower control channel.
+
+<dt><a name="field-kSMDCV34FullDuplex">kSMDCV34FullDuplex</a>
+<dd>Configures the channel for full-duplex. Both channels may
+transmit at the full modem speed simultaneously.
+
+</dl>
+<dt><a name="field-min_bitrate">min_bitrate</a><dd>The minimum bitrate to negotiate for the primary channel when it is
+receiving data, in bits/second.
+
+<dt><a name="field-max_bitrate">max_bitrate</a><dd>The maximum bitrate to negotiate for the primary channel when it is
+receiving data, in bits/second.
+
+<dt><a name="field-v8fsk_metric">v8fsk_metric</a><dd>A measure of expected peer signal power derived from prior V.8 FSK
+demodulation. Should be configured to a value obtained from FSK
+receiver, or zero if such information not available.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - a parameter value is bad<li>ERR_SM_WRONG_CHANNEL_STATE - channel is already busy</ul>
+<hr>
+<h2><a name="smdc_rx_control">Prosody data communications: API: smdc_rx_control</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_rx_control(struct smdc_rx_control_parms *<a href="#field-controlp">controlp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-controlp">*controlp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_rx_control_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCRxCtl">enum kSMDCRxCtl</a> {
+		<a href="#field-kSMDCRxCtlDiscard">kSMDCRxCtlDiscard</a>,
+		<a href="#field-kSMDCRxCtlNotifyOnData">kSMDCRxCtlNotifyOnData</a>,
+		<a href="#field-kSMDCRxCtlStop">kSMDCRxCtlStop</a>,
+		<a href="#field-kSMDCRxCtlResume">kSMDCRxCtlResume</a>,
+	} <a href="#field-cmd">cmd</a>;							/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-min_to_collect">min_to_collect</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-min_idle">min_idle</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-blocking">blocking</a>;					/* in */
+} SMDC_RX_CONTROL_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Performs a control operation on the input half of a data
+communications channel.
+<p>
+When the 
+<a class=pref href="#field-cmd">cmd</a>
+field holds
+<a class=pref href="#field-kSMDCRxCtlNotifyOnData">kSMDCRxCtlNotifyOnData</a>,
+the values 
+<a class=pref href="#field-min_to_collect">min_to_collect</a>
+and
+<a class=pref href="#field-min_idle">min_idle</a>
+configure the criteria used to determine when the input half
+of the channel is ready. There are two cases:
+<p>
+<table border>
+<tr>
+	<th>min_idle</th>
+	<th>Meaning</th>
+</tr>
+<tr>
+	<td><code>0</code></td>
+	<td>The channel is ready when at least
+<a class=pref href="#field-min_to_collect">min_to_collect</a>
+	octets of data are waiting. It ceases to be ready
+	when the amount waiting falls below
+<a class=pref href="#field-min_to_collect">min_to_collect</a>.
+	</td>
+</tr>
+<tr>
+	<td><code>T</code> != 0</td>
+	<td>The channel is ready when any data can be 
+	collected. Data becomes ready for collection when either
+<a class=pref href="#field-min_to_collect">min_to_collect</a>
+	octets of data are waiting, or data is waiting and no 
+	further data has been received for a period of <code>T</code> mS.
+</tr>
+</table>
+<p>
+Note that, although times can be specified to the nearest
+millisecond, the measurement of time is limited to the epoch 
+period of the Prosody device.
+<p>
+When the input half of a channel is ready:
+<ul>
+<li>a call to 
+<a href="#smdc_rx_data">smdc_rx_data()</a>
+will not block
+<li>the associated event (if any) is signalled
+</ul>
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The data communication channel.
+
+<dt><a name="field-cmd">cmd</a><dd>The operations to perform.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCRxCtlDiscard">kSMDCRxCtlDiscard</a>
+<dd>Discard any buffered data not yet collected.
+
+<dt><a name="field-kSMDCRxCtlNotifyOnData">kSMDCRxCtlNotifyOnData</a>
+<dd>Set the criteria for determining when the input half of the
+channel is ready.
+
+<dt><a name="field-kSMDCRxCtlStop">kSMDCRxCtlStop</a>
+<dd>Use any flow control mechanism available in the configured
+protocol to stop the incoming data flow.
+
+<dt><a name="field-kSMDCRxCtlResume">kSMDCRxCtlResume</a>
+<dd>Use any flow control mechanism available in the configured
+protocol to resume the incoming data flow.
+
+</dl>
+<dt><a name="field-min_to_collect">min_to_collect</a><dd>Channel ready threshold (in octets). The input half of the
+channel is ready when at least this much data is buffered.
+This field is only used when the
+<a class=pref href="#field-cmd">cmd</a>
+field holds
+<a class=pref href="#field-kSMDCRxCtlNotifyOnData">kSMDCRxCtlNotifyOnData</a>.
+If this value is negative, it represents the amount of space
+remaining. For example, the value <code>-256</code> means
+that the threshold is reached when there is space available
+for no more than 256 further octets.
+See also the document <a href="../an-data_transfer.html">Prosody
+application note: considerations for data transfer
+thresholds</a>.
+
+<dt><a name="field-min_idle">min_idle</a><dd>Channel ready timeout (in mS). This field is only used when the
+<a class=pref href="#field-cmd">cmd</a>
+field holds
+<a class=pref href="#field-kSMDCRxCtlNotifyOnData">kSMDCRxCtlNotifyOnData</a>.
+The value zero indicates that no timer is to be used.
+
+<dt><a name="field-blocking">blocking</a><dd>Indicator of whether 
+<a href="#smdc_rx_data">smdc_rx_data()</a>
+should block if it attempts to read data when the channel is
+not ready. A non-zero value indicates that the function should
+block until the channel is ready. The value zero indicates that
+it should return immediately indicating that no data was read.
+Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCRxCtlNotifyOnData">kSMDCRxCtlNotifyOnData</a>.
+[Not currently implemented - reserved for future use]
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_rx_data">Prosody data communications: API: smdc_rx_data</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_rx_data(struct smdc_data_parms *<a href="#field-datap">datap</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datap">*datap</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_data_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	char *<a href="#field-data">data</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_length">max_length</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-done_length">done_length</a>;					/* out */
+} SMDC_DATA_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Attempt to read data from a channel whose input half has been
+configured for a data communications protocol. Less than the
+maximum will be read when either:
+<ul>
+<li>there is a status change which must be checked
+<li>there is no more data to read
+</ul>
+<p>
+To permit maximum system throughput, this function refuses to
+read from a channel whose status has changed since it was last
+checked. This allows an application to avoid checking the
+status during bulk data transfer. The application only needs
+to check the status when a call to
+<a href="#smdc_rx_data">smdc_rx_data()</a>
+returns with
+<a class=pref href="#field-done_length">done_length</a>
+equal to zero. This also ensures that status changes are
+reported at the point in the data at which they occurred,
+which may be important for some applications.
+<p>
+If an error is reported, the
+<a class=pref href="#field-done_length">done_length</a>
+field indicates the amount of data which was read before the
+error occurred.
+<p>
+Any amount of data (up to
+<a class=pref href="#field-max_length">max_length</a>)
+may be returned - even less than configured with the
+<a href="#field-min_to_collect">min_to_collect</a>,
+parameter set with
+<a href="#smdc_rx_control">smdc_rx_control()</a>,
+which only controls when the channel is declared ready. Once
+a channel is ready, it may remain so until all the data is
+read from it. This means that if the first read does not read
+all the data (i.e. the buffer supplied is too small), the
+next read will return immediately with more.
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The data communication channel.
+
+<dt><a name="field-data">data</a><dd>A pointer to the buffer into which data should be read.
+
+<dt><a name="field-max_length">max_length</a><dd>The amount of space in the buffer.
+
+<dt><a name="field-done_length">done_length</a><dd>The amount of data actually read.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_rx_encoding">Prosody data communications: API: smdc_rx_encoding</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_rx_encoding(struct smdc_encoding_parms *<a href="#field-encp">encp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-encp">*encp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_encoding_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-encoding">encoding</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-encoding_config_length">encoding_config_length</a>;				/* in */
+	void <a href="#field-encoding_config_data">*encoding_config_data</a>;				/* in */
+} SMDC_ENCODING_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures the receive encoding for the input half of a channel
+which must have been already configured for data communications using
+<a href="#smdc_channel_config">smdc_channel_config()</a>.
+<p>
+For details of what encodings are available,
+and the format of their configuration data,
+see the document <a href="../prosdc_encoding.html">Prosody data
+communications Encodings</a>.
+<p>
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to configure.
+
+<dt><a name="field-encoding">encoding</a><dd>The desired encoding for data received by the channel.
+
+<dt><a name="field-encoding_config_length">encoding_config_length</a><dd>The length of the encoding-specific configuration data pointed
+to by
+<a class=pref href="#field-encoding_config_data">encoding_config_data</a>
+
+<dt><a name="field-encoding_config_data">encoding_config_data</a><dd>Encoding-specific configuration data.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - a parameter value is bad<li>ERR_SM_WRONG_CHANNEL_STATE - channel has no receive protocol configured</ul>
+<hr>
+<h2><a name="smdc_rx_status">Prosody data communications: API: smdc_rx_status</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_rx_status(struct smdc_rx_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_rx_status_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-available_octets">available_octets</a>;				/* out */
+	<a name="enum-kSMDCRxStatus">enum kSMDCRxStatus</a> {
+		<a href="#field-kSMDCRxStatusEmpty">kSMDCRxStatusEmpty</a>,
+		<a href="#field-kSMDCRxStatusData">kSMDCRxStatusData</a>,
+		<a href="#field-kSMDCRxStatusOverrun">kSMDCRxStatusOverrun</a>,
+		<a href="#field-kSMDCRxStatusCarrier">kSMDCRxStatusCarrier</a>,
+		<a href="#field-kSMDCRxStatusFinished">kSMDCRxStatusFinished</a>,
+		<a href="#field-kSMDCRxStatusSigMetric">kSMDCRxStatusSigMetric</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-flow">flow</a>;						/* out */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-carrier-carrier">carrier</a>;			/* out */
+		} <a href="#field-u-carrier">carrier</a>;					/* out */
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-metric-metric">metric</a>;				/* out */
+		} <a href="#field-u-metric">metric</a>;					/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SMDC_RX_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Reports the status of a channel whose input half has been
+configured for data communications.
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The data communication channel.
+
+<dt><a name="field-available_octets">available_octets</a><dd>The amount of data currently buffered in this channel. Only
+valid if the
+<a class=pref href="#field-status">status</a>
+field reports
+<a class=pref href="#field-kSMDCRxStatusData">kSMDCRxStatusData</a>.
+
+<dt><a name="field-status">status</a><dd>The receiver status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCRxStatusEmpty">kSMDCRxStatusEmpty</a>
+<dd>No data is available for reading.
+
+<dt><a name="field-kSMDCRxStatusData">kSMDCRxStatusData</a>
+<dd>Some data is available for reading.
+
+<dt><a name="field-kSMDCRxStatusOverrun">kSMDCRxStatusOverrun</a>
+<dd>Data has been lost because the buffer has overflowed.
+
+<dt><a name="field-kSMDCRxStatusCarrier">kSMDCRxStatusCarrier</a>
+<dd>The input half has begun or stopped receiving a meaningful signal.
+
+<dt><a name="field-kSMDCRxStatusFinished">kSMDCRxStatusFinished</a>
+<dd>The receiver has finished with data communications. When this
+status is reported, the channel's input half reverts to the
+idle state that it was in before
+<a href="#smdc_channel_config">smdc_channel_config()</a>
+was used. Therefore it can be re-configured or used for
+another purpose and a subsequent call to
+<a href="#smdc_rx_status">smdc_rx_status()</a>
+will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+
+<dt><a name="field-kSMDCRxStatusSigMetric">kSMDCRxStatusSigMetric</a>
+<dd>The receiver is reporting a measurement relating to received signal
+prior to receiver termination. This status only occurs if receiver has been configured to report this metric.
+
+</dl>
+<dt><a name="field-flow">flow</a><dd>Indicator of whether the receiver has stopped incoming data by
+using flow control (non-zero) or not (zero).
+
+<dt><a name="field-u">u</a><dd>Additional information specifying the current status
+
+
+<dl>
+<dt><a name="field-u-carrier">carrier</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMDCRxStatusCarrier">kSMDCRxStatusCarrier</a>
+
+
+<dl>
+<dt><a name="field-u-carrier-carrier">carrier</a><dd>The current carrier status: zero=off, non-zero=on.
+
+</dl>
+<dt><a name="field-u-metric">metric</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMDCRxStatusSigMetric">kSMDCRxStatusSigMetric</a>
+
+
+<dl>
+<dt><a name="field-u-metric-metric">metric</a><dd>A measure of received signal.
+
+</dl>
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_rx_status_t38">Prosody data communications: API: smdc_rx_status_t38</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_rx_status_t38(struct smdc_rx_status_t38_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_rx_status_t38_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-available_octets">available_octets</a>;				/* out */
+	<a name="enum-kSMDCRxT38Status">enum kSMDCRxT38Status</a> {
+		<a href="#field-kSMDCRxT38StatusEmpty">kSMDCRxT38StatusEmpty</a>,
+		<a href="#field-kSMDCRxT38StatusTone">kSMDCRxT38StatusTone</a>,
+		<a href="#field-kSMDCRxT38StatusV34">kSMDCRxT38StatusV34</a>,
+		<a href="#field-kSMDCRxT38StatusData">kSMDCRxT38StatusData</a>,
+		<a href="#field-kSMDCRxT38StatusOverrun">kSMDCRxT38StatusOverrun</a>,
+		<a href="#field-kSMDCRxT38StatusCarrier">kSMDCRxT38StatusCarrier</a>,
+		<a href="#field-kSMDCRxT38StatusFinished">kSMDCRxT38StatusFinished</a>,
+		<a href="#field-kSMDCRxT38StatusProtocol">kSMDCRxT38StatusProtocol</a>,
+		<a href="#field-kSMDCRxT38StatusRate">kSMDCRxT38StatusRate</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-flow">flow</a>;						/* out */
+	union {
+		struct {
+			<a href="#enum-kSMDCT38ToneType">enum kSMDCT38ToneType</a> <a href="#field-u-tone-tone_type">tone_type</a>;	/* out */
+		} <a href="#field-u-tone">tone</a>;						/* out */
+		struct {
+			<a name="enum-kSMDCT38_V34Type">enum kSMDCT38_V34Type</a> {
+				<a href="#field-kSMDCT38_V34Type_V34_CC_1200">kSMDCT38_V34Type_V34_CC_1200</a>,
+				<a href="#field-kSMDCT38_V34Type_V34_PRI_CHAN">kSMDCT38_V34Type_V34_PRI_CHAN</a>,
+				<a href="#field-kSMDCT38_V34Type_V34_CC_RETRAIN">kSMDCT38_V34Type_V34_CC_RETRAIN</a>,
+			} <a href="#field-u-v34-v34_type">v34_type</a>;				/* out */
+		} <a href="#field-u-v34">v34</a>;						/* out */
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-carrier-carrier">carrier</a>;			/* out */
+		} <a href="#field-u-carrier">carrier</a>;					/* out */
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-rate-rate">rate</a>;				/* out */
+		} <a href="#field-u-rate">rate</a>;						/* out */
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-protocol-protocol">protocol</a>;			/* out */
+		} <a href="#field-u-protocol">protocol</a>;					/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SMDC_RX_STATUS_T38_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Reports the status of a channel whose input half has been
+configured for T.38 data communications.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The T.38 data communication channel.
+
+<dt><a name="field-available_octets">available_octets</a><dd>The amount of data currently buffered in this channel. Only
+valid if the
+<a class=pref href="#field-status">status</a>
+field reports
+<a class=pref href="#field-kSMDCRxT38StatusData">kSMDCRxT38StatusData</a>.
+
+<dt><a name="field-status">status</a><dd>The receiver status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCRxT38StatusEmpty">kSMDCRxT38StatusEmpty</a>
+<dd>No data is available for reading.
+
+<dt><a name="field-kSMDCRxT38StatusTone">kSMDCRxT38StatusTone</a>
+<dd>A T.38 tone indicator was received on this channel
+
+<dt><a name="field-kSMDCRxT38StatusV34">kSMDCRxT38StatusV34</a>
+<dd>A T.38 v34 indicator was received on this channel
+
+<dt><a name="field-kSMDCRxT38StatusData">kSMDCRxT38StatusData</a>
+<dd>Some data is available for reading.
+
+<dt><a name="field-kSMDCRxT38StatusOverrun">kSMDCRxT38StatusOverrun</a>
+<dd>Data has been lost because the buffer has overflowed.
+
+<dt><a name="field-kSMDCRxT38StatusCarrier">kSMDCRxT38StatusCarrier</a>
+<dd>The input half is not receiving a meaningful signal.
+
+<dt><a name="field-kSMDCRxT38StatusFinished">kSMDCRxT38StatusFinished</a>
+<dd>The receiver has finished with data communications. When this
+status is reported, the channel's input half reverts to the
+idle state that it was in before
+<a href="#smdc_rx_config_t38">smdc_rx_config_t38()</a>
+was used. Therefore it can be re-configured or used for
+another purpose and a subsequent call to
+<a href="#smdc_rx_status_t38">smdc_rx_status_t38()</a>
+will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+
+<dt><a name="field-kSMDCRxT38StatusProtocol">kSMDCRxT38StatusProtocol</a>
+<dd>The protocol of the data received has changed. This status is
+only possible when the channel has been configured to receive
+all protocols.
+
+<dt><a name="field-kSMDCRxT38StatusRate">kSMDCRxT38StatusRate</a>
+<dd>v34 primary bit-rate in bits/s.
+
+</dl>
+<dt><a name="field-flow">flow</a><dd>Indicator of whether the receiver has stopped incoming data by
+using flow control (non-zero) or not (zero).
+
+<dt><a name="field-u">u</a><dd>
+
+<dl>
+<dt><a name="field-u-tone">tone</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMDCRxT38StatusTone">kSMDCRxT38StatusTone</a>
+
+
+<dl>
+<dt><a name="field-u-tone-tone_type">tone_type</a><dd>The type of tone that was reported on this channel. 
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCT38ToneTypeCNG">kSMDCT38ToneTypeCNG</a>
+<dd>A CNG tone
+
+<dt><a name="field-kSMDCT38ToneTypeCED">kSMDCT38ToneTypeCED</a>
+<dd>A CED tone
+
+<dt><a name="field-kSMDCT38ToneTypeANSAM">kSMDCT38ToneTypeANSAM</a>
+<dd>An ANSAM tone
+
+</dl>
+</dl>
+<dt><a name="field-u-v34">v34</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMDCRxT38StatusV34">kSMDCRxT38StatusV34</a>
+
+
+<dl>
+<dt><a name="field-u-v34-v34_type">v34_type</a><dd>The type of v34 action that was requested on this channel.
+This may be a switch from primary to control channel, or switch from 
+control to primary channel or control channel retrain due 
+to a synchronisation problem or a need for a new primary channel bitrate.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCT38_V34Type_V34_CC_1200">kSMDCT38_V34Type_V34_CC_1200</a>
+<dd>A Control Channel 
+
+<dt><a name="field-kSMDCT38_V34Type_V34_PRI_CHAN">kSMDCT38_V34Type_V34_PRI_CHAN</a>
+<dd>A Primary Channel
+
+<dt><a name="field-kSMDCT38_V34Type_V34_CC_RETRAIN">kSMDCT38_V34Type_V34_CC_RETRAIN</a>
+<dd>A Control Channel Retrain
+
+</dl>
+</dl>
+<dt><a name="field-u-carrier">carrier</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMDCRxT38StatusCarrier">kSMDCRxT38StatusCarrier</a>
+
+
+<dl>
+<dt><a name="field-u-carrier-carrier">carrier</a><dd>The current carrier status: 0=off, 1=on.
+
+</dl>
+<dt><a name="field-u-rate">rate</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMDCRxT38StatusRate">kSMDCRxT38StatusRate</a>
+
+
+<dl>
+<dt><a name="field-u-rate-rate">rate</a><dd>The primary bitrate value, anything from 2400 bps to 33600 bps.
+
+</dl>
+<dt><a name="field-u-protocol">protocol</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMDCRxT38StatusProtocol">kSMDCRxT38StatusProtocol</a>
+
+
+<dl>
+<dt><a name="field-u-protocol-protocol">protocol</a><dd>The protocol, from Table 4/T.38, of the data being received 
+
+</dl>
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_rx_stop">Prosody data communications: API: smdc_rx_stop</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_rx_stop(struct smdc_stop_parms *<a href="#field-pp">pp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-pp">*pp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_stop_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+} SMDC_STOP_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This stops the receive protocol configured on a channel.
+Unlike the
+<a href="#field-kSMDCLineCtlCmdDisconnect">
+kSMDCLineCtlCmdDisconnect</a> command of
+<a href="#smdc_line_control">smdc_line_control()</a>,
+this does not use any disconnection procedures of the
+protocol - it simply stops immediately. It is intended for
+situations where there is no need to disconnect properly,
+such as when call control indicates that the remote party has
+cleared the call.
+<p>
+When the input half of a channel has stopped,
+<a href="#smdc_rx_status">smdc_rx_status()</a>
+returns the status
+<a href="#field-kSMDCRxStatusFinished">
+kSMDCRxStatusFinished</a>.
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The data communication channel.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_stop">Prosody data communications: API: smdc_stop</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_stop(struct smdc_stop_parms *<a href="#field-pp">pp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-pp">*pp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_stop_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+} SMDC_STOP_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This stops any protocol configured on a channel. If the input
+half and the output half are configured with independent
+protocols, both are stopped. Unlike the
+<a href="#field-kSMDCLineCtlCmdDisconnect">
+kSMDCLineCtlCmdDisconnect</a> command of
+<a href="#smdc_line_control">smdc_line_control()</a>,
+this does not use any disconnection procedures of the
+protocols - it simply stops immediately. It is intended for
+situations where there is no need to disconnect properly,
+such as when call control indicates that the remote party has
+cleared the call.
+<p>
+This function is equivalent to calling both
+<a href="#smdc_rx_stop">smdc_rx_stop()</a>
+and
+<a href="#smdc_tx_stop">smdc_tx_stop()</a>
+on the channel, except that it does not report an error if only one
+half of the channel is configured with a protocol.
+<p>
+When the input half of a channel has stopped,
+<a href="#smdc_rx_status">smdc_rx_status()</a>
+returns the status
+<a href="#field-kSMDCRxStatusFinished">
+kSMDCRxStatusFinished</a>.
+When the output half of a channel has stopped
+<a href="#smdc_tx_status">smdc_tx_status()</a>
+returns the status
+<a href="#field-kSMDCTxStatusFinished">
+kSMDCTxStatusFinished</a>.
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The data communication channel.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_tx_config_t38">Prosody data communications: API: smdc_tx_config_t38</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_tx_config_t38(struct smdc_tx_config_t38_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_tx_config_t38_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-PreCorrigendum">PreCorrigendum</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-Protocol">Protocol</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-max_packet_length">max_packet_length</a>;				/* in */
+} SMDC_TX_CONFIG_T38_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures a channel's output for data communications
+using the T.38 protocol.
+<p>
+The output half of a channel is reserved for this data communications
+configuration until
+<a href="#smdc_tx_status">smdc_tx_status()</a>
+returns the status
+<a href="#field-kSMDCTxStatusFinished">
+kSMDCTxStatusFinished</a>. No other activity can take place
+on the output half of the channel during this time.
+<p>
+While the output half of a channel is configured for data
+communications, a write event associated with this channel
+using
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event()</a>
+will be set while the channel is ready to allow data to be
+written or there may be a status change to report.
+See
+<a href="#smdc_tx_control">smdc_tx_control()</a>
+for details of how this works. When an application discovers
+that this event is set, it should attempt to write data using
+<a href="#smdc_tx_data">smdc_tx_data()</a>.
+See its description to see how this interacts with status
+changes.
+<p>
+The
+<a class=pref href="#field-max_packet_length">max_packet_length</a>
+field is used to restrict the size of the IFP packet data produced
+by the channel. A value of zero will cause the maximum size to be the
+maximum permitted by the firmware, as will any value above that maximum.
+<p>
+Requires the module
+<a href="softmodindex.html#ifptx">ifptx</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to configure.
+
+<dt><a name="field-PreCorrigendum">PreCorrigendum</a><dd>Selects the version of T.38 to use. Non-zero selects the
+pre-Corrigendum (1998) version, zero selects the updated version
+(2002).
+
+<dt><a name="field-Protocol">Protocol</a><dd>A value from Table 4/T.38 which is sent in packets indicating which
+kind of modulation is being described.
+
+<dt><a name="field-max_packet_length">max_packet_length</a><dd>The maximum number of octets in the output IFP packets
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - a parameter value is bad<li>ERR_SM_WRONG_CHANNEL_STATE - channel is already busy</ul>
+<hr>
+<h2><a name="smdc_tx_config_v34">Prosody data communications: API: smdc_tx_config_v34</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_tx_config_v34(struct smdc_tx_config_v34_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_tx_config_v34_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCV34Mode">enum kSMDCV34Mode</a> {
+		<a href="#field-kSMDCV34ModeOriginating">kSMDCV34ModeOriginating</a>,
+		<a href="#field-kSMDCV34ModeAnswering">kSMDCV34ModeAnswering</a>,
+	} <a href="#field-mode">mode</a>;							/* in */
+	<a name="enum-kSMDCV34Polling">enum kSMDCV34Polling</a> {
+		<a href="#field-kSMDCV34ModeNormal">kSMDCV34ModeNormal</a>,
+		<a href="#field-kSMDCV34ModePolling">kSMDCV34ModePolling</a>,
+	} <a href="#field-polling">polling</a>;						/* in */
+	<a href="#enum-kSMDCV34Duplex">enum kSMDCV34Duplex</a> <a href="#field-duplex">duplex</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-min_bitrate">min_bitrate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_bitrate">max_bitrate</a>;					/* in */
+} SMDC_TX_CONFIG_V34_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures a channel's output for data communications using the V.34
+protocol. The V.34 modem operates in a duplex manner (even when
+<a class=pref href="#field-duplex">duplex</a>
+is
+<a class=pref href="#field-kSMDCV34HalfDuplex">kSMDCV34HalfDuplex</a>),
+so
+<a class=pref href="#field-channel">channel</a>
+must be a full-duplex channel and its input half must also be
+configured using
+<a href="#smdc_rx_config_v34">smdc_rx_config_v34()</a>.
+<p>
+The channel output is reserved for this data communications
+configuration until
+<a href="#smdc_line_status_v34">smdc_line_status_v34()</a>
+returns the status
+<a href="#field-kSMDCLinkStatusNotConnected">
+kSMDCLinkStatusNotConnected</a>. No other activity can take place
+on the channel during this time.
+<p>
+While the output half of a channel is configured for data
+communications, a write event associated with this channel
+using
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event()</a>
+will be set while the channel is ready to accept more data or
+there may be a status change to report.
+See
+<a href="#smdc_tx_control">smdc_tx_control()</a>
+for details of how this works. When an application discovers
+that this event is set, it may check the status using
+<a href="#smdc_tx_status">smdc_tx_status()</a>.
+However, an application may simply try
+<a href="#smdc_tx_data">smdc_tx_data()</a>
+immediately and check status when it refuses to accept data.
+<p>
+Requires the module
+<a href="softmodindex.html#v34fdx">v34fdx</a>
+to have been downloaded if configuring for full duplex operation.
+<p>
+Requires the module
+<a href="softmodindex.html#v34">v34</a>
+to have been downloaded if configuring for half duplex operation.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to configure.
+
+<dt><a name="field-mode">mode</a><dd>The negotiation procedure for V.34 modems requires that one modem be
+nominated as the originator and the other is the answerer. In
+half-duplex mode the originating modem is the one which can transmit
+on the primary channel.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCV34ModeOriginating">kSMDCV34ModeOriginating</a>
+<dd>This modem is the originating modem.
+
+<dt><a name="field-kSMDCV34ModeAnswering">kSMDCV34ModeAnswering</a>
+<dd>This modem is the answering modem.
+
+</dl>
+<dt><a name="field-polling">polling</a><dd>V.34 half-duplex mode can only transmit data on the primary channel
+in one direction. There is no turnaround procedure, so to reverse the
+data flow the modem must be destroyed and a new modem created.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCV34ModeNormal">kSMDCV34ModeNormal</a>
+<dd>Primary channel data is transferred from the originating modem to the
+answering modem.
+
+<dt><a name="field-kSMDCV34ModePolling">kSMDCV34ModePolling</a>
+<dd>Primary channel data is transferred from the answering modem to the
+originating modem.
+
+</dl>
+<dt><a name="field-duplex">duplex</a><dd>Selects full-duplex or half-duplex operation. The transmitter and
+receiver must both be configured with the same value for this
+parameter.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCV34HalfDuplex">kSMDCV34HalfDuplex</a>
+<dd>Configures the channel for half-duplex. Only one channel may transmit
+at the full modem speed at a time, or both may transmit on a much
+slower control channel.
+
+<dt><a name="field-kSMDCV34FullDuplex">kSMDCV34FullDuplex</a>
+<dd>Configures the channel for full-duplex. Both channels may
+transmit at the full modem speed simultaneously.
+
+</dl>
+<dt><a name="field-min_bitrate">min_bitrate</a><dd>The minimum bitrate to negotiate for the primary channel when it is
+transmitting data, in bits/second.
+
+<dt><a name="field-max_bitrate">max_bitrate</a><dd>The maximum bitrate to negotiate for the primary channel when it is
+transmitting data, in bits/second.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - a parameter value is bad<li>ERR_SM_WRONG_CHANNEL_STATE - channel is already busy</ul>
+<hr>
+<h2><a name="smdc_tx_control">Prosody data communications: API: smdc_tx_control</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_tx_control(struct smdc_tx_control_parms *<a href="#field-controlp">controlp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-controlp">*controlp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_tx_control_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCTxCtl">enum kSMDCTxCtl</a> {
+		<a href="#field-kSMDCTxCtlDiscard">kSMDCTxCtlDiscard</a>,
+		<a href="#field-kSMDCTxCtlNotifyOnCapacity">kSMDCTxCtlNotifyOnCapacity</a>,
+		<a href="#field-kSMDCTxCtlNotifyOnEmpty">kSMDCTxCtlNotifyOnEmpty</a>,
+		<a href="#field-kSMDCTxCtlNoNotifyOnEmpty">kSMDCTxCtlNoNotifyOnEmpty</a>,
+		<a href="#field-kSMDCTxCtlFinish">kSMDCTxCtlFinish</a>,
+	} <a href="#field-cmd">cmd</a>;							/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-capacity">capacity</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-blocking">blocking</a>;					/* in */
+} SMDC_TX_CONTROL_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Performs a control operation on the output half of a data
+communications channel.
+<p>
+If the
+<a class=pref href="#field-cmd">cmd</a>
+field holds
+<a class=pref href="#field-kSMDCTxCtlNotifyOnCapacity">kSMDCTxCtlNotifyOnCapacity</a>,
+the criterion is set for determining when the output half of
+the channel is ready.
+A channel is ready when there is space to buffer the amount of
+data specified by 
+<a class=pref href="#field-capacity">capacity</a>.
+It ceases to be ready when the space falls below this value.
+When the output half of a channel is ready:
+<ul>
+<li>a call to 
+<a href="#smdc_tx_data">smdc_tx_data()</a>
+will not block
+<li>the associated event (if any) is signalled
+</ul>
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The data communication channel.
+
+<dt><a name="field-cmd">cmd</a><dd>The operation to perform.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCTxCtlDiscard">kSMDCTxCtlDiscard</a>
+<dd>Attempt to discard all data which has been buffered but has
+not yet been sent.
+
+<dt><a name="field-kSMDCTxCtlNotifyOnCapacity">kSMDCTxCtlNotifyOnCapacity</a>
+<dd>Set the parameter which controls when this output reports
+that there is capacity for more data. The value is taken from
+the
+<a class=pref href="#field-capacity">capacity</a>
+field.
+Also
+enable notification of the presence of capacity. The blocking
+indicator is also set from the
+<a class=pref href="#field-blocking">blocking</a>
+field.
+
+<dt><a name="field-kSMDCTxCtlNotifyOnEmpty">kSMDCTxCtlNotifyOnEmpty</a>
+<dd>Reserved value.
+
+<dt><a name="field-kSMDCTxCtlNoNotifyOnEmpty">kSMDCTxCtlNoNotifyOnEmpty</a>
+<dd>Reserved value.
+
+<dt><a name="field-kSMDCTxCtlFinish">kSMDCTxCtlFinish</a>
+<dd>Indicate that there is no more data to be sent and that the
+transmitter should cease transmission when it has sent any
+data currently buffered. The channel's tx status becomes
+<a href="#field-kSMDCTxStatusFinishing">
+kSMDCTxStatusFinishing</a> and any associated event will no
+longer be set by space being available for more data. It is
+an error to attempt to send more data after using this command.
+
+</dl>
+<dt><a name="field-capacity">capacity</a><dd>The capacity (in octets) for the notification threshold. Only
+valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCTxCtlNotifyOnCapacity">kSMDCTxCtlNotifyOnCapacity</a>.
+If this value is greater than zero, notification occurs when
+that number of octets of space is available. If it is less
+than zero, notification occurs when the amount of buffered
+data falls below that value. For example, the value
+<code>-128</code> means that notification is to happen
+when only 128 octets of data is waiting to be sent.
+If it is zero, then any associated event will only be set when 
+<a href="#smdc_tx_status">smdc_tx_status()</a>
+needs to be called.
+See also the document <a href="../an-data_transfer.html">Prosody
+application note: considerations for data transfer
+thresholds</a>.
+
+<dt><a name="field-blocking">blocking</a><dd>This field is currently ignored.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_tx_data">Prosody data communications: API: smdc_tx_data</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_tx_data(struct smdc_data_parms *<a href="#field-datap">datap</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datap">*datap</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_data_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	char *<a href="#field-data">data</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_length">max_length</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-done_length">done_length</a>;					/* out */
+} SMDC_DATA_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Attempt to write data to a channel whose output half has been
+configured for a data commuications protocol. Less than the
+maximum will be written when either:
+<ul>
+<li>there is a status change which must be checked
+<li>there is insufficient space and this function has been 
+forbidden to wait by the
+<a href="#field-blocking">blocking</a>
+value set with
+<a href="#smdc_tx_control">smdc_tx_control()</a>.
+</ul>
+<p>
+To permit maximum system throughput, this function refuses to
+write to a channel whose status has changed since it was last
+checked. This allows an application to avoid checking the
+status during bulk data transfer. The application only needs
+to check the status (using
+<a href="#smdc_tx_status">smdc_tx_status()</a>)
+when a call to
+<a href="#smdc_tx_data">smdc_tx_data()</a>
+returns with
+<a class=pref href="#field-done_length">done_length</a>
+equal to zero. If a status change occurs while writing data,
+<a class=pref href="#field-done_length">done_length</a>
+may indicate that some, but not all, of the data was written.
+In this case, the most convenient way for an application to
+react is often to note how much data has been sent, and to
+try to send more. Since the new attempt will indicate that
+no data was written, it means that the application does not
+need to have different cases to handle a status change at the
+beginning of the data buffer and a status change after a
+partial write.
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The data communication channel.
+
+<dt><a name="field-data">data</a><dd>A pointer to the data to be written.
+
+<dt><a name="field-max_length">max_length</a><dd>The amount of data in the buffer.
+
+<dt><a name="field-done_length">done_length</a><dd>The amount of data actually written.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_tx_encoding">Prosody data communications: API: smdc_tx_encoding</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_tx_encoding(struct smdc_encoding_parms *<a href="#field-encp">encp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-encp">*encp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_encoding_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-encoding">encoding</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-encoding_config_length">encoding_config_length</a>;				/* in */
+	void <a href="#field-encoding_config_data">*encoding_config_data</a>;				/* in */
+} SMDC_ENCODING_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures the transmit encoding for the output half of a channel
+which must have been already configured for data communications using
+<a href="#smdc_channel_config">smdc_channel_config()</a>.
+<p>
+For details of what encodings are available,
+and the format of their configuration data,
+see the document <a href="../prosdc_encoding.html">Prosody data
+communications Encodings</a>.
+<p>
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to configure.
+
+<dt><a name="field-encoding">encoding</a><dd>The desired encoding for data transmitted by the channel.
+
+<dt><a name="field-encoding_config_length">encoding_config_length</a><dd>The length of the encoding-specific configuration data pointed
+to by
+<a class=pref href="#field-encoding_config_data">encoding_config_data</a>
+
+<dt><a name="field-encoding_config_data">encoding_config_data</a><dd>Encoding-specific configuration data.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - a parameter value is bad<li>ERR_SM_WRONG_CHANNEL_STATE - channel has no transmit protocol configured</ul>
+<hr>
+<h2><a name="smdc_tx_status">Prosody data communications: API: smdc_tx_status</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_tx_status(struct smdc_tx_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_tx_status_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-capacity">capacity</a>;					/* out */
+	<a name="enum-kSMDCTxStatus">enum kSMDCTxStatus</a> {
+		<a href="#field-kSMDCTxStatusEmpty">kSMDCTxStatusEmpty</a>,
+		<a href="#field-kSMDCTxStatusHasCapacity">kSMDCTxStatusHasCapacity</a>,
+		<a href="#field-kSMDCTxStatusNoCapacity">kSMDCTxStatusNoCapacity</a>,
+		<a href="#field-kSMDCTxStatusUnderrun">kSMDCTxStatusUnderrun</a>,
+		<a href="#field-kSMDCTxStatusFinishing">kSMDCTxStatusFinishing</a>,
+		<a href="#field-kSMDCTxStatusFinished">kSMDCTxStatusFinished</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-flow">flow</a>;						/* out */
+} SMDC_TX_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Report the status of the output half of a channel.
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The data communication channel.
+
+<dt><a name="field-capacity">capacity</a><dd>The currently available capacity (in octets) to buffer more
+output data. Only valid if the 
+<a class=pref href="#field-status">status</a>
+field reports
+<a class=pref href="#field-kSMDCTxStatusHasCapacity">kSMDCTxStatusHasCapacity</a>.
+
+<dt><a name="field-status">status</a><dd>The output status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCTxStatusEmpty">kSMDCTxStatusEmpty</a>
+<dd>The transmitter has sent all data and is ready for more. This status
+is only reported where explicitly stated in the documentation of
+individual protocols
+
+<dt><a name="field-kSMDCTxStatusHasCapacity">kSMDCTxStatusHasCapacity</a>
+<dd>The transmitter has some capacity to buffer more data, but
+has not yet sent all data previously buffered.
+
+<dt><a name="field-kSMDCTxStatusNoCapacity">kSMDCTxStatusNoCapacity</a>
+<dd>The transmitter has no capacity to buffer more data.
+
+<dt><a name="field-kSMDCTxStatusUnderrun">kSMDCTxStatusUnderrun</a>
+<dd>At an inappropriate point the transmitter has run out of data to
+send.
+
+<dt><a name="field-kSMDCTxStatusFinishing">kSMDCTxStatusFinishing</a>
+<dd>The application has used the command
+<a href="#field-kSMDCTxCtlFinish">
+kSMDCTxCtlFinish</a> but the transmitter has not yet sent all
+buffered data.
+
+<dt><a name="field-kSMDCTxStatusFinished">kSMDCTxStatusFinished</a>
+<dd>The transmitter has finished with data communications. When this
+status is reported, the channel's output half reverts to the
+idle state that it was in before
+<a href="#smdc_channel_config">smdc_channel_config()</a>
+was used. Therefore it can be re-configured or used for
+another purpose and a subsequent call to
+<a href="#smdc_tx_status">smdc_tx_status()</a>
+will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+
+</dl>
+<dt><a name="field-flow">flow</a><dd>Indicator of whether the transmitter has been stopped by flow
+control (non-zero) or not (zero).
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_tx_stop">Prosody data communications: API: smdc_tx_stop</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_tx_stop(struct smdc_stop_parms *<a href="#field-pp">pp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-pp">*pp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_stop_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+} SMDC_STOP_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This stops the transmit protocol configured on a channel.
+Unlike the
+<a href="#field-kSMDCLineCtlCmdDisconnect">
+kSMDCLineCtlCmdDisconnect</a> command of
+<a href="#smdc_line_control">smdc_line_control()</a>,
+this does not use any disconnection procedures of the
+protocol - it simply stops immediately. It is intended for
+situations where there is no need to disconnect properly,
+such as when call control indicates that the remote party has
+cleared the call.
+<p>
+When the output half of a channel has stopped
+<a href="#smdc_tx_status">smdc_tx_status()</a>
+returns the status
+<a href="#field-kSMDCTxStatusFinished">
+kSMDCTxStatusFinished</a>.
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The data communication channel.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_tx_tone_indicator_t38">Prosody data communications: API: smdc_tx_tone_indicator_t38</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_tx_tone_indicator_t38(struct smdc_tx_tone_indicator_t38_parms *<a href="#field-tonep">tonep</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-tonep">*tonep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_tx_tone_indicator_t38_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCT38ToneType">enum kSMDCT38ToneType</a> {
+		<a href="#field-kSMDCT38ToneTypeCNG">kSMDCT38ToneTypeCNG</a>,
+		<a href="#field-kSMDCT38ToneTypeCED">kSMDCT38ToneTypeCED</a>,
+		<a href="#field-kSMDCT38ToneTypeANSAM">kSMDCT38ToneTypeANSAM</a>,
+	} <a href="#field-tone_type">tone_type</a>;						/* in */
+} SMDC_TX_TONE_INDICATOR_T38_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Sends a T.38 tone indicator on the output half of a T.38 data
+communication channel.
+<p>
+T.38 tone indicators must be sent before sending any T.38 data on a
+given channel.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The T.38 data communications channel
+
+<dt><a name="field-tone_type">tone_type</a><dd>The type of tone indicator to send
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCT38ToneTypeCNG">kSMDCT38ToneTypeCNG</a>
+<dd>A CNG tone
+
+<dt><a name="field-kSMDCT38ToneTypeCED">kSMDCT38ToneTypeCED</a>
+<dd>A CED tone
+
+<dt><a name="field-kSMDCT38ToneTypeANSAM">kSMDCT38ToneTypeANSAM</a>
+<dd>An ANSAM tone
+
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_tx_v34_indicator_t38">Prosody data communications: API: smdc_tx_v34_indicator_t38</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_tx_v34_indicator_t38(struct smdc_tx_v34_indicator_t38_parms *<a href="#field-tonep">tonep</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-tonep">*tonep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_tx_v34_indicator_t38_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="#enum-kSMDCT38_V34Type">enum kSMDCT38_V34Type</a> <a href="#field-v34_type">v34_type</a>;				/* int */
+} SMDC_TX_V34_INDICATOR_T38_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Sends a T.38 v34 indicator on the output half of a T.38 data
+communication channel.
+<p>
+The T.38 V34_CC_1200 indicator is sent when a switch from primary 
+channel to control channel is requested.
+<p>
+The T.38 V34_PRI_CHAN indicator is sent when a switch from control 
+channel to primary channel is requested.
+<p>
+The T.38 V34_CC_RETRAIN indicator is sent when a new primary 
+channel datarate is requested. This is usually followed by a
+T.38 data element with a field set to v34-pri-rate and the
+specific datarate.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The T.38 data communications channel
+
+<dt><a name="field-v34_type">v34_type</a><dd>The type of v34 indicator to send
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCT38_V34Type_V34_CC_1200">kSMDCT38_V34Type_V34_CC_1200</a>
+<dd>A Control Channel 
+
+<dt><a name="field-kSMDCT38_V34Type_V34_PRI_CHAN">kSMDCT38_V34Type_V34_PRI_CHAN</a>
+<dd>A Primary Channel
+
+<dt><a name="field-kSMDCT38_V34Type_V34_CC_RETRAIN">kSMDCT38_V34Type_V34_CC_RETRAIN</a>
+<dd>A Control Channel Retrain
+
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smdc_tx_v34_line_control_t38">Prosody data communications: API: smdc_tx_v34_line_control_t38</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smdc_tx_v34_line_control_t38(struct smdc_tx_v34_line_control_t38_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_tx_v34_line_control_t38_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-primary_bitrate">primary_bitrate</a>;				/* in */
+} SMDC_TX_V34_LINE_CONTROL_T38_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures a channel's output for data communications
+using the T.38 protocol.
+<p>
+The output half of a channel is reserved for this data communications
+configuration. The primary_bitrate returned from
+<a href="#smdc_line_status_v34">smdc_line_status_v34()</a>
+may be used to configure the v34 t38 line control channel to the same
+bitrate.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to configure.
+
+<dt><a name="field-primary_bitrate">primary_bitrate</a><dd>The primary channel bitrate
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - a parameter value is bad<li>ERR_SM_WRONG_CHANNEL_STATE - channel is already busy</ul>
+<hr>
+<p>These functions constitute the
+<a href="../prosdc.html">Prosody data communications API</a>.
+</body>
+</html>

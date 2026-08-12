@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>SCTP Packet contents and their relevance to ASSP</title>
+</head>
+<body>
+<h1>SCTP Packet contents and their relevance to ASSP</h1>
+<p>
+Here's a list of SCTP packet fields with considerations of how necessary
+they are in ASSP.
+
+<h2>Common header contents</h2>
+<p>
+<dl>
+<dt>source port
+<dd>
+Something similar is required. See discussion of addressibility.
+
+<dt>dest port
+<dd>
+Something similar is required. See discussion of addressibility.
+
+<dt>Verification tag
+<dd>
+Not needed. Packets can be protected by sequence number range
+checking.
+
+<dt>checksum
+<dd>
+Something similar is required.
+
+</dl>
+
+<h2>DATA chunk</h2>
+<p>
+<dl>
+<dt>U bit
+<dd>
+Not required. Unsequenced delivery is not supported.
+
+<dt>B bit
+<dd>
+Not required. ASSP is a stream protocol, so it does not have record
+boundaries in the data.
+
+<dt>E bit
+<dd>
+Not required. ASSP is a stream protocol, so it does not have record
+boundaries in the data.
+
+<dt>TSN
+<dd>
+Something similar is required.
+
+<dt>Stream identifier S
+<dd>
+Not required. ASSP does not aggregate multiple sub-streams within a
+stream.
+
+<dt>Stream sequence number n
+<dd>
+Not required. ASSP does not aggregate multiple sub-streams within a
+stream.
+
+<dt>Payload protocol identifier
+<dd>
+Not required. ASSP does not aggregate multiple sub-sub-streams within
+a sub-stream.
+
+</dl>
+
+<h2>INIT chunk</h2>
+<p>
+<dl>
+<dt>Initiate tag
+<dd>
+Not required. Used only to provide the verification tag in subsequent
+packets..
+
+<dt>Advertised Receiver Window Credit
+<dd>
+Not required as a separate option as normal flow control mechanisms
+can be used.
+
+<dt>Number of outbound streams
+<dd>
+Not required. ASSP does not aggregate multiple sub-streams within a
+stream.
+
+<dt>Number of inbound streams
+<dd>
+Not required. ASSP does not aggregate multiple sub-streams within a
+stream.
+
+<dt>Initial TSN
+<dd>
+Something similar is required. We can use the ACK field in the reverse
+direction.
+
+<dt>IPv4 address
+<dd>
+Not required. ASSP does not support multiple addresses per connection.
+
+<dt>IPv6 address
+<dd>
+Not required. ASSP does not support multiple addresses per connection.
+
+<dt>Cookie preservative
+<dd>
+Possibly permit as an option. Note that the longer a cookie's lifetime
+the less it protects the server sending it.
+
+<dt>Host name address
+<dd>
+Not required. ASSP does not support multiple addresses per connection.
+
+<dt>Supported address types
+<dd>
+Not required. ASSP does not support multiple addresses per connection.
+
+</dl>
+
+<h2>INIT ACK chunk</h2>
+<p>
+See the INIT chunk for most values.
+<dl>
+<dt>State cookie
+<dd>
+An equivalent is required.
+
+<dt>Unrecognised paramter
+<dd>
+Not required. All errors are reported by RST.
+
+</dl>
+
+<h2>SACK chunk</h2>
+<p>
+<dl>
+<dt>Cumulative TSN ACK
+<dd>
+An equivalent is required.
+
+<dt>Advertised Receiver Window Credit
+<dd>
+An equivalent is required.
+
+<dt>Gap ack blocks
+<dd>
+An equivalent is required.
+
+<dt>Duplicate TSN
+<dd>
+Not required.
+
+</dl>
+
+<h2>HEARTBEAT chunk</h2>
+<p>
+Not required. (Functionality can be achieved by sending any FASTACK
+packet).
+
+<h2>HEARTBEAT ACK chunk</h2>
+<p>
+Not required. (Functionality can be achieved by sending any FASTACK
+packet).
+
+<h2>ABORT chunk</h2>
+<p>
+Equivalent required.
+
+<h2>SHUTDOWN chunk</h2>
+<p>
+Equivalent required.
+
+<h2>SHUTDOWN ACK chunk</h2>
+<p>
+Not required. A single acknowledgement mechanism covers both data and
+shutdown.
+
+<h2>ERROR chunk</h2>
+<p>
+Not required. Errors are all fatal.
+
+<h2>COOKIE ECHO chunk</h2>
+<p>
+Equivalent required.
+
+<h2>COOKIE ACK chunk</h2>
+<p>
+Equivalent required.
+
+<h2>SHUTDOWN COMPLETE chunk</h2>
+<p>
+Not required. A single acknowledgement mechanism covers both data and
+shutdown.
+
+<h2>ECNE chunk</h2>
+<p>
+An equivalent option may be provided.
+
+<h2>CWR chunk</h2>
+<p>
+An equivalent option may be provided.
+
+</body>
+</html>

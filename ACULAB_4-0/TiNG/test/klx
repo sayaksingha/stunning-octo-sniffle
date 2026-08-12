@@ -1,0 +1,1 @@
+../util/gen-LINUX_V6_AMD64/kloadx $* ../starcore/gen/pxting_kernel.xmf

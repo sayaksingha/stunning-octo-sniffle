@@ -1,0 +1,10 @@
+.	fdxdc.o
+.	setup.o
+.	rxthread.o
+.	txthread.o
+Testlib	cardopen.o
+libutil	v18a.o
+Testlib	errcode_sm.o
+Testlib	error.o
+Testlib	modopen.o
+apilib

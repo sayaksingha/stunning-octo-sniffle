@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_set_profile_specific</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_set_profile_specific</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_set_profile_specific(struct sm_vmptx_set_profile_specific_parms *<a href="#field-psp">psp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-psp">*psp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_set_profile_specific_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-paramlen">paramlen</a>;					/* in */
+	char *<a href="#field-paramval">paramval</a>;						/* in */
+} SM_VMPTX_SET_PROFILE_SPECIFIC_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Sets profile specific parameters for a VMP[tx] previously set up to encode RTP extensions
+with call to 
+<a href="apifn-sm_vmptx_config_profile_specific.html">sm_vmptx_config_profile_specific()</a>
+. See documentation supplied with ProsodyS profile specific plugin for further details.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to be configured
+
+<dt><a name="field-paramlen">paramlen</a><dd>The length of the plugin specific parameter string in octets.
+
+<dt><a name="field-paramval">paramval</a><dd>The plugin specific parameter string contents.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

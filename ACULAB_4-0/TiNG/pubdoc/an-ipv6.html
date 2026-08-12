@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: using IPv6 RTP</title>
+</head>
+<body>
+<h1>Prosody application note: using IPv6</h1>
+
+<h2>Introduction</h2>
+<p>
+This application note describes how to set up an Prosody application to use IPv6 RTP
+streams and/or control ProsodyS/X over an IPv6 link. It assumes the reader already is
+familiar with Prosody applications using IPv4 RTP streams.
+<p>
+ProsodyS/X can work with both IPv4 and IPv6 RTP streams, but at any time an individual RTP endpoint is either in IPv4 or IPv6 mode.
+<p>
+One important distinction to note between ProsodyX IPv4 and IPv6 endpoints, is that whilst with IPv4 the base card and
+all the DSPs share a single IPv4 address which is also the media enpoint address for RTP, with IPv6 each DSP has its own 
+media endpoint IPv6 address (which may be discovered through the resource manager API).
+<p>
+The ASSP connection between application and ProsodyS/X (set up by <a href="gen/apifn-sm_open_prosody_x.html">this call</a>)
+may be configured to use either IPv4 or IPv6. When using IPv6, for ProsodyX, the address specified in the locator 
+remains the address of the base card (as the DSP module is not yet selected at this point in the API dialogue).
+<p>
+<h2>Endpoint Creation</h2>
+<p>
+When creating a VMPRx, it is necessary to specify whether it is to 
+accept IPv6 RTP or IPv4 RTP using the type field.
+<p>If an explicit listen address is specified, it may be either a global scope
+IPv6 address or a link local IPv6 address.
+<p>The local media address indicated in SIP SDP should be the explicit IPv6 address for the VMPRx
+or one of the implicit IPv6 addresses for the VMPRx if explicit address not used
+(normally a global scope IPv6 address).
+<p>When a vmprx status event is processed, an application should expect to
+get:
+<pre>
+	kSMVMPrxStatusGotPortsIPv6
+	kSMVMPrxStatusNewSSRCIPv6
+</pre>
+instead of:
+<pre>
+	kSMVMPrxStatusGotPorts
+	kSMVMPrxStatusNewSSRC
+</pre>
+and should access ports_ipv6 and ssrc_ipv6 elements of SM_VMPRX_STATUS_PARMS union.
+<p>
+A VMPTx does not have inherent IPv6 or IPv4 type until it is configured with destination
+address, so is created as normal using sm_vmptx_create.
+<p>
+<h2>VMPTx Configuration</h2>
+<p>
+When the VMPTx is configured, this should be done with new call sm_vmptx_config_ipv6.
+<p>
+The equivalent field to TOS_RTP for IPv6 is bits 20..27 of destination_rtp.sin6_flowinfo
+which will get placed in the RTP IP packets Traffic Class 8 bit field. This functionality is
+not currently available under Windows.
+<p>
+An example of setting up an IPv6 destination address is given here:
+<pre>
+	SM_VMPTX_CONFIG_IPV6_PARMS configp;
+	struct addrinfo hints;
+	struct addrinfo *result;
+	struct addrinfo *srcresult;
+	int s;
+
+	memset(&configp, 0, sizeof(configp));
+
+	memset(&hints, 0, sizeof(struct addrinfo));
+	hints.ai_family = AF_UNSPEC;	/* Allow IPv4 or IPv6 */
+	hints.ai_socktype = SOCK_DGRAM;
+	hints.ai_protocol = IPPROTO_UDP;
+	hints.ai_flags = AI_NUMERICHOST;
+
+	s = getaddrinfo(vmppar.dest_ip, NULL, &hints, &result);
+ 	/* handle errors... */
+	...
+	configp.destination_rtp.sin6_addr = ((struct sockaddr_in6*)result->ai_addr)->sin6_addr;
+	/* set up other elements in configp ...*/
+	...
+	e = sm_vmptx_config_ipv6(&configp);
+ 	/* handle errors and do any freeaddrinfo calls... */
+</pre>
+<p>
+Note if a source address is specified when configuring VMPTx, both source and destination addresses must be of same scope
+so either both global or both link local.
+<p>
+Similar considerations apply to other endpoint types such as FMPTx and FMPRx.
+<p>
+<h2>TiNG Test tools</h2>
+<p>
+TiNG test tools can be used to generate or receive an IPv6 RTP stream with similar parameters to those used for ipv4, rtprec needs a "-6" flag.
+<pre>
+	# ASSP over IPv4 to local PS, play and record IPv6
+	./rtprec -x x:127.0.0.1/mykey -6 -F a -m 8 -c a mysig.alaw
+	./rtpplay -x x:127.0.0.1/otherkey -d fdcd:fb9b:497a:0:21b:21ff:fe26:a6c6 -p 50000 -F a -m 8 -c a test.alaw
+	# ASSP over IPv6 to remote PS, play IPv6
+	./rtpplay -x x:[fdcd:fb9b:497a:0:202:1fff:fe00:a43b]/otherkey -d fdcd:fb9b:497a:0:21b:21ff:fe26:a6c6 -p 50000 -F a -m 8 -c a test.alaw
+</pre>
+</body>
+</html>
+

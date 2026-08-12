@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_isac_rate</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_isac_rate</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_isac_rate(struct sm_vmptx_isac_rate_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_isac_rate_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-rate">rate</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-ptime">ptime</a>;						/* in */
+} SM_VMPTX_ISAC_RATE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a VMP[tx] which is running the iSAC codec to generate
+output data at an explict rate. The data rate of an iSAC codec
+can be explicitly configured or it can automatically adapt its
+transmitter to network conditions using information derived from
+the corresponding receiver.
+<p>
+Note that if a transmitter is already running and automatically
+adapting using a corresponding receiver, the rate configured with
+this function is ignored.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] which is running the iSAC codec
+
+<dt><a name="field-rate">rate</a><dd>The short-term average bit rate in bits per second.
+
+<dt><a name="field-ptime">ptime</a><dd>The length of the RTP media, in milliseconds, to send in each packet.
+Applications should specify
+<a class=pref href="#field-ptime">ptime</a>
+as 30, or 60.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

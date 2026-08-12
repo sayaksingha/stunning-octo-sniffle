@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: writing applications for Microsoft Windows</title>
+</head>
+<body>
+<h1>Prosody application note: writing applications for Microsoft Windows</h1>
+<p>
+This document provides additional information specific to the Microsoft
+Windows implementation of Prosody TiNG.
+
+<h2>Building applications</h2>
+<p>
+Please see
+<a href="howto_buildapp.html">Prosody Guide - how to build applications to use Prosody</a>.
+
+<h2>File descriptors</h2>
+<p>
+If a large number of C run time library file descriptors are opened in an
+application, it may be necessary to invoke <code>_setmaxstdio()</code>
+to increase the default limit from default of 512 to a higher value
+(absolute max is 2048). See Microsoft C run time library documentation
+for more details.
+
+<h2>Prosody Events</h2>
+<p>
+Prosody events must be created using
+<a href="gen/apifn-smd_ev_create.html">smd_ev_create()</a>. The Win32 API calls
+WaitForSingleObject() or WaitForMultipleObjects() may be used instead of
+<a href="gen/apifn-smd_ev_wait.html">smd_ev_wait()</a>
+to wait on one or more Prosody events.
+<p>
+The example code below illustrates how to wait until another thread
+terminates, a DTMF digit occurs, or another thread sets an event to
+indicate the incoming call has been cleared down by the call originator.
+See Microsoft Win32 API documentation for more information about
+WaitForSingleObject() and WaitForMultipleObjects().
+
+<pre>
+HANDLE current_handles[3];
+
+/* create and associate event as before */
+
+current_handles[0] = handleToAnotherThread;
+current_handles[1] = chEvSetParms.event;
+current_handles[2] = callToIdleStateEvent;
+
+for (;!finished;) {
+    switch (WaitForMultipleObjects(3, current_handles, FALSE, WAIT_TIME)) {
+	case WAIT_OBJECT_0:
+		/* handle another thread termination */
+		break; 
+	case WAIT_OBJECT_0 + 1:
+		/* handle DTMF digit - do get recognised etc. */
+		break; 
+	case WAIT_OBJECT_0 + 2:
+		/* handle incoming call being cleared to idle state */
+		break; 
+	case WAIT_TIMEOUT:
+		/* handle timeout */
+		break;
+	default:
+		/* handle error */
+    }
+}
+
+/* free event etc */
+</pre>
+
+<h2>Multi-process applications</h2>
+<p>
+Care should be taken with values of type like <code>tSMChannelId</code>.
+These are defined as pointers, and consequently are only valid in the
+process space in which they were allocated.
+Multiple threads in one process space may of course share use of these values.
+<p>
+<hr>
+<p>
+<small>Document reference: AN 1344</small>
+
+</body>
+</html>

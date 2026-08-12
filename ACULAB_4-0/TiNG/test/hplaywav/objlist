@@ -1,0 +1,10 @@
+.	hplaywav.o
+Testlib	cardopen.o
+Testlib	fmtcode.o
+Testlib	error.o
+Testlib	errcode_sm.o
+Testlib	modopen.o
+apilib
+highapi	smhlib.o
+highapi	smwavlib.o
+libutil	generic_io.o

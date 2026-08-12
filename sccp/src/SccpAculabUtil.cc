@@ -212,23 +212,23 @@ BOOLEAN AculabUtil::PrintSccpStatus(acu_sccp_msg_t *msg)
 
 
    gTrace.PrintTraceTimeStamp("Y");
-   printf("%s:%s %s host %c:PC:%d",
+   T(gTrace, printf("%s:%s %s host %c:PC:%d",
          gProcessName,BLUE,msg->tm_msg_type == ACU_SCCP_MSG_USER_STATUS ? "USER" : "SP",
-         sccp_status->tsp_host, sccp_status->tsp_pc);
+         sccp_status->tsp_host, sccp_status->tsp_pc););
 
 
    if (msg->tm_msg_type == ACU_SCCP_MSG_USER_STATUS) 
    {
-      printf(" SSN:%d", sccp_status->tsp_ssn);
+      T(gTrace, printf(" SSN:%d", sccp_status->tsp_ssn););
       switch (sccp_status->tsp_user_status) {
          case ACU_SCCP_UOS:
-            printf(", User out of service");
+            T(gTrace, printf(", User out of service"););
             break;
          case ACU_SCCP_UIS:
-            printf(", User in service");
+            T(gTrace, printf(", User in service"););
             break;
          default:
-            printf(", User state %d", sccp_status->tsp_user_status);
+            T(gTrace, printf(", User state %d", sccp_status->tsp_user_status););
             break;
       }
    }
@@ -236,40 +236,40 @@ BOOLEAN AculabUtil::PrintSccpStatus(acu_sccp_msg_t *msg)
    switch (sccp_status->tsp_sp_status) 
    {
       case ACU_SCCP_SP_PROHIBIT:
-         printf(RED ", Signalling point prohibited" UNDO);
+         T(gTrace, printf(RED ", Signalling point prohibited" UNDO););
          break;
       case ACU_SCCP_SP_ACCESS:
-         printf(", Signalling point accessible");
+         T(gTrace, printf(", Signalling point accessible"););
          break;
       default:
-         printf(", Signalling point state %d", sccp_status->tsp_sp_status);
+         T(gTrace, printf(", Signalling point state %d", sccp_status->tsp_sp_status););
          break;
    }
 
    switch (sccp_status->tsp_sccp_status) {
       case ACU_SCCP_REM_SCCP_PROHIBIT:
-         printf(RED ", Remote SCCP prohibited" UNDO);
+         T(gTrace, printf(RED ", Remote SCCP prohibited" UNDO););
          break;
       case ACU_SCCP_REM_SCCP_UNAVAIL:
-         printf(RED ", Remote SCCP unavailable" UNDO);
+         T(gTrace, printf(RED ", Remote SCCP unavailable" UNDO););
          break;
       case ACU_SCCP_REM_SCCP_UNEQUIP:
-         printf(RED ", Remote SCCP unequipped"UNDO);
+         T(gTrace, printf(RED ", Remote SCCP unequipped"UNDO););
          break;
       case ACU_SCCP_REM_SCCP_INACCESS:
-         printf(RED ", Remote SCCP inaccessible"UNDO);
+         T(gTrace, printf(RED ", Remote SCCP inaccessible"UNDO););
          break;
       case ACU_SCCP_REM_SCCP_CONGEST:
-         printf(RED ", Remote SCCP congested"UNDO);
+         T(gTrace, printf(RED ", Remote SCCP congested"UNDO););
          break;
       case ACU_SCCP_REM_SCCP_AVAIL:
-         printf(", Remote SCCP available");
+         T(gTrace, printf(", Remote SCCP available"););
          break;
       default:
-         printf(", Remote SCCP state %d", sccp_status->tsp_sccp_status);
+         T(gTrace, printf(", Remote SCCP state %d", sccp_status->tsp_sccp_status););
          break;
    }
-   printf("%s\n",UNDO);
+   T(gTrace, printf("%s\n",UNDO););
 
    return true;
 }
@@ -297,14 +297,14 @@ void AculabUtil::ReturnAculabErrStr(int lErrCode,TEXT *lErrText)
 void AculabUtil::PrintHex (int numberOfBytes, const UINT8 * data,
       int arrayLen)
 {
-   printf("%s: Number Of Bytes = %d\n", gProcessName, numberOfBytes);
+   T(gTrace, printf("%s: Number Of Bytes = %d\n", gProcessName, numberOfBytes););
 
    for (int i = 0; i < numberOfBytes && i < arrayLen;)
    {
-      printf("      ");
+      T(gTrace, printf("      "););
       for (int j = 0; j < 16 && i < numberOfBytes && i < MAX_TDARRAY_BYTES; j++, i++)
-         printf("%02X ", data[i]);
-      printf("\n");
+         T(gTrace, printf("%02X ", data[i]););
+      T(gTrace, printf("\n"););
    }
 }
 
@@ -446,7 +446,7 @@ void AculabUtil::HandleSignal (int sig)
 
       case 30:
          {
-            printf("Received signal to thread :%u\n", pthread_self());
+            T(gTrace, printf("Received signal to thread :%u\n", (unsigned int)pthread_self()););
             pthread_exit(NULL);
          }
          break;
@@ -458,7 +458,7 @@ void AculabUtil::HandleSignal (int sig)
                   mSignal);
          }
    }
-   printf ("%s:\33[31m %s\33[0m\n", gProcessName, lLogText);
+   TERR(gTrace, printf ("%s:\33[31m %s\33[0m\n", gProcessName, lLogText););
    gLog.GenerateLog (GSYS13, lLogText, 99);
    signal (sig, HandleSignal);
 

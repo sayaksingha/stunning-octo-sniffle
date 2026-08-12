@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>API reference for an ASSP implementation</title>
+</head>
+<body>
+<h1>API reference for an ASSP implementation</h1>
+<p>
+This is the reference manual for
+<a href="assp_impl.html">An ASSP implementation</a>.
+<h2>API functions</h2>
+<p>
+The API provides these functions:
+<dl>
+<dt><a name="assp_init"><code>int assp_init(void);</code></a>
+<dd>
+Initialise the ASSP implementation library. This must be the first
+function from this library that you call.
+<dt><a name="assp_fini"><code>int assp_fini(void);</code></a>
+<dd>
+Undo initialisation of the ASSP implementation library. This must be
+the last function from this library that you call, with the exeption
+that after calling <code>assp_fini()</code> you may call
+<code>assp_init()</code> and start using the library again. It is not
+normally necessary to call <code>assp_fini()</code> unless you want to
+free any resources the library might be using in a long-running
+server when a configuration change indicates that the protocol is no
+longer needed.
+<dt><a name="assp_txpacket"><code>PACKET *assp_txpacket(TCB *tcb, unsigned maxdlen);</code></a>
+<dd>
+Allocate space for a new packet for transmission. On return, the
+<code>datastart</code> field points to a buffer into which the data to be
+transmitted must be copied. The <code>dataend</code> field must be updated
+to point to the address after the last byte of data and is initialised to the
+maximum value it can be in this packet. The parameters are:
+	<dl>
+	<dt>tcb
+	<dd>
+	The TCB on which the packet will be sent.
+	<dt>maxdlen
+	<dd>
+	The maximum number of octets of data that the packet might be
+	required to hold.
+	</dl>
+<dt><a name="assp_rx_cid"><code>U32 assp_rx_cid(PACKET *pkt);</code></a>
+<dd>
+Returns the CID value encoded in a received packet.
+	<dl>
+	<dt>pkt
+	<dd>
+	Points to the packet.
+	</dl>
+<dt><a name="assp_handle_rx"><code>void assp_handle_rx(TCB *tcb, PACKET *pkt);</code></a>
+<dd>
+Causes the protocol to process a received packet.
+	<dl>
+	<dt>tcb
+	<dd>
+	The TCB for which the packet has been received.
+	<dt>pkt
+	<dd>
+	Points to the packet.
+	</dl>
+<dt><a name="assp_connect"><code>int assp_connect(TCB *tcb, U32 cid);</code></a>
+<dd>
+Initiate a connection.
+	<dl>
+	<dt>tcb
+	<dd>
+	The TCB to use for the connection.
+	<dt>CID
+	<dd>
+	The CID (connection ID) value to use.
+	</dl>
+<dt><a name="assp_txready"><code>int assp_txready(TCB *tcb);</code></a>
+<dd>
+Indicates that there is more data available for transmission.
+	<dl>
+	<dt>tcb
+	<dd>
+	The TCB to use for the connection.
+	</dl>
+<dt><a name="assp_abort"><code>int assp_abort(TCB *tcb, PACKET *txp);</code></a>
+<dd>
+Abruptly close a connection.
+	<dl>
+	<dt>tcb
+	<dd>
+	The TCB of the connection to be closed.
+	<dt>txp
+	<dd>
+	The packet to use for closing the connection, which must have
+	been allocated with assp_txpacket(). This packet does not normally
+	carry data, and is not reported back through <code>txack()</code>.
+	This parameter may be the null pointer, in which case
+	no RST packet is sent. This is intended for handling the
+	situation where the underlying connectivity is lost.
+	</dl>
+<dt><a name="assp_validate"><code>int assp_validate(TCB *tcb);</code></a>
+<dd>
+Ensure that there is network activity. If the TCB is not currently expecting
+a reply to some packet, provoke a reply by sending a packet (re-transmitted
+as necessary until there is a reply).
+	<dl>
+	<dt>tcb
+	<dd>
+	The TCB of the connection to be validated.
+	</dl>
+<dt><a name="assp_tcb_init"><code>void assp_tcb_init(TCB *tcb, ASSP_CONN *cnx, TIMEQUEUE *tq, TCBPATH *tcbpath, struct assp_tcb_vtbl *vtbl);</code></a>
+<dd>
+Prepare a TCB for use.
+	<dl>
+	<dt>tcb
+	<dd>
+	The TCB to prepare.
+	<dt>cnx
+	<dd>
+	An arbitrary parameter which the protocol will pass to your
+	functions when it calls them.
+	<dt>tq
+	<dd>
+	The TIMEQUEUE object to use for timeouts on this TCB.
+	<dt>tcbpath
+	<dd>
+	The TCBPATH object to use for this TCB. A TCBPATH represents
+	the underlying connection to the remote party.
+	<dt>vtbl
+	<dd>
+	The table of your functions that the protocol invokes in
+	response to various events. These functions are passed the
+	<code>cnx</code> parameter when they are invoked. The table
+	contains these functions:
+	<dl>
+	<dt><code>int (*sof)(ASSP_CONN *cnx);</code>
+	<dd>
+	Called before any other function when a connection opens. For
+	incoming connections, the return value indicates whether or
+	not to accept the connection, with a non-zero value
+	signifying acceptance. For outgoing connections, the return
+	value is ignored.
+	<dt><code>void (*rx_peek)(ASSP_CONN *cnx, unsigned ofs, PACKET *pkt); </code>
+	<dd>
+	Called whenever new data is received. <code>ofs</code> is the
+	number of packets missing between the next packet due to be
+	delivered (with <code>deliver()</code>) and this one. The packet
+	fields <code>datastart</code> and <code>dataend</code> point to
+	the received data. ASSP retains ovnership of the packet passed
+	into this call.
+	<dt><code>void (*deliver)(ASSP_CONN *cnx, PACKET *pkt);</code>
+	<dd>
+	Delivers received data. ASSP surrenders ownership of the packet
+	when it calls this function, which must arrange for the packet
+	to be freed whenever it is no longer required.
+	<dt><code>void (*eof)(ASSP_CONN *cnx);</code>
+	<dd>
+	Called after delivery of the last received packet on this
+	connection when such a packet indicates EOF. No further data can
+	be delivered after this function is called (neither via
+	<code>rx_peek()</code> nor <code>deliver()</code>).
+	<dt><code>void (*stopped)(ASSP_CONN *cnx);</code>
+	<dd>
+	Called when the connection starts closing. From this point, no
+	further data can be sent or received, and unacknowledged data
+	may be lost.
+	<dt><code>void (*closed)(ASSP_CONN *cnx);</code>
+	<dd>
+	Called when the TCB is no longer required by ASSP.
+	<dt><code>PACKET *(*nexttx)(ASSP_CONN *cnx, int *flags);</code>
+	<dd>
+	Called when it is possible to send a new packet. This function
+	must either return 0 to indicate that there is no data ready for
+	transmission, or a packet containing the data to send.
+	<code>*flags</code> must be set to any desired per-packet flags,
+	the bitwise OR of any of these values:
+		<dl>
+		<dt>ASSP_F_EOF
+		<dd>
+		There is no further data to transmit. This can be specified
+		even if the function returns 0. If a packet is returned, the
+		logical end of file occurs after the data in the packet.
+		<dt>ASSP_F_ACKLESS
+		<dd>
+		The returned packet is a reply to the remote party. The remote
+		is responsible for soliciting re-transmissions if it
+		does not arrive, so do not re-transmit if no response
+		is received.
+		<dt>ASSP_F_FASTACK
+		<dd>
+		The returned packet is time-sensitive and requires an instant
+		acknowldgement so that it can be re-transmitted very
+		quickly if no acknowldgement is received soon.
+		</dl>
+	<dt><code>void (*txack)(ASSP_CONN *cnx, PACKET *txp, int acked);</code>
+	<dd>
+	Invoked when the fate of <code>txp</code> is known. If the
+	packet has been acknowledged, then <code>acked</code> is
+	non-zero: otherwise the packet may have been lost (e.g. the
+	connection has been reset).
+	</dl>
+</dl>
+<dt><a name="assp_tcb_dtor"><code>void assp_tcb_dtor(TCB *tcb);</code></a>
+<dd>
+Destroy a TCB. After destroying a TCB it becomes invalid and must not be
+passed into any function (except, of course,
+<a href="#assp_tcb_init"><code>assp_tcb_init()</code></a>).
+	<dl>
+	<dt>tcb
+	<dd>
+	The TCB to be destroyed.
+	</dl>
+</dl>

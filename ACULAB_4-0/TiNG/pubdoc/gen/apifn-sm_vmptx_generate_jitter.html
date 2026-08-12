@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_generate_jitter</title>
+</head>
+<body class=version-Prel>
+<h1>Prosody RTP processing: API: sm_vmptx_generate_jitter</h1>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_generate_jitter(struct sm_vmptx_generate_jitter_parms *<a href="#field-jitterp">jitterp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-jitterp">*jitterp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_generate_jitter_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-external_jitter_threshold">external_jitter_threshold</a>;			/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-inter_jitter_gap">inter_jitter_gap</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-added_jitter">added_jitter</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_packet_age">max_packet_age</a>;					/* in */
+} SM_VMPTX_GENERATE_JITTER_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a VMP[tx] to add jitter to the outgoing RTP stream by 
+occasionally buffering packets.
+<p>
+This requires the module
+<a href="softmodindex.html#vmptx">vmptx</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-Prel><a name="field-vmptx">vmptx</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The VMP[tx] to generate jitter.
+
+<dt class=version-Prel><a name="field-external_jitter_threshold">external_jitter_threshold</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The time between VMP[tx] execution that is considered to indicate that 
+epochs have been delayed due to external conditions. Note that the normal 
+time between VMP[tx] execution can be up to 20ms, so values larger than 
+this should be used. A value of <code>0</code> disables the addition of 
+jitter.
+
+<dt class=version-Prel><a name="field-inter_jitter_gap">inter_jitter_gap</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The time that must elapse after a jitter burst before the buffering 
+starts again.
+
+<dt class=version-Prel><a name="field-added_jitter">added_jitter</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The duration of buffering used to add jitter.
+
+<dt class=version-Prel><a name="field-max_packet_age">max_packet_age</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The maximum age of packets that are transmitted. A value of <code>0</code> 
+will allow all packets to be sent, regardless of their age.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

@@ -1,0 +1,4 @@
+#ifdef TSS_PRODUCT_VERSION
+#undef TSS_PRODUCT_VERSION
+#endif
+#define TSS_PRODUCT_VERSION  "ss7"

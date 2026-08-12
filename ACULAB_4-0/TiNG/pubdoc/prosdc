@@ -1,0 +1,1581 @@
+	Prosody data communications
+secname sort
+
+	Configure a channel (or half a channel) for data communications
+apifn	smdc_channel_config
+params	smdc_channel_config_parms configp
+	The channel to configure.
+field	tSMChannelId channel in
+	The desired data communications protocol. The value zero
+	(kSMDCProtocolNone) is reserved and guaranteed never to select a
+	valid protocol.
+field	tSM_INT protocol in
+	The length of the protocol-specific configuration data pointed
+	to by
+ref	config_data.
+field	tSM_INT config_length in
+	Protocol-specific configuration data.
+field	void *config_data in config
+	The desired encoding for data transferred with the selected
+	protocol.
+field	tSM_INT encoding in
+	The length of the encoding-specific configuration data pointed
+	to by
+ref	encoding_config_data 
+field	tSM_INT encoding_config_length in
+	Encoding-specific configuration data.
+field	void *encoding_config_data in enc
+unstruct
+	Configures a channel (or half a channel) for data communications
+	using a specified
+ref	protocol
+	and preparing it to transfer data encoded
+	according to the
+ref	encoding
+	type over that protocol.
+	<p>
+	For details of what protocols and encodings are available,
+	and the format of their configuration data,
+	see the document <a href="../prosdc_config.html">Prosody Data
+	Communcations Protocols and Encodings</a>.
+	<p>
+	Channels can have two halves: an input half and an output half.
+	A protocol may occupy either or both of these. It is possible
+	to configure a channel for two protocols if one is input-only
+	and the other is output-only. In that case the channel
+	operates as if it were two separate channels, one for each
+	direction.
+	<p>
+	The input half of a channel is reserved for this data communications
+	configuration until
+fnref	smdc_rx_status
+	returns the status
+	<a href="apifn-smdc_rx_status.html#field-kSMDCRxStatusFinished">
+	kSMDCRxStatusFinished</a>. No other activity can take place
+	on the input half of the channel during this time.
+	<p>
+	The output half of a channel is reserved for this data communications
+	configuration until
+fnref	smdc_tx_status
+	returns the status
+	<a href="apifn-smdc_tx_status.html#field-kSMDCTxStatusFinished">
+	kSMDCTxStatusFinished</a>. No other activity can take place
+	on the output half of the channel during this time.
+	<p>
+	While the output half of a channel is configured for data
+	communications, a write event associated with this channel
+	using
+fnref	sm_channel_set_event
+	will be set while the channel is ready to accept more data or
+	there may be a status change to report.
+	See
+fnref	smdc_tx_control
+	for details of how this works. When an application discovers
+	that this event is set, it may check the status using
+fnref	smdc_tx_status.
+	However, an application may simply try
+fnref	smdc_tx_data
+	immediately and check status when it refuses to accept data.
+	<p>
+	While the input half of a channel is configured for data
+	communications, a read event associated with this channel
+	using
+fnref	sm_channel_set_event
+	will be set while the channel is ready to allow data to be
+	read or there may be a status change to report.
+	See
+fnref	smdc_rx_control
+	for details of how this works. When an application discovers
+	that this event is set, it should attempt to read data using
+fnref	smdc_rx_data.
+	See its description to see how this interacts with status
+	changes.
+	<p>
+	Requires firmware modules applicable to protocol and encoding to have been downloaded.
+	See <a href="../prosdc_config.html">Prosody Data
+	Communcations Protocols and Encodings</a>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - a parameter value is bad
+error	ERR_SM_WRONG_CHANNEL_STATE - channel is already busy
+
+	Configure a channel's input for V.34 data communications
+apifn	smdc_rx_config_v34
+params	smdc_rx_config_v34_parms configp
+	The channel to configure.
+field	tSMChannelId channel in
+	Selects full-duplex or half-duplex operation. The transmitter and
+	receiver must both be configured with the same value for this
+	parameter.
+enumstart	kSMDCV34Duplex
+	Configures the channel for half-duplex. Only one channel may transmit
+	at the full modem speed at a time, or both may transmit on a much
+	slower control channel.
+enum	kSMDCV34HalfDuplex
+	Configures the channel for full-duplex. Both channels may
+	transmit at the full modem speed simultaneously.
+enum	kSMDCV34FullDuplex
+enumend	duplex in
+	The minimum bitrate to negotiate for the primary channel when it is
+	receiving data, in bits/second.
+field	tSM_INT min_bitrate in
+	The maximum bitrate to negotiate for the primary channel when it is
+	receiving data, in bits/second.
+field	tSM_INT max_bitrate in
+	A measure of expected peer signal power derived from prior V.8 FSK
+	demodulation. Should be configured to a value obtained from FSK
+	receiver, or zero if such information not available.
+field	tSM_INT v8fsk_metric in
+unstruct
+	Configures a channel's input for data communications using the V.34
+	protocol. The V.34 modem operates in a duplex manner (even when
+ref	duplex
+	is
+ref	kSMDCV34HalfDuplex),
+	so
+ref	channel
+	must be a full-duplex channel and its output half must also be
+	configured using
+fnref	smdc_tx_config_v34.
+	<p>
+	The channel input is reserved for this data communications
+	configuration until
+fnref	smdc_line_status_v34
+	returns the status
+	<a href="apifn-smdc_line_status.html#field-kSMDCLinkStatusNotConnected">
+	kSMDCLinkStatusNotConnected</a>. No other activity can take place
+	on the channel during this time.
+	<p>
+	While the input half of a channel is configured for data
+	communications, a read event associated with this channel
+	using
+fnref	sm_channel_set_event
+	will be set while the channel is ready to allow data to be
+	read or there may be a status change to report.
+	See
+fnref	smdc_rx_control
+	for details of how this works. When an application discovers
+	that this event is set, it should attempt to read data using
+fnref	smdc_rx_data.
+	See its description to see how this interacts with status
+	changes.
+	<p>
+	Requires the module
+modref  v34fdx
+	to have been downloaded if configuring for full duplex operation.
+	<p>
+	Requires the module
+modref  v34
+	to have been downloaded if configuring for half duplex operation.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - a parameter value is bad
+error	ERR_SM_WRONG_CHANNEL_STATE - channel is already busy
+
+	Configure a channel's output for V.34 data communications
+apifn	smdc_tx_config_v34
+params	smdc_tx_config_v34_parms configp
+	The channel to configure.
+field	tSMChannelId channel in
+	The negotiation procedure for V.34 modems requires that one modem be
+	nominated as the originator and the other is the answerer. In
+	half-duplex mode the originating modem is the one which can transmit
+	on the primary channel.
+enumstart	kSMDCV34Mode
+	This modem is the originating modem.
+enum	kSMDCV34ModeOriginating
+	This modem is the answering modem.
+enum	kSMDCV34ModeAnswering
+enumend	mode in
+	V.34 half-duplex mode can only transmit data on the primary channel
+	in one direction. There is no turnaround procedure, so to reverse the
+	data flow the modem must be destroyed and a new modem created.
+enumstart	kSMDCV34Polling
+	Primary channel data is transferred from the originating modem to the
+	answering modem.
+enum	kSMDCV34ModeNormal
+	Primary channel data is transferred from the answering modem to the
+	originating modem.
+enum	kSMDCV34ModePolling
+enumend	polling in
+	Selects full-duplex or half-duplex operation. The transmitter and
+	receiver must both be configured with the same value for this
+	parameter.
+enumref	kSMDCV34Duplex duplex in
+	The minimum bitrate to negotiate for the primary channel when it is
+	transmitting data, in bits/second.
+field	tSM_INT min_bitrate in
+	The maximum bitrate to negotiate for the primary channel when it is
+	transmitting data, in bits/second.
+field	tSM_INT max_bitrate in
+unstruct
+	Configures a channel's output for data communications using the V.34
+	protocol. The V.34 modem operates in a duplex manner (even when
+ref	duplex
+	is
+ref	kSMDCV34HalfDuplex),
+	so
+ref	channel
+	must be a full-duplex channel and its input half must also be
+	configured using
+fnref	smdc_rx_config_v34.
+	<p>
+	The channel output is reserved for this data communications
+	configuration until
+fnref	smdc_line_status_v34
+	returns the status
+	<a href="apifn-smdc_line_status.html#field-kSMDCLinkStatusNotConnected">
+	kSMDCLinkStatusNotConnected</a>. No other activity can take place
+	on the channel during this time.
+	<p>
+	While the output half of a channel is configured for data
+	communications, a write event associated with this channel
+	using
+fnref	sm_channel_set_event
+	will be set while the channel is ready to accept more data or
+	there may be a status change to report.
+	See
+fnref	smdc_tx_control
+	for details of how this works. When an application discovers
+	that this event is set, it may check the status using
+fnref	smdc_tx_status.
+	However, an application may simply try
+fnref	smdc_tx_data
+	immediately and check status when it refuses to accept data.
+	<p>
+	Requires the module
+modref  v34fdx
+	to have been downloaded if configuring for full duplex operation.
+	<p>
+	Requires the module
+modref  v34
+	to have been downloaded if configuring for half duplex operation.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - a parameter value is bad
+error	ERR_SM_WRONG_CHANNEL_STATE - channel is already busy
+
+	Configure a channel's input for T.38 data communications
+apifn	smdc_rx_config_t38
+params	smdc_rx_config_t38_parms configp
+	The channel to configure.
+field	tSMChannelId channel in
+	Selects the version of T.38 to use. Non-zero selects the
+	pre-Corrigendum (1998) version, zero selects the updated version
+	(2002).
+field	tSM_INT PreCorrigendum in
+	A value from Table 4/T.38 which is used in packets indicating which
+	kind of modulation is being described. Incoming packets are discarded
+	if they are incompatible with the value selected.
+	The value 
+	<code>kSMDCT38ProtocolAll</code> may be used to allow all received
+	data to be read. In this case,
+fnref	smdc_rx_status_t38
+	will report the protocol being received and all data read will be in 
+	the appropriate format until a new protocol is reported.
+field	tSM_INT Protocol in
+unstruct
+	Configures a channel's input for data communications
+	using the T.38 protocol.
+	<p>
+	The input half of a channel is reserved for this data communications
+	configuration until
+fnref	smdc_rx_status_t38
+	returns the status
+	<a href="apifn-smdc_rx_status_t38.html#field-kSMDCRxT38StatusFinished">
+	kSMDCRxT38StatusFinished</a>. No other activity can take place
+	on the input half of the channel during this time.
+	<p>
+	While the input half of a channel is configured for data
+	communications, a read event associated with this channel
+	using
+fnref	sm_channel_set_event
+	will be set while the channel is ready to allow data to be
+	read or there may be a status change to report.
+	See
+fnref	smdc_rx_control
+	for details of how this works. When an application discovers
+	that this event is set, it should attempt to read data using
+fnref	smdc_rx_data.
+	See its description to see how this interacts with status
+	changes.
+	<p>
+	Requires the module
+modref  ifprx
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - a parameter value is bad
+error	ERR_SM_WRONG_CHANNEL_STATE - channel is already busy
+
+	Configure a channel's output for T.38 data communications
+apifn	smdc_tx_config_t38
+params	smdc_tx_config_t38_parms configp
+	The channel to configure.
+field	tSMChannelId channel in
+	Selects the version of T.38 to use. Non-zero selects the
+	pre-Corrigendum (1998) version, zero selects the updated version
+	(2002).
+field	tSM_INT PreCorrigendum in
+	A value from Table 4/T.38 which is sent in packets indicating which
+	kind of modulation is being described.
+field	tSM_INT Protocol in
+	The maximum number of octets in the output IFP packets
+field	tSM_UT32 max_packet_length in
+unstruct
+	Configures a channel's output for data communications
+	using the T.38 protocol.
+	<p>
+	The output half of a channel is reserved for this data communications
+	configuration until
+fnref	smdc_tx_status
+	returns the status
+	<a href="apifn-smdc_tx_status.html#field-kSMDCTxStatusFinished">
+	kSMDCTxStatusFinished</a>. No other activity can take place
+	on the output half of the channel during this time.
+	<p>
+	While the output half of a channel is configured for data
+	communications, a write event associated with this channel
+	using
+fnref	sm_channel_set_event
+	will be set while the channel is ready to allow data to be
+	written or there may be a status change to report.
+	See
+fnref	smdc_tx_control
+	for details of how this works. When an application discovers
+	that this event is set, it should attempt to write data using
+fnref	smdc_tx_data.
+	See its description to see how this interacts with status
+	changes.
+	<p>
+	The
+ref	max_packet_length
+	field is used to restrict the size of the IFP packet data produced
+	by the channel. A value of zero will cause the maximum size to be the
+	maximum permitted by the firmware, as will any value above that maximum.
+	<p>
+	Requires the module
+modref  ifptx
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - a parameter value is bad
+error	ERR_SM_WRONG_CHANNEL_STATE - channel is already busy
+
+	Control a channel's output for V34 over T.38 data communications
+apifn	smdc_tx_v34_line_control_t38
+params	smdc_tx_v34_line_control_t38_parms configp
+	The channel to configure.
+field	tSMChannelId channel in
+	The primary channel bitrate
+field	tSM_UT32 primary_bitrate in
+unstruct
+	Configures a channel's output for data communications
+	using the T.38 protocol.
+	<p>
+	The output half of a channel is reserved for this data communications
+	configuration. The primary_bitrate returned from
+fnref	smdc_line_status_v34
+	may be used to configure the v34 t38 line control channel to the same
+	bitrate.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - a parameter value is bad
+error	ERR_SM_WRONG_CHANNEL_STATE - channel is already busy
+
+	Configure the receive encoding used by a channel for data communications
+apifn	smdc_rx_encoding
+params	smdc_encoding_parms encp
+	The channel to configure.
+field	tSMChannelId channel in
+	The desired encoding for data received by the channel.
+field	tSM_INT encoding in
+	The length of the encoding-specific configuration data pointed
+	to by
+ref	encoding_config_data 
+field	tSM_INT encoding_config_length in
+	Encoding-specific configuration data.
+field	void *encoding_config_data in enc
+unstruct
+	Configures the receive encoding for the input half of a channel
+	which must have been already configured for data communications using
+fnref	smdc_channel_config.
+	<p>
+	For details of what encodings are available,
+	and the format of their configuration data,
+	see the document <a href="../prosdc_encoding.html">Prosody data
+	communications Encodings</a>.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - a parameter value is bad
+error	ERR_SM_WRONG_CHANNEL_STATE - channel has no receive protocol configured
+
+	Configure the transmit encoding used by a channel for data communications
+apifn	smdc_tx_encoding
+params	smdc_encoding_parms encp
+	The channel to configure.
+field	tSMChannelId channel in
+	The desired encoding for data transmitted by the channel.
+field	tSM_INT encoding in
+	The length of the encoding-specific configuration data pointed
+	to by
+ref	encoding_config_data 
+field	tSM_INT encoding_config_length in
+	Encoding-specific configuration data.
+field	void *encoding_config_data in enc
+unstruct
+	Configures the transmit encoding for the output half of a channel
+	which must have been already configured for data communications using
+fnref	smdc_channel_config.
+	<p>
+	For details of what encodings are available,
+	and the format of their configuration data,
+	see the document <a href="../prosdc_encoding.html">Prosody data
+	communications Encodings</a>.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - a parameter value is bad
+error	ERR_SM_WRONG_CHANNEL_STATE - channel has no transmit protocol configured
+
+	Perform a general control operation on a data communications channel
+apifn	smdc_line_control
+params	smdc_line_control_parms controlp
+	The channel which has been configured for data communications.
+field	tSMChannelId channel in
+	The control operation to perform.
+enumstart	kSMDCLineCtlCmd
+	Initiate the connection handshake required by the configured
+	protocol. If the protocol distinguishes between an originator
+	(or caller) and a responder (or answerer), then act as the
+	originator.
+enum	kSMDCLineCtlCmdInitiatorConnect
+	For a protocol which distinguishes between an originator
+	(or caller) and a responder (or answerer), initiate the
+	connection handshake acting as responder.
+enum	kSMDCLineCtlCmdResponderConnect
+	Initiate the disconnection procedures for the configured
+	protocol.
+enum	kSMDCLineCtlCmdDisconnect
+	For a protocol which uses a carrier or equivalent mechanism,
+	turn on the carrier. If there is more than one way to do this
+	(e.g. a long or a short training sequence) then the field
+ref	shorttrain
+	selects the one to use. If a protocol specification requires RTS
+	to be used, the Prosody implementation may provide automatic
+	RTS. Automatic RTS control is triggered when data is presented
+	for transmission without RTS being asserted. The protocol acts
+	as if RTS had been asserted, sends the data, and acts as if RTS
+	was then deasserted.
+enum	kSMDCLineCtlCmdAssertRTS
+	For a protocol which uses a carrier or equivalent mechanism,
+	turn off the carrier. The effect of this command is delayed
+	while the transmitter sends data which is queued.
+enum	kSMDCLineCtlCmdUnassertRTS
+	For a protocol which has auxiliary configuration, modify the
+	current configuration value by ANDing with
+ref	aux_mask
+	and XORing
+ref	aux_toggle.
+enum	kSMDCLineCtlCmdSetAux
+	Set the bit patterns to be used as a prefix and a suffix on
+	transmissions.
+	The prefix is set to
+ref	prefix_bitlength
+	bits of data at
+ref	prefix_data
+	and the suffix is set to
+ref	suffix_bitlength
+	bits of data at
+ref	suffix_data.
+	These are arbitrary sequences
+	of bits which are added when the normal data has
+	been encoded and, therefore, are not affected by the
+	type of encoding in use. The prefix is sent as soon as the
+	protocol is ready to transmit (which is typically when the
+ref	kSMDCLineCtlCmdAssertRTS
+	command is issued), and the suffix is sent just before the
+	carrier is turned off (which is typically when the
+ref	kSMDCLineCtlCmdUnassertRTS
+	command is issued). If a protocol has no RTS control, the
+	prefix is sent as soon as possible, and the suffix is never
+	sent. If the protocol permits RTS to be turned on
+	automatically when data is ready to be sent, then the prefix
+	is sent as soon as there is data ready to be sent and the suffix
+	is sent when there is no remaining data to be sent. See the
+	documentation for each protocol to determine which protocols
+	support this feature.
+	Requires the module
+modref	prefsuf.
+enum	kSMDCLineCtlCmdSetPrefixSuffix
+	Suspend modem receiver. The modem no longer processes the incoming
+	signal. This command is only valid for the modem types which
+	state they support it.
+enum	kSMDCLineCtlCmdSuspend
+	Resume modem receiver. The modem must have been suspended with
+ref	kSMDCLineCtlCmdSuspend
+	and it now resumes processing the incoming
+	signal. Typically, this allows the modem to make use of a shorter
+	training sequence as some of the signal analysis saved when the
+	modem was suspended can be re-used.
+enum	kSMDCLineCtlCmdResume
+	Resume modem receiver but only for purposes of monitoring signal 
+	following a previous loss of synchronisation. The modem must have 
+	been suspended with 
+ref	kSMDCLineCtlCmdSuspend
+	when the previous loss of carrier occurred and it is now resumed 
+	but solely to monitor the nature/energy of following signal. The 
+	application will notified with a carrier on and carrier off 
+	notification if what looks like an additional segment of modem 
+	modulated signal is present - so an application can determine where 
+	modem modulated signal ended following any dropout. Demodulated data 
+	will not be supplied. Typically, this allows the application to avoid 
+	a timeout following a fax modem dropout.
+	The modem must be suspended again, using
+ref	kSMDCLineCtlCmdSuspend,
+	before 
+ref	kSMDCLineCtlCmdResume
+	is used to resume wait for a shorter training sequence.
+enum	kSMDCLineCtlCmdResumeMonitorCarrier
+	Initiate a modem retrain. This command is only valid for the modem types 
+	which state they support it.
+enum	kSMDCLineCtlCmdRetrain
+enumend	cmd in
+	A bitmask used with the
+ref	kSMDCLineCtlCmdSetAux
+	command.
+field	tSM_UT32 aux_mask in
+	A bitmask used with the
+ref	kSMDCLineCtlCmdSetAux
+	command.
+field	tSM_UT32 aux_toggle in
+	Select whether the protocol should use short training
+	(non-zero) or long training (zero). Only valid when the
+ref	cmd
+	field is
+ref	kSMDCLineCtlCmdAssertRTS.
+field	tSM_UT32 shorttrain in
+	Indicator of whether the transmitter should use <em>Talker
+	Echo Protection</em> tone (non-zero) or not (zero). Only valid
+	when the
+ref	cmd
+	field is
+ref	kSMDCLineCtlCmdAssertRTS.
+field	tSM_INT tep in
+	The number of bits in the prefix. Must be zero or a multiple of 8.
+	Only valid when the
+ref	cmd
+	field is
+ref	kSMDCLineCtlCmdSetPrefixSuffix.
+field	tSM_UT32 prefix_bitlength in
+	The prefix to be used with transmission.
+	Only valid when the
+ref	cmd
+	field is
+ref	kSMDCLineCtlCmdSetPrefixSuffix.
+	The data is sent least significant bit first, and any extra
+	bits in the last word are ignored.
+field	tSM_UT32 *prefix_data in prefdat
+	The number of bits in the suffix. Must be zero or a multiple of 8.
+	Only valid when the
+ref	cmd
+	field is
+ref	kSMDCLineCtlCmdSetPrefixSuffix.
+field	tSM_UT32 suffix_bitlength in
+	The suffix to be used with transmission.
+	Only valid when the
+ref	cmd
+	field is
+ref	kSMDCLineCtlCmdSetPrefixSuffix.
+	The data is sent least significant bit first, and any extra
+	bits in the last word are ignored.
+field	tSM_UT32 *suffix_data in sufdat
+	The speed to retrain to.
+	Only valid when the
+ref	cmd
+	field is
+ref	kSMDCLineCtlCmdRetrain.
+field	tSM_UT32 retrain_speed in
+unstruct
+	Perform a command on the halves of a channel which have been
+	configured for data communications. If the channel has been
+	configured with independent input and output halves, the
+	operation requested by
+ref	cmd
+	is performed separately on both. It is an error to attempt to
+	perform a command on a protocol which does not implement it.
+	<p>
+	If a protocol has an auxiliary configuration value, the
+ref	aux_mask
+	and
+ref	aux_toggle
+	fields are used by the
+ref	kSMDCLineCtlCmdSetAux
+	command to modify this value as shown in this table:
+	<table border>
+	<tr>
+		<th>bit in aux_mask</th>
+		<th>bit in aux_toggle</th>
+		<th>effect on configuration bit</th>
+	</tr>
+	<tr>	<td>0</td> <td>0</td> <td>clear it</td>	</tr>
+	<tr>	<td>0</td> <td>1</td> <td>set it</td>	</tr>
+	<tr>	<td>1</td> <td>0</td> <td>leave it unchanged</td>	</tr>
+	<tr>	<td>1</td> <td>1</td> <td>invert it</td>	</tr>
+	</table>
+	<p>
+	See also the document <a href="../prosdc_config.html">Prosody
+	Data Communcations Protocols and Encodings</a>
+	for details of behaviour specific to individual protocols and
+	encodings.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - configured protocol does not support this command
+
+	Perform a general control operation on a V.34 data communications channel
+apifn	smdc_line_control_v34
+params	smdc_line_control_v34_parms controlp
+	The channel which has been configured for data communications.
+field	tSMChannelId channel in
+	The control operation to perform.
+enumstart	kSMDCV34LineCtlCmd
+	Initiate a full retrain procedure on the line, negotiating the best
+	new data rate for the primary channel.
+enum	kSMDCV34LineCtlCmdRetrain
+	Performs a short renegotiation procedure to increase the data rate on
+	the primary channel. This is typically done when the
+	<tt>snr_status</tt> parameter of
+fnref	smdc_line_status_v34
+	is greater than zero.
+enum	kSMDCV34LineCtlCmdRenegotiateUp
+	Performs a short renegotiation procedure to decrease the data rate on
+	the primary channel. This is typically done when the
+	<tt>snr_status</tt> parameter of
+fnref	smdc_line_status_v34
+	is less than zero.
+enum	kSMDCV34LineCtlCmdRenegotiateDown
+	Switches the modem to transmit on the primary channel. Both
+	originating and answering modem must send this command at the
+	appropriate time, as negotiated by a higher-level protocol. This
+	message is only available on the half-duplex V.34 modem; the
+	full-duplex modem always runs on the primary channel.
+enum	kSMDCV34LineCtlCmdEnablePrimary
+	Switches the modem to transmit on the control channel.  Both
+	originating and answering modem must send this command at the
+	appropriate time, as negotiated by a higher-level protocol. This
+	message is only available on the half-duplex V.34 modem; the
+	full-duplex modem always runs on the primary channel. The
+	half-duplex modem is using the control channel when it first returns
+	control to the user after negotiation.
+enum	kSMDCV34LineCtlCmdEnableControl
+	Change the bitrate limits on the transmitter.
+enum	kSMDCV34LineCtlCmdBitrateTx
+	Change the bitrate limits on the receiver.
+enum	kSMDCV34LineCtlCmdBitrateRx
+enumend	cmd in
+union
+	This field is only valid if the cmd is
+ref	kSMDCV34LineCtlCmdBitrateTx
+	or
+ref	kSMDCV34LineCtlCmdBitrateRx.
+struct
+	The minimum bitrate to negotiate for the primary channel, in bits/second.
+field	tSM_INT min_bitrate in
+	The maximum bitrate to negotiate for the primary channel, in bits/second.
+field	tSM_INT max_bitrate in
+unstruct	bitrate
+unstruct	u
+unstruct
+	Perform a command on a channel which has been configured for V.34 data
+	communications.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - configured protocol does not support this command
+
+	Check general status on a data communications channel
+apifn	smdc_line_status
+params	smdc_line_status_parms statusp
+	The channel which has been configured for data communications.
+field	tSMChannelId channel in
+	The channel status.
+enumstart	kSMDCLinkStatus
+	The channel has finished with data communications. When this
+	status is reported, the channel reverts to the idle state
+	that it was in before
+fnref	smdc_channel_config
+	was used. Therefore it can be re-configured or used for
+	another purpose and a subsequent call to
+fnref	smdc_line_status
+	will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+enum	kSMDCLinkStatusNotConnected
+	Channel is waiting to connect. Either the appropriate command
+	(<a href="apifn-smdc_line_control.html#field-kSMDCLineCtlCmdInitiatorConnect">kSMDCLineCtlCmdInitiatorConnect</a>
+	or
+	<a href="apifn-smdc_line_control.html#field-kSMDCLineCtlCmdResponderConnect">kSMDCLineCtlCmdResponderConnect</a>)
+	has not yet been used in a call to
+fnref	smdc_line_control
+	or the connection handshake procedures have not yet completed.
+enum	kSMDCLinkStatusConnecting
+	Connection handshake procedures have been completed or are not
+	applicable.
+enum	kSMDCLinkStatusConnected
+	The channel is in the process of disconnecting.
+enum	kSMDCLinkStatusDisconnecting
+enumend	link_status out
+enumstart	kSMDCLineRxStatus
+	The input half is not receiving a meaningful signal.
+enum	kSMDCRxStatusNoCarrier
+	The input half is receiving a meaningful signal, but it does
+	not contain data.
+enum	kSMDCRxStatusCarrierPresent
+	The input half is receiving a meaningful signal, and it contains
+	data.
+enum	kSMDCRxStatusReceivingData
+enumend	rx_status out
+enumstart	kSMDCLineTxStatus
+	The output half is not sending any signal.
+enum	kSMDCTxStatusSilent
+	The output half is sending a signal which does not contain
+	data (e.g. a carrier or framing pattern).
+enum	kSMDCTxStatusSendingCarrier
+	The output half is sending a signal which contains data.
+enum	kSMDCTxStatusSendingData
+enumend	tx_status out
+	Indicator of whether the transmitter is ready to transmit
+	(non-zero) or not (zero).
+field	tSM_INT tx_cts out
+unstruct
+	This function is deprecated in favour of using
+fnref	smdc_rx_status
+	and
+fnref	smdc_tx_status.
+	<p>
+	Reports the status of a channel used for data communications.
+	If its input half has not been configured for data
+	communications, then the field
+ref	rx_status
+	will contain the value
+ref	kSMDCRxStatusNoCarrier,
+	otherwise it indicates status of the input half of the channel.
+	Note that it is not normally appropriate to distinguish between
+ref	kSMDCRxStatusCarrierPresent
+	and
+ref	kSMDCRxStatusReceivingData
+	since protocols can typically switch between them very
+	quickly and the system only reports approximately to avoid
+	the status changing very rapidly.
+	<p>
+	If the channel's output half has not been configured for data
+	communications, then the field
+ref	tx_status
+	will contain the value
+ref	kSMDCTxStatusSilent,
+	otherwise it indicates the output half status. Note that it is
+	not normally appropriate to distinguish between
+ref	kSMDCTxStatusSendingCarrier
+	and
+ref	kSMDCTxStatusSendingData
+	since protocols can typically switch between them very
+	quickly and the system only reports approximately to avoid
+	the status changing very rapidly.
+	<p>
+	The overall channel status is reported in
+ref	link_status.
+	Where the input half and output half have been configured
+	with independent protocols, the status is reported as
+ref	kSMDCLinkStatusConnected
+	if either is connected. The status
+ref	kSMDCLinkStatusNotConnected
+	is reported only if both have finished data communications.
+	<p>
+	See also the document <a href="../prosdc_config.html">Prosody
+	Data Communcations Protocols and Encodings</a>
+	for details of behaviour specific to individual protocols and
+	encodings.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Check general status on a V.34 data communications channel
+apifn	smdc_line_status_v34
+params	smdc_line_status_v34_parms statusp
+	The channel which has been configured for data communications.
+field	tSMChannelId channel in
+	The channel status.
+enumref	kSMDCLinkStatus link_status out
+enumref	kSMDCLineRxStatus rx_status out
+enumref	kSMDCLineTxStatus tx_status out
+	In half-duplex mode, the currently-negotiated data rate of the control 
+	channel, in bits/second. This value will be zero before the rate has been
+	negotiated, while the modem is in state
+ref	kSMDCLinkStatusConnecting.
+field	tSM_INT control_bitrate out
+	In half-duplex mode, the currently-negotiated data rate of the primary 
+	channel, in bits/second. This value will be zero before the rate has been
+	negotiated, while the modem is in state
+ref	kSMDCLinkStatusConnecting.
+field	tSM_INT primary_bitrate out
+	A value representing the signal-to-noise ratio on the line, as an
+	arbitrary integer representing quality. Numbers less than zero
+	indicate a low SNR and indicate that it may be advisable to reduce the
+	data rate. Numbers greater than zero indicate that the data rate could
+	be safely increased.
+field	tSM_INT snr_status out
+	In full-duplex mode, the currently-negotiated receive data rate of the 
+	primary channel, in bits/second. This value will be zero before the rate 
+	has been negotiated, while the modem is in state
+ref	kSMDCLinkStatusConnecting.
+field	tSM_INT fdx_rx_bitrate out
+	In full-duplex mode, the currently-negotiated transmit data rate of the 
+	primary channel, in bits/second. This value will be zero before the rate 
+	has been negotiated, while the modem is in state
+ref	kSMDCLinkStatusConnecting.
+field	tSM_INT fdx_tx_bitrate out
+unstruct
+	Reports the status of a channel used for data communications with the
+	V.34 protocol. V.34 is a full-duplex modem so both the input and
+	output halves of the channel must have been configured for data
+	communications.
+	<p>
+	The field
+ref	rx_status
+	will indicate the status of the input half of the channel.
+	Note that it is not normally appropriate to distinguish between
+ref	kSMDCRxStatusCarrierPresent
+	and
+ref	kSMDCRxStatusReceivingData
+	since protocols can typically switch between them very
+	quickly and the system only reports approximately to avoid
+	the status changing very rapidly.
+	<p>
+	The field
+ref	tx_status
+	will indicate the output half status. Note that it is
+	not normally appropriate to distinguish between
+ref	kSMDCTxStatusSendingCarrier
+	and
+ref	kSMDCTxStatusSendingData
+	since protocols can typically switch between them very
+	quickly and the system only reports approximately to avoid
+	the status changing very rapidly.
+	<p>
+	The overall channel status is reported in
+ref	link_status.
+	<p>
+	See also the document <a href="../prosdc_config.html">Prosody
+	Data Communcations Protocols and Encodings</a>
+	for details of behaviour specific to individual protocols and
+	encodings.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Check the status of the output half of a data communication
+	channel.
+apifn	smdc_tx_status
+params	smdc_tx_status_parms statusp
+	The data communication channel.
+field	tSMChannelId channel in
+	The currently available capacity (in octets) to buffer more
+	output data. Only valid if the 
+ref	status
+	field reports
+ref	kSMDCTxStatusHasCapacity.
+field	tSM_INT capacity out
+	The output status.
+enumstart	kSMDCTxStatus
+	The transmitter has sent all data and is ready for more. This status
+	is only reported where explicitly stated in the documentation of
+	individual protocols
+enum	kSMDCTxStatusEmpty
+	The transmitter has some capacity to buffer more data, but
+	has not yet sent all data previously buffered.
+enum	kSMDCTxStatusHasCapacity
+	The transmitter has no capacity to buffer more data.
+enum	kSMDCTxStatusNoCapacity
+	At an inappropriate point the transmitter has run out of data to
+	send.
+enum	kSMDCTxStatusUnderrun
+	The application has used the command
+	<a href="apifn-smdc_tx_control.html#field-kSMDCTxCtlFinish">
+	kSMDCTxCtlFinish</a> but the transmitter has not yet sent all
+	buffered data.
+enum	kSMDCTxStatusFinishing
+	The transmitter has finished with data communications. When this
+	status is reported, the channel's output half reverts to the
+	idle state that it was in before
+fnref	smdc_channel_config
+	was used. Therefore it can be re-configured or used for
+	another purpose and a subsequent call to
+fnref	smdc_tx_status
+	will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+enum	kSMDCTxStatusFinished
+enumend	status out
+	Indicator of whether the transmitter has been stopped by flow
+	control (non-zero) or not (zero).
+field	tSM_INT flow out
+unstruct
+	Report the status of the output half of a channel.
+	<p>
+	See also the document <a href="../prosdc_config.html">Prosody
+	Data Communcations Protocols and Encodings</a>
+	for details of behaviour specific to individual protocols and
+	encodings.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Perform a control operation on the output half of a data communications channel
+apifn	smdc_tx_control
+params	smdc_tx_control_parms controlp
+	The data communication channel.
+field	tSMChannelId channel in
+	The operation to perform.
+enumstart	kSMDCTxCtl
+	Attempt to discard all data which has been buffered but has
+	not yet been sent.
+enum	kSMDCTxCtlDiscard
+	Set the parameter which controls when this output reports
+	that there is capacity for more data. The value is taken from
+	the
+ref	capacity
+	field.
+	Also
+	enable notification of the presence of capacity. The blocking
+	indicator is also set from the
+ref	blocking
+	field.
+enum	kSMDCTxCtlNotifyOnCapacity
+	Reserved value.
+enum	kSMDCTxCtlNotifyOnEmpty
+	Reserved value.
+enum	kSMDCTxCtlNoNotifyOnEmpty
+	Indicate that there is no more data to be sent and that the
+	transmitter should cease transmission when it has sent any
+	data currently buffered. The channel's tx status becomes
+	<a href="apifn-smdc_tx_status.html#field-kSMDCTxStatusFinishing">
+	kSMDCTxStatusFinishing</a> and any associated event will no
+	longer be set by space being available for more data. It is
+	an error to attempt to send more data after using this command.
+enum	kSMDCTxCtlFinish
+enumend	cmd in
+	The capacity (in octets) for the notification threshold. Only
+	valid when the
+ref	cmd
+	field is
+ref	kSMDCTxCtlNotifyOnCapacity.
+	If this value is greater than zero, notification occurs when
+	that number of octets of space is available. If it is less
+	than zero, notification occurs when the amount of buffered
+	data falls below that value. For example, the value
+	<code>-128</code> means that notification is to happen
+	when only 128 octets of data is waiting to be sent.
+	If it is zero, then any associated event will only be set when 
+fnref smdc_tx_status
+	needs to be called.
+	See also the document <a href="../an-data_transfer.html">Prosody
+	application note: considerations for data transfer
+	thresholds</a>.
+field	tSM_INT capacity in
+	This field is currently ignored.
+field	tSM_INT blocking in
+unstruct
+	Performs a control operation on the output half of a data
+	communications channel.
+	<p>
+	If the
+ref	cmd
+	field holds
+ref	kSMDCTxCtlNotifyOnCapacity,
+	the criterion is set for determining when the output half of
+	the channel is ready.
+	A channel is ready when there is space to buffer the amount of
+	data specified by 
+ref	capacity.
+	It ceases to be ready when the space falls below this value.
+	When the output half of a channel is ready:
+	<ul>
+	<li>a call to 
+fnref	smdc_tx_data
+	will not block
+	<li>the associated event (if any) is signalled
+	</ul>
+	<p>
+	See also the document <a href="../prosdc_config.html">Prosody
+	Data Communcations Protocols and Encodings</a>
+	for details of behaviour specific to individual protocols and
+	encodings.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Write data to a channel configured for data communications
+apifn	smdc_tx_data
+params	smdc_data_parms datap
+	The data communication channel.
+field	tSMChannelId channel in
+	A pointer to the data to be written.
+field	char* data in rxtx_data
+	The amount of data in the buffer.
+field	tSM_INT max_length in
+	The amount of data actually written.
+field	tSM_INT done_length out
+unstruct
+	Attempt to write data to a channel whose output half has been
+	configured for a data commuications protocol. Less than the
+	maximum will be written when either:
+	<ul>
+	<li>there is a status change which must be checked
+	<li>there is insufficient space and this function has been 
+	forbidden to wait by the
+	<a href="apifn-smdc_tx_control.html#field-blocking">blocking</a>
+	value set with
+fnref	smdc_tx_control.
+	</ul>
+	<p>
+	To permit maximum system throughput, this function refuses to
+	write to a channel whose status has changed since it was last
+	checked. This allows an application to avoid checking the
+	status during bulk data transfer. The application only needs
+	to check the status (using
+fnref	smdc_tx_status)
+	when a call to
+fnref	smdc_tx_data
+	returns with
+ref	done_length
+	equal to zero. If a status change occurs while writing data,
+ref	done_length
+	may indicate that some, but not all, of the data was written.
+	In this case, the most convenient way for an application to
+	react is often to note how much data has been sent, and to
+	try to send more. Since the new attempt will indicate that
+	no data was written, it means that the application does not
+	need to have different cases to handle a status change at the
+	beginning of the data buffer and a status change after a
+	partial write.
+	<p>
+	See also the document <a href="../prosdc_config.html">Prosody
+	Data Communcations Protocols and Encodings</a>
+	for details of behaviour specific to individual protocols and
+	encodings.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Sends a T.38 tone indicator on the output half of a T.38 data
+	communication channel
+apifn	smdc_tx_tone_indicator_t38
+params	smdc_tx_tone_indicator_t38_parms tonep
+	The T.38 data communications channel
+field	tSMChannelId channel in
+	The type of tone indicator to send
+enumstart	kSMDCT38ToneType
+	A CNG tone
+enum	kSMDCT38ToneTypeCNG
+	A CED tone
+enum	kSMDCT38ToneTypeCED
+	An ANSAM tone
+enum	kSMDCT38ToneTypeANSAM
+enumend	tone_type in
+unstruct
+	Sends a T.38 tone indicator on the output half of a T.38 data
+	communication channel.
+	<p>
+	T.38 tone indicators must be sent before sending any T.38 data on a
+	given channel.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Check the status of the input half of a data communication
+	channel.
+apifn	smdc_rx_status
+params	smdc_rx_status_parms statusp
+	The data communication channel.
+field	tSMChannelId channel in
+	The amount of data currently buffered in this channel. Only
+	valid if the
+ref	status
+	field reports
+ref	kSMDCRxStatusData.
+field	tSM_INT available_octets out
+	The receiver status.
+enumstart	kSMDCRxStatus
+	No data is available for reading.
+enum	kSMDCRxStatusEmpty
+	Some data is available for reading.
+enum	kSMDCRxStatusData
+	Data has been lost because the buffer has overflowed.
+enum	kSMDCRxStatusOverrun
+	The input half has begun or stopped receiving a meaningful signal.
+enum	kSMDCRxStatusCarrier
+	The receiver has finished with data communications. When this
+	status is reported, the channel's input half reverts to the
+	idle state that it was in before
+fnref	smdc_channel_config
+	was used. Therefore it can be re-configured or used for
+	another purpose and a subsequent call to
+fnref	smdc_rx_status
+	will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+enum	kSMDCRxStatusFinished
+	The receiver is reporting a measurement relating to received signal
+	prior to receiver termination. This status only occurs if receiver has been configured to report this metric.
+enum	kSMDCRxStatusSigMetric
+enumend	status out
+	Indicator of whether the receiver has stopped incoming data by
+	using flow control (non-zero) or not (zero).
+field	tSM_INT flow out
+	Additional information specifying the current status
+union
+	This field is only valid if the status is
+ref	kSMDCRxStatusCarrier
+struct
+	The current carrier status: zero=off, non-zero=on.
+field	tSM_INT carrier out
+unstruct	carrier
+	This field is only valid if the status is
+ref	kSMDCRxStatusSigMetric
+struct
+	A measure of received signal.
+field	tSM_INT metric out
+unstruct	metric
+unstruct	u
+unstruct
+	Reports the status of a channel whose input half has been
+	configured for data communications.
+	<p>
+	See also the document <a href="../prosdc_config.html">Prosody
+	Data Communcations Protocols and Encodings</a>
+	for details of behaviour specific to individual protocols and
+	encodings.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Check the status of the input half of a T.38 data communication
+	channel.
+apifn	smdc_rx_status_t38
+params	smdc_rx_status_t38_parms statusp
+	The T.38 data communication channel.
+field	tSMChannelId channel in
+	The amount of data currently buffered in this channel. Only
+	valid if the
+ref	status
+	field reports
+ref	kSMDCRxT38StatusData.
+field	tSM_INT available_octets out
+	The receiver status.
+enumstart	kSMDCRxT38Status
+	No data is available for reading.
+enum	kSMDCRxT38StatusEmpty
+	A T.38 tone indicator was received on this channel
+enum	kSMDCRxT38StatusTone
+	A T.38 v34 indicator was received on this channel
+enum	kSMDCRxT38StatusV34
+	Some data is available for reading.
+enum	kSMDCRxT38StatusData
+	Data has been lost because the buffer has overflowed.
+enum	kSMDCRxT38StatusOverrun
+	The input half is not receiving a meaningful signal.
+enum	kSMDCRxT38StatusCarrier
+	The receiver has finished with data communications. When this
+	status is reported, the channel's input half reverts to the
+	idle state that it was in before
+fnref	smdc_rx_config_t38
+	was used. Therefore it can be re-configured or used for
+	another purpose and a subsequent call to
+fnref	smdc_rx_status_t38
+	will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+enum	kSMDCRxT38StatusFinished
+	The protocol of the data received has changed. This status is
+	only possible when the channel has been configured to receive
+	all protocols.
+enum	kSMDCRxT38StatusProtocol
+	v34 primary bit-rate in bits/s.
+enum	kSMDCRxT38StatusRate
+enumend	status out
+	Indicator of whether the receiver has stopped incoming data by
+	using flow control (non-zero) or not (zero).
+field	tSM_INT flow out
+union
+	This field is only valid if the status is
+ref	kSMDCRxT38StatusTone
+struct
+	The type of tone that was reported on this channel. 
+enumref	kSMDCT38ToneType tone_type out
+unstruct	tone
+	This field is only valid if the status is
+ref	kSMDCRxT38StatusV34
+struct
+	The type of v34 action that was requested on this channel.
+	This may be a switch from primary to control channel, or switch from 
+	control to primary channel or control channel retrain due 
+	to a synchronisation problem or a need for a new primary channel bitrate.
+enumstart	kSMDCT38_V34Type
+	A Control Channel 
+enum	kSMDCT38_V34Type_V34_CC_1200
+	A Primary Channel
+enum	kSMDCT38_V34Type_V34_PRI_CHAN
+	A Control Channel Retrain
+enum	kSMDCT38_V34Type_V34_CC_RETRAIN
+enumend	v34_type out
+unstruct	v34
+	This field is only valid if the status is
+ref	kSMDCRxT38StatusCarrier
+struct
+	The current carrier status: 0=off, 1=on.
+field	tSM_INT carrier out
+unstruct	carrier
+	This field is only valid if the status is
+ref	kSMDCRxT38StatusRate
+struct
+	The primary bitrate value, anything from 2400 bps to 33600 bps.
+field	tSM_INT rate out
+unstruct	rate
+	This field is only valid if the status is
+ref	kSMDCRxT38StatusProtocol
+struct
+	The protocol, from Table 4/T.38, of the data being received 
+field	tSM_INT protocol out
+unstruct	protocol
+unstruct	u
+unstruct
+	Reports the status of a channel whose input half has been
+	configured for T.38 data communications.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Sends a T.38 v34 indicator on the output half of a T.38 data
+	communication channel
+apifn	smdc_tx_v34_indicator_t38
+params	smdc_tx_v34_indicator_t38_parms tonep
+	The T.38 data communications channel
+field	tSMChannelId channel in
+	The type of v34 indicator to send
+enumref	kSMDCT38_V34Type v34_type int
+unstruct
+	Sends a T.38 v34 indicator on the output half of a T.38 data
+	communication channel.
+	<p>
+	The T.38 V34_CC_1200 indicator is sent when a switch from primary 
+	channel to control channel is requested.
+	<p>
+	The T.38 V34_PRI_CHAN indicator is sent when a switch from control 
+	channel to primary channel is requested.
+	<p>
+	The T.38 V34_CC_RETRAIN indicator is sent when a new primary 
+	channel datarate is requested. This is usually followed by a
+	T.38 data element with a field set to v34-pri-rate and the
+	specific datarate.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Perform a control operation on the input half of a data communications channel
+apifn	smdc_rx_control
+params	smdc_rx_control_parms controlp
+	The data communication channel.
+field	tSMChannelId channel in
+	The operations to perform.
+enumstart	kSMDCRxCtl
+	Discard any buffered data not yet collected.
+enum	kSMDCRxCtlDiscard
+	Set the criteria for determining when the input half of the
+	channel is ready.
+enum	kSMDCRxCtlNotifyOnData
+	Use any flow control mechanism available in the configured
+	protocol to stop the incoming data flow.
+enum	kSMDCRxCtlStop
+	Use any flow control mechanism available in the configured
+	protocol to resume the incoming data flow.
+enum	kSMDCRxCtlResume
+enumend	cmd in
+	Channel ready threshold (in octets). The input half of the
+	channel is ready when at least this much data is buffered.
+	This field is only used when the
+ref	cmd
+	field holds
+ref	kSMDCRxCtlNotifyOnData.
+	If this value is negative, it represents the amount of space
+	remaining. For example, the value <code>-256</code> means
+	that the threshold is reached when there is space available
+	for no more than 256 further octets.
+	See also the document <a href="../an-data_transfer.html">Prosody
+	application note: considerations for data transfer
+	thresholds</a>.
+field	tSM_INT min_to_collect in
+	Channel ready timeout (in mS). This field is only used when the
+ref	cmd
+	field holds
+ref	kSMDCRxCtlNotifyOnData.
+	The value zero indicates that no timer is to be used.
+field	tSM_INT min_idle in
+	Indicator of whether 
+fnref	smdc_rx_data
+	should block if it attempts to read data when the channel is
+	not ready. A non-zero value indicates that the function should
+	block until the channel is ready. The value zero indicates that
+	it should return immediately indicating that no data was read.
+	Only valid when the
+ref	cmd
+	field is
+ref	kSMDCRxCtlNotifyOnData.
+	[Not currently implemented - reserved for future use]
+field	tSM_INT blocking in
+unstruct
+	Performs a control operation on the input half of a data
+	communications channel.
+	<p>
+	When the 
+ref	cmd
+	field holds
+ref	kSMDCRxCtlNotifyOnData,
+	the values 
+ref	min_to_collect
+	and
+ref	min_idle
+	configure the criteria used to determine when the input half
+	of the channel is ready. There are two cases:
+	<p>
+	<table border>
+	<tr>
+		<th>min_idle</th>
+		<th>Meaning</th>
+	</tr>
+	<tr>
+		<td><code>0</code></td>
+		<td>The channel is ready when at least
+ref	min_to_collect
+		octets of data are waiting. It ceases to be ready
+		when the amount waiting falls below
+ref	min_to_collect.
+		</td>
+	</tr>
+	<tr>
+		<td><code>T</code> != 0</td>
+		<td>The channel is ready when any data can be 
+		collected. Data becomes ready for collection when either
+ref	min_to_collect
+		octets of data are waiting, or data is waiting and no 
+		further data has been received for a period of <code>T</code> mS.
+	</tr>
+	</table>
+	<p>
+	Note that, although times can be specified to the nearest
+	millisecond, the measurement of time is limited to the epoch 
+	period of the Prosody device.
+	<p>
+	When the input half of a channel is ready:
+	<ul>
+	<li>a call to 
+fnref	smdc_rx_data
+	will not block
+	<li>the associated event (if any) is signalled
+	</ul>
+	<p>
+	See also the document <a href="../prosdc_config.html">Prosody
+	Data Communcations Protocols and Encodings</a>
+	for details of behaviour specific to individual protocols and
+	encodings.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Read data from a channel configured for data communications
+apifn	smdc_rx_data 
+params	smdc_data_parms datap
+	The data communication channel.
+field	tSMChannelId channel in
+	A pointer to the buffer into which data should be read.
+field	char* data in rxtx_data
+	The amount of space in the buffer.
+field	tSM_INT max_length in
+	The amount of data actually read.
+field	tSM_INT done_length out
+unstruct
+	Attempt to read data from a channel whose input half has been
+	configured for a data communications protocol. Less than the
+	maximum will be read when either:
+	<ul>
+	<li>there is a status change which must be checked
+	<li>there is no more data to read
+	</ul>
+	<p>
+	To permit maximum system throughput, this function refuses to
+	read from a channel whose status has changed since it was last
+	checked. This allows an application to avoid checking the
+	status during bulk data transfer. The application only needs
+	to check the status when a call to
+fnref	smdc_rx_data
+	returns with
+ref	done_length
+	equal to zero. This also ensures that status changes are
+	reported at the point in the data at which they occurred,
+	which may be important for some applications.
+	<p>
+	If an error is reported, the
+ref	done_length
+	field indicates the amount of data which was read before the
+	error occurred.
+	<p>
+	Any amount of data (up to
+ref	max_length)
+	may be returned - even less than configured with the
+	<a href="apifn-smdc_rx_control.html#field-min_to_collect">min_to_collect</a>,
+	parameter set with
+fnref	smdc_rx_control,
+	which only controls when the channel is declared ready. Once
+	a channel is ready, it may remain so until all the data is
+	read from it. This means that if the first read does not read
+	all the data (i.e. the buffer supplied is too small), the
+	next read will return immediately with more.
+	<p>
+	See also the document <a href="../prosdc_config.html">Prosody
+	Data Communcations Protocols and Encodings</a>
+	for details of behaviour specific to individual protocols and
+	encodings.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Stop data communications protocols on a channel.
+apifn	smdc_stop
+params	smdc_stop_parms pp
+	The data communication channel.
+field	tSMChannelId channel in
+unstruct
+	This stops any protocol configured on a channel. If the input
+	half and the output half are configured with independent
+	protocols, both are stopped. Unlike the
+	<a href="apifn-smdc_line_control.html#field-kSMDCLineCtlCmdDisconnect">
+	kSMDCLineCtlCmdDisconnect</a> command of
+fnref	smdc_line_control,
+	this does not use any disconnection procedures of the
+	protocols - it simply stops immediately. It is intended for
+	situations where there is no need to disconnect properly,
+	such as when call control indicates that the remote party has
+	cleared the call.
+	<p>
+	This function is equivalent to calling both
+fnref	smdc_rx_stop
+	and
+fnref	smdc_tx_stop
+	on the channel, except that it does not report an error if only one
+	half of the channel is configured with a protocol.
+	<p>
+	When the input half of a channel has stopped,
+fnref	smdc_rx_status
+	returns the status
+	<a href="apifn-smdc_rx_status.html#field-kSMDCRxStatusFinished">
+	kSMDCRxStatusFinished</a>.
+	When the output half of a channel has stopped
+fnref	smdc_tx_status
+	returns the status
+	<a href="apifn-smdc_tx_status.html#field-kSMDCTxStatusFinished">
+	kSMDCTxStatusFinished</a>.
+	<p>
+	See also the document <a href="../prosdc_config.html">Prosody
+	Data Communcations Protocols and Encodings</a>
+	for details of behaviour specific to individual protocols and
+	encodings.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Stop the receive data communications protocol on a channel.
+apifn	smdc_rx_stop
+params	smdc_stop_parms pp
+	The data communication channel.
+field	tSMChannelId channel in
+unstruct
+	This stops the receive protocol configured on a channel.
+	Unlike the
+	<a href="apifn-smdc_line_control.html#field-kSMDCLineCtlCmdDisconnect">
+	kSMDCLineCtlCmdDisconnect</a> command of
+fnref	smdc_line_control,
+	this does not use any disconnection procedures of the
+	protocol - it simply stops immediately. It is intended for
+	situations where there is no need to disconnect properly,
+	such as when call control indicates that the remote party has
+	cleared the call.
+	<p>
+	When the input half of a channel has stopped,
+fnref	smdc_rx_status
+	returns the status
+	<a href="apifn-smdc_rx_status.html#field-kSMDCRxStatusFinished">
+	kSMDCRxStatusFinished</a>.
+	<p>
+	See also the document <a href="../prosdc_config.html">Prosody
+	Data Communcations Protocols and Encodings</a>
+	for details of behaviour specific to individual protocols and
+	encodings.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Stop the transmit data communications protocol on a channel.
+apifn	smdc_tx_stop
+params	smdc_stop_parms pp
+	The data communication channel.
+field	tSMChannelId channel in
+unstruct
+	This stops the transmit protocol configured on a channel.
+	Unlike the
+	<a href="apifn-smdc_line_control.html#field-kSMDCLineCtlCmdDisconnect">
+	kSMDCLineCtlCmdDisconnect</a> command of
+fnref	smdc_line_control,
+	this does not use any disconnection procedures of the
+	protocol - it simply stops immediately. It is intended for
+	situations where there is no need to disconnect properly,
+	such as when call control indicates that the remote party has
+	cleared the call.
+	<p>
+	When the output half of a channel has stopped
+fnref	smdc_tx_status
+	returns the status
+	<a href="apifn-smdc_tx_status.html#field-kSMDCTxStatusFinished">
+	kSMDCTxStatusFinished</a>.
+	<p>
+	See also the document <a href="../prosdc_config.html">Prosody
+	Data Communcations Protocols and Encodings</a>
+	for details of behaviour specific to individual protocols and
+	encodings.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error

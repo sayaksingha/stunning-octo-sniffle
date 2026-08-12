@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_add_input_tone_set</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_add_input_tone_set</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_add_input_tone_set(struct sm_input_tone_set_parms *<a href="#field-tonesetp">tonesetp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-tonesetp">*tonesetp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_input_tone_set_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-band1_first_freq_coeffs_id">band1_first_freq_coeffs_id</a>;			/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-band1_freq_count">band1_freq_count</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-band2_first_freq_coeffs_id">band2_first_freq_coeffs_id</a>;			/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-band2_freq_count">band2_freq_count</a>;				/* in */
+	double <a href="#field-req_third_peak">req_third_peak</a>;					/* in */
+	double <a href="#field-req_signal_to_noise_ratio">req_signal_to_noise_ratio</a>;			/* in */
+	double <a href="#field-req_minimum_power">req_minimum_power</a>;				/* in */
+	double <a href="#field-req_twist_for_dual_tone">req_twist_for_dual_tone</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-id">id</a>;						/* out */
+} SM_INPUT_TONE_SET_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This call may be used to define an additional set of simple
+input tones (recognisable on any input channel) for the
+specified module
+<a class=pref href="#field-module">module</a>.
+<p>
+The new set of input tones is defined with respect to two sets
+of possible component frequencies, band 1 and band 2, and
+various other parameters
+<a class=pref href="#field-req_third_peak">req_third_peak</a>,
+<a class=pref href="#field-req_signal_to_noise_ratio">req_signal_to_noise_ratio</a>,
+<a class=pref href="#field-req_minimum_power">req_minimum_power</a>
+and
+<a class=pref href="#field-req_twist_for_dual_tone">req_twist_for_dual_tone</a>.
+<p>
+Band 1 is comprised of
+<a class=pref href="#field-band1_freq_count">band1_freq_count</a>
+coefficients whose ids range from:
+<a class=pref href="#field-band1_first_freq_coeffs_id">band1_first_freq_coeffs_id</a>
+to
+<a class=pref href="#field-band1_first_freq_coeffs_id">band1_first_freq_coeffs_id</a>
++
+<a class=pref href="#field-band1_freq_count">band1_freq_count</a>
+- 1
+<p>
+Similarly Band 2 is comprised of
+<a class=pref href="#field-band2_freq_count">band2_freq_count</a>
+coefficients whose ids range from:
+<a class=pref href="#field-band2_first_freq_coeffs_id">band2_first_freq_coeffs_id</a>
+to
+<a class=pref href="#field-band2_first_freq_coeffs_id">band2_first_freq_coeffs_id</a>
++
+<a class=pref href="#field-band2_freq_count">band2_freq_count</a>
+- 1
+<p>
+The new set of input tones will consist of all those tones that
+have a component frequency that is within the limits for a
+frequency coefficient pair taken from band 1, and another that
+is within the limits for a frequency coefficient pair taken from
+band 2.
+<p>
+For example, if band 1 was defined as the set of input frequency
+coefficient ids {0,1,2,3} and band 2 was defined as {4,5,6,7},
+then the defined input tone set would be:
+<p><table>
+<tr> <td>{</td>
+	<td>&lt;0,4&gt;,</td> <td>&lt;0,5&gt;,</td>
+	<td>&lt;0,6&gt;,</td> <td>&lt;0,7&gt;,</td>
+</tr>
+<tr> <td></td>
+	<td>&lt;1,4&gt;,</td> <td>&lt;1,5&gt;,</td>
+	<td>&lt;1,6&gt;,</td> <td>&lt;1,7&gt;,</td>
+</tr>
+<tr> <td></td>
+	<td>&lt;2,4&gt;,</td> <td>&lt;2,5&gt;,</td>
+	<td>&lt;2,6&gt;,</td> <td>&lt;2,7&gt;,</td>
+</tr>
+<tr> <td></td>
+	<td>&lt;3,4&gt;,</td> <td>&lt;3,5&gt;,</td>
+	<td>&lt;3,6&gt;,</td> <td>&lt;3,7&gt;</td>
+<td>}</td>
+</tr>
+</table>
+<p>
+On return
+<a class=pref href="#field-id">id</a>
+will be set to an identifier for the new set of input tones.
+This id may be used as a parameter to
+<a href="apifn-sm_listen_for.html">sm_listen_for()</a>
+in order to specify the new set of input tones as those to be
+recognised on an input channel.
+<p>
+If single tones (as opposed to dual tones) are required to be
+detected, then either
+<a class=pref href="#field-band1_freq_count">band1_freq_count</a>
+or
+<a class=pref href="#field-band2_freq_count">band2_freq_count</a>
+should be set to zero. In this case the corresponding
+<a class=pref href="#field-band1_first_freq_coeffs_id">band1_first_freq_coeffs_id</a>
+or
+<a class=pref href="#field-band2_first_freq_coeffs_id">band2_first_freq_coeffs_id</a>
+is ignored.
+<p>
+See
+<a href="../prospapi_intones.html">
+Prosody speech processing: pre-loaded input tones</a>
+for list of predefined input frequency
+coefficient pairs, and for list of predefined input tone
+sets.
+See
+<a href="../tonedet.html">Prosody - Details of Tone Detection Algorithm</a>
+for an explanation of the other parameters to this call.
+<p>
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-module">module</a><dd>The module to which the tone set is to be added.
+
+<dt><a name="field-band1_first_freq_coeffs_id">band1_first_freq_coeffs_id</a><dd>One more than the identifier of the first tone in band 1.
+
+<dt><a name="field-band1_freq_count">band1_freq_count</a><dd>The number of tones in band 1.
+
+<dt><a name="field-band2_first_freq_coeffs_id">band2_first_freq_coeffs_id</a><dd>One more than the identifier of the first tone in band 2.
+
+<dt><a name="field-band2_freq_count">band2_freq_count</a><dd>The number of tones in band 2.
+
+<dt><a name="field-req_third_peak">req_third_peak</a><dd>The maximum power of the third loudest frequency. If the third
+frequency exceeds this, then it prevents detection of a
+tone. This is specified as a factor so, for example, the
+value <code>0.1</code> indicates that the third frequency must
+be no stronger than a tenth the power of the second frequency.
+
+<dt><a name="field-req_signal_to_noise_ratio">req_signal_to_noise_ratio</a><dd>The minimum signal to noise ratio. This is given as a factor
+to be multiplied by the total power. For example, the value
+<code>0.25</code> means that the detected signal must be more
+than a quarter of the total received power.
+
+<dt><a name="field-req_minimum_power">req_minimum_power</a><dd>The minimum power. For dual tones this is the power of the
+tone with the lesser amplitude.
+
+<dt><a name="field-req_twist_for_dual_tone">req_twist_for_dual_tone</a><dd>The maximum twist. This is the ratio of power between the two
+components of a dual tone. For example, a value of
+<code>10</code> means that the stronger must be no more than
+ten times the power of the weaker.
+
+<dt><a name="field-id">id</a><dd>The identifier of this tone set.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists<li>ERR_SM_NO_RESOURCES - if no resources to store new set of input tones<li>ERR_SM_BAD_PARAMETER - if frequency or amplitude parameter out of range<li>ERR_SM_CHANNEL_ALLOCATED - channel still allocated</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

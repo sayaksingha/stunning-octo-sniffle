@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: vmwitest</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: vmwitest</h1>
+<p>
+This application exercises the
+<a href="gen/apifn-sm_play_vmwi_fsk.html">sm_play_vmwi_fsk()</a> function
+from the <a href="adsilib.html">ADSI library</a>. See its
+documentation for further details of the meaning of the parameters.
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have downloaded these firmware modules:
+<ul>
+<li><a href="gen/softmodindex.html#datafeed">datafeed</a> (on Prosody X only)
+<li><a href="gen/softmodindex.html#tonegen">tonegen</a>
+<li><a href="gen/softmodindex.html#asytx">asytx</a>
+<li><a href="gen/softmodindex.html#fsktx">fsktx</a>
+<li><a href="gen/softmodindex.html#outchan">outchan</a>
+<li><a href="gen/softmodindex.html#prefsuf">prefsuf</a>
+<li><a href="gen/softmodindex.html#td">td</a>
+</ul>
+<p>
+Run <code>vmwitest</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/vmwitest</span> or
+<span class="type-WINNT"> gen-WINNT_V6/vmwitest</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table>
+<tr>
+	<td><code>-a</code> &lt;sastype&gt;
+		<td>the number of tone bursts in the SAS sequence
+
+<tr>
+	<td><code>-h</code>
+		<td>use on-hook signalling
+
+<tr>
+	<td><code>-m</code> &lt;module&gt;
+		<td>The Prosody module to use. This is the number of the
+		module on the card.
+
+<tr>
+	<td><code>-n</code>
+		<td>send an 'indicator on' message rather than
+		'indicator off'
+
+<tr>
+	<td><code>-s</code>
+		<td>Use SMDF as the message format (rather than
+		MDMF)
+
+<tr>
+	<td><code>-t</code> &lt;timeslot&gt;
+		<td>timeslot to use (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>). If you specify more than one channel,
+		they use consecutive timeslots starting at this one.
+		For example, the options "<code>-n 3 -t48:20</code>"
+		play to timeslots <code>48:20</code>, <code>48:21</code>,
+		and <code>48:22</code>.
+
+<tr>
+	<td><code>-x</code> &lt;cardspec&gt;
+		<td>Use a Prosody processor module on this card, specified as
+		described in
+		<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a>
+
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/vmwitest -x x:1.2.3.4/mykey -t 64:0
+</pre>
+<p>
+would send a VMWI sequence to timeslot <code>64:0</code>.
+<p>
+The source code for this program is provided (vmwitest.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

@@ -1,0 +1,16 @@
+-TiNGtrace
+F	format		string
+O	once		bool
+P	per_mod		unsigned
+R	randdelay	unsigned
+X	maxoctets	unsigned
+a	agc		unsigned
+b	background	timeslot
+m	module		unsigned
+n	numchan		unsigned
+q	quiet		bool
+r	restart		bool
+s	speed		signed
+t	timeslot	timeslot
+v	volume		signed
+x	serialnumber	string

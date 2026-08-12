@@ -25,7 +25,10 @@ extern TEXT gCfgFile[MAX_LOG_TEXT_LEN + 1];
 SccpAculab::SccpAculab()
 {
    memset(&mSaapStatus, 0, sizeof(mSaapStatus));
-      mSsapPtr = NULL;
+   mSsapPtr = NULL;
+   // Defensive initialization: Prevents arbitrary segmentation faults if any Aculab 
+   // connection-setter functions are accidentally invoked before mConnection is properly assigned.
+   mConnection = NULL;
 }
 
 //-------------------------------------------------------------------------------
@@ -106,7 +109,7 @@ BOOLEAN SccpAculab::SetSccpConfigFilePath(TEXT *lCfgFile)
       return false;
    }
 
-   sprintf(mCfgFile,"%s%s/%s",lProductHome,lCfgPath,lCfgFile);
+   snprintf(mCfgFile, sizeof(mCfgFile), "%s%s/%s", lProductHome, lCfgPath, lCfgFile);
    T(gTrace,printf("%s: SCCP config file:%s\n",gProcessName,mCfgFile););
       gLog.GenerateLog(ACUSCCP13, mCfgFile);
 
@@ -152,17 +155,11 @@ BOOLEAN SccpAculab::ReadSccpConfig()
    if( CFG_OK !=  lCfgRead.GetConfigNum("LocalPC", mLocalPc,
             1, 35000))
    {
-      sprintf(lLogText,
-            "Config read Err for LocalPc in %s",
-            mCfgFile);
-      TERR(gTrace, printf("%s: %s\n", lLogText,gProcessName););
+      sprintf(lLogText, "Config read Err for LocalPC in %s",gCfgFile);
+      TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
       gLog.GenerateLog(GSYS09, lLogText);
       lCfgRead.CfgDeInit();
       return false;
-   }
-   else
-   {
-      T(gTrace,printf("%s: LocalPc = %d \n", gProcessName, mLocalPc););
    }
 
    lCfgRead.CfgDeInit();
@@ -190,18 +187,18 @@ BOOLEAN SccpAculab::SsapCreate(BOOLEAN reload)
    if(NULL == mSsapPtr)
    {
       sprintf(lLogText,"SSAP creation failed, config file %s",mCfgFile);
-      printf("%s:%s %s %s\n",gProcessName,RED,lLogText,UNDO);
+      TERR(gTrace, printf("%s:%s %s %s\n",gProcessName,RED,lLogText,UNDO););
       gLog.GenerateLog(ACUSCCP01,lLogText);
       return false;
    }
 
    mLocAddr = acu_sccp_ssap_get_locaddr(mSsapPtr);
    sprintf(lTraceTag, "sccp_%d_%d", mLocAddr->sa_pc, 0);
-   if(mLocalPc != mLocAddr->sa_pc)
+   if((unsigned int)mLocalPc != mLocAddr->sa_pc)
    {
       sprintf(lLogText,"SSAP creation failed, LocalPC:%d OPC in file %s is %d",
             mLocalPc, mCfgFile, mLocAddr->sa_pc);
-      printf("%s:%s %s %s\n",gProcessName,RED,lLogText,UNDO);
+      TERR(gTrace, printf("%s:%s %s %s\n",gProcessName,RED,lLogText,UNDO););
       gLog.GenerateLog(ACUSCCP01,lLogText);
       acu_sccp_ssap_delete(mSsapPtr);
       return false;
@@ -222,12 +219,11 @@ BOOLEAN SccpAculab::SsapCreate(BOOLEAN reload)
    }
    else
    {
-      printf("%s:%s SSAP SP status disabled%s\n",gProcessName,RED,UNDO);
+      T(gTrace, printf("%s:%s SSAP SP status disabled%s\n",gProcessName,RED,UNDO););
    }
 
    //This function enables the receipt of ACU_SCCP_MSG_USER_STATUS
    //messages for the specified pointcode and ssn.
-
    acu_sccp_enable_user_status(mSsapPtr, mRemAddr->sa_pc ? mRemAddr->sa_pc : ~0u,
          mRemAddr->sa_ssn ? mRemAddr->sa_ssn : ~0u);
    sprintf(lLogText,"SSAP user status recieve enabled remote(PC:%d SSN:%d)",
@@ -261,7 +257,7 @@ BOOLEAN SccpAculab::SsapConnect()
    if(mSsapPtr == NULL)
    {
       sprintf(lLogText,"SSAP mSsapPtr NULL");
-      printf("%s:%s %s%s\n",gProcessName,RED,lLogText,UNDO);
+      TERR(gTrace, printf("%s:%s %s%s\n",gProcessName,RED,lLogText,UNDO););
       gLog.GenerateLog(ACUSCCP02,lLogText);
       return false;
    }
@@ -271,13 +267,13 @@ BOOLEAN SccpAculab::SsapConnect()
    if(0 != lRetVal)
    {
       sprintf(lLogText,"SSAP connected to SCCP driver code failed");
-      printf("%s:%s %s%s\n",gProcessName,RED,lLogText,UNDO);
+      TERR(gTrace, printf("%s:%s %s%s\n",gProcessName,RED,lLogText,UNDO););
       gLog.GenerateLog(ACUSCCP02,lLogText);
       return false;
    }
 
    sprintf(lLogText,"SSAP connected to SCCP driver code success");
-   printf("%s:%s %s%s\n",gProcessName,BLUE,lLogText,UNDO);
+   T(gTrace, printf("%s:%s %s%s\n",gProcessName,BLUE,lLogText,UNDO););
       gLog.GenerateLog(ACUSCCP12,lLogText);
 
    return true;
@@ -377,6 +373,14 @@ BOOLEAN SccpAculab::SendAcuSccpMsg(const void *data, unsigned int dataLen, UINT3
    TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
    TEXT lErrText[ACU_SCCP_ERR_TEXT_LEN + 1] = "";
 
+   if (NULL == mConnection)
+   {
+      sprintf(lLogText,"TransactionId:%08x Transmitting UDT msg failed: Connection not ready (mConnection is NULL)", transId);
+      TERR(gTrace,printf("%s:%s %s%s\n",gProcessName,RED,lLogText,UNDO););
+      gLog.GenerateLog(ACUSCCP12,lLogText);
+      return false;
+   }
+
    int lRetVal = acu_sccp_unitdata_request(mConnection, data, dataLen);
    if(0 != lRetVal)
    {
@@ -395,6 +399,8 @@ BOOLEAN SccpAculab::SendAcuSccpMsg(const void *data, unsigned int dataLen, UINT3
       return true;
    }
 }
+
+
 
 //-------------------------------------------------------------------------------
 // METHOD      : GetAcuSccpEvent
@@ -469,29 +475,75 @@ BOOLEAN SccpAculab::UpdateSsapStatus()
 //-------------------------------------------------------------------------------
 BOOLEAN SccpAculab::GetSsapStatus()
 {
-   time_t lTime = time(NULL);
-   time_t lDiffTime = lTime  - mSaapStatus.lastActTime;
-   TEXT  lLogText[MAX_LOG_TEXT_LEN + 1] = "";
+   time_t lTime     = time(NULL);
+   time_t lDiffTime = lTime - mSaapStatus.lastActTime;
+   TEXT   lLogText[MAX_LOG_TEXT_LEN + 1] = "";
 
    if(mSsapPtr == NULL)
       return true;
 
-   if((lDiffTime >= 10) ||
-         (mSaapStatus.host_a_con_state & ACU_SCCP_CON_STATE_IN_SERVICE &&
-          (mSaapStatus.host_a_con_state & ACU_SCCP_CON_STATE_RX_BLOCKED ||
-           mSaapStatus.host_a_con_state & ACU_SCCP_CON_STATE_TX_BLOCKED)) ||
-         (mSaapStatus.host_b_con_state & ACU_SCCP_CON_STATE_IN_SERVICE &&
-          (mSaapStatus.host_b_con_state & ACU_SCCP_CON_STATE_RX_BLOCKED ||
-           mSaapStatus.host_b_con_state & ACU_SCCP_CON_STATE_TX_BLOCKED)))
+   // -----------------------------------------------------------------------
+   // Ab Comment
+   // Priority 1: Genuine TCP/hardware fault — trigger reconnect immediately.
+   //
+   // ACU_SCCP_CON_STATE_RX_BLOCKED or TX_BLOCKED while IN_SERVICE means the
+   // Aculab driver's ring buffer is full or the underlying TCP link is stalled.
+   // This is a real fault that will freeze all SS7 traffic if not cleared.
+   // -----------------------------------------------------------------------
+   bool lConABlocked =
+      (mSaapStatus.host_a_con_state & ACU_SCCP_CON_STATE_IN_SERVICE) &&
+      (mSaapStatus.host_a_con_state & ACU_SCCP_CON_STATE_RX_BLOCKED ||
+       mSaapStatus.host_a_con_state & ACU_SCCP_CON_STATE_TX_BLOCKED);
+
+   bool lConBBlocked =
+      (mSaapStatus.host_b_con_state & ACU_SCCP_CON_STATE_IN_SERVICE) &&
+      (mSaapStatus.host_b_con_state & ACU_SCCP_CON_STATE_RX_BLOCKED ||
+       mSaapStatus.host_b_con_state & ACU_SCCP_CON_STATE_TX_BLOCKED);
+
+   if(lConABlocked || lConBBlocked)
    {
-      sprintf(lLogText,"SSAP Connection status for instance:0 is with host_a %d\n", mSaapStatus.host_a_con_state);
-      TERR(gTrace,printf("%s: %s",gProcessName,lLogText););
-      gLog.GenerateLog(ACUSCCP13, lLogText);
-      sprintf(lLogText,"SSAP Connection status for instance:0 is with host_b %d\n", mSaapStatus.host_b_con_state);
-      TERR(gTrace,printf("%s: %s",gProcessName,lLogText););
+      snprintf(lLogText, MAX_LOG_TEXT_LEN,
+            "SSAP Connection BLOCKED: host_a=0x%X host_b=0x%X Triggering reconnect",
+            mSaapStatus.host_a_con_state, mSaapStatus.host_b_con_state);
+      TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
       gLog.GenerateLog(ACUSCCP13, lLogText);
       mSaapStatus.state = EXITING;
       return false;
+   }
+
+   // -----------------------------------------------------------------------
+   // Ab Comment
+   // Priority 2: Extended silence watchdog (30s).
+   //
+   // No message received for 30 seconds is unusual but NOT necessarily a fault
+   // (low-traffic off-peak periods are common). Only trigger reconnect if the
+   // SSAP connection is also NOT in-service — i.e. the driver has gone away.
+   // Previously this was 10s which caused false reconnects on quiet periods.
+   // -----------------------------------------------------------------------
+   if(lDiffTime >= 30)
+   {
+      snprintf(lLogText, MAX_LOG_TEXT_LEN,
+            "SSAP silence for %ld s: host_a=0x%X host_b=0x%X",
+            (long)lDiffTime,
+            mSaapStatus.host_a_con_state, mSaapStatus.host_b_con_state);
+      TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
+      gLog.GenerateLog(ACUSCCP13, 2, lLogText);
+
+      // Only reconnect if neither connection is in-service.
+      // If at least one is in-service, the link is alive — just quiet.
+      bool lConAInService = (mSaapStatus.host_a_con_state & ACU_SCCP_CON_STATE_IN_SERVICE) != 0;
+      bool lConBInService = (mSaapStatus.host_b_con_state & ACU_SCCP_CON_STATE_IN_SERVICE) != 0;
+
+      if(!lConAInService && !lConBInService)
+      {
+         snprintf(lLogText, MAX_LOG_TEXT_LEN,
+               "SSAP not in-service after %ld s silence. Triggering reconnect",
+               (long)lDiffTime);
+         TERR(gTrace, printf("%s: %s\n", gProcessName, lLogText););
+         gLog.GenerateLog(ACUSCCP13, lLogText);
+         mSaapStatus.state = EXITING;
+         return false;
+      }
    }
 
    return true;
@@ -607,13 +659,20 @@ BOOLEAN SccpAculab::GetAcuSccpConState(acu_sccp_msg_t *lMsg)
             gProcessName,lConStr););
    }
 
-   mConnection = acu_sccp_ssap_get_unitdata_con(mSsapPtr);
-   if(NULL == mConnection)
-   {
-      //sprintf(lLogText,"SCCP connection area on Ssap creation Failed...");
-      T(gTrace, printf("%s:%s %s%s\n",gProcessName,RED,"SCCP connection area on Ssap creation Failed...",UNDO););
-      gLog.GenerateLog(ACUSCCP02,lLogText);
-      return false;
+   if (NULL == mConnection) {
+      mConnection = acu_sccp_ssap_get_unitdata_con(mSsapPtr);
+      if(NULL != mConnection)
+      {
+         // Ensure default QoS Priorities for ANSI SCCP
+         acu_sccp_con_set_cfg_int(mConnection, ACU_SCCP_CFG_QOS_PRIORITY, 0);
+         acu_sccp_con_set_cfg_int(mConnection, ACU_SCCP_CFG_QOS_RESPONSE_PRI, 1);
+      }
+      else
+      {
+         T(gTrace, printf("%s:%s %s%s\n",gProcessName,RED,"SCCP connection area on Ssap creation Failed...",UNDO););
+         gLog.GenerateLog(ACUSCCP02,"SCCP connection area on Ssap creation Failed...");
+         return false;
+      }
    }
 
    return true;
@@ -627,9 +686,31 @@ BOOLEAN SccpAculab::GetAcuSccpConState(acu_sccp_msg_t *lMsg)
 //-----------------------------------------------------------------------------
 BOOLEAN SccpAculab::SetRemoteLocalAddress(acu_sccp_addr_t lLocAddr, acu_sccp_addr_t lRemAddr)
 {
+   if (NULL == mConnection)
+   {
+      T(gTrace, printf("%s:%s SetRemoteLocalAddress failed: mConnection is NULL%s\n",gProcessName,RED,UNDO););
+      return false;
+   }
    memcpy(acu_sccp_con_get_locaddr(mConnection), &lLocAddr, sizeof(acu_sccp_addr_t));
    memcpy(acu_sccp_con_get_remaddr(mConnection), &lRemAddr, sizeof(acu_sccp_addr_t));
 
+   return true;
+}
+
+//-------------------------------------------------------------------------------
+// METHOD      : SetReturnOption
+// DESCRIPTION : Sets the Return Option QoS parameter on the connection
+// PARAMETER   : bool enable
+// RETURN      : BOOLEAN
+//-----------------------------------------------------------------------------
+BOOLEAN SccpAculab::SetReturnOption(bool enable)
+{
+   if (NULL == mConnection)
+   {
+      T(gTrace, printf("%s:%s SetReturnOption failed: mConnection is NULL%s\n",gProcessName,RED,UNDO););
+      return false;
+   }
+   acu_sccp_con_set_cfg_int(mConnection, ACU_SCCP_CFG_QOS_RET_OPT, enable ? 1 : 0);
    return true;
 }
 
@@ -661,26 +742,28 @@ BOOLEAN SccpAculab::GetSccpStatus(INT16 dest, BOOLEAN &status)
       sprintf(lLogText,"SCCP Destination acu_sccp_get_sccp_status Success %d", dest);
       T(gTrace, printf("%s: %s\n", gProcessName, lLogText););
       gLog.GenerateLog(ACUSCCP25, lLogText);
+
+      // Ab Comment : Safely check status ONLY if API call succeeded
+      if(ACU_SCCP_REM_SCCP_AVAIL == lSccp_status->tsp_sccp_status)
+      {
+         sprintf(lLogText,"SCCP Destination %d Available", dest);
+         T(gTrace, printf("%s: %s\n", gProcessName, lLogText););
+         gLog.GenerateLog(ACUSCCP27, lLogText);
+         status = true;
+      }
+      else
+      {
+         sprintf(lLogText,"SCCP Destination %d Not Available", dest);
+         T(gTrace, printf("%s: %s\n", gProcessName, lLogText););
+         gLog.GenerateLog(ACUSCCP28, lLogText);
+         status = false;
+      }
    }
    else
    {
       sprintf(lLogText,"SCCP Destination acu_sccp_get_sccp_status Failed %d", dest);
       T(gTrace, printf("%s: %s\n", gProcessName, lLogText););
       gLog.GenerateLog(ACUSCCP26, lLogText);
-   }
-
-   if(ACU_SCCP_REM_SCCP_AVAIL == lSccp_status->tsp_sccp_status)
-   {
-      sprintf(lLogText,"SCCP Destination %d Available", dest);
-      T(gTrace, printf("%s: %s\n", gProcessName, lLogText););
-      gLog.GenerateLog(ACUSCCP27, lLogText);
-      status = true;
-   }
-   else
-   {
-      sprintf(lLogText,"SCCP Destination %d Not Available", dest);
-      T(gTrace, printf("%s: %s\n", gProcessName, lLogText););
-      gLog.GenerateLog(ACUSCCP28, lLogText);
       status = false;
    }
 

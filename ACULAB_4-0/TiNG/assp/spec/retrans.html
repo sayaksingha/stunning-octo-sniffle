@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Expected number of transmissions</title>
+</head>
+<body>
+<h1>Expected number of transmissions</h1>
+<p>
+Given a packet is lost with probability <code>p</code>, what is the expected
+number of packets required to receive a response to a command?
+
+<p>
+Suppose the expected number of packets required is <code>N</code>.
+
+<p>
+Let <code>q = 1-p</code>
+
+<p>
+When we send the command, if it is lost we have sent a packet and still
+need <code>N</code> to reach the target, so in this case we need
+<code>N+1</code> packets with probability <code>p</code>.
+i.e <code>(N + 1)p</code>
+
+<p>
+If the command arrives and the response is lost, we again need a further
+<code>N</code> packets, but we have sent two, so in this case we need
+<code>N+2</code> packets with probability <code>qp</code>.
+i.e. <code>(N + 2)qp</code>.
+
+<p>
+Finally, if neither the command nor the response are lost we need 2
+packets with probability <code>q*q</code>. i.e. <code>2q*q</code>
+
+<p>
+In total this gives:
+
+<pre>
+	N = (N + 1)p + (N + 2)qp + 2q*q
+	N = Np + p + Nqp + 2qp + 2q*q
+	N = N(p + qp) + p + 2qp + 2q*q
+	N(1 - p - qp) = p + 2qp + 2q*q
+	N(1 - (1 - q) - q(1 - q)) = (1 - q) + 2q(1 - q) + 2q*q
+	N(1 - 1 + q - q + q*q) = 1 - q + 2q - 2q*q + 2q*q
+	N(q*q) = 1 + q
+	N = (1 + q) / (q*q)
+</pre>
+
+<p>
+Now suppose that three packets are required: command, response, ack.
+<p>
+Suppose the expected number of packets required is <code>M</code>.
+<p>
+If the command is delivered, the number of packets required to deliver
+the response is exactly as derived above, so it's <code>q(N+1)</code>.
+<p>
+If the command is lost, we resend it and still have to send
+<code>M</code> more to finish, so this is <code>p(M+1)</code>.
+<p>
+Note that this underestimates the transmissions in a real protocol since
+it assumes that packets are only re-transmitted when lost. In practice,
+a lost response is liable to cause re-transmission of the command
+because of a timeout waiting for the response, and simultaneous
+re-transmission of the response caused by timeout at the other end
+waiting for an acknowledgement. While a good choice of timeouts may
+reduce this effect, when adaptive timeouts are used it is very
+difficult to determine the number of extra packets sent, so we use the
+theoretical minimum, since actual protocols cannot be better than
+this.
+<p>
+This gives:
+
+<pre>
+	M = q(N + 1) + p(M + 1)
+	M = qN + q + pM + p
+	M(1 - p) = qN + q + p
+	Mq = qN + q + p
+	Mq = qN + q + (1 - q)
+	Mq = qN + q + 1 - q
+	Mq = qN + 1
+	M = (qN + 1) / q
+	M = (q(1 + q) / (q*q) + 1) / q
+	M = ((1 + q) / q + 1) / q
+	M = (1 + q) / (q*q) + 1 / q
+	M = (1 + q) / (q*q) + q / (q*q)
+	M = (1 + q + q) / (q*q)
+	M = (1 + 2*q) / (q*q)
+</pre>
+
+<p>
+Let's see what difference the ack makes. It means we need to send an
+extra <code>(M - N)</code> packets. Can this be negative?
+
+<pre>
+	M - N = (1 + 2*q) / (q*q) - (1 + q) / (q*q)
+	M - N = (1 + 2*q - (1 + q)) / (q*q)
+	M - N = (1 + 2*q - 1 - q) / (q*q)
+	M - N = q / q*q
+	M - N = 1 / q
+</pre>
+
+<p>
+Since <code>0 <= q <= 1</code>, this can never be negative, so acknowledgements
+always result in extra traffic. In particular, for a given q the extra
+traffic is:
+
+<table>
+<tr><th>q</th>	<th>extra</th></tr>
+<tr><td>1</td>	<td>1</td>	<td>(obviously - it's the ACK)</td></tr>
+<tr><td>.999999</td>	<td>1.0000010000</td></tr>
+<tr><td>.99999</td>	<td>1.0000100001</td></tr>
+<tr><td>.9999</td>	<td>1.0001000100</td></tr>
+<tr><td>.999</td>	<td>1.0010010010</td></tr>
+<tr><td>.99</td>	<td>1.0101010101</td></tr>
+<tr><td>.9</td>	<td>1.1111111111</td></tr>
+<tr><td>.5</td>	<td>2.0000000000</td></tr>
+</table>
+<p>
+For completeness, here are the corresponding values of N:
+<table>
+<tr><th>q</th>	<th>N</th></tr>
+<tr><td>1</td>	<td>2.0000000000</tr>
+<tr><td>.999999</td>	<td>2.0000030000</tr>
+<tr><td>.99999</td>	<td>2.0000300004</tr>
+<tr><td>.9999</td>	<td>2.0003000400</tr>
+<tr><td>.999</td>	<td>2.0030040050</tr>
+<tr><td>.99</td>	<td>2.0304050607</tr>
+<tr><td>.9</td>	<td>2.3456790123</tr>
+<tr><td>.5</td>	<td>6.0000000000</tr>
+</table>
+</body>
+</html>

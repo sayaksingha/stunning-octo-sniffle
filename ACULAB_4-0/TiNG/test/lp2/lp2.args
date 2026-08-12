@@ -1,0 +1,14 @@
+-TiNGtrace
+a	agc		unsigned
+b	background	timeslot
+F	format		string
+m	module		unsigned
+n	numchan		unsigned
+O	once		bool
+R	randdelay	unsigned
+s	speed		signed
+t	timeslot	timeslot
+v	volume		signed
+X	maxoctets	unsigned
+x	serialnumber	string
+y	sync		bool

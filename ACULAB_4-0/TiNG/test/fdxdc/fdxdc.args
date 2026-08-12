@@ -1,0 +1,58 @@
+-TiNGtrace
+m	module		unsigned
+x	serialnumber	string
+
+i	inifile		string
+RAns	rx_answer	bool
+TAns	tx_answer	bool
+
+Rt	rx_timeslot	timeslot
+Tt	tx_timeslot	timeslot
+
+RId	rx_dest_ip	string
+RIs	rx_source_ip	string
+RIp	rx_dest_port	unsigned
+RIq	rx_source_port	unsigned
+
+TL	tx_local_ip	string
+
+o	outfile		string
+f	format		string
+RU	rx_useevent	bool
+TU	tx_useevent	bool
+
+#Rp	rx_patlen	unsigned
+#Tp	tx_patlen	unsigned
+
+Re	rx_encoding	string
+Te	tx_encoding	string
+Ru	rx_modulation	string
+Tu	tx_modulation	string
+
+Rd	rx_databits	unsigned
+Td	tx_databits	unsigned
+RC	rx_crcsize	unsigned
+TC	tx_crcsize	unsigned
+Rc	rx_crc		unsigned
+Tc	tx_crc		unsigned
+TX	tx_stopbits	unsigned
+
+Rs	rx_standard	string
+Ts	tx_standard	string
+RM	rx_markfreq	float
+TM	tx_markfreq	float
+RS	rx_spacefreq	float
+TS	tx_spacefreq	float
+RB	rx_bitrate	unsigned
+TB	tx_bitrate	unsigned
+RFon	rx_carrier_on	unsigned
+RFoff	rx_carrier_off	unsigned
+TP	tx_power	float
+
+RTb	rx_xferbits	signed
+RTt	rx_xfertimeout	unsigned
+
+Rx	rx_xorval	unsigned
+Tx	tx_xorval	unsigned
+R4	rx_i460_mask	unsigned
+T4	tx_i460_mask	unsigned

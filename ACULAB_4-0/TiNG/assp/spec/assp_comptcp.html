@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>TCP Packet contents and their relevance to ASSP</title>
+</head>
+<body>
+<h1>TCP Packet contents and their relevance to ASSP</h1>
+<p>
+Here's a list of TCP packet fields with considerations of how necessary
+they are in ASSP:
+<dl>
+<dt>source port
+<dd>
+Something similar is required. See discussion of addressibility.
+
+<dt>dest port
+<dd>
+Something similar is required. See discussion of addressibility.
+
+<dt>sequence number
+<dd>
+Essential. See discussion of sequencing.
+
+<dt>acknowledgement number
+<dd>
+Essential. See discussion of sequencing.
+
+<dt>data offset
+<dd>
+This is merely an encoding overhead.
+
+<dt>FIN
+<dd>
+Essential. Very rare (only once per connection) - replace with an option.
+
+<dt>SYN
+<dd>
+Essential. Very rare (only once per connection) - replace with an option.
+
+<dt>RST
+<dd>
+Essential but rare (never in a correct connection) - replace with an
+option.
+
+<dt>PSH
+<dd>
+Seems useful.
+
+<dt>ACK
+<dd>
+Not needed - all packets have valid ACK numbers.
+
+<dt>URG
+<dd>
+Should rarely occur in packets - replace with an option.
+
+<dt>ECE - rfc 3168
+<dd>
+Important. See discussion of ECN.
+
+<dt>CWR - rfc 3168
+<dd>
+Important. See discussion of ECN.
+
+<dt>window
+<dd>
+Something equivalent is required. See discussion of flow control.
+
+<dt>checksum
+<dd>
+Something equivalent is required.
+
+<dt>urgent pointer
+<dd>
+Should rarely occur - replace with an option.
+
+</dl>
+
+<p>
+Additionally, the following options may be present:
+<dl>
+<dt>NOP	- for padding
+<dd>
+Not needed if we make options align themselves.
+
+<dt>MSS	- limit packet sizes
+<dd>
+Useful. The application may group items into transactions. Identifying a
+maximum size allows the protocol to avoid IP fragmentation.
+
+<dt>WSOPT	- window scaling - rfc 1323
+<dd>
+Avoid by making window large enough.
+
+<dt>SACK permitted	- enable sending SACK
+<dd>
+Avoid by requiring SACK support.
+
+<dt>SACK	- selective acknowledgement
+<dd>
+Something equivalent is required.
+
+<dt>TSOPT	- timestamp
+<dd>
+Something equivalent is required. (RFC 1323) The main purpose of this
+field is to let the transmitter predict when an acknowledgement should
+arrive. Therefore its use allows accurate estimates of the RTT including
+any effects such as receiver application delays and deferred ack all
+of which should influence when the transmitter assumes packet loss.
+
+<dt>CC	- rfc 1644
+<dd>
+See discussion of T/TCP.
+
+<dt>CC.NEW	- rfc 1644
+<dd>
+See discussion of T/TCP.
+
+<dt>CC.ECHO	- rfc 1644
+<dd>
+See discussion of T/TCP.
+
+<dt>alternative checksum
+<dd>
+Not required - but permit for experimental use.
+
+<dt>MD5 signature - rfc 2385
+<dd>
+Not necessary, but suitable for experimental purposes. Option only.
+
+<dt>Reserved
+<dd>
+Essential. Future extensions may need status which appears in every
+packet, which would be extremely wasteful to encode in an option (e.g.
+the proposed ECN nonce sum).
+
+</dl>
+</body>
+</html>

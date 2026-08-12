@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody TiNG: Using the API DLL</title>
+</head>
+<body>
+<h1>Prosody TiNG: Using the API DLL</h1>
+<p>
+This document explains how to use the API DLL in three different
+situations:
+<ul>
+<li>your development tools can use <code>.h</code> files and
+Microsoft <code>.lib</code> files
+<li>your development tools can use <code>.h</code> files but not
+Microsoft <code>.lib</code> files
+<li>your development tools can only use <code>.dll</code> files - not
+<code>.h</code> files or Microsoft <code>.lib</code> files
+</ul>
+<p>
+Don't forget that, if you don't want to use the DLL, and you can
+compile C code, you can link the API library directly as described in
+<a href="howto_buildapp.html">Prosody Guide - how to build applications to use Prosody</a>.
+
+<h2>Using the DLL via <code>.h</code> and <code>.LIB</code> files</h2>
+<p>
+If you have development tools which allow you to use <code>.h</code>
+files, such as Microsoft Visual Studio, or if you have another C or C++
+compiler, or even if you are using some other language but it can
+interpret C header files, then you make your program refer to the
+appropriate header files (as documented in
+<a href="howto_buildapp.html">Prosody Guide - how to build applications to use Prosody</a>) and link with the <code>TiNG.LIB</code> file.
+
+<h2>Using the DLL via <code>.h</code> file but without the <code>.LIB</code> file</h2>
+<p>
+If your development tools cannot use Microsoft <code>.LIB</code>
+files, then you must use the DLL directly. If you are using C, C++,
+or another language which lets you use the <code>.h</code> files,
+then this is not very difficult. The significant difference from
+using the <code>.LIB</code> file is that you must find the DLL entry
+points with <code>GetProcAddress</code>. You can do that like this:
+<pre>
+
+SM_REPLAY_START_FN *sm_replay_start_ptr;
+
+int prepare_TiNG_dll(void)
+{
+ HANDLE dll = LoadLibrary("TiNG.DLL");
+ if (!dll) {
+ 	// handle error
+ 	return 1;
+ }
+ 	// find all necessary functions
+ sm_replay_start_ptr = GetProcAddress(dll, SM_REPLAY_START_NAME);
+ if (!sm_replay_start_ptr) {
+ 	// handle error
+ 	return 1;
+ }
+ 	... etc
+ return 0;
+}
+
+	... code to call sm_replay_start() 
+		assuming prepare_TiNG_dll() has already been called ...
+
+	SM_REPLAY_START_PARMS rp;
+	memset(&amp;rp, 0, sizeof(rp));
+	rp.channel = ...;		// set fields in 'rp'
+	rp.... = 
+	rp.... = etc
+	r = (*sm_replay_start_ptr)(&amp;rp);
+	if (r) {
+		// handle error
+
+
+</pre>
+<p>
+Every API function, sm_whatever(), has a typedef,
+SM_WHATEVER_FN, which allows you to declare a pointer to that
+function with the correct prototype.
+<p>
+The name used by the DLL is <strong>not</strong> simply the API
+function name. The name exported by the DLL also contains type
+information about the parameters expected by the function. This
+ensures that if the DLL is replaced with one in which the function
+parameters are different (for example, because an enhancement added
+an extra option field) then you can't accidentally call the function
+with the wrong parameters. The correct name is provided as a
+<code>#define</code>d string, with the correct name for API function
+sm_whatever being defined as SM_WHATEVER_NAME. If
+<code>GetProcAddress</code> fails to find this name in the DLL, this
+is most likely because the DLL it is searching is incompatible with
+the .h files used when building the application.
+
+<h2>Using the DLL directly with neither <code>.h</code> nor <code>.LIB</code> files</h2>
+<p>
+If your development environment cannot use .h files, then you can
+still use the DLL directly, but it's a lot more work. You'll need to
+do this sequence of steps for each API function you want to handle.
+To illustrate, we'll look at how you would call
+<a href="gen/apifn-sm_replay_start.html">sm_replay_start()</a>.
+<ul>
+<li>
+Find the declaration of the function in the approriate header
+file. In this example, we look in <code>include/smbesp.h</code> and
+find:
+<pre>
+	... other stuff ...
+
+typedef struct sm_replay_parms {
+	tSMChannelId channel;
+	tSMChannelId background;
+	tSM_INT volume;
+	tSM_INT agc;
+	tSM_INT speed;
+	enum kSMDataFormat type;
+	tSM_UT32 data_length;
+} SM_REPLAY_PARMS;
+
+ACUAPI int ACUTiNG_WINAPI sm_replay_start(struct sm_replay_parms *replayp);
+
+</pre>
+<li>
+Write the necessary code to construct the parameter structure.
+For example, in Perl you might have:
+<pre>
+		# construct the sm_replay_parms in '$parms'
+	$params = pack("LLIIIII", $chan, $bg, $vol, $agc, $spd, $typ, $len);
+</pre>
+<li>
+Write the code to interpret the parameter structure after the API
+function has returned. In the case of <code>sm_replay_start()</code>,
+you don't need to do this, since it doesn't return anything in fields
+in this structure. But just to show the principle, here's Perl code which
+would interpret it:
+<pre>
+		($chan, $bg, $vol, $agc, $spd, $typ, $len) = unpack("LLIIIII", $params);
+</pre>
+<li>In the TiNG header file, find the string which contains the
+function's true name. The function's true name encodes the parameters
+it expects, which helps prevent bugs caused by using an application
+and DLL which are not compatible.
+There will be a <code>#define</code> which
+defines *<code>_NAME</code>. For <code>sm_replay_start()</code>, this
+is
+<pre>
+#define SM_REPLAY_START_NAME "sm_replay_start_iPsCtCtiiie0_9_14_15_17_20_Ui_"
+</pre>
+<li>Arrange for the function to be found in the DLL. For example, in
+Perl this would involve code like this:
+<pre>
+	use Win32::API;
+	$sm_replay_start = new Win32::API("TiNG.DLL",
+			"sm_replay_start_iPsCtCtiiie0_9_14_15_17_20_Ui_",
+			[ P ],
+			N);
+	if (!defined($sm_replay_start)) {
+		# handle the error
+	}
+</pre>
+<li>Then you can put this all together to allow the function to be
+called. For example, in Perl:
+<pre>
+	use Win32::API;
+	$sm_replay_start = new Win32::API("TiNG.DLL",
+			"sm_replay_start_iPsCtCtiiie0_9_14_15_17_20_Ui_",
+			[ P ],
+			N);
+	if (!defined($sm_replay_start)) {
+		die "Cannot find sm_replay_start in TiNG.DLL\n";
+	}
+
+	sub sm_replay_start {
+		my ($chan, $bg, $vol, $agc, $spd, $typ, $len) = @_;
+
+			# construct the sm_replay_parms in '$parms'
+		my $params = pack("LLIIIII", $chan, $bg, $vol, $agc, $spd, $typ, $len);
+		
+			# call function here
+		my $ret = $sm_replay_start->Call($params);
+
+			# interpret results
+		# we would use 
+		# ($chan, $bg, $vol, $agc, $spd, $typ, $len) = unpack("LLIIIII", $params);
+		# to retrieve the fields from the sm_replay_parms if
+		# we wanted to examine any of them, but this function
+		# doesn't return any fields, so we don't bother
+		# unpacking them
+		#
+		return $ret;
+	}
+</pre>
+</ul>
+<p>
+As you can see, this is a rather laborious process, because you have
+to interpret the .h files yourself. Once you've done this, your code
+will be compatible with future versions of Prosody TiNG, until there
+is a modification to one of the API functions you are using. When
+that happens, you will find that the attempt to locate the API
+function in the DLL fails. Fortunately, fixing this is much simpler
+than the original effort required to build the interface. Find what
+has changed and modify three parts of your code: the construction of
+the parameters, the name being looked up, and the interpretation of
+the results.

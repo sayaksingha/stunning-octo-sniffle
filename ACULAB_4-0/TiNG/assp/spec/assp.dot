@@ -1,0 +1,32 @@
+digraph D {
+	node [ shape=box ];
+
+	closed [ label="CLOSED" ];
+	wcookie [ label="WAIT-COOKIE"];
+	estab [ label="ESTABLISHED"];
+	fin_wait [ label="FIN-WAIT"];
+	last_ack [ label="LAST-ACK"];
+	close_wait [ label="CLOSE-WAIT"];
+	time_wait [ label="TIME-WAIT"];
+	rst_wait [ label="RST-WAIT"];
+	any [ style=invis, label="(ANY except CLOSED)" ];
+
+	{ rank=max; any }
+
+	closed -> wcookie [ label="connect()"];
+	closed -> estab [ label="got SYN"];
+	time_wait -> estab [ label="got SYN"];
+	wcookie -> estab [ label="got COOKIE" ];
+	estab -> fin_wait [ label="send EOF" ];
+	estab -> close_wait [ label="process FIN" ];
+	close_wait -> last_ack [ label="send EOF" ];
+	last_ack -> time_wait [ label="all ACKed" ];
+	fin_wait -> last_ack [ label="process FIN" ];
+	rst_wait -> time_wait [ label="got RST" ];
+	time_wait -> closed [ label="timeout" ];
+	time_wait -> wcookie [ label="connect()", style=dashed ];
+	any -> rst_wait [ label="abort()" ];
+	any -> time_wait [ label="got RST" ];
+	any -> time_wait [ label="got erroneous packet" ];
+
+}

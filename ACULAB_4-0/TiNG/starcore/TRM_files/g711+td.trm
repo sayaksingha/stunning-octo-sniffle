@@ -1,0 +1,8 @@
+WARNING: AUTOMATICALLY GENERATED FILE - DO NOT EDIT
+
+VERSION: 1
+DESCRIPTION: VoIP gateway G711 Tone detect 
+
+Modules: vmprx vmptx datafeed  vtdet td tonegen vmpplc inchan rtcp
+Resources: ACU+G711+TD   60 tdm_in tdm_out 
+

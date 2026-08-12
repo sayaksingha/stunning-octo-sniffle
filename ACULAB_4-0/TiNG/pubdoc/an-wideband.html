@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: using wideband sampling rates</title>
+</head>
+<body>
+<h1>Prosody application note: using wideband sampling rates</h1>
+
+<h2>Introduction</h2>
+<p>
+This application note describes how to set up a channel to operate at 16kHz. 
+By default, the Prosody X firmware operates at a sample rate of 8kHz. However, 
+it is possible to operate at a higher rate in order to support the use of 
+wideband codecs such as AMR-WB.
+
+<h2>Echo cancellation, Tone Detection and Tone Regeneration</h2>
+<p>
+Note that the echo canceller and tone and grunt detectors are designed to 
+operate on 8kHz audio ONLY. These features will not operate correctly if 
+applied to a channel where the input data is 16kHz sampled audio.
+<p>
+Note also that tone regeneration from RFC2833 packets at a VMP[rx] also only 
+operates correctly at 8kHz. 
+
+<h2>Setting up the channel</h2>
+<p>
+To make a channel generate 16kHz sampled audio, the channel's default output 
+sampling rate must be adjusted.
+<p>
+Allocate your channel in the normal way. Once the channel is created, use 
+<a href="gen/apifn-sm_channel_set_output_rate.html">sm_channel_set_output_rate()</a> 
+to set the new sampling rate on the channel.
+<p>
+Note that only channels outputting at 8kHz can be connected to TDM. If you 
+need to supply the same audio stream to both a 16kHz wideband codec and to 
+TDM, you will need to resample the audio to the appropriate rate. See 
+"Setting up a resampling path" below for details.
+
+<h2>Setting up the RTP endpoints</h2>
+<p>
+The RTP endpoints - VMP[tx] and VMP[rx] - must each also be set to operate at 
+the new sampling rate. In particular, failure to set the VMP[tx] rate correctly 
+will affect the generation of RTP timestamps, causing the packets to be 
+decoded incorrectly at the far end.
+<p>
+Create your VMP[rx] and VMP[tx] as normal. Using 
+<a href="gen/apifn-sm_vmptx_config_sample_rate.html">sm_vmptx_config_sample_rate()</a> 
+and <a href="gen/apifn-sm_vmprx_config_sample_rate.html">sm_vmprx_config_sample_rate()</a> 
+respectively, set the new sampling rate on the RTP endpoints. The VMP[rx] and 
+VMP[tx] can now be configured with a codec and connected to your 16kHz channel 
+in the normal way.
+
+<h2>A note on record and replay</h2>
+<p>
+The sampling_rate parameters given to the functions sm_record_start and 
+sm_replay_start, whether directly or via the high-level API functions, do not 
+affect the internal working rate of the channel. They are used to calculate a 
+resampling ratio to scale between the file sample rate and the channel sample 
+rate. In order to ensure sane operation, always configure your channel's 
+sample rate BEFORE starting any replay or record on the channel.
+<p>
+The sampling_rate passed to <a href="gen/apifn-sm_record_start.html">sm_record_start()</a> 
+is used to calculate a ratio assuming the channel will be given data at a sample 
+rate of 8kHz. It is recommended that the sampling_rate be set to 0, which will cause the 
+recording rate to be the same as the sampling rate of data supplied to the channel.
+<p>
+Other supported rates for a channel operating at 16kHz are:
+<p>
+<table border>
+<tr> <th>recording file sample rate<th>sampling_rate value
+<tr> <td>16kHz<td>8000
+<tr> <td>12kHz<td>6000
+<tr> <td>22kHz<td>11000
+</table>
+<p>
+The sampling_rate given to <a href="gen/apifn-sm_replay_start.html">sm_replay_start()</a> 
+is used to calculate a resampling ratio relative to the current working rate 
+of the channel that the replay is being configured on. Supported rates for a 
+channel operating at 16KHz are thus:
+<p>
+<table border>
+<tr> <th>replay file sample rate<th>sampling_rate value
+<tr> <td>16kHz<td>16000
+<tr> <td>12kHz<td>12000
+<tr> <td>22kHz<td>22000
+</table>
+
+<h2>A note on conferencing</h2>
+<p>
+A channel that is a low level conference output will produce audio at the
+channel's configured rate. Only those conference input's that are supplied
+with audio at that rate will be added to the output.
+<p>
+Therefore, when conferencing multiple channels together, ALL the conferenced 
+channels MUST operate at the same sampling rate. To ensure sane operation, 
+the required rate must be set before the channels are passed to any 
+conferencing API function.
+<p>
+If a mixed conference is required, choose ONE sampling rate as the conference 
+rate. For each participant at a nonstandard rate, use resampling paths to 
+up/down rate the participant's inputs and outputs onto a new channel operating 
+at the conference rate. This new channel can then be included in the conference 
+in the usual way.
+
+<h2>Setting up a resampling path</h2>
+<p>
+Sometimes it is necessary to change the rate of an audio stream - e.g. playing 
+an 8kHz recording out to a 16kHz channel, or gatewaying between wideband RTP 
+and TDM.In order to do this, the audio must be passed through a path configured 
+to resample to the appropriate rate. 
+<p>
+Create a path in the usual manner, and then use 
+<a href="gen/apifn-sm_path_resample.html">sm_path_resample()</a> to configure 
+the resampling ratio to use. The configured path can now be used to interconnect 
+the two channels that are using differing sampling rates.
+
+</body>
+</html>

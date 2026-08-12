@@ -1,0 +1,1353 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody H.223 Mux: API</title>
+</head>
+<body>
+<h1>Prosody H.223 Mux: API</h1>
+<p>
+The following functions are provided by the
+<a href="../prosh223api.html">Prosody H.223 Mux API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_add_entry">sm_h223mux_add_entry()</a>
+	<td>P
+	<td>Add mux entry
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_close_lc">sm_h223mux_close_lc()</a>
+	<td>P
+	<td>Close logical channel
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_create">sm_h223mux_create()</a>
+	<td>P
+	<td>Create an H.223 Mux
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_datafeed_connect">sm_h223mux_datafeed_connect()</a>
+	<td>P
+	<td>Connect datafeed to an H.223 MUX.
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_delete_session">sm_h223mux_delete_session()</a>
+	<td>P
+	<td>Delete the H.223 session
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_destroy">sm_h223mux_destroy()</a>
+	<td>P
+	<td>Destroy an H.223 Mux
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_get_datafeed">sm_h223mux_get_datafeed()</a>
+	<td>P
+	<td>Get datafeed from H.223 MUX.
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_get_event">sm_h223mux_get_event()</a>
+	<td>P
+	<td>
+Get an event for the H.223 mux
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_new_session">sm_h223mux_new_session()</a>
+	<td>P
+	<td>
+Create new session for the H.223 mux
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_open_lc">sm_h223mux_open_lc()</a>
+	<td>P
+	<td>Open logical channel
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_reconfig">sm_h223mux_reconfig()</a>
+	<td>P
+	<td>Reconfigure the H.223 multiplex
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_set_caps">sm_h223mux_set_caps()</a>
+	<td>P
+	<td>
+Set the multiplex capabilities for a specific terminal 
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_status">sm_h223mux_status()</a>
+	<td>P
+	<td>Fetch status info on H.223 mux
+
+	<tr class=version-Prel>
+	<td><a href="#sm_h223mux_stop">sm_h223mux_stop()</a>
+	<td>P
+	<td>Stop H.223 mux
+
+</table>
+<p>
+Key to <strong>W</strong> column:
+<table border>
+<tr class=version-Prel><th>P
+	<td>	Preliminary documentation - this functionality is under development. It 
+	could be changed or withdrawn, and may not be implemented in this release
+
+</table>
+<p>
+This document is also available as
+<a href="prosh223api-index.html">separate pages for each function</a>.
+<hr>
+<h2><a name="sm_h223mux_add_entry">Prosody H.223 Mux: API: sm_h223mux_add_entry</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_add_entry(struct sm_h223mux_add_entry_parms *<a href="#field-entryp">entryp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-entryp">*entryp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_add_entry_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a name="enum-kSMH223muxTableEntryDirection">enum kSMH223muxTableEntryDirection</a> {
+		<a href="#field-kSMH223muxTableEntryDirectionTransmit">kSMH223muxTableEntryDirectionTransmit</a>,
+		<a href="#field-kSMH223muxTableEntryDirectionReceive">kSMH223muxTableEntryDirectionReceive</a>,
+	} <a href="#field-direction">direction</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-entry_number">entry_number</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-descriptor_len">descriptor_len</a>;					/* in */
+	char *<a href="#field-descriptor">descriptor</a>;					/* in */
+} SM_H223MUX_ADD_ENTRY_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This function will add an entry to the multiplex table.  The entry may be transmit or receive.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to add the table entry to.
+
+<dt class=version-Prel><a name="field-direction">direction</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The logical channel direction.
+
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxTableEntryDirectionTransmit">kSMH223muxTableEntryDirectionTransmit</a>
+<dd>Table entry relates to transmit direction.
+
+<dt><a name="field-kSMH223muxTableEntryDirectionReceive">kSMH223muxTableEntryDirectionReceive</a>
+<dd>Table entry relates to receive direction.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-entry_number">entry_number</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The multiplex table entry number
+
+<dt class=version-Prel><a name="field-descriptor_len">descriptor_len</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The length of the descriptor in octets.
+
+<dt class=version-Prel><a name="field-descriptor">descriptor</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The multiplex entry descriptor as defined in ITU-T H.223 Table 2.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_h223mux_close_lc">Prosody H.223 Mux: API: sm_h223mux_close_lc</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_close_lc(struct sm_h223mux_close_lc_parms *<a href="#field-close_lcp">close_lcp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-close_lcp">*close_lcp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_close_lc_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a name="enum-kSMH223muxChannelDirection">enum kSMH223muxChannelDirection</a> {
+		<a href="#field-kSMH223muxChannelDirectionTransmit">kSMH223muxChannelDirectionTransmit</a>,
+		<a href="#field-kSMH223muxChannelDirectionReceive">kSMH223muxChannelDirectionReceive</a>,
+	} <a href="#field-direction">direction</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-lcn">lcn</a>;						/* in */
+} SM_H223MUX_CLOSE_LC_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This function will close a specific logical channel.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to close the logical channel on.
+
+<dt class=version-Prel><a name="field-direction">direction</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxChannelDirectionTransmit">kSMH223muxChannelDirectionTransmit</a>
+<dd>logical channel transmit
+
+<dt><a name="field-kSMH223muxChannelDirectionReceive">kSMH223muxChannelDirectionReceive</a>
+<dd>logical channel receive
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-lcn">lcn</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>logical channel number
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_h223mux_create">Prosody H.223 Mux: API: sm_h223mux_create</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_create(struct sm_h223mux_create_parms *<a href="#field-createp">createp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-createp">*createp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_create_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+} SM_H223MUX_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Creates an H.223 Mux.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The created mux.
+
+<dt class=version-Prel><a name="field-module">module</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module on which the mux is to be created.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if no suitable output channel free<li>ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified</ul>
+<hr>
+<h2><a name="sm_h223mux_datafeed_connect">Prosody H.223 Mux: API: sm_h223mux_datafeed_connect</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_datafeed_connect(struct sm_h223mux_datafeed_connect_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_datafeed_connect_parms {
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* in */
+	<a name="enum-kSMH223muxInputType">enum kSMH223muxInputType</a> {
+		<a href="#field-kSMH223muxInputTypeH245Ctl">kSMH223muxInputTypeH245Ctl</a>,
+		<a href="#field-kSMH223muxInputTypeAudio">kSMH223muxInputTypeAudio</a>,
+		<a href="#field-kSMH223muxInputTypeVideo">kSMH223muxInputTypeVideo</a>,
+		<a href="#field-kSMH223muxInputTypeMux">kSMH223muxInputTypeMux</a>,
+	} <a href="#field-port">port</a>;							/* in */
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+} SM_H223MUX_DATAFEED_CONNECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Connect a datafeed to one of the three inputs of the H.223 mux.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-datafeed">datafeed</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The datafeed object to be connected. 
+
+<dt class=version-Prel><a name="field-port">port</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Which input of the mux to connect the datafeed to.
+
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxInputTypeH245Ctl">kSMH223muxInputTypeH245Ctl</a>
+<dd>Indicates that the datafeed should be connected to the H.245 input
+
+<dt><a name="field-kSMH223muxInputTypeAudio">kSMH223muxInputTypeAudio</a>
+<dd>Indicates that the datafeed should be connected to the audio input
+
+<dt><a name="field-kSMH223muxInputTypeVideo">kSMH223muxInputTypeVideo</a>
+<dd>Indicates that the datafeed should be connected to the video input
+
+<dt><a name="field-kSMH223muxInputTypeMux">kSMH223muxInputTypeMux</a>
+<dd>Indicates that the datafeed should be connected to the muxed data input
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to connect the datafeed to.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_h223mux_delete_session">Prosody H.223 Mux: API: sm_h223mux_delete_session</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_delete_session(struct sm_h223mux_delete_session_parms *<a href="#field-sessionp">sessionp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-sessionp">*sessionp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_delete_session_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+} SM_H223MUX_DELETE_SESSION_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This function will delete the H.223 session previously created by sm_h223mux_new_session.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to delete the session on.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_h223mux_destroy">Prosody H.223 Mux: API: sm_h223mux_destroy</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_destroy(<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-mux">mux</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-mux">mux</a>
+<dd>
+The mux to destroy. Must have been previously created by a call to
+<a href="#sm_h223mux_create">sm_h223mux_create()</a>
+.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys an H.223 Mux.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_h223mux_get_datafeed">Prosody H.223 Mux: API: sm_h223mux_get_datafeed</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_get_datafeed(struct sm_h223mux_datafeed_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_datafeed_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a name="enum-kSMH223muxOutputType">enum kSMH223muxOutputType</a> {
+		<a href="#field-kSMH223muxOutputTypeH245Ctl">kSMH223muxOutputTypeH245Ctl</a>,
+		<a href="#field-kSMH223muxOutputTypeAudio">kSMH223muxOutputTypeAudio</a>,
+		<a href="#field-kSMH223muxOutputTypeVideo">kSMH223muxOutputTypeVideo</a>,
+		<a href="#field-kSMH223muxOutputTypeMux">kSMH223muxOutputTypeMux</a>,
+	} <a href="#field-port">port</a>;							/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* out */
+} SM_H223MUX_DATAFEED_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Request a datafeed identifier from an H.223 mux.
+This identifier can subsequently used in a call to 
+<a href="apifn-sm_channel_datafeed_connect.html">sm_channel_datafeed_connect()</a>
+.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux from which to obtain a datafeed.
+
+<dt class=version-Prel><a name="field-port">port</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Which output of the mux to get the datafeed for.
+
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxOutputTypeH245Ctl">kSMH223muxOutputTypeH245Ctl</a>
+<dd>Indicates that the datafeed should be connected to the H.245 output
+
+<dt><a name="field-kSMH223muxOutputTypeAudio">kSMH223muxOutputTypeAudio</a>
+<dd>Indicates that the datafeed should be connected to the audio output
+
+<dt><a name="field-kSMH223muxOutputTypeVideo">kSMH223muxOutputTypeVideo</a>
+<dd>Indicates that the datafeed should be connected to the video output
+
+<dt><a name="field-kSMH223muxOutputTypeMux">kSMH223muxOutputTypeMux</a>
+<dd>Indicates that the datafeed should be connected to the muxed data output
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-datafeed">datafeed</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The datafeed object associated with the H.223 mux.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_h223mux_get_event">Prosody H.223 Mux: API: sm_h223mux_get_event</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_get_event(struct sm_h223mux_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_event_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_H223MUX_EVENT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+the event will be signalled when a status change occurs on the mux.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux.
+
+<dt class=version-Prel><a name="field-event">event</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The aevent identifier
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_h223mux_new_session">Prosody H.223 Mux: API: sm_h223mux_new_session</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_new_session(struct sm_h223mux_new_session_parms *<a href="#field-sessionp">sessionp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-sessionp">*sessionp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_new_session_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-level">level</a>;						/* in */
+	<a name="enum-kSMH223muxTransmissionBitOrder">enum kSMH223muxTransmissionBitOrder</a> {
+		<a href="#field-kSMH223muxTransmissionBitOrderLSBFirst">kSMH223muxTransmissionBitOrderLSBFirst</a>,
+		<a href="#field-kSMH223muxTransmissionBitOrderMSBFirst">kSMH223muxTransmissionBitOrderMSBFirst</a>,
+	} <a href="#field-bit_order">bit_order</a>;						/* in */
+} SM_H223MUX_NEW_SESSION_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This function will create and initialise an H.223 session.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to create the new session on.
+
+<dt class=version-Prel><a name="field-level">level</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mobile startup level for the new session.
+
+<dt class=version-Prel><a name="field-bit_order">bit_order</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Network bit order for transmission of H.223 data.
+
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxTransmissionBitOrderLSBFirst">kSMH223muxTransmissionBitOrderLSBFirst</a>
+<dd>The output bytes from the H.223 session to the network will be sent LSB first.
+
+<dt><a name="field-kSMH223muxTransmissionBitOrderMSBFirst">kSMH223muxTransmissionBitOrderMSBFirst</a>
+<dd>The output bytes from the H.223 session to the network will be sent MSB first.
+
+</dl>
+</div>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_h223mux_open_lc">Prosody H.223 Mux: API: sm_h223mux_open_lc</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_open_lc(struct sm_h223mux_open_lc_parms *<a href="#field-open_lcp">open_lcp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-open_lcp">*open_lcp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_open_lc_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-segmentable_flag">segmentable_flag</a>;				/* in */
+	<a name="enum-kSMH223muxLogicalChannelType">enum kSMH223muxLogicalChannelType</a> {
+		<a href="#field-kSMH223muxLogicalChannelTypeUnidirectional">kSMH223muxLogicalChannelTypeUnidirectional</a>,
+		<a href="#field-kSMH223muxLogicalChannelTypeBidirectional">kSMH223muxLogicalChannelTypeBidirectional</a>,
+	} <a href="#field-type">type</a>;							/* in */
+	struct {
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-forward_channel-lcn">lcn</a>;					/* in */
+		<a name="enum-kSMH223muxLogicalChannelDirection">enum kSMH223muxLogicalChannelDirection</a> {
+			<a href="#field-kSMH223muxLogicalChannelDirectionTransmit">kSMH223muxLogicalChannelDirectionTransmit</a>,
+			<a href="#field-kSMH223muxLogicalChannelDirectionReceive">kSMH223muxLogicalChannelDirectionReceive</a>,
+		} <a href="#field-forward_channel-direction">direction</a>;					/* in */
+		struct {
+			<a name="enum-kSMH223muxMarkUnit">enum kSMH223muxMarkUnit</a> {
+				<a href="#field-kSMH223muxMarkUnitBytes">kSMH223muxMarkUnitBytes</a>,
+				<a href="#field-kSMH223muxMarkUnitALSDU">kSMH223muxMarkUnitALSDU</a>,
+			} <a href="#field-forward_channel-transmit_lc-mark_unit">mark_unit</a>;
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-forward_channel-transmit_lc-hi_mark">hi_mark</a>;			/* in */
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-forward_channel-transmit_lc-lo_mark">lo_mark</a>;			/* in */
+		} <a href="#field-forward_channel-transmit_lc">transmit_lc</a>;					/* in */
+		<a name="enum-kSMH223muxAdaptationLayerType">enum kSMH223muxAdaptationLayerType</a> {
+			<a href="#field-kSMH223muxAdaptationLayerTypeNonStandard">kSMH223muxAdaptationLayerTypeNonStandard</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL1Framed">kSMH223muxAdaptationLayerTypeAL1Framed</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL1NotFramed">kSMH223muxAdaptationLayerTypeAL1NotFramed</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL3">kSMH223muxAdaptationLayerTypeAL3</a>,
+		} <a href="#field-forward_channel-adaptation_layer_type">adaptation_layer_type</a>;
+		union {
+			struct {
+				<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-forward_channel-u_al-al3-control_field_octets">control_field_octets</a>;	/* in */
+				<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-forward_channel-u_al-al3-send_buffer_size">send_buffer_size</a>;	/* in */
+			} <a href="#field-forward_channel-u_al-al3">al3</a>;					/* in */
+		} <a href="#field-forward_channel-u_al">u_al</a>;						/* in */
+	} <a href="#field-forward_channel">forward_channel</a>;					/* in */
+	struct {
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-reverse_channel-lcn">lcn</a>;					/* in */
+		<a name="enum-kSMH223muxLogicalChannelDirection">enum kSMH223muxLogicalChannelDirection</a> {
+			<a href="#field-kSMH223muxLogicalChannelDirectionTransmit">kSMH223muxLogicalChannelDirectionTransmit</a>,
+			<a href="#field-kSMH223muxLogicalChannelDirectionReceive">kSMH223muxLogicalChannelDirectionReceive</a>,
+		} <a href="#field-reverse_channel-direction">direction</a>;					/* in */
+		struct {
+			<a name="enum-kSMH223muxMarkUnit">enum kSMH223muxMarkUnit</a> {
+				<a href="#field-kSMH223muxMarkUnitBytes">kSMH223muxMarkUnitBytes</a>,
+				<a href="#field-kSMH223muxMarkUnitALSDU">kSMH223muxMarkUnitALSDU</a>,
+			} <a href="#field-reverse_channel-transmit_lc-mark_unit">mark_unit</a>;
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-reverse_channel-transmit_lc-hi_mark">hi_mark</a>;			/* in */
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-reverse_channel-transmit_lc-lo_mark">lo_mark</a>;			/* in */
+		} <a href="#field-reverse_channel-transmit_lc">transmit_lc</a>;					/* in */
+		<a name="enum-kSMH223muxAdaptationLayerType">enum kSMH223muxAdaptationLayerType</a> {
+			<a href="#field-kSMH223muxAdaptationLayerTypeNonStandard">kSMH223muxAdaptationLayerTypeNonStandard</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL1Framed">kSMH223muxAdaptationLayerTypeAL1Framed</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL1NotFramed">kSMH223muxAdaptationLayerTypeAL1NotFramed</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL3">kSMH223muxAdaptationLayerTypeAL3</a>,
+		} <a href="#field-reverse_channel-adaptation_layer_type">adaptation_layer_type</a>;
+		union {
+			struct {
+				<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-reverse_channel-u_al-al3-control_field_octets">control_field_octets</a>;	/* in */
+				<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-reverse_channel-u_al-al3-send_buffer_size">send_buffer_size</a>;	/* in */
+			} <a href="#field-reverse_channel-u_al-al3">al3</a>;					/* in */
+		} <a href="#field-reverse_channel-u_al">u_al</a>;						/* in */
+	} <a href="#field-reverse_channel">reverse_channel</a>;					/* in */
+} SM_H223MUX_OPEN_LC_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This function will open a new logical channel.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to open the logical channel on.
+
+<dt class=version-Prel><a name="field-segmentable_flag">segmentable_flag</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero indicates that the channel is designated to be segmentable,
+and when equal to zero indicates that the channel is designated to be non-segmentable.
+
+<dt class=version-Prel><a name="field-type">type</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The type of logical channel to be opened.
+
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxLogicalChannelTypeUnidirectional">kSMH223muxLogicalChannelTypeUnidirectional</a>
+<dd>Unidirectional channel.
+
+<dt><a name="field-kSMH223muxLogicalChannelTypeBidirectional">kSMH223muxLogicalChannelTypeBidirectional</a>
+<dd>Bidirectional channel.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-forward_channel">forward_channel</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-forward_channel-lcn">lcn</a><dd>The logical channel number.
+
+<dt><a name="field-forward_channel-direction">direction</a><dd>The logical channel direction.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxLogicalChannelDirectionTransmit">kSMH223muxLogicalChannelDirectionTransmit</a>
+<dd>Logical channel is to be opened for transmission.
+
+<dt><a name="field-kSMH223muxLogicalChannelDirectionReceive">kSMH223muxLogicalChannelDirectionReceive</a>
+<dd>Logical channel is to be opened for receive.
+
+</dl>
+<dt><a name="field-forward_channel-transmit_lc">transmit_lc</a><dd>This structure is only valid if direction is
+<a class=pref href="#field-kSMH223muxLogicalChannelDirectionTransmit">kSMH223muxLogicalChannelDirectionTransmit</a>.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-forward_channel-transmit_lc-mark_unit">mark_unit</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxMarkUnitBytes">kSMH223muxMarkUnitBytes</a>
+<dd>Unit of measurement is in bytes.
+
+<dt><a name="field-kSMH223muxMarkUnitALSDU">kSMH223muxMarkUnitALSDU</a>
+<dd>Unit of measurement is in AL-SDUs
+
+</dl>
+<dt><a name="field-forward_channel-transmit_lc-hi_mark">hi_mark</a><dd>Higher level threshold.  Represents bytes or AL-SDUs depending on value of mark_unit.	
+
+<dt><a name="field-forward_channel-transmit_lc-lo_mark">lo_mark</a><dd>Lower level threshold.  Represents bytes or AL-SDUs depending on value of mark_unit.	
+
+</dl>
+</div>
+<dt><a name="field-forward_channel-adaptation_layer_type">adaptation_layer_type</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxAdaptationLayerTypeNonStandard">kSMH223muxAdaptationLayerTypeNonStandard</a>
+<dd>Non standard.  Please note that this is currently unsupported.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL1Framed">kSMH223muxAdaptationLayerTypeAL1Framed</a>
+<dd>AL1 framed mode.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL1NotFramed">kSMH223muxAdaptationLayerTypeAL1NotFramed</a>
+<dd>AL1 unframed mode.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers</a>
+<dd>AL2 with no sequence numbers present.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers</a>
+<dd>AL2 with sequence numbers present.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL3">kSMH223muxAdaptationLayerTypeAL3</a>
+<dd>AL3 with the specified parameters. See below. 
+
+</dl>
+<dt><a name="field-forward_channel-u_al">u_al</a><dd>
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-forward_channel-u_al-al3">al3</a><dd>This structure is only valid if adaptation_layer_type is
+<a class=pref href="#field-kSMH223muxAdaptationLayerTypeAL3">kSMH223muxAdaptationLayerTypeAL3</a>
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-forward_channel-u_al-al3-control_field_octets">control_field_octets</a><dd>Number of control field octets
+
+<dt><a name="field-forward_channel-u_al-al3-send_buffer_size">send_buffer_size</a><dd>Size of the send buffer that will be used.  The size being measured in octets.
+
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+</div>
+<dt class=version-Prel><a name="field-reverse_channel">reverse_channel</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>This structure is only valid if type is
+<a class=pref href="#field-kSMH223muxLogicalChannelTypeBidirectional">kSMH223muxLogicalChannelTypeBidirectional</a>.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-reverse_channel-lcn">lcn</a><dd>The logical channel number.
+
+<dt><a name="field-reverse_channel-direction">direction</a><dd>The logical channel direction.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxLogicalChannelDirectionTransmit">kSMH223muxLogicalChannelDirectionTransmit</a>
+<dd>Logical channel is to be opened for transmission.
+
+<dt><a name="field-kSMH223muxLogicalChannelDirectionReceive">kSMH223muxLogicalChannelDirectionReceive</a>
+<dd>Logical channel is to be opened for receive.
+
+</dl>
+<dt><a name="field-reverse_channel-transmit_lc">transmit_lc</a><dd>This structure is only valid if direction is
+<a class=pref href="#field-kSMH223muxLogicalChannelDirectionTransmit">kSMH223muxLogicalChannelDirectionTransmit</a>.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-reverse_channel-transmit_lc-mark_unit">mark_unit</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxMarkUnitBytes">kSMH223muxMarkUnitBytes</a>
+<dd>Unit of measurement is in bytes.
+
+<dt><a name="field-kSMH223muxMarkUnitALSDU">kSMH223muxMarkUnitALSDU</a>
+<dd>Unit of measurement is in AL-SDUs
+
+</dl>
+<dt><a name="field-reverse_channel-transmit_lc-hi_mark">hi_mark</a><dd>Higher level threshold.  Represents bytes or AL-SDUs depending on value of mark_unit.	
+
+<dt><a name="field-reverse_channel-transmit_lc-lo_mark">lo_mark</a><dd>Lower level threshold.  Represents bytes or AL-SDUs depending on value of mark_unit.	
+
+</dl>
+</div>
+<dt><a name="field-reverse_channel-adaptation_layer_type">adaptation_layer_type</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxAdaptationLayerTypeNonStandard">kSMH223muxAdaptationLayerTypeNonStandard</a>
+<dd>Non standard.  Please note that this is currently unsupported.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL1Framed">kSMH223muxAdaptationLayerTypeAL1Framed</a>
+<dd>AL1 framed mode.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL1NotFramed">kSMH223muxAdaptationLayerTypeAL1NotFramed</a>
+<dd>AL1 unframed mode.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers</a>
+<dd>AL2 with no sequence numbers present.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers</a>
+<dd>AL2 with sequence numbers present.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL3">kSMH223muxAdaptationLayerTypeAL3</a>
+<dd>AL3 with the specified parameters. See below. 
+
+</dl>
+<dt><a name="field-reverse_channel-u_al">u_al</a><dd>
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-reverse_channel-u_al-al3">al3</a><dd>This structure is only valid if adaptation_layer_type is
+<a class=pref href="#field-kSMH223muxAdaptationLayerTypeAL3">kSMH223muxAdaptationLayerTypeAL3</a>
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-reverse_channel-u_al-al3-control_field_octets">control_field_octets</a><dd>Number of control field octets
+
+<dt><a name="field-reverse_channel-u_al-al3-send_buffer_size">send_buffer_size</a><dd>Size of the send buffer that will be used.  The size being measured in octets.
+
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_h223mux_reconfig">Prosody H.223 Mux: API: sm_h223mux_reconfig</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_reconfig(struct sm_h223mux_reconfig_parms *<a href="#field-reconfigp">reconfigp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-reconfigp">*reconfigp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_reconfig_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a name="enum-kSMH223muxReconfigLevelChangeDirection">enum kSMH223muxReconfigLevelChangeDirection</a> {
+		<a href="#field-kSMH223muxReconfigLevelChangeDirectionTransmit">kSMH223muxReconfigLevelChangeDirectionTransmit</a>,
+		<a href="#field-kSMH223muxReconfigLevelChangeDirectionReceive">kSMH223muxReconfigLevelChangeDirectionReceive</a>,
+	} <a href="#field-direction">direction</a>;						/* in */
+	struct {
+		<a name="enum-kSMH223muxReconfigChoice">enum kSMH223muxReconfigChoice</a> {
+			<a href="#field-kSMH223muxReconfigModeChange">kSMH223muxReconfigModeChange</a>,
+			<a href="#field-kSMH223muxReconfigAnnexADoubleFlag">kSMH223muxReconfigAnnexADoubleFlag</a>,
+		} <a href="#field-multiplex_reconfiguration-choice">choice</a>;
+		union {
+			<a name="enum-kSMH223muxReconfigModeChange">enum kSMH223muxReconfigModeChange</a> {
+				<a href="#field-kSMH223muxReconfigModeChangeToLevel0">kSMH223muxReconfigModeChangeToLevel0</a>,
+				<a href="#field-kSMH223muxReconfigModeChangeToLevel1">kSMH223muxReconfigModeChangeToLevel1</a>,
+				<a href="#field-kSMH223muxReconfigModeChangeToLevel2">kSMH223muxReconfigModeChangeToLevel2</a>,
+				<a href="#field-kSMH223muxReconfigModeChangeToLevel2WithOptionalHeader">kSMH223muxReconfigModeChangeToLevel2WithOptionalHeader</a>,
+			} <a href="#field-multiplex_reconfiguration-u-mode_change">mode_change</a>;
+			<a name="enum-kSMH223muxReconfigAnnexADoubleFlag">enum kSMH223muxReconfigAnnexADoubleFlag</a> {
+				<a href="#field-kSMH223muxReconfigAnnexADoubleFlagStart">kSMH223muxReconfigAnnexADoubleFlagStart</a>,
+				<a href="#field-kSMH223muxReconfigAnnexADoubleFlagStop">kSMH223muxReconfigAnnexADoubleFlagStop</a>,
+			} <a href="#field-multiplex_reconfiguration-u-annex_a_double_flag">annex_a_double_flag</a>;
+		} <a href="#field-multiplex_reconfiguration-u">u</a>;
+	} <a href="#field-multiplex_reconfiguration">multiplex_reconfiguration</a>;
+} SM_H223MUX_RECONFIG_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Reconfigure the H.223 multiplex ie changing to another level, or adopting double flag mode vs.
+basic flag.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to reconfigure.
+
+<dt class=version-Prel><a name="field-direction">direction</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The direction of dynamic level change request.
+
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxReconfigLevelChangeDirectionTransmit">kSMH223muxReconfigLevelChangeDirectionTransmit</a>
+<dd>Indicates that the transmitter side shall change from current to new level ie. H.245 command
+h223ModeChange was received from the remote end.
+
+<dt><a name="field-kSMH223muxReconfigLevelChangeDirectionReceive">kSMH223muxReconfigLevelChangeDirectionReceive</a>
+<dd>Indicates that the receiver side shall change from current to new level ie. H.245 command
+h223ModeChange was sent to the remote end.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-multiplex_reconfiguration">multiplex_reconfiguration</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-multiplex_reconfiguration-choice">choice</a><dd>Reconfiguration options.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxReconfigModeChange">kSMH223muxReconfigModeChange</a>
+<dd>Change the level of multiplex mode as described in Annex C/H.324 to level 0, level 1, level 2
+or level 2 with Annex B/H.223 optional header.
+
+<dt><a name="field-kSMH223muxReconfigAnnexADoubleFlag">kSMH223muxReconfigAnnexADoubleFlag</a>
+<dd>Start or stop the use of double-flag mode of Annex A/H.223.
+
+</dl>
+<dt><a name="field-multiplex_reconfiguration-u">u</a><dd>
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-multiplex_reconfiguration-u-mode_change">mode_change</a><dd>This parameter is only valid if reconfiguration choice is
+<a class=pref href="#field-kSMH223muxReconfigModeChange">kSMH223muxReconfigModeChange</a>.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxReconfigModeChangeToLevel0">kSMH223muxReconfigModeChangeToLevel0</a>
+<dd>
+<dt><a name="field-kSMH223muxReconfigModeChangeToLevel1">kSMH223muxReconfigModeChangeToLevel1</a>
+<dd>
+<dt><a name="field-kSMH223muxReconfigModeChangeToLevel2">kSMH223muxReconfigModeChangeToLevel2</a>
+<dd>
+<dt><a name="field-kSMH223muxReconfigModeChangeToLevel2WithOptionalHeader">kSMH223muxReconfigModeChangeToLevel2WithOptionalHeader</a>
+<dd>
+</dl>
+<dt><a name="field-multiplex_reconfiguration-u-annex_a_double_flag">annex_a_double_flag</a><dd>This parameter is only valid if reconfiguration choice is
+<a class=pref href="#field-kSMH223muxReconfigAnnexADoubleFlag">kSMH223muxReconfigAnnexADoubleFlag</a>
+
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxReconfigAnnexADoubleFlagStart">kSMH223muxReconfigAnnexADoubleFlagStart</a>
+<dd>
+<dt><a name="field-kSMH223muxReconfigAnnexADoubleFlagStop">kSMH223muxReconfigAnnexADoubleFlagStop</a>
+<dd>
+</dl>
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_h223mux_set_caps">Prosody H.223 Mux: API: sm_h223mux_set_caps</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_set_caps(struct sm_h223mux_set_caps_parms *<a href="#field-capsp">capsp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-capsp">*capsp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_set_caps_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a name="enum-kSMH223muxSetCapsRole">enum kSMH223muxSetCapsRole</a> {
+		<a href="#field-kSMH223muxSetCapsRoleLocal">kSMH223muxSetCapsRoleLocal</a>,
+		<a href="#field-kSMH223muxSetCapsRoleRemote">kSMH223muxSetCapsRoleRemote</a>,
+	} <a href="#field-role">role</a>;							/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-optional_ext">optional_ext</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-transport_with_i_frames">transport_with_i_frames</a>;			/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-video_with_AL1">video_with_AL1</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-video_with_AL2">video_with_AL2</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-video_with_AL3">video_with_AL3</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-audio_with_AL1">audio_with_AL1</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-audio_with_AL2">audio_with_AL2</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-audio_with_AL3">audio_with_AL3</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-data_with_AL1">data_with_AL1</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-data_with_AL2">data_with_AL2</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-data_with_AL3">data_with_AL3</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-maximum_AL2_sdu_size">maximum_AL2_sdu_size</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-maximum_AL3_sdu_size">maximum_AL3_sdu_size</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-maximum_delay_jitter">maximum_delay_jitter</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-max_MUX_PDU_size_capability">max_MUX_PDU_size_capability</a>;			/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-nsrp_support">nsrp_support</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-bit_rate_o">bit_rate_o</a>;					/* in */
+	struct {
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-mobile_operation_transmit_capability_o-mode_change_capability">mode_change_capability</a>;		/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-mobile_operation_transmit_capability_o-h223_AnnexA">h223_AnnexA</a>;				/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-mobile_operation_transmit_capability_o-h223_AnnexA_double_flag">h223_AnnexA_double_flag</a>;		/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-mobile_operation_transmit_capability_o-h223_AnnexB">h223_AnnexB</a>;				/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-mobile_operation_transmit_capability_o-h223_AnnexB_with_header">h223_AnnexB_with_header</a>;		/* in */
+	} <a href="#field-mobile_operation_transmit_capability_o">mobile_operation_transmit_capability_o</a>;		/* in */
+	struct {
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-mobile_multilink_frame_capability_o-maximum_sample_size">maximum_sample_size</a>;			/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-mobile_multilink_frame_capability_o-maximum_payload_length">maximum_payload_length</a>;			/* in */
+	} <a href="#field-mobile_multilink_frame_capability_o">mobile_multilink_frame_capability_o</a>;			/* in */
+	struct {
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-video_with_AL1M">video_with_AL1M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-video_with_AL2M">video_with_AL2M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-video_with_AL3M">video_with_AL3M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-audio_with_AL1M">audio_with_AL1M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-audio_with_AL2M">audio_with_AL2M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-audio_with_AL3M">audio_with_AL3M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-data_with_AL1M">data_with_AL1M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-data_with_AL2M">data_with_AL2M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-data_with_AL3M">data_with_AL3M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-alpdu_interleaving">alpdu_interleaving</a>;			/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-H223_AnnexC_capability_o-maximum_AL1M_pdu_size">maximum_AL1M_pdu_size</a>;			/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-H223_AnnexC_capability_o-maximum_AL2M_pdu_size">maximum_AL2M_pdu_size</a>;			/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-H223_AnnexC_capability_o-maximum_AL3M_pdu_size">maximum_AL3M_pdu_size</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-rs_code_capability">rs_code_capability</a>;			/* in */
+	} <a href="#field-H223_AnnexC_capability_o">H223_AnnexC_capability_o</a>;				/* in */
+} SM_H223MUX_SET_CAPS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This function will set the negotiated capabilities on the H.223 multiplexer.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to send the capabilities to.
+
+<dt class=version-Prel><a name="field-role">role</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Indicates what terminal these capabilities apply to.
+
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxSetCapsRoleLocal">kSMH223muxSetCapsRoleLocal</a>
+<dd>Capabilities relate to the local terminal.
+
+<dt><a name="field-kSMH223muxSetCapsRoleRemote">kSMH223muxSetCapsRoleRemote</a>
+<dd>Capabilities relate to the remote terminal.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-optional_ext">optional_ext</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>A bitmap field, representing the optional fields (_o) that will be present in this structure.  The
+bit values for each field are as follows :
+H223MUX_H245_CAP_O_MOBILE_OPERATION_TRANSMIT_CAP 0x04, H223MUX_H245_CAP_O_ANNEX_C 0x08, 
+H223MUX_H245_CAP_O_BIT_RATE 0x10, H223MUX_H245_CAP_O_MOBILE_MULTILINK_FRAME_CAP 0x20
+
+<dt class=version-Prel><a name="field-transport_with_i_frames">transport_with_i_frames</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates that the terminal is capable of sending and receiving
+control channel messages using LAPM I-frames as defined in ITU-T Recommendation V.42 (2002).
+
+<dt class=version-Prel><a name="field-video_with_AL1">video_with_AL1</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive video using AL1.
+
+<dt class=version-Prel><a name="field-video_with_AL2">video_with_AL2</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive video using AL2.
+
+<dt class=version-Prel><a name="field-video_with_AL3">video_with_AL3</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive video using AL3.
+
+<dt class=version-Prel><a name="field-audio_with_AL1">audio_with_AL1</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive audio using AL1.
+
+<dt class=version-Prel><a name="field-audio_with_AL2">audio_with_AL2</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive audio using AL2.
+
+<dt class=version-Prel><a name="field-audio_with_AL3">audio_with_AL3</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive audio using AL3.
+
+<dt class=version-Prel><a name="field-data_with_AL1">data_with_AL1</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive data using AL1.
+
+<dt class=version-Prel><a name="field-data_with_AL2">data_with_AL2</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive data using AL2.
+
+<dt class=version-Prel><a name="field-data_with_AL3">data_with_AL3</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive data using AL3.
+
+<dt class=version-Prel><a name="field-maximum_AL2_sdu_size">maximum_AL2_sdu_size</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Indicates the maximum number of octets in each SDU that the terminal can receive when
+using adaptation layer type 2.
+
+<dt class=version-Prel><a name="field-maximum_AL3_sdu_size">maximum_AL3_sdu_size</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Indicates the maximum number of octets in each SDU that the terminal can receive when
+using adaptation layer type 3.
+
+<dt class=version-Prel><a name="field-maximum_delay_jitter">maximum_delay_jitter</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Indicates the maximum peak-to-peak multiplexing jitter that the transmitter shall cause.
+Measured in milliseconds.
+
+<dt class=version-Prel><a name="field-max_MUX_PDU_size_capability">max_MUX_PDU_size_capability</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates that the transmitter is able to restrict the size of the
+H.223 MUX-PDUs that it transmits.  Has no meaning when part of a receive capability.
+
+<dt class=version-Prel><a name="field-nsrp_support">nsrp_support</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates support of the Annex A/H.324 NSRP mode.
+
+<dt class=version-Prel><a name="field-bit_rate_o">bit_rate_o</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Indicates the bit rate to transmit the bitstream output from the H.223 multiplexer.  Please
+note that this parameter is optional.
+
+<dt class=version-Prel><a name="field-mobile_operation_transmit_capability_o">mobile_operation_transmit_capability_o</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The parameters in this structure indicate the capability to transmit the multiplex layers
+described in Annex A/H.223 and Annex B/H.223.  Please note that this structure is optional.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-mobile_operation_transmit_capability_o-mode_change_capability">mode_change_capability</a><dd>When set to non-zero, indicates the terminal has the capability to change H.223 multiplex levels
+or options during a session.  The levels and options supported are listed below.  If set to zero
+the remainder of the structure will be ignored.
+
+<dt><a name="field-mobile_operation_transmit_capability_o-h223_AnnexA">h223_AnnexA</a><dd>When set to non-zero, indicates the terminal can transmit the MUX-PDUs as defined in Annex A/H.223.  
+
+<dt><a name="field-mobile_operation_transmit_capability_o-h223_AnnexA_double_flag">h223_AnnexA_double_flag</a><dd>When set to non-zero, indicates the terminal can transmit the MUX-PDUs as defined in Annex A/H.223
+with it's optional double-flag mode.
+
+<dt><a name="field-mobile_operation_transmit_capability_o-h223_AnnexB">h223_AnnexB</a><dd>When set to non-zero, indicates the terminal can transmit the MUX-PDUs as defined in AnnexB/H.223.
+
+<dt><a name="field-mobile_operation_transmit_capability_o-h223_AnnexB_with_header">h223_AnnexB_with_header</a><dd>When set to non-zero, indicates the terminal can transmit the MUX-PDUs as defined in AnnexB/H.223
+with its optional header field.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-mobile_multilink_frame_capability_o">mobile_multilink_frame_capability_o</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The parameters in this structure indicate the capability to receive and process mobile multilink
+frames.  Please note that this structure is optional.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-mobile_multilink_frame_capability_o-maximum_sample_size">maximum_sample_size</a><dd>Indicates the maximum number of octets in each sample that the terminal can process.
+
+<dt><a name="field-mobile_multilink_frame_capability_o-maximum_payload_length">maximum_payload_length</a><dd>Indicates the maximum length of frames in octets that the terminal can process.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-H223_AnnexC_capability_o">H223_AnnexC_capability_o</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The parameters in this structure indicate the capability to receive and process AL-PDUs as described
+in Annex C/H.223.  Please note that this structure is optional.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-H223_AnnexC_capability_o-video_with_AL1M">video_with_AL1M</a><dd>When set to non-zero, indicates the capability to receive video using AL1M.
+
+<dt><a name="field-H223_AnnexC_capability_o-video_with_AL2M">video_with_AL2M</a><dd>When set to non-zero, indicates the capability to receive video using AL2M.
+
+<dt><a name="field-H223_AnnexC_capability_o-video_with_AL3M">video_with_AL3M</a><dd>When set to non-zero, indicates the capability to receive video using AL3M.
+
+<dt><a name="field-H223_AnnexC_capability_o-audio_with_AL1M">audio_with_AL1M</a><dd>When set to non-zero, indicates the capability to receive audio using AL1M.
+
+<dt><a name="field-H223_AnnexC_capability_o-audio_with_AL2M">audio_with_AL2M</a><dd>When set to non-zero, indicates the capability to receive audio using AL2M.
+
+<dt><a name="field-H223_AnnexC_capability_o-audio_with_AL3M">audio_with_AL3M</a><dd>When set to non-zero, indicates the capability to receive audio using AL3M.
+
+<dt><a name="field-H223_AnnexC_capability_o-data_with_AL1M">data_with_AL1M</a><dd>When set to non-zero, indicates the capability to receive data using AL1M.
+
+<dt><a name="field-H223_AnnexC_capability_o-data_with_AL2M">data_with_AL2M</a><dd>When set to non-zero, indicates the capability to receive data using AL2M.
+
+<dt><a name="field-H223_AnnexC_capability_o-data_with_AL3M">data_with_AL3M</a><dd>When set to non-zero, indicates the capability to receive data using AL3M.
+
+<dt><a name="field-H223_AnnexC_capability_o-alpdu_interleaving">alpdu_interleaving</a><dd>When set to non-zero, indicates the capability to receive and process AL-PDUs for which interleaving
+is applied.
+
+<dt><a name="field-H223_AnnexC_capability_o-maximum_AL1M_pdu_size">maximum_AL1M_pdu_size</a><dd>Indicates the maximum number of octets in each PDU that the terminal can receive when using
+adaptation layer AL1M.
+
+<dt><a name="field-H223_AnnexC_capability_o-maximum_AL2M_pdu_size">maximum_AL2M_pdu_size</a><dd>Indicates the maximum number of octets in each PDU that the terminal can receive when using
+adaptation layer AL2M.
+
+<dt><a name="field-H223_AnnexC_capability_o-maximum_AL3M_pdu_size">maximum_AL3M_pdu_size</a><dd>Indicates the maximum number of octets in each PDU that the terminal can receive when using
+adaptation layer AL3M.
+
+<dt><a name="field-H223_AnnexC_capability_o-rs_code_capability">rs_code_capability</a><dd>When set to non-zero, indicates the capability to receive the AL-PDUs for which Reed-Solomon coding
+is indicated.
+
+</dl>
+</div>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_h223mux_status">Prosody H.223 Mux: API: sm_h223mux_status</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_status(struct sm_h223mux_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_status_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a name="enum-kSMH223muxStatus">enum kSMH223muxStatus</a> {
+		<a href="#field-kSMH223muxStatusRunning">kSMH223muxStatusRunning</a>,
+		<a href="#field-kSMH223muxStatusStopped">kSMH223muxStatusStopped</a>,
+		<a href="#field-kSMH223muxStatusSessionStarted">kSMH223muxStatusSessionStarted</a>,
+		<a href="#field-kSMH223muxStatusCreateSessionFailed">kSMH223muxStatusCreateSessionFailed</a>,
+		<a href="#field-kSMH223muxStatusDeleteSessionFailed">kSMH223muxStatusDeleteSessionFailed</a>,
+		<a href="#field-kSMH223muxStatusSetCapsFailed">kSMH223muxStatusSetCapsFailed</a>,
+		<a href="#field-kSMH223muxStatusAddEntryFailed">kSMH223muxStatusAddEntryFailed</a>,
+		<a href="#field-kSMH223muxStatusOpenLCFailed">kSMH223muxStatusOpenLCFailed</a>,
+		<a href="#field-kSMH223muxStatusCloseLCFailed">kSMH223muxStatusCloseLCFailed</a>,
+		<a href="#field-kSMH223muxStatusReconfigLevelChange">kSMH223muxStatusReconfigLevelChange</a>,
+		<a href="#field-kSMH223muxStatusReconfigFailed">kSMH223muxStatusReconfigFailed</a>,
+		<a href="#field-kSMH223muxStatusInternalError">kSMH223muxStatusInternalError</a>,
+		<a href="#field-kSMH223muxStatusVideoPFrameDrop">kSMH223muxStatusVideoPFrameDrop</a>,
+		<a href="#field-kSMH223muxStatusVideoPFrameSend">kSMH223muxStatusVideoPFrameSend</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-session_transport-level">level</a>;				/* out */
+		} <a href="#field-u-session_transport">session_transport</a>;				/* out */
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-internal_error-num_errors">num_errors</a>;			/* out */
+		} <a href="#field-u-internal_error">internal_error</a>;				/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SM_H223MUX_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+returns the status of the H.223 mux.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux.
+
+<dt class=version-Prel><a name="field-status">status</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxStatusRunning">kSMH223muxStatusRunning</a>
+<dd>The H.223 session is running.
+
+<dt><a name="field-kSMH223muxStatusStopped">kSMH223muxStatusStopped</a>
+<dd>The H.223 session has stopped and it is now safe to destroy.
+
+<dt><a name="field-kSMH223muxStatusSessionStarted">kSMH223muxStatusSessionStarted</a>
+<dd>H.223 session has started and the setup level has been negotiated successfully.
+
+<dt><a name="field-kSMH223muxStatusCreateSessionFailed">kSMH223muxStatusCreateSessionFailed</a>
+<dd>H.223 session creation has failed.
+
+<dt><a name="field-kSMH223muxStatusDeleteSessionFailed">kSMH223muxStatusDeleteSessionFailed</a>
+<dd>H.223 session deletion has failed.
+
+<dt><a name="field-kSMH223muxStatusSetCapsFailed">kSMH223muxStatusSetCapsFailed</a>
+<dd>The setting of terminal capabilities has failed.
+
+<dt><a name="field-kSMH223muxStatusAddEntryFailed">kSMH223muxStatusAddEntryFailed</a>
+<dd>Multiplex table entry addition has failed.
+
+<dt><a name="field-kSMH223muxStatusOpenLCFailed">kSMH223muxStatusOpenLCFailed</a>
+<dd>Open logical channel request has failed.
+
+<dt><a name="field-kSMH223muxStatusCloseLCFailed">kSMH223muxStatusCloseLCFailed</a>
+<dd>Close logical channel request has failed.
+
+<dt><a name="field-kSMH223muxStatusReconfigLevelChange">kSMH223muxStatusReconfigLevelChange</a>
+<dd>Level has changed as a result of a reconfiguration request.
+
+<dt><a name="field-kSMH223muxStatusReconfigFailed">kSMH223muxStatusReconfigFailed</a>
+<dd>Multiplex reconfiguration request has failed.
+
+<dt><a name="field-kSMH223muxStatusInternalError">kSMH223muxStatusInternalError</a>
+<dd>The H.223 session encountered one or more internal errors during processing.  These
+errors are likely to result in missing data.  Note that such errors are not fatal
+and the H.223 session will continue to run.  These status reports are throttled in 
+order to maintain a sensibly low rate of reporting even in the event of a high rate
+of errors.
+
+<dt><a name="field-kSMH223muxStatusVideoPFrameDrop">kSMH223muxStatusVideoPFrameDrop</a>
+<dd>The video logical channel has entered a busy situation and will now drop all subsequent
+P-frames added to the transmit queue until an I-frame is received.
+
+<dt><a name="field-kSMH223muxStatusVideoPFrameSend">kSMH223muxStatusVideoPFrameSend</a>
+<dd>An I-frame has been received on the video channel queue after entering a busy situation,
+so subsequent P-frames will now be sent.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-u">u</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Additional information relating to the current status of the H.223 mux.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-u-session_transport">session_transport</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMH223muxStatusSessionStarted">kSMH223muxStatusSessionStarted</a>
+or
+<a class=pref href="#field-kSMH223muxStatusReconfigLevelChange">kSMH223muxStatusReconfigLevelChange</a>.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-u-session_transport-level">level</a><dd>The H.223 transport level negotiated for the session.
+
+</dl>
+</div>
+<dt><a name="field-u-internal_error">internal_error</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMH223muxStatusInternalError">kSMH223muxStatusInternalError</a>.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-u-internal_error-num_errors">num_errors</a><dd>The number of internal errors encountered by the H.223 session covered
+by this status report.
+
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_h223mux_stop">Prosody H.223 Mux: API: sm_h223mux_stop</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_h223mux_stop(struct sm_h223mux_stop_parms *<a href="#field-stopp">stopp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-stopp">*stopp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_stop_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+} SM_H223MUX_STOP_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Stops the H.223 Mux.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>the mux
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>These functions constitute the
+<a href="../prosh223api.html">Prosody H.223 Mux API</a>.
+</body>
+</html>

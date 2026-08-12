@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_codec_gsmhr</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_codec_gsmhr</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_codec_gsmhr(struct sm_vmptx_codec_gsmhr_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_codec_gsmhr_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a href="apifn-sm_vmptx_config_codec_alaw.html#enum-kSMVMPTxVADMode">enum kSMVMPTxVADMode</a> <a href="#field-VADMode">VADMode</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-frames_per_packet">frames_per_packet</a>;				/* in */
+} SM_VMPTX_CODEC_GSMHR_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a VMP[tx] to use GSM half-rate for encoding data.
+<p>
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to which to add this codec
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type identifer to use with this codec (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13). Supplying a value of
+<code>-1</code> will remove any payload type configuration from the 
+codec preventing its use.
+
+<dt><a name="field-VADMode">VADMode</a><dd>The mode of operation for the voice activity detector.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMVMPTxVADModeDisabled">kSMVMPTxVADModeDisabled</a>
+<dd>Disable VAD - all data delivered to the VMP[tx] is encoded and sent
+
+<dt><a name="field-kSMVMPTxVADModeEnabled">kSMVMPTxVADModeEnabled</a>
+<dd>Enable VAD - if the signal is inactive, no data is sent (DTX)
+
+<dt><a name="field-kSMVMPTxVADModeComfortNoise">kSMVMPTxVADModeComfortNoise</a>
+<dd>Enable VAD with comfort noise generation - if the signal is inactive,
+comfort noise packets are sent. If the main codec does not define
+its own comfort noise, it must have been configured by
+<a href="apifn-sm_vmptx_config_codec_comfort_noise.html">sm_vmptx_config_codec_comfort_noise()</a>.
+
+</dl>
+<dt><a name="field-frames_per_packet">frames_per_packet</a><dd>The number of frames to send per packet. This value is normally one,
+which encodes 20 milliseconds per packet, but larger values can be
+used, reducing the packet overhead at the expense of extra delay.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

@@ -1,0 +1,14 @@
+-TiNGtrace
+P	per_mod		unsigned
+a	agc		unsigned
+e	sil_elim	unsigned
+F	format		string
+m	module		unsigned
+n	numchan		unsigned
+l	max_elapsed_time	unsigned
+q	max_silence	unsigned
+t	timeslot	timeslot
+T	threshold	unsigned
+v	volume		signed
+X	maxoctets	unsigned
+x	serialnumber	string

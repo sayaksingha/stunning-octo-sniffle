@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody high level BFILE play/record: API: sm_record_bfile_start</title>
+</head>
+<body>
+<h1>Prosody high level BFILE play/record: API: sm_record_bfile_start</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_record_bfile_start(struct sm_bfile_record_parms *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-file_parms">*file_parms</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_bfile_record_parms {
+	<a href="../apitype.html#type-BFILE">BFILE</a> *<a href="#field-fd">fd</a>;						/* in */
+	<a href="../apitype.html#type-SM_RECORD_PARMS">SM_RECORD_PARMS</a> <a href="#field-record_parms">record_parms</a>;				/* in */
+	int <a href="#field-status">status</a>;						/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-private_length">private_length</a>;				/* out */
+	int <a href="#field-completing">completing</a>;						/* out */
+	char <a href="#field-buffer">buffer[kSMMaxHBRecordDataBufferSize]</a>;		/* out */
+} SM_BFILE_RECORD_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Prepares channel for recording of data to a file from an input
+channel previously allocated by a call to
+<a href="apifn-sm_channel_alloc_placed.html">sm_channel_alloc_placed()</a>.
+<p>
+The status field is used to indicate the current status of the
+record. On return from a successful invocation of
+<a href="apifn-sm_record_bfile_start.html">sm_record_bfile_start()</a>
+it will be set to a value of <code>ERR_SM_PENDING</code> and
+will continue to have this value until recording has been
+completed, aborted or terminated on occurrence of an error.
+<p>
+The fields
+<a class=pref href="#field-private_length">private_length</a>
+and
+<a class=pref href="#field-buffer">buffer</a>
+are used internally by the high level library and should not be
+accessed by the application.
+<p>
+The recording is finished when a call to
+<a href="apifn-sm_record_bfile_complete.html">sm_record_bfile_complete()</a>
+returns.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-fd">fd</a><dd>The file into which the data is to be recorded, which must have
+been opened for writing with the <a href="../bfile.html">bfile library</a>.
+
+<dt><a name="field-record_parms">record_parms</a><dd>A structure as defined for
+<a href="apifn-sm_record_start.html">sm_record_start</a>.
+
+<dt><a name="field-status">status</a><dd>The status of the record.
+
+<dt><a name="field-private_length">private_length</a><dd>A field reserved for the library.
+
+<dt><a name="field-completing">completing</a><dd>A field reserved for the library.
+
+<dt><a name="field-buffer">buffer</a><dd>A field reserved for the library.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem accessing file to contain recorded data</ul>
+<hr>
+<p>This function is part of the <a href="../highapi_bf_playrec.html">Prosody high level BFILE play/record API</a>.
+</body>
+</html>

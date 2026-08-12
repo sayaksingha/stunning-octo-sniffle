@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody application note: waiting on multiple channels</title>
+</head>
+<body>
+<h1>Prosody application note: waiting on multiple channels</h1>
+<p>
+One popular architecture for applications is to have one thread which
+handles the routine work, such as reading and writing bulk data, on all
+channels, while another handles the other activities, such as
+starting and stopping channels. This application note suggests a way
+to achieve this reliably on <a href="index.html">Prosody</a>.
+<p>
+In general, the approach taken is to have one thread (the <cite>worker
+thread</cite>) which loops, waiting for any of a set of events, while
+another (the <cite>manager thread</cite>) performs the channel setup and
+clearing. To achieve this, the two threads must ensure that the set of
+events is properly updated. This is done by making the worker thread
+include an extra item in the set of events it waits for. The manager
+uses this to signal that items are to be inserted into or deleted
+from the set of events handled by the worker. On Windows, this can be
+an <em>event</em>, while on Unix it can be a <em>pipe</em>. Since a
+pipe carries data, it would be possible to use it to carry commands
+to the worker. Alternatively, commands can be sent by another means,
+with the pipe only serving to wake the worker (by writing dummy data
+to it).
+<p>Care is required to ensure that access to the various objects is
+properly synchronised. In particular, after handing a channel to the
+worker for processing, the manager can only perform operations on that
+channel which are valid even if the worker has decided that the channel
+is finished. Similarly, the manager must not perform an operation, such
+as deleting the channel, which causes any worker thread operation to be
+invalid. If the manager wants to do such an operation, a request should
+be sent to the worker to do it, as this ensures that the channel
+accesses are performed in a consistent order.
+<p>
+An example implementation of a worker thread model is provided in
+<code>test/Testlib/eventset.*</code>, which is documented in
+<a href="eventset/index.html">EVENTSETs</a>, and a replay program which
+uses it is provided in <code>test/locplay</code>. To make the code as
+similar as possible across operating systems, the Unix variant only uses
+the pipe to wake the worker and not to carry commands.
+
+<hr>
+<p>
+<small>Document reference: AN 1383</small>
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+-TiNGtrace
+c	card		unsigned
+qM	modonly		bool
+x	serialnumber	string

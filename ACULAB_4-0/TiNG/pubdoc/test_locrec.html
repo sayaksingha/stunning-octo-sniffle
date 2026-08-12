@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: locrec</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: locrec</h1>
+<p>
+This is a very simple recording application. It records a timeslot into
+a file. It can be stopped by a command, but otherwise records forever.
+The recorded file has no headers or other formatting of any kind - just
+the data. The test program <a href="test_ansplay.html">ansplay</a> can
+use these files directly.
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have downloaded firmware modules as listed below.
+<p>
+Run <code>locrec</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/locrec</span> or
+<span class="type-WINNT"> gen-WINNT_V6/locrec</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table border>
+<tr>
+	<td><code>-a 1</code>
+		<td>use AGC
+<tr>
+	<td><code>-e</code> &lt;N&gt;
+		<td>use silence elimination, eliminating silences
+		longer than N milliseconds. (default, 0, means do not
+		eliminate silences)
+<tr>
+	<td><code>-E</code> &lt;N&gt;
+		<td>use tone elimination, with mode N.
+<tr>
+	<td><code>-F</code> &lt;format&gt;
+		<td>record in this format. The known formats can
+		be listed by specifying a question mark
+		(<code>?</code>).
+<tr>
+	<td><code>-l</code> &lt;N&gt;
+		<td>Set a maximum elapsed time for the recording to N
+		milliseconds (default, 0, means no maximum).
+<tr>
+	<td><code>-n</code> &lt;number-of-channels&gt;
+		<td>record this many channels (default = 1)
+<tr>
+	<td><code>-q</code> &lt;N&gt;
+		<td>Set a maximum silence in milliseconds. As soon as this
+		much silence occurs, the recording finishes.
+		(default, 0, means no maximum).
+<tr>
+	<td><code>-S</code> &lt;toneset&gt;
+		<td>the toneset to use for tone elimination (if
+		enabled).
+<tr>
+	<td><code>-T</code> &lt;bits&gt;
+		<td>set the data transfer threshold
+<tr>
+	<td><code>-t</code> &lt;timeslot&gt;
+		<td>timeslot to use (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>). If you specify more than one channel,
+		they use consecutive timeslots starting at this one.
+		For example, the options "<code>-n 3 -t64:20</code>"
+		record timeslots <code>64:20</code>, <code>64:21</code>,
+		and <code>64:22</code>.
+<tr>
+	<td><code>-U</code>
+		<td>Show message when overruns occur.
+<tr>
+	<td><code>-v</code> &lt;volume&gt;
+		<td>adjust volume of the recording by this (in dB)
+<tr>
+	<td><code>-X</code> &lt;maxoctets&gt;
+		<td>Specify the maximum number of octets to record.
+		When this quantity is reached, the recording finishes.
+<tr>
+	<td><code>-x</code> &lt;cardspec&gt;
+		<td>Use these Prosody processor modules, specified as
+		described in
+		<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a>
+<tr>
+	<td>&lt;file&gt;
+		<td>name of file into which data is to be recorded.
+		If the file name contains a "<code>%d</code>", this
+		wil be replaced with the stream number. If it
+		contains a second "<code>%d</code>", this will be
+		replaced with the timeslot number. In fact, this is
+		done by using the file name as a format string for
+		<code>printf()</code> so you can use any printf
+		format codes (e.g. "<code>recfile-%02d-%02d</code>").
+		
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/locrec -x x:1.2.3.4/mykey -F ALawPCM@8000 -t 64:0 rec1.dat
+</pre>
+<p>
+would record A-law encoded speech from timeslot 64:0 of a Prosody processor module on the card with address 1.2.3.4 and key mykey into <code>rec1.dat</code>.
+<p>
+The firmware modules that are required depend on the options you
+specify. Here are the details:
+<p>
+<table border>
+<tr>
+	<th class=bg>Module<th class=bg>When needed
+<tr>
+	<td><a href="gen/softmodindex.html#datafeed">datafeed</a>
+		<td>always on Prosody X
+<tr>
+	<td><a href="gen/softmodindex.html#grunt">grunt</a>
+		<td>If you use '<code>-e 1</code>' for silence elimination
+<tr>
+	<td><a href="gen/softmodindex.html#gainbg">gainbg</a>
+		<td>If you use '<code>-a 1</code>' for AGC or
+		<code>-v</code> with a non-zero volume adjustment
+<tr>
+	<td><a href="gen/softmodindex.html#inchan">inchan</a>
+		<td>always
+<tr>
+	<td><a href="gen/softmodindex.html#sixkin">sixkin</a>
+		<td>when the recording format is ACUBLKPCM@6000,
+		ALawPCM@6000, OKIADPCM@6000, or ULawPCM@6000 
+<tr>
+	<td><a href="gen/softmodindex.html#recA">recA</a>
+		<td>when the recording format is
+		ALawPCM@6000 or ALawPCM@8000
+<tr>
+	<td><a href="gen/softmodindex.html#recima">recima</a>
+		<td>when the recording format is IMAADPCM
+<tr>
+	<td><a href="gen/softmodindex.html#recmu">recmu</a>
+		<td>when the recording format is
+		ULawPCM@6000 or ULawPCM@8000
+<tr>
+	<td><a href="gen/softmodindex.html#recoki">recoki</a>
+		<td>when the recording format is
+		OKIADPCM@6000 or OKIADPCM@8000
+</table>
+<p>
+While it is recording, it prints the speed at which the data is
+arriving. You can use the '<code>q</code>' command to stop the
+program.
+<p>
+The source code for this program is provided (locrec.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

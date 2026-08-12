@@ -181,7 +181,9 @@ obj/TcapAculabHandler.o : src/TcapAculabHandler.cc include/TcapAculabHandler.h \
  /home/mram/cvs/Thirdparty//src/ACULAB/include/tcap_api.h \
  /home/mram/cvs/Thirdparty//src/ACULAB/include/tcap_asn1_codec.h \
  /home/mram/cvs/Thirdparty//src/ACULAB/include/tcap_synch.h \
- include/TcapAculabTransDlgMap.h include/TcapAculabApi.h
+ include/TcapAculabTransDlgMap.h include/TcapAculabApi.h \
+ /home/mram/cvs/ss7/src/include/MsuStructs.h \
+ /home/mram/cvs/ss7/src/include/TcapStructs.h
 obj/TcapAculabHandlerMain.o : src/TcapAculabHandlerMain.cc \
  include/TcapAculabHandler.h include/TcapAculabDlgMgr.h \
  include/TcapAculabUtil.h include/TcapAculabConstDef.h \

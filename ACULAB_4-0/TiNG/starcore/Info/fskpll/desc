@@ -1,0 +1,6 @@
+Reconstruct a clock from a received FSK data stream. If the
+output of an FSK modem receiver is to be interpreted as a
+synchronous encoding, then the data must be divided into bits
+using a clock recovered from the signal. This module does this,
+converting the received signal into a digital data signal
+suitable for decoding by HDLC or sync.

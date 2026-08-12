@@ -1,0 +1,21 @@
+-TiNGtrace
+a	agc		unsigned
+e	sil_elim	unsigned
+E	tone_elim_mode	unsigned
+F	format		string
+f	flood		bool
+h	grunt_threshold		float
+m	grunt_min_noise_level	float
+l	max_elapsed_time	unsigned
+n	numchan		unsigned
+P	per_mod		unsigned
+q	max_silence	unsigned
+S	tone_set	unsigned
+T	threshold	unsigned
+t	timeslot	timeslot
+M	maxts		unsigned
+U	underrun_flag	bool
+v	volume		signed
+X	maxoctets	unsigned
+x	serialnumber	string
+y	sync		bool

@@ -1,0 +1,13 @@
+sm_sprt_config	iPsSPRTtSAdSAdi_
+sm_sprt_config_data_channel	iPsSPRTtiii_
+sm_sprt_config_data_format	iPsSPRTte1_2_e1_4__
+sm_sprt_config_ipv6	iPsSPRTtSA6dSA6di_
+sm_sprt_config_reliable_channel	iPsSPRTtiiiii_
+sm_sprt_create	iPsSPRTtMt_
+sm_sprt_datafeed_connect	iPsDtSPRTt_
+sm_sprt_destroy	iSPRTt
+sm_sprt_get_datafeed	iPsSPRTtDt_
+sm_sprt_get_event	iPsSPRTtEt_
+sm_sprt_read_message	iPsSPRTtPcii_
+sm_sprt_send_message	iPsSPRTtPci_
+sm_sprt_status	iPsSPRTte1_3__

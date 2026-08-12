@@ -1,0 +1,3 @@
+b	baudrate	float
+o	outfile		string
+s	spacefreq	float

@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody I.460 Mux: API: sm_i460mux_destroy</title>
+</head>
+<body>
+<h1>Prosody I.460 Mux: API: sm_i460mux_destroy</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_i460mux_destroy(<a href="../apitype.html#type-tSMI460muxId">tSMI460muxId</a> <a href="#field-mux">mux</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-mux">mux</a>
+<dd>
+The mux to destroy. Must have been previously created by a call to
+<a href="apifn-sm_i460mux_create.html">sm_i460mux_create()</a>
+.
+</dl>
+<h2>Description</h2>
+<p>
+Destroys an I.460 Mux.
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosi460muxapi.html">Prosody I.460 Mux API</a>.
+</body>
+</html>

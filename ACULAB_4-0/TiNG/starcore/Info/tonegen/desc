@@ -1,0 +1,5 @@
+Tone generation. This is used by
+<a href="apifn-sm_play_tone.html">sm_play_tone()</a>,
+<a href="apifn-sm_play_cptone.html">sm_play_cptone()</a>,
+and
+<a href="apifn-sm_play_digits.html">sm_play_digits()</a>.

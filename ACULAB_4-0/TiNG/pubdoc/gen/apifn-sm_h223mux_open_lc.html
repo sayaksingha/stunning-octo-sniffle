@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody H.223 Mux: API: sm_h223mux_open_lc</title>
+</head>
+<body class=version-Prel>
+<h1>Prosody H.223 Mux: API: sm_h223mux_open_lc</h1>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_h223mux_open_lc(struct sm_h223mux_open_lc_parms *<a href="#field-open_lcp">open_lcp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-open_lcp">*open_lcp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_open_lc_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-segmentable_flag">segmentable_flag</a>;				/* in */
+	<a name="enum-kSMH223muxLogicalChannelType">enum kSMH223muxLogicalChannelType</a> {
+		<a href="#field-kSMH223muxLogicalChannelTypeUnidirectional">kSMH223muxLogicalChannelTypeUnidirectional</a>,
+		<a href="#field-kSMH223muxLogicalChannelTypeBidirectional">kSMH223muxLogicalChannelTypeBidirectional</a>,
+	} <a href="#field-type">type</a>;							/* in */
+	struct {
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-forward_channel-lcn">lcn</a>;					/* in */
+		<a name="enum-kSMH223muxLogicalChannelDirection">enum kSMH223muxLogicalChannelDirection</a> {
+			<a href="#field-kSMH223muxLogicalChannelDirectionTransmit">kSMH223muxLogicalChannelDirectionTransmit</a>,
+			<a href="#field-kSMH223muxLogicalChannelDirectionReceive">kSMH223muxLogicalChannelDirectionReceive</a>,
+		} <a href="#field-forward_channel-direction">direction</a>;					/* in */
+		struct {
+			<a name="enum-kSMH223muxMarkUnit">enum kSMH223muxMarkUnit</a> {
+				<a href="#field-kSMH223muxMarkUnitBytes">kSMH223muxMarkUnitBytes</a>,
+				<a href="#field-kSMH223muxMarkUnitALSDU">kSMH223muxMarkUnitALSDU</a>,
+			} <a href="#field-forward_channel-transmit_lc-mark_unit">mark_unit</a>;
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-forward_channel-transmit_lc-hi_mark">hi_mark</a>;			/* in */
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-forward_channel-transmit_lc-lo_mark">lo_mark</a>;			/* in */
+		} <a href="#field-forward_channel-transmit_lc">transmit_lc</a>;					/* in */
+		<a name="enum-kSMH223muxAdaptationLayerType">enum kSMH223muxAdaptationLayerType</a> {
+			<a href="#field-kSMH223muxAdaptationLayerTypeNonStandard">kSMH223muxAdaptationLayerTypeNonStandard</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL1Framed">kSMH223muxAdaptationLayerTypeAL1Framed</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL1NotFramed">kSMH223muxAdaptationLayerTypeAL1NotFramed</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL3">kSMH223muxAdaptationLayerTypeAL3</a>,
+		} <a href="#field-forward_channel-adaptation_layer_type">adaptation_layer_type</a>;
+		union {
+			struct {
+				<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-forward_channel-u_al-al3-control_field_octets">control_field_octets</a>;	/* in */
+				<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-forward_channel-u_al-al3-send_buffer_size">send_buffer_size</a>;	/* in */
+			} <a href="#field-forward_channel-u_al-al3">al3</a>;					/* in */
+		} <a href="#field-forward_channel-u_al">u_al</a>;						/* in */
+	} <a href="#field-forward_channel">forward_channel</a>;					/* in */
+	struct {
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-reverse_channel-lcn">lcn</a>;					/* in */
+		<a name="enum-kSMH223muxLogicalChannelDirection">enum kSMH223muxLogicalChannelDirection</a> {
+			<a href="#field-kSMH223muxLogicalChannelDirectionTransmit">kSMH223muxLogicalChannelDirectionTransmit</a>,
+			<a href="#field-kSMH223muxLogicalChannelDirectionReceive">kSMH223muxLogicalChannelDirectionReceive</a>,
+		} <a href="#field-reverse_channel-direction">direction</a>;					/* in */
+		struct {
+			<a name="enum-kSMH223muxMarkUnit">enum kSMH223muxMarkUnit</a> {
+				<a href="#field-kSMH223muxMarkUnitBytes">kSMH223muxMarkUnitBytes</a>,
+				<a href="#field-kSMH223muxMarkUnitALSDU">kSMH223muxMarkUnitALSDU</a>,
+			} <a href="#field-reverse_channel-transmit_lc-mark_unit">mark_unit</a>;
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-reverse_channel-transmit_lc-hi_mark">hi_mark</a>;			/* in */
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-reverse_channel-transmit_lc-lo_mark">lo_mark</a>;			/* in */
+		} <a href="#field-reverse_channel-transmit_lc">transmit_lc</a>;					/* in */
+		<a name="enum-kSMH223muxAdaptationLayerType">enum kSMH223muxAdaptationLayerType</a> {
+			<a href="#field-kSMH223muxAdaptationLayerTypeNonStandard">kSMH223muxAdaptationLayerTypeNonStandard</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL1Framed">kSMH223muxAdaptationLayerTypeAL1Framed</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL1NotFramed">kSMH223muxAdaptationLayerTypeAL1NotFramed</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers</a>,
+			<a href="#field-kSMH223muxAdaptationLayerTypeAL3">kSMH223muxAdaptationLayerTypeAL3</a>,
+		} <a href="#field-reverse_channel-adaptation_layer_type">adaptation_layer_type</a>;
+		union {
+			struct {
+				<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-reverse_channel-u_al-al3-control_field_octets">control_field_octets</a>;	/* in */
+				<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-reverse_channel-u_al-al3-send_buffer_size">send_buffer_size</a>;	/* in */
+			} <a href="#field-reverse_channel-u_al-al3">al3</a>;					/* in */
+		} <a href="#field-reverse_channel-u_al">u_al</a>;						/* in */
+	} <a href="#field-reverse_channel">reverse_channel</a>;					/* in */
+} SM_H223MUX_OPEN_LC_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This function will open a new logical channel.
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to open the logical channel on.
+
+<dt class=version-Prel><a name="field-segmentable_flag">segmentable_flag</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero indicates that the channel is designated to be segmentable,
+and when equal to zero indicates that the channel is designated to be non-segmentable.
+
+<dt class=version-Prel><a name="field-type">type</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The type of logical channel to be opened.
+
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxLogicalChannelTypeUnidirectional">kSMH223muxLogicalChannelTypeUnidirectional</a>
+<dd>Unidirectional channel.
+
+<dt><a name="field-kSMH223muxLogicalChannelTypeBidirectional">kSMH223muxLogicalChannelTypeBidirectional</a>
+<dd>Bidirectional channel.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-forward_channel">forward_channel</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-forward_channel-lcn">lcn</a><dd>The logical channel number.
+
+<dt><a name="field-forward_channel-direction">direction</a><dd>The logical channel direction.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxLogicalChannelDirectionTransmit">kSMH223muxLogicalChannelDirectionTransmit</a>
+<dd>Logical channel is to be opened for transmission.
+
+<dt><a name="field-kSMH223muxLogicalChannelDirectionReceive">kSMH223muxLogicalChannelDirectionReceive</a>
+<dd>Logical channel is to be opened for receive.
+
+</dl>
+<dt><a name="field-forward_channel-transmit_lc">transmit_lc</a><dd>This structure is only valid if direction is
+<a class=pref href="#field-kSMH223muxLogicalChannelDirectionTransmit">kSMH223muxLogicalChannelDirectionTransmit</a>.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-forward_channel-transmit_lc-mark_unit">mark_unit</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxMarkUnitBytes">kSMH223muxMarkUnitBytes</a>
+<dd>Unit of measurement is in bytes.
+
+<dt><a name="field-kSMH223muxMarkUnitALSDU">kSMH223muxMarkUnitALSDU</a>
+<dd>Unit of measurement is in AL-SDUs
+
+</dl>
+<dt><a name="field-forward_channel-transmit_lc-hi_mark">hi_mark</a><dd>Higher level threshold.  Represents bytes or AL-SDUs depending on value of mark_unit.	
+
+<dt><a name="field-forward_channel-transmit_lc-lo_mark">lo_mark</a><dd>Lower level threshold.  Represents bytes or AL-SDUs depending on value of mark_unit.	
+
+</dl>
+</div>
+<dt><a name="field-forward_channel-adaptation_layer_type">adaptation_layer_type</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxAdaptationLayerTypeNonStandard">kSMH223muxAdaptationLayerTypeNonStandard</a>
+<dd>Non standard.  Please note that this is currently unsupported.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL1Framed">kSMH223muxAdaptationLayerTypeAL1Framed</a>
+<dd>AL1 framed mode.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL1NotFramed">kSMH223muxAdaptationLayerTypeAL1NotFramed</a>
+<dd>AL1 unframed mode.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers</a>
+<dd>AL2 with no sequence numbers present.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers</a>
+<dd>AL2 with sequence numbers present.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL3">kSMH223muxAdaptationLayerTypeAL3</a>
+<dd>AL3 with the specified parameters. See below. 
+
+</dl>
+<dt><a name="field-forward_channel-u_al">u_al</a><dd>
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-forward_channel-u_al-al3">al3</a><dd>This structure is only valid if adaptation_layer_type is
+<a class=pref href="#field-kSMH223muxAdaptationLayerTypeAL3">kSMH223muxAdaptationLayerTypeAL3</a>
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-forward_channel-u_al-al3-control_field_octets">control_field_octets</a><dd>Number of control field octets
+
+<dt><a name="field-forward_channel-u_al-al3-send_buffer_size">send_buffer_size</a><dd>Size of the send buffer that will be used.  The size being measured in octets.
+
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+</div>
+<dt class=version-Prel><a name="field-reverse_channel">reverse_channel</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>This structure is only valid if type is
+<a class=pref href="#field-kSMH223muxLogicalChannelTypeBidirectional">kSMH223muxLogicalChannelTypeBidirectional</a>.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-reverse_channel-lcn">lcn</a><dd>The logical channel number.
+
+<dt><a name="field-reverse_channel-direction">direction</a><dd>The logical channel direction.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxLogicalChannelDirectionTransmit">kSMH223muxLogicalChannelDirectionTransmit</a>
+<dd>Logical channel is to be opened for transmission.
+
+<dt><a name="field-kSMH223muxLogicalChannelDirectionReceive">kSMH223muxLogicalChannelDirectionReceive</a>
+<dd>Logical channel is to be opened for receive.
+
+</dl>
+<dt><a name="field-reverse_channel-transmit_lc">transmit_lc</a><dd>This structure is only valid if direction is
+<a class=pref href="#field-kSMH223muxLogicalChannelDirectionTransmit">kSMH223muxLogicalChannelDirectionTransmit</a>.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-reverse_channel-transmit_lc-mark_unit">mark_unit</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxMarkUnitBytes">kSMH223muxMarkUnitBytes</a>
+<dd>Unit of measurement is in bytes.
+
+<dt><a name="field-kSMH223muxMarkUnitALSDU">kSMH223muxMarkUnitALSDU</a>
+<dd>Unit of measurement is in AL-SDUs
+
+</dl>
+<dt><a name="field-reverse_channel-transmit_lc-hi_mark">hi_mark</a><dd>Higher level threshold.  Represents bytes or AL-SDUs depending on value of mark_unit.	
+
+<dt><a name="field-reverse_channel-transmit_lc-lo_mark">lo_mark</a><dd>Lower level threshold.  Represents bytes or AL-SDUs depending on value of mark_unit.	
+
+</dl>
+</div>
+<dt><a name="field-reverse_channel-adaptation_layer_type">adaptation_layer_type</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxAdaptationLayerTypeNonStandard">kSMH223muxAdaptationLayerTypeNonStandard</a>
+<dd>Non standard.  Please note that this is currently unsupported.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL1Framed">kSMH223muxAdaptationLayerTypeAL1Framed</a>
+<dd>AL1 framed mode.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL1NotFramed">kSMH223muxAdaptationLayerTypeAL1NotFramed</a>
+<dd>AL1 unframed mode.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers</a>
+<dd>AL2 with no sequence numbers present.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers">kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers</a>
+<dd>AL2 with sequence numbers present.
+
+<dt><a name="field-kSMH223muxAdaptationLayerTypeAL3">kSMH223muxAdaptationLayerTypeAL3</a>
+<dd>AL3 with the specified parameters. See below. 
+
+</dl>
+<dt><a name="field-reverse_channel-u_al">u_al</a><dd>
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-reverse_channel-u_al-al3">al3</a><dd>This structure is only valid if adaptation_layer_type is
+<a class=pref href="#field-kSMH223muxAdaptationLayerTypeAL3">kSMH223muxAdaptationLayerTypeAL3</a>
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-reverse_channel-u_al-al3-control_field_octets">control_field_octets</a><dd>Number of control field octets
+
+<dt><a name="field-reverse_channel-u_al-al3-send_buffer_size">send_buffer_size</a><dd>Size of the send buffer that will be used.  The size being measured in octets.
+
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosh223api.html">Prosody H.223 Mux API</a>.
+</body>
+</html>

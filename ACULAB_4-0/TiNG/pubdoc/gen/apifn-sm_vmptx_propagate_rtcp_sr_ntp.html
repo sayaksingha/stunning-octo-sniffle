@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_propagate_rtcp_sr_ntp</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_propagate_rtcp_sr_ntp</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_propagate_rtcp_sr_ntp(struct sm_vmptx_propagate_rtcp_sr_ntp_parms *<a href="#field-propp">propp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-propp">*propp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_propagate_rtcp_sr_ntp_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT64">tSM_UT64</a> <a href="#field-localtimeref">localtimeref</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT64">tSM_UT64</a> <a href="#field-ntp_timestamp">ntp_timestamp</a>;					/* in */
+} SM_VMPTX_PROPAGATE_RTCP_SR_NTP_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+RTCP sender reports (SRs) include an RTP timestamp and a 64 bit NTP time with this NTP time indicating the wallclock
+time corresponding to the sample with the given RTP timestamp. For SR associated with a VMP[tx] this NTP time is normally the
+time of the epoch in which that packet would be emitted. This call sets an adjustment to cause each RTCP SR NTP time to be
+an earlier time in order to allow the relation between NTP time and a given sample to be maintained when forwarding an RTP signal
+from a VMP[rx] via a signal pipeline to a VMP[tx]. The passed in ntp_timestamp needs to be calculated by the application, normally using
+a received RTCP sender report NTP time, and the difference between RTCP SR RTP timestamp and the RTP timestamp obtained on occurrence 
+of
+<a href="apifn-sm_vmprx_status.html">sm_vmprx_status()</a>
+kSMVMPrxStatusJBResync, as a basis for the calculation.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] 
+
+<dt><a name="field-localtimeref">localtimeref</a><dd>A local time reference in units of microseconds obtained on occurrence of kSMVMPrxStatusJBResync.
+
+<dt><a name="field-ntp_timestamp">ntp_timestamp</a><dd>The NTP time that should correspond to this localtimeref for this VMP[tx].
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

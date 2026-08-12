@@ -1,0 +1,258 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: recording 2-party conversations</title>
+</head>
+<body>
+<h1>Prosody application note: recording 2-party conversations</h1>
+
+<h2>Introduction</h2>
+<p>
+This application note describes how the Aculab Prosody speech processing
+API may be used to efficiently record multiple two party conversations,
+(efficient in terms of maximum recording count per Prosody module).
+
+<h2>Setting up the conversation</h2>
+<p>
+In a conversation between two parties, <code>A</code> and
+<code>B</code>, the signal from <code>A</code> is transmitted to
+<code>B</code>, and the signal from <code>B</code> is transmitted to
+<code>A</code>. Each party has a pair of unidirectional speech paths
+(incoming and outgoing) that appear as timeslots on the network ports
+and are connected using the switch driver API.
+<p>
+A common application requirement is to make a recording of the
+conversation between parties <code>A</code> and <code>B</code>. This may
+be achieved by adding the incoming signals from <code>A</code> and
+<code>B</code> using a DSP, and then making a recording of the combined
+signal.
+
+<h2>Recording the conversation using signal paths</h2>
+<p>
+This is the preferred and most straightforward approach.  A signal path
+must be created using <a href="gen/apifn-sm_path_create.html">sm_path_create()</a> 
+then the signal from one side of the
+conversation fed into the path using <a href="gen/apifn-sm_path_datafeed_connect.html">sm_path_datafeed_connect()</a> 
+then the signal from the other side fed into a mixer task added to the path using
+<a href="gen/apifn-sm_path_mix.html">sm_path_mix()</a> and finally the output of the path fed to an input channel
+using <a href="gen/apifn-sm_path_get_datafeed.html">sm_path_get_datafeed()</a> and 
+<a href="gen/apifn-sm_channel_datafeed_connect.html">sm_channel_datafeed_connect()</a>.
+<p>
+A recording started on this input channel will have the signals from both parties mixed together. 
+<p>
+<h2>Recording the conversation using conferencing primitives</h2>
+<p>
+Using Prosody conferencing primitives to activate the mixing function, a
+conference output job is created; the signals from <code>A</code> and
+<code>B</code> are nominated as the inputs to this conference.
+<p>
+In order to economise on channels and external connections, rather than
+switching the conference output back into a separate input, Prosody can
+be made to record the output of the conference job directly.
+<p>
+This is achieved by using the optional parameter
+<code>alt_data_source</code> when starting the recording.
+
+<h2><a name="ChanAlloc">Channel allocation</a></h2>
+<p>
+For each conversation, Prosody channels are allocated using
+<a href="gen/apifn-sm_channel_alloc_placed.html">sm_channel_alloc_placed()</a>.
+Two inputs are required; these are incoming signals <code>A</code> and
+B.
+<ol>	
+<li>The first input <code>A</code> is allocated as a channel that is
+capable of input, eg <code>kSMChannelTypeInput</code>.
+<li>The second input <code>B</code> is allocated as a input channel that
+is capable of input, e.g. <code>kSMChannelTypeInput</code>.
+<li>The combined channel <code>sumofAB</code>, whose signal is generated
+by the conference job, is the output channel. In this instance, type
+should be set to <code>kSMChannelOutput</code>.
+<li>The recording channel <code>recAB</code> is allocated as a channel
+that is capable of input, eg <code>kSMChannelTypeInput</code>.
+</ol>
+
+<h2>Prosody firmware configurations</h2>
+<p>
+TiNG modules
+<a href="gen/softmodindex.html#inchan">inchan</a> and
+<a href="gen/softmodindex.html#outchan">outchan</a>
+are required for input and output of speech data.  The module
+<a href="gen/softmodindex.html#conf">conf</a>
+is required for the conferencing and, depending on the recording
+format desired, an appropriate recording module will be needed. For
+example, for A-law, <a href="gen/softmodindex.html#recA">recA</a>.
+
+<h2>Starting the Prosody jobs</h2>
+<p>
+Following on from the example <a href="#ChanAlloc">above</a>.
+<ol>
+<li>The conference should be set up on the output channel
+<code>sumofAB</code> using the conferencing primitive
+<a href="gen/apifn-sm_conf_prim_start.html">sm_conf_prim_start()</a>,
+with <code>channel</code> set to the channel allocated to
+<code>sumofAB</code>. At this point, as it has no input signals
+assigned, the primitive conference is doing nothing.
+<li>Add the two input signals to the primitive conference using
+<a href="gen/apifn-sm_conf_prim_add.html">sm_conf_prim_add()</a>,
+with <code>channel</code> set to channel <code>sumofAB</code>, and
+<code>participant</code> set first to channel
+<code>A</code>, and then channel <code>B</code>.
+Channel <code>sumofAB</code> will then consist of channels
+<code>A</code> and <code>B</code> mixed together.
+<li>Record the conference using
+<a href="gen/apifn-sm_record_start.html">sm_record_start()</a>,
+<a href="gen/apifn-sm_record_file_start.html">sm_record_file_start()</a>, or
+<a href="gen/apifn-sm_record_wav_start.html">sm_record_wav_start()</a>,
+with <code>channel</code> set to <code>recAB</code> (this has the
+recording resources), but <code>alt_data_source</code> set to channel
+<code>sumofAB</code> (this is the signal we want to record).
+</ol>
+
+<h2>Source code illustration</h2>
+<p>
+The following code example shows a two party recording being set up. For
+conciseness, it merely returns if an error occurs. A real application
+would need to clean up (e.g. by freeing any channels already
+allocated) and report exactly what function returned the error.
+etc.
+<p>
+The code assumes you have selected appropriate streams and timeslots
+on the Prosody module. The two inputs will use the specified streams
+and timeslots. The conference sum needs to be switched to a timeslot
+to provide a buffer to store the output data until it is recorded. In this
+example, the conference sum will use the output corresponding to the first
+input (but since that isn't switched anywhere it doesn't matter where it
+goes as long as it doesn't conflict with another output). Normally, there
+is a trivial way to allocate these timeslots (for example by deriving them
+from the port and timeslot on a bearer circuit).
+<pre>
+int setup2party_recording(tSMModuleId module,
+	int streamA, int tsA, enum kSMTimeslotType tstypeA,
+	int streamB, int tsB, enum kSMTimeslotType tstypeB)
+{
+ tSMChannelId chanA;
+ tSMChannelId chanB;
+ tSMChannelId sumofAB;
+ tSMChannelId recAB;
+ int err;
+ {					// allocate A
+  SM_CHANNEL_ALLOC_PLACED_PARMS pp;
+  memset(&amp;pp, 0, sizeof(pp));
+  pp.module = module;
+  pp.type = kSMChannelTypeInput;
+  err = sm_alloc_channel_placed(&amp;pp);
+  if (err) return err;
+  chanA = pp.channel;
+ }
+ {
+  SM_SWITCH_CHANNEL_PARMS pp;
+  memset(&amp;pp, 0, sizeof(pp));
+  pp.channel = chanA;
+  pp.st = streamA;
+  pp.ts = tsA;
+  pp.type = tstypeA;
+  err = sm_switch_channel_input(&amp;pp);
+  if (err) return err;
+ }
+ {					// allocate B
+  SM_CHANNEL_ALLOC_PLACED_PARMS pp;
+  memset(&amp;pp, 0, sizeof(pp));
+  pp.module = module;
+  pp.type = kSMChannelTypeInput;
+  err = sm_alloc_channel_placed(&amp;pp);
+  if (err) return err;
+  chanB = pp.channel;
+ }
+ {
+  SM_SWITCH_CHANNEL_PARMS pp;
+  memset(&amp;pp, 0, sizeof(pp));
+  pp.channel = chanB;
+  pp.st = streamB;
+  pp.ts = tsB;
+  pp.type = tstypeB;
+  err = sm_switch_channel_input(&amp;pp);
+  if (err) return err;
+ }
+ {					// allocate sumofAB
+  SM_CHANNEL_ALLOC_PLACED_PARMS pp;
+  memset(&amp;pp, 0, sizeof(pp));
+  pp.module = module;
+  pp.type = kSMChannelTypeOutput;
+  err = sm_alloc_channel_placed(&amp;pp);
+  if (err) return err;
+  sumofAB = pp.channel;
+ }
+ {
+  SM_SWITCH_CHANNEL_PARMS pp;
+  memset(&amp;pp, 0, sizeof(pp));
+  pp.channel = sumofAB;
+  pp.st = streamA;
+  pp.ts = tsA;
+  pp.type = tstypeA;
+  err = sm_switch_channel_output(&amp;pp);
+  if (err) return err;
+ }
+ {					// allocate recAB
+  SM_CHANNEL_ALLOC_PLACED_PARMS pp;
+  memset(&amp;pp, 0, sizeof(pp));
+  pp.module = module;
+  pp.type = kSMChannelTypeInput;
+  err = sm_alloc_channel_placed(&amp;pp);
+  if (err) return err;
+  recAB = pp.channel;
+ }
+ {					// start the conference
+  SM_CONF_PRIM_START_PARMS pp;
+  memset(&amp;pp, 0, sizeof(pp));
+  pp.channel = sumofAB;
+  err = sm_conf_prim_start(&amp;pp);
+  if (err) return err;
+ }
+ {					// add A to the conference
+  SM_CONF_PRIM_ADD_PARMS pp;
+  memset(&amp;pp, 0, sizeof(pp));
+  pp.channel = sumofAB;
+  pp.participant = chanA;
+  err = sm_conf_prim_add(&amp;pp);
+  if (err) return err;
+ }
+ {					// add B to the conference
+  SM_CONF_PRIM_ADD_PARMS pp;
+  memset(&amp;pp, 0, sizeof(pp));
+  pp.channel = sumofAB;
+  pp.participant = chanB;
+  err = sm_conf_prim_add(&amp;pp);
+  if (err) return err;
+ }
+ {					// start recording
+  SM_RECORD_PARMS pp;
+  memset(&amp;pp, 0, sizeof(pp));
+  pp.channel = recAB;
+  pp.alt_data_source = sumofAB;
+  pp.alt_data_source_type = kSMRecordAltSourceOutput;
+  err = sm_record_start(&amp;pp);
+  if (err) return err;
+ }
+ /*
+  * process recording until call is cleared
+  */
+ err = sm_channel_release(recAB);	// release all the channels
+ if (err) return err;
+ err = sm_channel_release(sumofAB);
+ if (err) return err;
+ err = sm_channel_release(chanA);
+ if (err) return err;
+ err = sm_channel_release(chanB);
+ if (err) return err;
+ return 0;
+}
+</pre>
+
+<hr>
+<p>
+<small>Document reference: AN 1348</small>
+
+</body>
+</html>

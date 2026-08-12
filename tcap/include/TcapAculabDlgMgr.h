@@ -49,8 +49,10 @@ class DlgMgr
      ~DlgMgr();
 
 
-    BOOLEAN  Init(); 
-    BOOLEAN  ReadConfig();
+    // Ab Change: Pass lCfgFile so DlgMgr reads from the same config as the handler
+    BOOLEAN  Init(TEXT* lCfgFile); 
+    // Ab Change: Pass lCfgFile so DlgMgr reads from the same config as the handler
+    BOOLEAN  ReadConfig(TEXT* lCfgFile);
     
     // Returns Allocated DlgId for outgoing Map messages.
     DlgRecord*  Allocate_DlgId(DlgRecord &lDlgRecord);

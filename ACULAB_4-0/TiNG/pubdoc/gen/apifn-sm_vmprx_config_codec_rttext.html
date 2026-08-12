@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_config_codec_rttext</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_config_codec_rttext</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_config_codec_rttext(struct sm_vmprx_codec_rttext_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_codec_rttext_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-redundant_payload_type">redundant_payload_type</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-out_of_order_delay">out_of_order_delay</a>;				/* in */
+} SM_VMPRX_CODEC_RTTEXT_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures the VMP[rx] to be able to receive real-time text, setting the
+payload type mapping to
+<a class=pref href="#field-payload_type">payload_type</a>
+and the redundant format payload type mapping to
+<a class=pref href="#field-redundant_payload_type">redundant_payload_type</a>
+.
+This supersedes any previous mapping that was in effect
+for this codec.
+<p>
+If the call completes successfully, RTP packets arriving at the VMP[rx]
+with a payload type that matches the specified payload types will
+be decoded using this codec.
+<p>
+The packet format is described in 
+<a href="http://www.ietf.org/rfc/rfc4103.txt">IETF RFC 4103</a>.
+<p>
+A VMP[rx] that is configured to use this codec will output octet data 
+rather than audio. As such it will normally be connected to a channel 
+configured for data communitcations with the raw protocol and no encoding. 
+The data collected from the channel will be 32 bit values, presented as 
+4 octets with the least significant octet first. The values will 
+correspond to UCS4 characters.
+<p>
+This requires the module
+<a href="softmodindex.html#rttext">rttext</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to which to add the codec
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type identifer to use with this codec (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13). Supplying a value of
+<code>-1</code> will remove any payload type configuration from the 
+codec preventing its use.
+
+<dt><a name="field-redundant_payload_type">redundant_payload_type</a><dd>The payload type identifer to use with this codec (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13) for packets with redundant data. Supply a value of
+<code>-1</code> if redundant data is not to be received.
+
+<dt><a name="field-out_of_order_delay">out_of_order_delay</a><dd>The time in milliseconds to wait for a text block once a later block 
+has been received.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

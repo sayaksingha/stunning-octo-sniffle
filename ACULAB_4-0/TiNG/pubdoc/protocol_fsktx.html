@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Protocols: FSK tx</title>
+</head>
+<body>
+<h1>Prosody data communications Protocols: FSK tx</h1>
+<p>
+FSK is 'frequency shift keying' which is a method of transmitting
+data using tones. Binary data is encoded by sending one of two tones
+for each bit, with one tone used for zero bits and another for one
+bits.
+<p>
+This protocol implements the transmitter for FSK. Since it is only a
+transmitter, it only uses the output half of a channel. Typically the
+input half is configured for <a href="protocol_fskrx.html">FSK rx</a>.
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic
+<a href="prosdc.html">data communications documentation</a>.
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_fsk.h"</code> to get the
+	appropriate declarations.
+<p>
+	The protocol value is <code>kSMDCProtocolFSKtx</code>.
+<p>
+	The config_data pointer must point to one of these structs:
+<pre>
+	typedef struct smdc_fsk_config_parms {
+		unsigned long <a href="#speed">speed</a>;
+		float <a href="#mark_frequency">mark_frequency</a>;
+		float <a href="#space_frequency">space_frequency</a>;
+		unsigned long <a href="#rx_carrier_on_mS">rx_carrier_on_mS</a>;
+		unsigned long <a href="#rx_carrier_off_mS">rx_carrier_off_mS</a>;
+		unsigned long <a href="#set_power">set_power</a>;
+		float <a href="#user_power">user_power</a>;
+		unsigned long <a href="#get_metric">get_metric</a>;
+		unsigned long <a href="#thresh_metric">thresh_metric</a>;
+		unsigned long <a href="#reverse_chan_filter">reverse_chan_filter</a>;
+	} SMDC_FSK_CONFIG_PARMS;
+</pre>
+<p>
+	<a name="speed">'<code>speed</code>'</a> is the data rate in
+	bits per second. Where supported by the firmware, fractional
+	speeds may be specified by multiplying by 65536, e.g. 45.45 can
+	by given as 2978909.
+<p>
+	<a name="mark_frequency">'<code>mark_frequency</code>'</a> is
+	the frequency, in Hz, of the tone used to encode mark ('1')
+	bits.
+<p>
+	<a name="space_frequency">'<code>space_frequency</code>'</a> is
+	the frequency, in Hz, of the tone used to encode space ('0')
+	bits.
+<p>
+	<a name="rx_carrier_on_mS">'<code>rx_carrier_on_mS</code>'</a>
+	is not used and applies only to FSK reception.
+<p>
+	<a name="rx_carrier_off_mS">'<code>rx_carrier_off_mS</code>'</a>
+	is not used and applies only to FSK reception.
+<p>
+	<a name="set_power">'<code>set_power</code>'</a>
+	indicates whether to use the default power for transmissions
+	(when zero) or to use a user-specified power level
+	(non-zero). The user-specified power level is given in the
+	<code>user_power</code> field.
+<p>
+	<a name="user_power">'<code>user_power</code>'</a> is the
+	power level (in dBm0) to use for transmissions. This field must
+	be zero if the <code>set_power</code> field is zero to
+	indicate that the default should be used..
+<p>
+	<a name="get_metric">'<code>get_metric</code>'</a> 
+	is not used and applies only to FSK reception.
+<p>
+	<a name="thresh_metric">'<code>thresh_metric</code>'</a> 
+	is not used and applies only to FSK reception.
+<p>
+	<a name="reverse_chan_filter">'<code>reverse_chan_filter</code>'</a> 
+	is not used and applies only to FSK reception.
+<p>
+	This table shows values of these parameters for some standard
+	FSK modems:
+<p>
+	<table border>
+	<tr>
+		<th>Standard
+		<th>speed
+		<th>mark
+		<th>space
+	
+	<tr>
+		<td>V.21 Channel 1
+		<td>300
+		<td>980
+		<td>1180
+	
+	<tr>
+		<td>V.21 Channel 2
+		<td>300
+		<td>1650
+		<td>1850
+	
+	<tr>
+		<td>Bell 103 originating
+		<td>300
+		<td>1270
+		<td>1070
+	
+	<tr>
+		<td>Bell 103 answering
+		<td>300
+		<td>2225
+		<td>2025
+	
+	<tr>
+		<td>V.23 mode 2
+		<td>1200
+		<td>1300
+		<td>2100
+	
+	<tr>
+		<td>V.23 mode 1
+		<td>600
+		<td>1300
+		<td>1700
+	
+	<tr>
+		<td>V.23 back
+		<td>75
+		<td>390
+		<td>450
+	
+	<tr>
+		<td>Bell 202
+		<td>1200
+		<td>1200
+		<td>2200
+	
+	<tr>
+		<td>Bell 202 back channel
+		<td>75, 110, or 150
+		<td>387
+		<td>487
+	
+	<tr>
+		<td>V.18 Annex A
+		<td>50
+		<td>1400
+		<td>1800
+	
+	</table>
+<p>
+	Note that for full duplex operation, V.21 channel 1 is the one
+	used from the originator to the answering end, and channel 2
+	is used for the reverse direction. For half duplex, channel 2
+	is not used (at least, that's what the V.21 standard says, but
+	fax machines complying with the T.30 standard use only channel
+	2).
+<p>
+	There is also an alternative Bell 202 back channel which runs
+	at 5 bps, but this uses a single carrier frequency of 387 Hz
+	representing mark (1), with space (0) represented by no
+	signal (so it's actually a
+	<a href="protocol_cwtx.html">continuous wave</a> modem, not
+	FSK).
+<p>
+	This protocol can use these encodings:
+	<a href="encoding_sync.html">SYNC</a>,
+	<a href="encoding_async.html">ASYNC</a>, and
+	<a href="encoding_hdlc.html">HDLC</a>.
+	Note that since an FSK signal contains no clock information, if
+	SYNC or HDLC encodings are used the data must contain enough
+	transitions between the frequencies (i.e. no long runs of only
+	zeros or only ones) to allow the receiver to keep locked onto
+	the bit rate. It is the user's responsibility to determine the
+	capabilities of the receiver and to ensure that sufficient
+	transitions occur in the data.
+<p>
+	The firmware modules <a href="gen/softmodindex.html#fsktx">fsktx</a>
+	and <a href="gen/softmodindex.html#outchan">outchan</a> must have
+	been downloaded.
+
+<h3><a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a></h3>
+<p>
+	The <a href="gen/apifn-smdc_line_control.html#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>
+	command is supported by this protocol.
+
+<h3><a href="gen/apifn-smdc_line_status.html">smdc_line_status()</a></h3>
+
+<h3><a href="gen/apifn-smdc_tx_status.html">smdc_tx_status()</a></h3>
+<p>
+	The <a href="gen/apifn-smdc_tx_status.html#field-kSMDCTxStatusEmpty">kSMDCTxStatusEmpty</a>
+	status is returned when the carrier has stopped in response to a call to
+	<a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a> with the command
+	<a href="gen/apifn-smdc_line_control.html#field-kSMDCLineCtlCmdUnassertRTS">kSMDCLineCtlCmdUnassertRTS</a>.
+<p>
+	[note] 'flow' is not useful since there is no flow
+	control mechanism.
+
+<h3><a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a></h3>
+<p>
+	The only notification implemented is
+	<a href="gen/apifn-smdc_tx_control.html#field-kSMDCTxCtlNotifyOnCapacity">kSMDCTxCtlNotifyOnCapacity</a>.
+<p>
+	When setting the capacity, it is necessary to specify a
+	value one greater than the value required. i.e. to get notified
+	when space is available for at least 32 bytes, set the capacity
+	to 33 or greater.
+
+<h3><a href="gen/apifn-smdc_rx_status.html">smdc_rx_status()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	input half of a channel.
+
+<h3><a href="gen/apifn-smdc_rx_control.html">smdc_rx_control()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	input half of a channel.
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	input half of a channel.
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+</body>

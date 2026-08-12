@@ -1,0 +1,448 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_replay_start</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_replay_start</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_replay_start(struct sm_replay_parms *<a href="#field-replayp">replayp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-replayp">*replayp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_replay_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-background">background</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-volume">volume</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-agc">agc</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-speed">speed</a>;						/* in */
+	<a name="enum-kSMDataFormat">enum kSMDataFormat</a> {
+		<a href="#field-kSMDataFormatNone">kSMDataFormatNone</a>=0,
+		<a href="#field-kSMDataFormatALawPCM">kSMDataFormatALawPCM</a>=30,
+		<a href="#field-kSMDataFormatULawPCM">kSMDataFormatULawPCM</a>=31,
+		<a href="#field-kSMDataFormatOKIADPCM">kSMDataFormatOKIADPCM</a>=32,
+		<a href="#field-kSMDataFormatACUBLKPCM">kSMDataFormatACUBLKPCM</a>=33,
+		<a href="#field-kSMDataFormat16bit">kSMDataFormat16bit</a>=34,
+		<a href="#field-kSMDataFormat8bit">kSMDataFormat8bit</a>=35,
+		<a href="#field-kSMDataFormatSigned8bit">kSMDataFormatSigned8bit</a>=36,
+		<a href="#field-kSMDataFormatIMAADPCM">kSMDataFormatIMAADPCM</a>=17,
+		<a href="#field-kSMDataFormatSpeex">kSMDataFormatSpeex</a>=37,
+	} <a href="#field-type">type</a>;							/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-data_length">data_length</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-sampling_rate">sampling_rate</a>;					/* in */
+} SM_REPLAY_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Prepares output channel
+<a class=pref href="#field-channel">channel</a>
+for replay of data (a replay job).
+<p>
+Normally the
+<a class=pref href="#field-background">background</a>
+parameter would be set to <code>kSMNullChannelId</code>. If
+however, this parameter has assigned to it the channel id of
+another output channel, then the signal generated on the output
+channel
+<a class=pref href="#field-channel">channel</a>
+will be combined with the data currently
+being output on
+<a class=pref href="#field-background">background</a>.
+Note that a channel must not be reconfigured while it is in
+use as a background channel for other channels.
+<p>
+To keep a continuous background signal while playing a
+mixture of different recorded signals and silence, start the
+replay only once and use
+<a href="apifn-sm_put_replay_data.html">sm_put_replay_data()</a>
+as necessary to feed it data for each signal. To produce
+silence, simply stop sending data for a suitable period (the
+channel will report an underrun when it starts sending
+silence).
+<p>
+The
+<a class=pref href="#field-volume">volume</a>
+parameter determines the gain applied to the replayed data and
+has a range of at least -24 to +8 in dB.
+<p>
+The
+<a class=pref href="#field-agc">agc</a>
+parameter controls whether automatic gain control is applied to
+the replayed data. If
+<a class=pref href="#field-agc">agc</a>
+is non-zero then automatic gain control is applied. Even if this
+is the case, the output level is still governed by volume.
+<p>
+The
+<a class=pref href="#field-speed">speed</a>
+parameter determines rate of replay and is a percentage value
+expressing the rate of replay compared with the normal replay
+rate. Only certain speeds are supported, so the speed specified
+is rounded to the nearest supported value. The following speeds
+are currently supported:
+<p><table border cellpadding=5>
+<tr> <th>Ratio</th> <th>Percentage</th> </tr>
+<tr> <td>2:1</td> <td>200</td> </tr>
+<tr> <td>3:2</td> <td>150</td> </tr>
+<tr> <td>4:3</td> <td>133</td> </tr>
+<tr> <td>1:1</td> <td>100</td> </tr>
+<tr> <td>3:4</td> <td>75</td> </tr>
+<tr> <td>2:3</td> <td>67</td> </tr>
+<tr> <td>1:2</td> <td>50</td> </tr>
+</table>
+<p>
+An application should not rely on a speed being rounded to a
+specific value. Other speeds may also be supported, so a
+requested speed may round to a value nearer than expected.
+<p>
+If
+<a class=pref href="#field-speed">speed</a>
+is set to zero, the data is replayed at an unadjusted rate.
+<p>
+The
+<a class=pref href="#field-type">type</a>
+parameter determines the format of data that will played back
+over the timeslot.
+<p>
+<a name="compatcode">Note that, for compatibility</a> with
+earlier releases of Prosody, many other values are permitted for
+the
+<a class=pref href="#field-type">type</a>
+field. These compatibility values specify a combination of
+data type and sampling rate. When one of these is used in
+the
+<a class=pref href="#field-type">type</a>
+field, the
+<a class=pref href="#field-sampling_rate">sampling_rate</a>
+field must be zero, and the actual rate used will be as
+listed here. They are:
+<p>
+<table border>
+<tr>
+	<th rowspan=2>compatibility code</th>
+	<th colspan=2>new code</th>
+</tr>
+<tr>
+	<th>type</th>
+	<th>sampling rate</th>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHzALawPCM</td>
+	<td>kSMDataFormatALawPCM</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHzULawPCM</td>
+	<td>kSMDataFormatULawPCM</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHzOKIADPCM</td>
+	<td>kSMDataFormatOKIADPCM</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHzACUBLKPCM</td>
+	<td>kSMDataFormatACUBLKPCM</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat6KHzALawPCM</td>
+	<td>kSMDataFormatALawPCM</td>
+	<td>6000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat6KHzULawPCM</td>
+	<td>kSMDataFormatULawPCM</td>
+	<td>6000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat6KHzOKIADPCM</td>
+	<td>kSMDataFormatOKIADPCM</td>
+	<td>6000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat6KHzACUBLKPCM</td>
+	<td>kSMDataFormatACUBLKPCM</td>
+	<td>6000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHz16bitMono</td>
+	<td>kSMDataFormat16bit</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHz8bitMono</td>
+	<td>kSMDataFormat8bit</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormat8KHzSigned8bitMono</td>
+	<td>kSMDataFormatSigned8bit</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>kSMDataFormatIMAADPCM</td>
+	<td>kSMDataFormatIMAADPCM</td>
+	<td>8000</td>
+</tr>
+</table>
+<p>
+Any form of replay requires the module
+<a href="softmodindex.html#outchan">outchan</a>
+to have been downloaded in addition to the module
+that is required for the specific type of replay, and any
+module required for the sampling rate:
+<p>
+<table border>
+<tr>
+	<th>replay type</th>
+	<th>extra firmware required</th>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatALawPCM">kSMDataFormatALawPCM</a>
+	</td>
+	<td>
+<a href="softmodindex.html#playA">playA</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatULawPCM">kSMDataFormatULawPCM</a>
+	</td>
+	<td>
+<a href="softmodindex.html#playmu">playmu</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatOKIADPCM">kSMDataFormatOKIADPCM</a>
+	</td>
+	<td>
+<a href="softmodindex.html#playoki">playoki</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatACUBLKPCM">kSMDataFormatACUBLKPCM</a>
+	</td>
+	<td>
+<a href="softmodindex.html#playablk">playablk</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatSigned8bit">kSMDataFormatSigned8bit</a>
+	</td>
+	<td>
+<a href="softmodindex.html#play8b">play8b</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormat8bit">kSMDataFormat8bit</a>
+	</td>
+	<td>
+<a href="softmodindex.html#playms8b">playms8b</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormat16bit">kSMDataFormat16bit</a>
+	</td>
+	<td>
+<a href="softmodindex.html#play16b">play16b</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatIMAADPCM">kSMDataFormatIMAADPCM</a>
+	</td>
+	<td>
+<a href="softmodindex.html#playima">playima</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<a class=pref href="#field-kSMDataFormatSpeex">kSMDataFormatSpeex</a>
+	</td>
+	<td>
+<a href="softmodindex.html#speexrp">speexrp</a>
+	</td>
+</tr>
+</table>
+<p>
+The sampling rate firmware:
+<table border>
+<tr>
+	<th>sampling rate</th>
+	<th>extra firmware required</th>
+</tr>
+<tr> <td> 8000 </td> <td> - </td> </tr>
+<tr> <td> 6000 </td> <td>
+<a href="softmodindex.html#sixkout">sixkout</a>
+</td> </tr>
+<tr> <td> 11000 </td> <td>
+<a href="softmodindex.html#11_to_8">11_to_8</a>
+</td> </tr>
+<tr> <td> 12000 </td> <td>
+<a href="softmodindex.html#sixkout">sixkout</a>
+</td> </tr>
+<tr> <td> 16000 </td> <td> - </td> </tr>
+<tr> <td> 22000 </td> <td>
+<a href="softmodindex.html#11_to_8">11_to_8</a>
+</td> </tr>
+</table>
+<p>
+See document
+<a href="../an-speechdataformats.html">Prosody application note: speech processing replay and record data formats</a>
+for more details on data formats supported by
+Prosody and their appropriate use.
+<p>
+The
+<a class=pref href="#field-data_length">data_length</a>
+parameter indicates the total number of octets of speech data
+that the application intends to  supply to the driver for replay on the
+given timeslot. If
+<a class=pref href="#field-data_length">data_length</a>
+is set to zero, the replay will be of indefinite length (in this
+case the replay job can be completed with
+<a href="apifn-sm_put_last_replay_data.html">sm_put_last_replay_data()</a>).
+<p>
+If an event has been previously associated with channel (see
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event</a>),
+then the driver will notify the application with that event
+whenever:
+<ul>
+<li>capacity becomes available on the given channel to buffer up
+replay data</li>
+<li>replay completes after all data_length octets were output
+(or last buffer of indefinite replay was output)</li>
+<li>replay completes following abort</li>
+</ul>
+<p>
+The channel is reserved for replaying until
+<a href="apifn-sm_replay_status.html">sm_replay_status()</a>
+returns the status
+<a href="apifn-sm_replay_status.html#field-kSMReplayStatusComplete">
+kSMReplayStatusComplete</a>. No other output activity can
+take place on the channel during this time.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to perform the replay.
+
+<dt><a name="field-background">background</a><dd>A channel which is producing a signal to be added to the replay signal.
+Requires the module
+<a href="softmodindex.html#gainbg">gainbg</a>.
+
+<dt><a name="field-volume">volume</a><dd>The volume adjustment (dB).
+Requires the module
+<a href="softmodindex.html#gainbg">gainbg</a>.
+
+<dt><a name="field-agc">agc</a><dd>Indicator of whether automatic gain control is to be enabled.
+(non-zero) or not (zero).
+Requires the module
+<a href="softmodindex.html#gainbg">gainbg</a>.
+
+<dt><a name="field-speed">speed</a><dd>The percentage of full speed at which the replay should work.
+The value zero also represents full speed.
+Speeds faster than 100% require the module
+<a href="softmodindex.html#fast">fast</a>
+to have been downloaded, while speeds slower than 100% require
+the module
+<a href="softmodindex.html#slow">slow</a>.
+
+<dt><a name="field-type">type</a><dd>The type of data to replay. (See the main text above for
+<a href="#compatcode">compatibility codes</a> that can also be
+used in this field.)
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDataFormatNone">kSMDataFormatNone</a>
+<dd>Special value for test purposes only. This indicates that the
+channel should prepare as if it was about to play or record
+data, but not actually transfer any data.
+
+<dt><a name="field-kSMDataFormatALawPCM">kSMDataFormatALawPCM</a>
+<dd>G.711 A-law. This uses 8 bits per sample.
+
+<dt><a name="field-kSMDataFormatULawPCM">kSMDataFormatULawPCM</a>
+<dd>G.711 mu-law. This uses 8 bits per sample.
+
+<dt><a name="field-kSMDataFormatOKIADPCM">kSMDataFormatOKIADPCM</a>
+<dd>A 4-bit coding scheme.
+
+<dt><a name="field-kSMDataFormatACUBLKPCM">kSMDataFormatACUBLKPCM</a>
+<dd>This format is obsolete, as cards fitted with SHARC DSPs are no longer supported.
+It has never been implemented for Prosody X cards.
+
+<dt><a name="field-kSMDataFormat16bit">kSMDataFormat16bit</a>
+<dd>16-bit linear coding, where each sample is a signed value
+(-32768 to 32767). The first octet of each sample is the less
+significant one.
+
+<dt><a name="field-kSMDataFormat8bit">kSMDataFormat8bit</a>
+<dd>8-bit unsigned linear coding, where each sample is an unsigned value
+(0 to 255). This is Microsoft's 8-bit format.
+
+<dt><a name="field-kSMDataFormatSigned8bit">kSMDataFormatSigned8bit</a>
+<dd>8-bit linear coding, where each sample is a signed value (-128 to 127).
+
+<dt><a name="field-kSMDataFormatIMAADPCM">kSMDataFormatIMAADPCM</a>
+<dd>A 4-bit coding scheme standardised by the Interactive Multimedia
+Association (IMA).
+
+<dt><a name="field-kSMDataFormatSpeex">kSMDataFormatSpeex</a>
+<dd>A patent and royalty-free speech compression codec. Use of the functions
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a>
+and
+<a href="apifn-sm_record_start.html">sm_record_start()</a>
+only allows playback and recording using the default "narrowband" Speex
+configuration. Other operating modes and parameters will be made available
+via new API calls.
+
+</dl>
+<dt><a name="field-data_length">data_length</a><dd>The length of the replay (in octets) or zero for indefinite
+length replay.
+
+<dt><a name="field-sampling_rate">sampling_rate</a><dd>The sampling rate of the data to be played. Currently supported
+values are:
+<ul>
+<li>8000 - the typical rate for telephony, since it is the rate at
+	which telephone networks themselves operate.
+<li>6000 - a rate which reduces file sizes at the cost of lower
+	quality, will be upsampled to 8000 Hz.
+<li>11000 - a rate convenient for use with typical PC soundcards.
+	This is sufficiently close to a quarter of the rate used
+	by CDs (44100 Hz) that the difference is not significant,
+	allowing almost universal compatibility with cheap PC
+	soundcards which can handle 11025 Hz sampling, will be downsampled
+	to 8000 Hz.
+<li>16000 - the typical rate for use with wideband RTP codecs.
+<li>12000 - will be upsampled to 16000 Hz (unlikely to be useful).
+<li>22000 - approx half rate of 44100Hz, will be downsampled to 16000 Hz
+	allowing use with wideband RTP codecs.
+</ul>
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - out of range volume, speed or unknown type<li>ERR_SM_WRONG_CHANNEL_TYPE - attempt to replay on input channel<li>ERR_SM_WRONG_CHANNEL_STATE - replay or other non-interruptible job still in progress</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

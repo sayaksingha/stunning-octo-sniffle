@@ -1,0 +1,9 @@
+.	hplayone.o
+Testlib	fmtcode.o
+Testlib	error.o
+Testlib	errcode_sm.o
+Testlib	cardopen.o
+Testlib	modopen.o
+apilib
+highapi	smhlib.o
+libutil	generic_io.o

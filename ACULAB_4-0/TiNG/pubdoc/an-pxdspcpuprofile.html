@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: ProsodyX TiNG DSP CPU Usage Profiling</title>
+</head>
+<body>
+<h1>Prosody application note: ProsodyX TiNG DSP CPU Usage Profiling</h1>
+
+<h2>Introduction</h2>
+<p>
+When an application runs tasks on a ProsodyX card DSP module, it must take care
+not to overload the DSP with task related work otherwise audio quality and
+system response to events will degrade. On a system with multiple DSPs,
+work must be divided among the DSPs using some application specific resource
+management scheme. This might also have to be in combination with a scheme
+to manage DSP memory usage. 
+</p>
+<p>
+Different types of tasks will use different amounts of DSP CPU, thus a vmprx task
+decoding packets encoded with a complex codec such as EVRC will use more DSP CPU
+than a vmprx task decoding packets encoded with a simple codec such as G.711.
+</p>
+<p>
+Another variable for applications that load DSPs with many algorithm firmware
+files will be the placemement of such code in DSP fast or slow memory, see
+<a href="an-placement.html">application note on placement</a> for more details.
+</p>
+<p>
+It is possible to read CPU usage information from a DSP module using either
+<a href="prog_pxdiagutil.html">pxdiagutil</a> dspcpu command or using 
+<a href="test_cpumon.html">cpumon</a> test program.
+The first of these reports an instantaneous snapshot reading of DSP CPU usage
+whereas cpumon allows a data file to be generated with 32 bit little endian integer
+samples that can be later analysed using a suitable data visualisation program. 
+Each integer value represents the amount of time spent processing a DSP epoch. 
+Values reported will be in range 0..10000 if DSP is not overloaded, or greater than
+10000 if DSP is overloaded. The value 10000 represents the number of microseconds 
+in a DSP epoch scheduling interval, the total time accumulated by the DSP 
+running all its tasks on all its cores in an epoch needs to be kept to less 
+than the duration of the epoch (10ms).
+</p>
+<h2>Base load and peak load</h2>
+<p>
+A set of tasks running on the DSP will take some percentage of the epoch duration to process. This is
+termed the base load and will be more or less fixed for a given set of tasks.
+Any remaining epoch time is used for processing task setup and control messages received from
+application, this is generally not CPU intensive but will be occasional and variable in quantity.
+The DSP will limit, if necessary, the number of any pending messages it processes in an epoch
+to prevent it overruning its epoch time, defering any unprocessed messages for future epochs.
+</p>
+<p>
+The epoch usage shown by CPUMON is the sum of both base load task processing time and message processing
+time, so when viewed as a graph, CPU usage peaks will be seen, for example, when the message processing traffic 
+for setting up a large number vmprxs is processed.
+</p>
+<p>
+Typically one might want to limit base load to be about 90% DSP CPU usage.
+</p>
+<h2>DSP Usage Strategy</h2>
+<p>
+For the purposes of profiling DSP CPU usage we can imagine applications of several different types:
+<ul>
+<li>A - Those that replicate same set of tasks for N call instances.</li>
+<li>B - Those that have a fixed or variable sequence of different tasks sets for duration of a given call.</li>
+<li>C - More complex applications where multiple calls interact.</li>
+<li>D - Applications where set of tasks depends on end user configurations.</li>
+</ul>
+Type A applications are the simplest to profile, one can run varying number of instances of the task set on
+a DSP and use cpumon to determine maximum number N of instances, then in application code enforce a limit of N
+to run per DSP.
+</p>
+<p>
+For type B applications, it is necessary to determine worst case task set in sequence that occurs during
+call, then determine with cpumon how many of that worst case can be supported. For example during fax reception
+the T.30 part of the dialogue uses a low complexity FSK modem whereas during image reception, a V.17 receiver would use
+a much larger amount of CPU, thus the limit per DSP would be based on the number of V.17 receives that could run during a
+DSP epoch.
+</p>
+<p>
+Type C applications can be approached in same way as those above but would typically require
+more work in determining worst case cpu usage.
+</p>
+<p>
+Type D applications could be approached by devising some kind of model to represent load on a DSP as tasks are added
+and use load given by that model to guide and limit task placement among DSPs.
+</p>
+<h2>DSP Usage and Large Fan-out Task Graphs</h2>
+<p>
+In general, when processing audio, the sequence of task processing follows the flow of a signal from its originating task to its destination.
+For example:
+<ul>
+<li>From vmprx through path to an input channel and recording</li>
+<li>From replay on output channel through path to vmptx</li>
+</ul>
+Each such sequence is termed a task graph, and when the DSP processes tasks during an epoch it will
+schedule the running of the whole of such a task graph to occur on one of its multiple cores.
+</p>
+<p>
+If the set of tasks a DSP is asked to run is comprised of a very few (say less than 4) big task graphs
+where the computational effort for each task graph is large, this will inhibit the ability of the DSP code scheduler
+to exploit all the DSP processing cores (current ProsodyX cards have 4 cores per DSP). An example of this would be a 
+single DSP replay fanning out (multidropping) its output to a large number of high complexity codec configured vmptxs. 
+If the achievable number of RTP transmissions is CPU limited for this type of unusual scenario,  it can be considerably 
+improved by breaking up the single-source-multi-output task graph into four independant replications of the source 
+each feeding its own set of vmptxs.
+</p>
+<p>
+Note that a large conference where signals for all calls are combined - which one might expect to generate a 
+large task graph - is dealt with in a special way by the DSP scheduler, so it is not necessary to break up this type of task
+graph.
+</p>
+<h2>More Information</h2>
+<p>
+Aculab support can give further advice on DSP CPU management for specific types of application.
+</p>
+</body>
+</html>
+

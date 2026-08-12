@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_tdmrx_destroy</title>
+</head>
+<body>
+<h1>Prosody generic: API: sm_tdmrx_destroy</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_tdmrx_destroy(<a href="../apitype.html#type-tSMTDMrxId">tSMTDMrxId</a> <a href="#field-tdmrx">tdmrx</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-tdmrx">tdmrx</a>
+<dd>
+A tSMTDMrxId that has been prevously created by a call to 
+<a href="apifn-sm_tdmrx_create.html">sm_tdmrx_create()</a>
+.
+</dl>
+<h2>Description</h2>
+<p>
+Destroys
+<a class=pref href="#field-tdmrx">tdmrx</a>
+and invalidates the tSMTDMrxId.
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

@@ -1,0 +1,1159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody signal path processing: API</title>
+</head>
+<body>
+<h1>Prosody signal path processing: API</h1>
+<p>
+The following functions are provided by the
+<a href="../prospath.html">Prosody signal path processing API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr>
+	<td><a href="#sm_path_agc">sm_path_agc()</a>
+	<td>&nbsp;
+	<td>Configure a signal path to perform automatic gain control
+
+	<tr>
+	<td><a href="#sm_path_agc_adjust_settings">sm_path_agc_adjust_settings()</a>
+	<td>&nbsp;
+	<td>Adjust AGC settings.
+
+	<tr class=version-Prel>
+	<td><a href="#sm_path_avf_amrnb_dec">sm_path_avf_amrnb_dec()</a>
+	<td>P
+	<td>Configure a signal path to decode AVF encapsulated AMR-NB encoded data to linear audio
+
+	<tr class=version-Prel>
+	<td><a href="#sm_path_avf_amrnb_enc">sm_path_avf_amrnb_enc()</a>
+	<td>P
+	<td>Configure a signal path to encode linear audio to AVF encapsulated AMR-NB encoded data
+
+	<tr>
+	<td><a href="#sm_path_create">sm_path_create()</a>
+	<td>&nbsp;
+	<td>Create a signal path
+
+	<tr>
+	<td><a href="#sm_path_datafeed_connect">sm_path_datafeed_connect()</a>
+	<td>&nbsp;
+	<td>Connect a datafeed to a signal path
+
+	<tr>
+	<td><a href="#sm_path_delay">sm_path_delay()</a>
+	<td>&nbsp;
+	<td>Configure a signal path to apply a delay to signal
+
+	<tr>
+	<td><a href="#sm_path_destroy">sm_path_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy a previously allocated signal path
+
+	<tr>
+	<td><a href="#sm_path_echocancel">sm_path_echocancel()</a>
+	<td>&nbsp;
+	<td>Configure a signal path to perform echo cancellation
+
+	<tr>
+	<td><a href="#sm_path_emphasis">sm_path_emphasis()</a>
+	<td>&nbsp;
+	<td>Configure a signal path to apply a filter to emphasise or deemphasise high frequencies
+
+	<tr>
+	<td><a href="#sm_path_get_datafeed">sm_path_get_datafeed()</a>
+	<td>&nbsp;
+	<td>Obtain a datafeed from a signal path
+
+	<tr>
+	<td><a href="#sm_path_get_event">sm_path_get_event()</a>
+	<td>&nbsp;
+	<td>Obtain an event for a path
+
+	<tr>
+	<td><a href="#sm_path_mix">sm_path_mix()</a>
+	<td>&nbsp;
+	<td>Configure a signal path to add in another signal
+
+	<tr>
+	<td><a href="#sm_path_pitchshift">sm_path_pitchshift()</a>
+	<td>&nbsp;
+	<td>Configure a signal path to perform pitch shifting
+
+	<tr>
+	<td><a href="#sm_path_resample">sm_path_resample()</a>
+	<td>&nbsp;
+	<td>Configure a signal path to convert signal to a different sampling rate
+
+	<tr>
+	<td><a href="#sm_path_status">sm_path_status()</a>
+	<td>&nbsp;
+	<td>Determine path status
+
+	<tr>
+	<td><a href="#sm_path_stop">sm_path_stop()</a>
+	<td>&nbsp;
+	<td>Instructs a path to stop all processing
+
+	<tr>
+	<td><a href="#sm_path_tonedetect">sm_path_tonedetect()</a>
+	<td>&nbsp;
+	<td>Configure a signal path to detect and optionally eliminate tones
+
+	<tr>
+	<td><a href="#sm_path_ttyeliminate">sm_path_ttyeliminate()</a>
+	<td>&nbsp;
+	<td>Configure a signal path to eliminate TTY signals
+
+</table>
+<p>
+Key to <strong>W</strong> column:
+<table border>
+<tr class=version-Prel><th>P
+	<td>	Preliminary documentation - this functionality is under development. It 
+	could be changed or withdrawn, and may not be implemented in this release
+
+</table>
+<p>
+This document is also available as
+<a href="prospath-index.html">separate pages for each function</a>.
+<hr>
+<h2><a name="sm_path_agc">Prosody signal path processing: API: sm_path_agc</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_agc(struct sm_path_agc_parms *<a href="#field-agcp">agcp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-agcp">*agcp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_agc_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-agc">agc</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-volume">volume</a>;						/* in */
+} SM_PATH_AGC_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures automatic gain control and fixed volume adjustment on
+a signal path. The
+<a class=pref href="#field-agc">agc</a>
+parameter controls whether or not automatic gain control is
+applied to the signal. If
+<a class=pref href="#field-agc">agc</a>
+is non-zero then automatic gain control is applied. The
+volume adjustment specified is performed after the AGC and
+has a range of at least -24 to +8 dB. Volume adjustment is
+always applied, even if AGC is disabled.
+<p>
+Requires the module
+<a href="softmodindex.html#gainbg">gainbg</a>.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path to be configured
+
+<dt><a name="field-agc">agc</a><dd>Indicator of whether automatic gain control is to be enabled
+(non-zero) or disabled (zero).
+
+<dt><a name="field-volume">volume</a><dd>The volume adjustment (dBm0).
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_path_agc_adjust_settings">Prosody signal path processing: API: sm_path_agc_adjust_settings</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_agc_adjust_settings(struct sm_path_agc_adjust_settings_parms *<a href="#field-agcadjp">agcadjp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-agcadjp">*agcadjp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_agc_adjust_settings_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	float <a href="#field-max_level_decay">max_level_decay</a>;					/* in */
+	float <a href="#field-target_level">target_level</a>;					/* in */
+} SM_PATH_AGC_ADJUST_SETTINGS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path which has AGC enabled.
+
+<dt><a name="field-max_level_decay">max_level_decay</a><dd>The rate at which the AGC decays the estimate of the loudest signal, 
+as a fraction.
+
+<dt><a name="field-target_level">target_level</a><dd>The target output level in dBm0.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_WRONG_CHANNEL_STATE - the path does not have AGC enabled</ul>
+<hr>
+<h2><a name="sm_path_avf_amrnb_dec">Prosody signal path processing: API: sm_path_avf_amrnb_dec</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_avf_amrnb_dec(struct sm_path_avf_amrnb_dec_parms *<a href="#field-amrnbdecparms">amrnbdecparms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-amrnbdecparms">*amrnbdecparms</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_avf_amrnb_dec_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-enable">enable</a>;						/* in */
+} SM_PATH_AVF_AMRNB_DEC_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures AVF encapsulated AMR-NB decoding on a signal path.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-path">path</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The signal path to be configured
+
+<dt class=version-Prel><a name="field-enable">enable</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Enables (non-zero) or disables (zero) the AMR-NB decoder.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_path_avf_amrnb_enc">Prosody signal path processing: API: sm_path_avf_amrnb_enc</a></h2>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_avf_amrnb_enc(struct sm_path_avf_amrnb_enc_parms *<a href="#field-amrnbencparms">amrnbencparms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-amrnbencparms">*amrnbencparms</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_avf_amrnb_enc_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-enable">enable</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-bitrate">bitrate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-vad_enable">vad_enable</a>;					/* in */
+} SM_PATH_AVF_AMRNB_ENC_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures AVF encapsulated AMR-NB encoding on a signal path.
+Requires the module
+<a href="softmodindex.html#amr-nb-prs">amr-nb-prs</a>
+or
+<a href="softmodindex.html#amr-nb-all">amr-nb-all</a>.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-Prel><a name="field-path">path</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The signal path to be configured
+
+<dt class=version-Prel><a name="field-enable">enable</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Enables (non-zero) or disables (zero) the AMR-NB encoder.
+
+<dt class=version-Prel><a name="field-payload_type">payload_type</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The payload type which should be used in the output AVF. Note that on AVF replay the payload type
+in the AVF is ignored so, in general, the value supplied here is irrelevant. However if, for instance,
+the resulting file was to be output using a streaming server, the payload type may well be used.
+
+<dt class=version-Prel><a name="field-bitrate">bitrate</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The speed to use in bits per second. It must be one of the speeds which the AMR codec can
+encode, which are: 4750, 5150, 5900, 6700, 7400, 7950, 10200, and 12200.
+
+<dt class=version-Prel><a name="field-vad_enable">vad_enable</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Whether to enable the Voice Activity Detector.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_path_create">Prosody signal path processing: API: sm_path_create</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_create(struct sm_path_create_parms *<a href="#field-createp">createp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-createp">*createp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_create_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+} SM_PATH_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Creates a signal path. A signal path permits a variety of
+transformations to be performed on a signal. If no transformations
+are enabled, a path acts as a pass through.
+<p>
+The modules
+<a href="softmodindex.html#inchan">inchan</a>
+and
+<a href="softmodindex.html#passthru">passthru</a>
+are required.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The created signal path.
+
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module on which the path is to be created.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if no suitable output channel free<li>ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified</ul>
+<hr>
+<h2><a name="sm_path_datafeed_connect">Prosody signal path processing: API: sm_path_datafeed_connect</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_datafeed_connect(struct sm_path_datafeed_connect_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_datafeed_connect_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-data_source">data_source</a>;				/* in */
+} SM_PATH_DATAFEED_CONNECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Connects a datafeed to a signal path. The
+<a class=pref href="#field-data_source">data_source</a>
+must be a datafeed obtained from 
+<a href="apifn-sm_channel_get_datafeed.html">sm_channel_get_datafeed()</a>,
+<a href="apifn-sm_tdmrx_get_datafeed.html">sm_tdmrx_get_datafeed()</a>
+<a href="apifn-sm_vmprx_get_datafeed.html">sm_vmprx_get_datafeed()</a>
+or 
+<a href="#sm_path_get_datafeed">sm_path_get_datafeed()</a>.
+Datafeed connections can only be made between objects allocated
+on the same <code>tSMModuleId</code>.
+The signal path
+<a class=pref href="#field-path">path</a>
+will receive any data that is generated by the output task from which 
+<a class=pref href="#field-data_source">data_source</a>
+was derived.
+<p>
+To disconnect a signal path from a datafeed, specify 
+<code>kSMNullDatafeedId</code> as the tSMDatafeedId in
+<a class=pref href="#field-data_source">data_source</a>
+<p>
+Requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path that will receive and process the data
+
+<dt><a name="field-data_source">data_source</a><dd>The datafeed acting as a source of data for the signal path
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_path_delay">Prosody signal path processing: API: sm_path_delay</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_delay(struct sm_path_delay_parms *<a href="#field-delayparms">delayparms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-delayparms">*delayparms</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_delay_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-enable">enable</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-delay">delay</a>;						/* in */
+} SM_PATH_DELAY_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Delays signal by specified number of samples. If signal path already
+has a delay configured, the delay is changed to new value. A new or
+increased delay has gap filled with silence.
+<p>
+Requires the module
+<a href="softmodindex.html#delay">delay</a>
+to be loaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path to be configured
+
+<dt><a name="field-enable">enable</a><dd>Enables (non-zero) or disables (zero) delay.
+
+<dt><a name="field-delay">delay</a><dd>Delay value measured in samples.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_path_destroy">Prosody signal path processing: API: sm_path_destroy</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_destroy(<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-path">path</a>
+<dd>
+A tSMPathId that has been prevously created by a call to 
+<a href="#sm_path_create">sm_path_create()</a>
+.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys
+<a class=pref href="#field-path">path</a>
+and invalidates the tSMPathId.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_path_echocancel">Prosody signal path processing: API: sm_path_echocancel</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_echocancel(struct sm_path_echocancel_parms *<a href="#field-cancelp">cancelp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-cancelp">*cancelp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_echocancel_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-enable">enable</a>;						/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-reference">reference</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-non_linear">non_linear</a>;					/* in */
+	<a name="enum-kSMPathEchoNonLinearMode">enum kSMPathEchoNonLinearMode</a> {
+		<a href="#field-kSMPathEchoNonLinearModeMuting">kSMPathEchoNonLinearModeMuting</a>,
+		<a href="#field-kSMPathEchoNonLinearModeCNG">kSMPathEchoNonLinearModeCNG</a>,
+	} <a href="#field-mode">mode</a>;							/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-use_agc">use_agc</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-fix_agc">fix_agc</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-span">span</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-delay">delay</a>;						/* in */
+	<a name="enum-kSMPathEchoToneAction">enum kSMPathEchoToneAction</a> {
+		<a href="#field-kSMPathEchoToneActionNone">kSMPathEchoToneActionNone</a>,
+		<a href="#field-kSMPathEchoTonetActionMuteTTY">kSMPathEchoTonetActionMuteTTY</a>,
+	} <a href="#field-tone_action">tone_action</a>;						/* in */
+} SM_PATH_ECHOCANCEL_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures echo cancellation on a signal path. The
+input is examined for an echo of the
+<a class=pref href="#field-reference">reference</a>
+signal, and any echo found is suppressed.
+<p>
+Non-linear echo cancellation can operate in two modes. The default is 
+non-linear echo cancellation with muting, which is suitable for large-scale 
+conferencing and/or IVR applications, where it is important that the signal 
+is completely muted whenever the caller is not speaking.
+<p>
+Non-linear echo cancellation with comfort noise generation (CNG) never mutes 
+the signal. Instead it replaces any residual traces of echo with "comfort 
+noise". This mode of operation is most appropriate to IP gateway applications 
+where background noise is desirable to maintain the illusion of continuity.
+<p>
+If tone_action is set to mute TTY, the echo cancellation algorithm will expect to 
+encounter TTY tones on its primary input and its reference. 
+Its output will be muted whenever such tones are present on its reference and for a 
+short time afterwards (thus muting echoes of tones). It will pass though TTY tones 
+present on its primary input at other times. This behaviour should only be enabled 
+if TTY tones are expected in the signal path. It would normally be used with 
+non-linear mode disabled.
+<p>
+Requires the module
+<a href="softmodindex.html#echocan">echocan</a>.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path to be configured
+
+<dt><a name="field-enable">enable</a><dd>Enables (non-zero) or disables (zero) echo cancellation of the
+input signal.
+
+<dt><a name="field-reference">reference</a><dd>The datafeed which is the reference signal. Only used if
+<a class=pref href="#field-enable">enable</a>
+is non-zero.
+
+<dt><a name="field-non_linear">non_linear</a><dd>Enables (non-zero) or disables (zero) non-linear processing. 
+The exact behaviour of the non-linear processing module is controlled
+by
+<a class=pref href="#field-mode">mode</a>
+. Negative 
+values represent the lower limit in dBm0. Positive values cause 
+the default value of -42dBm0 to be used.
+Only used if
+<a class=pref href="#field-enable">enable</a>
+is non-zero.
+
+<dt><a name="field-mode">mode</a><dd>Selects the non-linear echo cancellation mode to be used. Only used if
+<a class=pref href="#field-non_linear">non_linear</a>
+is non-zero.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMPathEchoNonLinearModeMuting">kSMPathEchoNonLinearModeMuting</a>
+<dd>Uses non-linear processing to suppress the signal whenever
+echo or background noise are dominant. This mode of operation
+is suitable for large-scale conferencing and/or IVR applications,
+where it is important that the signal is completely muted whenever
+the caller is not speaking.
+
+<dt><a name="field-kSMPathEchoNonLinearModeCNG">kSMPathEchoNonLinearModeCNG</a>
+<dd>Uses non-linear processing to replace the signal with comfort noise
+whenever echo might otherwise be audible. This mode of operation is
+most appropriate to IP gateway applications where background noise is
+desirable to maintain the illusion of continuity.
+
+</dl>
+<dt><a name="field-use_agc">use_agc</a><dd>Enables (non-zero) or disables (zero) the use of automatic gain
+control on the input signal.
+Only used if
+<a class=pref href="#field-enable">enable</a>
+is non-zero.
+
+<dt><a name="field-fix_agc">fix_agc</a><dd>Enables (non-zero) or disables (zero) holding the gain fixed at its
+current value. This can be used after the AGC gain factor has adjusted
+itself to prevent further changes.
+Only used if
+<a class=pref href="#field-enable">enable</a>
+is non-zero.
+
+<dt><a name="field-span">span</a><dd>If non-zero, sets the span (in milliseconds) of the echo cancellation.
+A side effect of this is that the input conditioning may be re-initialised.
+Only used if
+<a class=pref href="#field-enable">enable</a>
+is non-zero.
+
+<dt><a name="field-delay">delay</a><dd>If non-zero, sets delay (in milliseconds) before the reference signal is presented 
+to echo cancellation reference input (allowing application to compensate for time 
+it takes reference signal to reach the TDM circuit, so avoiding the effective span 
+being diminished by this amount). Input conditioning is re-initialised. To set a 
+zero delay, use the value -1. If zero, the delay is unchanged and input conditioning
+is not re-initialised. The default delay is zero milliseconds. 
+
+<dt><a name="field-tone_action">tone_action</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMPathEchoToneActionNone">kSMPathEchoToneActionNone</a>
+<dd>No special action on occurence of tones.
+
+<dt><a name="field-kSMPathEchoTonetActionMuteTTY">kSMPathEchoTonetActionMuteTTY</a>
+<dd>TTY tones are expected - when detected action taken to mute TTY echo but passthrough non-echo TTY.
+
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_path_emphasis">Prosody signal path processing: API: sm_path_emphasis</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_emphasis(struct sm_path_emphasis_parms *<a href="#field-emphparms">emphparms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-emphparms">*emphparms</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_emphasis_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-enable">enable</a>;						/* in */
+	<a name="enum-kSMPathEmphMode">enum kSMPathEmphMode</a> {
+		<a href="#field-kSMPathEmphModeHFEmphasis">kSMPathEmphModeHFEmphasis</a>,
+		<a href="#field-kSMPathEmphModeHFDeemphasis">kSMPathEmphModeHFDeemphasis</a>,
+	} <a href="#field-mode">mode</a>;							/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-gain">gain</a>;						/* in */
+} SM_PATH_EMPHASIS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures a high-frequency emphasis/de-emphasis filter.
+In emphasis mode, response curve is approximately -3dB at 0Hz rising
+to 0dB at 300Hz and 20dB at 3330Hz.
+In de-emphasis mode, the inverse filter is applied: 3dB at 0Hz falling
+to 0dB at 300Hz and -20dB at 3330Hz.
+Disabling the filter also disables the gain.
+Note that the frequencies quoted are proportional to the input signal sample rate 
+and those given are for an input signal sample rate of 8000 samples per second. 
+<p>
+Requires the module
+<a href="softmodindex.html#emph">emph</a>
+to be loaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path to be configured
+
+<dt><a name="field-enable">enable</a><dd>Enables (non-zero) or disables (zero) filter.
+
+<dt><a name="field-mode">mode</a><dd>Indicates what mode the filter operates in.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMPathEmphModeHFEmphasis">kSMPathEmphModeHFEmphasis</a>
+<dd>Puts the filter into HF emphasis mode.
+
+<dt><a name="field-kSMPathEmphModeHFDeemphasis">kSMPathEmphModeHFDeemphasis</a>
+<dd>Puts the filter into HF de-emphasis mode.
+
+</dl>
+<dt><a name="field-gain">gain</a><dd>Extra gain to apply to the signal as part of the filter, in dB.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_path_get_datafeed">Prosody signal path processing: API: sm_path_get_datafeed</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_get_datafeed(struct sm_path_datafeed_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_datafeed_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* out */
+} SM_PATH_DATAFEED_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Request a datafeed identifier from a signal path. This identifer
+can subsequently be used in a call to 
+<a href="apifn-sm_channel_datafeed_connect.html">sm_channel_datafeed_connect()</a>,
+<a href="apifn-sm_tdmtx_datafeed_connect.html">sm_tdmtx_datafeed_connect()</a>
+or
+<a href="apifn-sm_vmptx_datafeed_connect.html">sm_vmptx_datafeed_connect()</a>
+to connect the result of the signal path procesing to a speech
+channel (tSMChannelId), TDM[tx], or a VMP[tx]
+respectively. It is valid until the path is destroyed.
+Datafeed connections can only be made between objects allocated
+on the same <code>tSMModuleId</code>.
+<p>
+Requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path from which to obtain a datafeed
+
+<dt><a name="field-datafeed">datafeed</a><dd>The datafeed object representing the processed signal from
+the signal path
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_path_get_event">Prosody signal path processing: API: sm_path_get_event</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_get_event(struct sm_path_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_event_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_PATH_EVENT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+If the call completes successfully 
+<a class=pref href="#field-event">event</a>
+will hold the tSMEventId belonging to 
+<a class=pref href="#field-path">path</a>.
+The tSMEventId is valid until the path is destroyed using 
+<a href="#sm_path_destroy">sm_path_destroy()</a>.
+This event will be signalled when a status change occurs on the 
+path. When the event is signalled the user must call 
+<a href="#sm_path_status">sm_path_status()</a>
+to discover the nature of the status change.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The path 
+
+<dt><a name="field-event">event</a><dd>The event identifier
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_path_mix">Prosody signal path processing: API: sm_path_mix</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_mix(struct sm_path_mix_parms *<a href="#field-mixp">mixp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-mixp">*mixp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_mix_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-enable">enable</a>;						/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-mixin">mixin</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-volume">volume</a>;						/* in */
+} SM_PATH_MIX_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures signal mixing on a signal path.
+The specified signal is added into the signal being processed
+by this path, and the result is adjusted according to the
+<a class=pref href="#field-volume">volume</a>
+parameter, which has a range of at least -24 to +8 dB.
+Typically, the signal is adjusted by -6 dB to prevent the sum
+of the two signals being louder than each original signal.
+<p>
+Requires the module
+<a href="softmodindex.html#gainbg">gainbg</a>.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path to be configured
+
+<dt><a name="field-enable">enable</a><dd>Enables (non-zero) or disables (zero) adding another signal
+to the input signal.
+
+<dt><a name="field-mixin">mixin</a><dd>The datafeed which is the signal to be added. Only used if
+<a class=pref href="#field-enable">enable</a>
+is non-zero.
+
+<dt><a name="field-volume">volume</a><dd>Volume adjustment (dB).
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_path_pitchshift">Prosody signal path processing: API: sm_path_pitchshift</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_pitchshift(struct sm_path_pitchshift_parms *<a href="#field-pitchshiftp">pitchshiftp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-pitchshiftp">*pitchshiftp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_pitchshift_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	float <a href="#field-shift">shift</a>;						/* in */
+} SM_PATH_PITCHSHIFT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures pitch shifting on a signal path.
+<p>
+Requires the module
+<a href="softmodindex.html#pitchshift">pitchshift</a>.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path to be configured
+
+<dt><a name="field-shift">shift</a><dd>The number of octaves by which the signal is to be shifted.
+Values less than zero cause a downward shift (for example, the
+value <code>-0.08333</code> configures a shift down one semitone),
+values greater than zero cause an upward shift, and the value
+zero disables pitch shifting.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_path_resample">Prosody signal path processing: API: sm_path_resample</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_resample(struct sm_path_resample_parms *<a href="#field-resamplep">resamplep</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-resamplep">*resamplep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_resample_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-uprate">uprate</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-downrate">downrate</a>;					/* in */
+} SM_PATH_RESAMPLE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures sample rate conversion on a signal path. If
+<a class=pref href="#field-uprate">uprate</a>
+and
+<a class=pref href="#field-downrate">downrate</a>
+are equal, sample rate conversion is disabled. Otherwise the
+signal is converted to a sampling rate of
+<a class=pref href="#field-uprate">uprate</a>
+/
+<a class=pref href="#field-downrate">downrate</a>
+times the original sampling rate. For example, if
+<a class=pref href="#field-uprate">uprate</a>
+is two, and
+<a class=pref href="#field-downrate">downrate</a>
+is one, the sampling rate is doubled. To produce the best audio quality,
+and to use the least processor time,
+<a class=pref href="#field-uprate">uprate</a>
+should always be kept as small as possible. For example,
+<a class=pref href="#field-uprate">uprate</a>
+= 2, with
+<a class=pref href="#field-downrate">downrate</a>
+= 3, would decrease the sampling rate to two-thirds of the original
+value, but so would
+<a class=pref href="#field-uprate">uprate</a>
+= 4, with
+<a class=pref href="#field-downrate">downrate</a>
+= 6. Both the audio quality and the CPU loading will be noticeably better
+with
+<a class=pref href="#field-uprate">uprate</a>
+= 2, than with
+<a class=pref href="#field-uprate">uprate</a>
+= 4.
+<p>
+Requires the module
+<a href="softmodindex.html#resample">resample</a>.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path to be configured
+
+<dt><a name="field-uprate">uprate</a><dd>Sets the up-sampling ratio. This value must be in the range 1..6.
+
+<dt><a name="field-downrate">downrate</a><dd>Sets the down-sampling ratio. This value must be in the range 1..6.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_path_status">Prosody signal path processing: API: sm_path_status</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_status(struct sm_path_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_status_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a name="enum-kSMPathStatus">enum kSMPathStatus</a> {
+		<a href="#field-kSMPathStatusRunning">kSMPathStatusRunning</a>,
+		<a href="#field-kSMPathStatusOngoingTone">kSMPathStatusOngoingTone</a>,
+		<a href="#field-kSMPathStatusEndTone">kSMPathStatusEndTone</a>,
+		<a href="#field-kSMPathStatusStopped">kSMPathStatusStopped</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-tone-id">id</a>;				/* out */
+			unsigned <a href="#field-u-tone-duration">duration</a>;			/* out */
+		} <a href="#field-u-tone">tone</a>;						/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SM_PATH_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Returns the current status of the path or an error to indicate that
+a problem occurred.
+<p>
+When the event, obtained from
+<a href="#sm_path_get_event">sm_path_get_event()</a>,
+is signalled the user must call this function to determine the nature
+of the status change. The change in status may indicate that an error 
+occurred whilst processing a user request or it may be notifiying the 
+user of a change to the previous state of the path.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The path to interrogate
+
+<dt><a name="field-status">status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMPathStatusRunning">kSMPathStatusRunning</a>
+<dd>Indicates that there is nothing significant to report.
+
+<dt><a name="field-kSMPathStatusOngoingTone">kSMPathStatusOngoingTone</a>
+<dd>Tone detector reports ongoing tone or silence.
+
+<dt><a name="field-kSMPathStatusEndTone">kSMPathStatusEndTone</a>
+<dd>Tone detector reports previously ongoing tone or silence has completed.
+
+<dt><a name="field-kSMPathStatusStopped">kSMPathStatusStopped</a>
+<dd>Indicates that the path has stopped and can be destroyed.
+
+</dl>
+<dt><a name="field-u">u</a><dd>Additional information relating to the current status of the path 
+
+
+<dl>
+<dt><a name="field-u-tone">tone</a><dd>This field is only valid if the status is either
+<a class=pref href="#field-kSMPathStatusOngoingTone">kSMPathStatusOngoingTone</a>
+or
+<a class=pref href="#field-kSMPathStatusEndTone">kSMPathStatusEndTone</a>.
+
+
+<dl>
+<dt><a name="field-u-tone-id">id</a><dd>The id for the recognised tone (or zero if silence).
+
+<dt><a name="field-u-tone-duration">duration</a><dd>The ongoing or final duration of the tone or silence.
+
+</dl>
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources existed to create the path</ul>
+<hr>
+<h2><a name="sm_path_stop">Prosody signal path processing: API: sm_path_stop</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_stop(struct sm_path_stop_parms *<a href="#field-stopp">stopp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-stopp">*stopp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_stop_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+} SM_PATH_STOP_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Requests that a path stops executing. The user will be notified that
+a path has terminated by a final status, kSMPAthStatusStopped, from
+<a href="#sm_path_status">sm_path_status()</a>.
+Once the stopped status notification has been received the path can 
+be destroyed using
+<a href="#sm_path_destroy">sm_path_destroy()</a>.
+<p>
+Once the path has stopped the event should no longer be used to wait
+for status notifications as it will be signalled permanently. The event
+is invalidated when
+<a href="#sm_path_destroy">sm_path_destroy()</a>
+is called.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>A tSMPathId that has been previously created by a call to
+<a href="#sm_path_create">sm_path_create()</a>.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_path_tonedetect">Prosody signal path processing: API: sm_path_tonedetect</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_tonedetect(struct sm_path_tonedetect_parms *<a href="#field-tdparms">tdparms</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-tdparms">*tdparms</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_tonedetect_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-elim">elim</a>;						/* in */
+	<a name="enum-kSMPathToneDetectMode">enum kSMPathToneDetectMode</a> {
+		<a href="#field-kSMPathToneDetectModeNone">kSMPathToneDetectModeNone</a>,
+		<a href="#field-kSMPathToneDetectModeMinDurationNoMinimum">kSMPathToneDetectModeMinDurationNoMinimum</a>,
+		<a href="#field-kSMPathToneDetectModeMinDuration40">kSMPathToneDetectModeMinDuration40</a>,
+		<a href="#field-kSMPathToneDetectModeMinDuration64">kSMPathToneDetectModeMinDuration64</a>,
+	} <a href="#field-min_duration">min_duration</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-tone_set_id">tone_set_id</a>;					/* in */
+} SM_PATH_TONEDETECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures a tone detector on signal path.
+Detected tones are reported through 
+<a href="#sm_path_status">sm_path_status()</a>.
+Tones that are detected may optionally be eliminated.
+When eliminating tones, the signal is delayed by small amount so entire 
+tone can be eliminated.
+<p>
+Requires the module
+<a href="softmodindex.html#td">td</a>
+to be loaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path to be configured
+
+<dt><a name="field-elim">elim</a><dd>Enables (non-zero) or disables (zero) elimination of detected tones from signal.
+
+<dt><a name="field-min_duration">min_duration</a><dd>Tone detection mode - see 
+<a href="apifn-sm_listen_for.html">sm_listen_for()</a>
+for more details.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMPathToneDetectModeNone">kSMPathToneDetectModeNone</a>
+<dd>Tone detection disabled.
+
+<dt><a name="field-kSMPathToneDetectModeMinDurationNoMinimum">kSMPathToneDetectModeMinDurationNoMinimum</a>
+<dd>Simple tone detection enabled, no minimum period.
+
+<dt><a name="field-kSMPathToneDetectModeMinDuration40">kSMPathToneDetectModeMinDuration40</a>
+<dd>Robust detection of tones with duration as short as 40mS.
+
+<dt><a name="field-kSMPathToneDetectModeMinDuration64">kSMPathToneDetectModeMinDuration64</a>
+<dd>Simple tone detection enabled, tone must be valid for 64ms to be detected.
+
+</dl>
+<dt><a name="field-tone_set_id">tone_set_id</a><dd>Selects tone set used for tone detection - use same as for active_tone_set_id field in
+<a href="apifn-sm_listen_for.html">sm_listen_for()</a>.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_path_ttyeliminate">Prosody signal path processing: API: sm_path_ttyeliminate</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_path_ttyeliminate(struct sm_path_ttyeliminate_parms *<a href="#field-ttyeliminatep">ttyeliminatep</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-ttyeliminatep">*ttyeliminatep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_ttyeliminate_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-enable">enable</a>;						/* in */
+} SM_PATH_TTYELIMINATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures TTY elimination on a signal path.
+<p>
+Requires the module
+<a href="softmodindex.html#ttyasyrx">ttyasyrx</a>.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path to be configured
+
+<dt><a name="field-enable">enable</a><dd>Enables (non-zero) or disables (zero) elimination of TTY signals.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>These functions constitute the
+<a href="../prospath.html">Prosody signal path processing API</a>.
+</body>
+</html>

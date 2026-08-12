@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_adjust_catsig_module_params</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_adjust_catsig_module_params</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_adjust_catsig_module_params(struct sm_adjust_catsig_module_parms *<a href="#field-catsigp">catsigp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-catsigp">*catsigp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_adjust_catsig_module_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-catsig_alg_id">catsig_alg_id</a>;					/* in */
+	<a name="enum-kSMBESPCatSigParam">enum kSMBESPCatSigParam</a> {
+		<a href="#field-kSMBESPCatSigParamF_ln_nrg_coeff">kSMBESPCatSigParamF_ln_nrg_coeff</a>=2,
+		<a href="#field-kSMBESPCatSigParamF_min_Lmin">kSMBESPCatSigParamF_min_Lmin</a>,
+		<a href="#field-kSMBESPCatSigParamF_Lmin_decay">kSMBESPCatSigParamF_Lmin_decay</a>,
+		<a href="#field-kSMBESPCatSigParamF_speech_thresh">kSMBESPCatSigParamF_speech_thresh</a>,
+		<a href="#field-kSMBESPCatSigParamF_debounce">kSMBESPCatSigParamF_debounce</a>,
+		<a href="#field-kSMBESPCatSigParamI_min_valid_period_count">kSMBESPCatSigParamI_min_valid_period_count</a>,
+		<a href="#field-kSMBESPCatSigParamI_min_valid_count">kSMBESPCatSigParamI_min_valid_count</a>,
+		<a href="#field-kSMBESPCatSigParamI_glitch_count">kSMBESPCatSigParamI_glitch_count</a>,
+		<a href="#field-kSMBESPCatSigParamI_qualify_count">kSMBESPCatSigParamI_qualify_count</a>,
+		<a href="#field-kSMBESPCatSigParamI_alter_duration">kSMBESPCatSigParamI_alter_duration</a>,
+		<a href="#field-kSMBESPCatSigParamI_max_valid_tone_cnt">kSMBESPCatSigParamI_max_valid_tone_cnt</a>,
+		<a href="#field-kSMBESPCatSigParamI_min_valid_speech_cnt">kSMBESPCatSigParamI_min_valid_speech_cnt</a>,
+		<a href="#field-kSMBESPCatSigParamI_threshold_samp_cnt">kSMBESPCatSigParamI_threshold_samp_cnt</a>,
+		<a href="#field-kSMBESPCatSigParamI_delay_time">kSMBESPCatSigParamI_delay_time</a>,
+		<a href="#field-kSMBESPCatSigParamI_period_time">kSMBESPCatSigParamI_period_time</a>,
+		<a href="#field-kSMBESPCatSigParamI_min_off_count">kSMBESPCatSigParamI_min_off_count</a>,
+		<a href="#field-kSMBESPCatSigParamI_min_period_off">kSMBESPCatSigParamI_min_period_off</a>,
+		<a href="#field-kSMBESPCatSigParamF_initial_Lmax">kSMBESPCatSigParamF_initial_Lmax</a>,
+	} <a href="#field-parameter_id">parameter_id</a>;						/* in */
+	union {
+		double <a href="#field-parameter_value-fp_value">fp_value</a>;				/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-parameter_value-int_value">int_value</a>;				/* in */
+	} <a href="#field-parameter_value">parameter_value</a>;					/* in */
+} SM_ADJUST_CATSIG_MODULE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Adjust parameter for signal categorisation algorithm.
+<p>
+Invoking the call will change a single signal categorisation
+parameter for the given signal categorisation algorithm, that
+parameter being identified by the value supplied
+<a class=pref href="#field-parameter_id">parameter_id</a>.
+<p>
+The new parameter value must be set in either the
+<a class=pref href="#field-parameter_value-fp_value">fp_value</a>
+or
+<a class=pref href="#field-parameter_value-int_value">int_value</a>
+element of the
+<a class=pref href="#field-parameter_value">parameter_value</a>
+union according to the parameter type.
+<p>
+Adjusting parameters for the signal categorisation algorithm requires 
+extreme care and should be attempted only under the guidance of Aculab 
+support. For more background information on how the algorithm works, 
+please refer to	
+<a href=../an-lsd.html>Prosody application note: Live Speaker Detection</a>
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-module">module</a><dd>The module whose signal categorisation parameters are to be
+modified.
+
+<dt><a name="field-catsig_alg_id">catsig_alg_id</a><dd>The algorithm identifier of the algorithm whose parameters are
+to be modified.
+
+<dt><a name="field-parameter_id">parameter_id</a><dd>The parameter to be modified.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMBESPCatSigParamF_ln_nrg_coeff">kSMBESPCatSigParamF_ln_nrg_coeff</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamF_min_Lmin">kSMBESPCatSigParamF_min_Lmin</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamF_Lmin_decay">kSMBESPCatSigParamF_Lmin_decay</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamF_speech_thresh">kSMBESPCatSigParamF_speech_thresh</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamF_debounce">kSMBESPCatSigParamF_debounce</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamI_min_valid_period_count">kSMBESPCatSigParamI_min_valid_period_count</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamI_min_valid_count">kSMBESPCatSigParamI_min_valid_count</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamI_glitch_count">kSMBESPCatSigParamI_glitch_count</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamI_qualify_count">kSMBESPCatSigParamI_qualify_count</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamI_alter_duration">kSMBESPCatSigParamI_alter_duration</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamI_max_valid_tone_cnt">kSMBESPCatSigParamI_max_valid_tone_cnt</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamI_min_valid_speech_cnt">kSMBESPCatSigParamI_min_valid_speech_cnt</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamI_threshold_samp_cnt">kSMBESPCatSigParamI_threshold_samp_cnt</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamI_delay_time">kSMBESPCatSigParamI_delay_time</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamI_period_time">kSMBESPCatSigParamI_period_time</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamI_min_off_count">kSMBESPCatSigParamI_min_off_count</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamI_min_period_off">kSMBESPCatSigParamI_min_period_off</a>
+<dd>
+<dt><a name="field-kSMBESPCatSigParamF_initial_Lmax">kSMBESPCatSigParamF_initial_Lmax</a>
+<dd>
+</dl>
+<dt><a name="field-parameter_value">parameter_value</a><dd>The parameter value.
+
+
+<dl>
+<dt><a name="field-parameter_value-fp_value">fp_value</a><dd>A floating-point value. Used when the
+<a class=pref href="#field-parameter_id">parameter_id</a>
+refers to a floating point parameter (i.e. its name contains
+<code>ParamF</code>).
+
+<dt><a name="field-parameter_value-int_value">int_value</a><dd>An integer value. Used when the
+<a class=pref href="#field-parameter_id">parameter_id</a>
+refers to an integer parameter (i.e. its name contains
+<code>ParamI</code>).
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists<li>ERR_SM_BAD_PARAMETER - if parameter out of range</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

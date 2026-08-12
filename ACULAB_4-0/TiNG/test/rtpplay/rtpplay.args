@@ -1,0 +1,37 @@
+-TiNGtrace
+-TiNGthreadtrace
+CH	high_pass_filter	bool
+CL	frame_len	unsigned
+CNm	comfort_noise_payload_mapping	unsigned
+CV	variant		unsigned
+Ca	clerk_addr	string
+Cb	bitrate		unsigned
+Cp	clerk_port	unsigned
+Cs	use_srtp	bool
+Ct	pticks		unsigned
+Cv	vad		unsigned
+F	format		string
+K	srtp_key	string
+O	once		bool
+P	per_mod		unsigned
+R	randdelay	unsigned
+SSEp	sse_payload_type unsigned
+SSEr	sse_repeat_count unsigned
+SSEt	sse_repeat_spacing unsigned
+T	threshold	signed
+X	maxoctets	unsigned
+a	agc		unsigned
+c	codec		string
+d	dest_ip		string
+e	src_ip		string
+f	rfc2833tones	unsigned
+m	payloadmapping	unsigned
+n	numchan		unsigned
+oR	out_sample_rate	unsigned
+p	dest_port	unsigned
+q	source_port	unsigned
+r	restart		bool
+s	speed		signed
+v	volume		signed
+x	identifier	string
+y	sync		bool

@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody data communications: API: smdc_line_control_v34</title>
+</head>
+<body>
+<h1>Prosody data communications: API: smdc_line_control_v34</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int smdc_line_control_v34(struct smdc_line_control_v34_parms *<a href="#field-controlp">controlp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-controlp">*controlp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_line_control_v34_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCV34LineCtlCmd">enum kSMDCV34LineCtlCmd</a> {
+		<a href="#field-kSMDCV34LineCtlCmdRetrain">kSMDCV34LineCtlCmdRetrain</a>,
+		<a href="#field-kSMDCV34LineCtlCmdRenegotiateUp">kSMDCV34LineCtlCmdRenegotiateUp</a>,
+		<a href="#field-kSMDCV34LineCtlCmdRenegotiateDown">kSMDCV34LineCtlCmdRenegotiateDown</a>,
+		<a href="#field-kSMDCV34LineCtlCmdEnablePrimary">kSMDCV34LineCtlCmdEnablePrimary</a>,
+		<a href="#field-kSMDCV34LineCtlCmdEnableControl">kSMDCV34LineCtlCmdEnableControl</a>,
+		<a href="#field-kSMDCV34LineCtlCmdBitrateTx">kSMDCV34LineCtlCmdBitrateTx</a>,
+		<a href="#field-kSMDCV34LineCtlCmdBitrateRx">kSMDCV34LineCtlCmdBitrateRx</a>,
+	} <a href="#field-cmd">cmd</a>;							/* in */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-bitrate-min_bitrate">min_bitrate</a>;			/* in */
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-bitrate-max_bitrate">max_bitrate</a>;			/* in */
+		} <a href="#field-u-bitrate">bitrate</a>;					/* in */
+	} <a href="#field-u">u</a>;							/* in */
+} SMDC_LINE_CONTROL_V34_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Perform a command on a channel which has been configured for V.34 data
+communications.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel which has been configured for data communications.
+
+<dt><a name="field-cmd">cmd</a><dd>The control operation to perform.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCV34LineCtlCmdRetrain">kSMDCV34LineCtlCmdRetrain</a>
+<dd>Initiate a full retrain procedure on the line, negotiating the best
+new data rate for the primary channel.
+
+<dt><a name="field-kSMDCV34LineCtlCmdRenegotiateUp">kSMDCV34LineCtlCmdRenegotiateUp</a>
+<dd>Performs a short renegotiation procedure to increase the data rate on
+the primary channel. This is typically done when the
+<tt>snr_status</tt> parameter of
+<a href="apifn-smdc_line_status_v34.html">smdc_line_status_v34()</a>
+is greater than zero.
+
+<dt><a name="field-kSMDCV34LineCtlCmdRenegotiateDown">kSMDCV34LineCtlCmdRenegotiateDown</a>
+<dd>Performs a short renegotiation procedure to decrease the data rate on
+the primary channel. This is typically done when the
+<tt>snr_status</tt> parameter of
+<a href="apifn-smdc_line_status_v34.html">smdc_line_status_v34()</a>
+is less than zero.
+
+<dt><a name="field-kSMDCV34LineCtlCmdEnablePrimary">kSMDCV34LineCtlCmdEnablePrimary</a>
+<dd>Switches the modem to transmit on the primary channel. Both
+originating and answering modem must send this command at the
+appropriate time, as negotiated by a higher-level protocol. This
+message is only available on the half-duplex V.34 modem; the
+full-duplex modem always runs on the primary channel.
+
+<dt><a name="field-kSMDCV34LineCtlCmdEnableControl">kSMDCV34LineCtlCmdEnableControl</a>
+<dd>Switches the modem to transmit on the control channel.  Both
+originating and answering modem must send this command at the
+appropriate time, as negotiated by a higher-level protocol. This
+message is only available on the half-duplex V.34 modem; the
+full-duplex modem always runs on the primary channel. The
+half-duplex modem is using the control channel when it first returns
+control to the user after negotiation.
+
+<dt><a name="field-kSMDCV34LineCtlCmdBitrateTx">kSMDCV34LineCtlCmdBitrateTx</a>
+<dd>Change the bitrate limits on the transmitter.
+
+<dt><a name="field-kSMDCV34LineCtlCmdBitrateRx">kSMDCV34LineCtlCmdBitrateRx</a>
+<dd>Change the bitrate limits on the receiver.
+
+</dl>
+<dt><a name="field-u">u</a><dd>
+
+<dl>
+<dt><a name="field-u-bitrate">bitrate</a><dd>This field is only valid if the cmd is
+<a class=pref href="#field-kSMDCV34LineCtlCmdBitrateTx">kSMDCV34LineCtlCmdBitrateTx</a>
+or
+<a class=pref href="#field-kSMDCV34LineCtlCmdBitrateRx">kSMDCV34LineCtlCmdBitrateRx</a>.
+
+
+<dl>
+<dt><a name="field-u-bitrate-min_bitrate">min_bitrate</a><dd>The minimum bitrate to negotiate for the primary channel, in bits/second.
+
+<dt><a name="field-u-bitrate-max_bitrate">max_bitrate</a><dd>The maximum bitrate to negotiate for the primary channel, in bits/second.
+
+</dl>
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - configured protocol does not support this command</ul>
+<hr>
+<p>This function is part of the <a href="../prosdc.html">Prosody data communications API</a>.
+</body>
+</html>

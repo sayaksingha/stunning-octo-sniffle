@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<link rel=stylesheet type="text/css" href="evapi.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>eventset_delete</title>
+<body>
+
+<h1>EVENTSET: eventset_delete() - delete an event from an
+EVENTSET</h1>
+
+<h2>Name</h2>
+
+<p>
+eventset_delete()
+
+<h2>Synopsis</h2>
+
+<pre>#include &quot;eventset.h&quot;</pre>
+
+<pre>err_t eventset_delete(EVENTSET *evs, ACTIVE_JOB *acp)</pre>
+
+<h2>Description</h2>
+
+<p>
+The <code>eventset_delete()</code> function
+deletes an <a href="ACTIVE_JOB.html">ACTIVE_JOB</a> (and hence
+its event) from an <a href="EVENTSET.html"><code>EVENTSET</code></a>. The event must previously
+have been added to the EVENTSET via the function <code>eventset_insert()</code>. The <a href="ACTIVE_JOB.html">ACTIVE_JOB</a> parameter must be the same
+one that was used in the corresponding <code>eventset_insert()</code>.
+
+<p>
+It is not always necessary to call eventset_delete(), as there
+are other ways that an <a href="ACTIVE_JOB.html">ACTIVE_JOB</a>'s
+life could end. For example, the handler could return non-zero,
+or <code>evenset_stop()</code>, could be
+called.
+
+<h2>Return value</h2>
+
+<p>
+<code>eventset_delete()</code> returns NULL
+if successful, or non-NULL otherwise. If non-NULL, the <code>err_t</code> object contains error strings
+which may be printed or otherwise communicated to the user.
+
+<h2>See also</h2>
+
+<p>
+<a href="eventset_insert.html">eventset_insert()</a><br>
+<a href="eventset_stop.html">eventset_stop()</a>

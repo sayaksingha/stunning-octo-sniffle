@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody program: modload - layout files</title>
+</head>
+<body>
+<h1>Prosody program: modload - layout files</h1>
+<p>
+When invoking modload in place of specifying a list of download files it is possible
+to specify a single layout file instead.  This must be a text file with the file
+extension ".lyt" which provides information relating to the loading and placement
+of ProsodyX firmware modules in DSP memory.
+<p>
+ProsodyX DSPs currently have 3 memory regions where firmware modules can be placed on loading:
+<table>
+<tr>
+    <td><code>m1</code> The fastest memory region but limited in size.
+<tr>
+    <td><code>m2</code> A slightly slower and larger memory area.
+<tr>
+    <td><code>sdram</code> The largest memory area but considerably slower than "m1" and "m2".
+</table>
+<p>
+The layout file controls the placing by modload of lists of firmware modules into the above memory regions. It may consist of blank lines, comment lines begining with a '#' and
+placement list lines consisting of a list of files to be downloaded prefixed with one of the following placement directives:
+<table>
+<tr>
+    <td><code>default:</code> use default placement, place in fastest "m1" memory if enough space, otherwise in slower "m2"
+<tr>
+    <td><code>m2:</code> place firmware modules in "m2" memory
+<tr>
+    <td><code>m2-fast-m1:</code> place critical sections of firmware modules in fastest "m1" memory and remainder in slower "m2" 
+<tr>
+    <td><code>sdram:</code> place firmware modules in "sdram" memory
+<tr>
+    <td><code>sdram-fast-m1:</code> place critical sections of firmware modules in fastest "m1" memory and remainder in slower "sdram" 
+<tr>
+    <td><code>sdram-fast-m2:</code> place critical sections of firmware modules in faster "m2" memory and remainder in slower "sdram" 
+</table>
+<p>
+For example,
+<pre>
+	# example layout file
+	#
+	# following algorithms in fastest memory
+	default: datafeed.sob inchan.sob outchan.sob echocan.sob passthru.sob v17rx.sob
+	#
+	# put modem receivers in slower memory
+	m2: v29rx.sob v27rx.sob v17rx.sob
+	#
+	# put modem receivers in large slowest memory
+	sdram: v29tx.sob v27tx.sob v17tx.sob
+	#
+	# put big iLBC codec in large slowest memory but place its critical sections in fastest memory
+	sdram-fast-m1: ilbc.sob
+</pre>
+<p>
+</body>
+</html>
+

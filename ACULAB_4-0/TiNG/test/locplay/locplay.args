@@ -1,0 +1,21 @@
+-TiNGtrace
+-TiNGthreadtrace
+l	remote_trace_port	string
+F	format		string
+oR	out_sample_rate	unsigned
+O	once		bool
+P	per_mod		unsigned
+R	randdelay	unsigned
+T	threshold	signed
+X	maxoctets	unsigned
+a	agc		unsigned
+b	background	timeslot
+f	flood		bool
+n	numchan		unsigned
+r	restart		bool
+s	speed		signed
+t	timeslot	timeslot
+M	maxts		unsigned
+v	volume		signed
+x	serialnumber	string
+y	sync		bool

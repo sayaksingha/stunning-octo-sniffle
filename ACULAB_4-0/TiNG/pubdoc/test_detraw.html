@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: detraw</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: detraw</h1>
+<p>
+This is a simple detection application. It performs various kinds of
+detection on a local timeslot.
+It can only use the default tone tables. To test detection with 
+new tone tables use <a href="test_tonedet.html">tonedet</a>.
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have these firmware modules loaded:
+<ul>
+	<li><a href="gen/softmodindex.html#datafeed">datafeed</a> (on Prosody X only)
+	<li><a href="gen/softmodindex.html#inchan">inchan</a>
+	<li><a href="gen/softmodindex.html#td">td</a>
+</ul>
+<p>
+Run <code>detraw</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/detraw</span> or
+<span class="type-WINNT"> gen-WINNT_V6/detraw</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table>
+<tr>
+	<td><code>-a 1</code>
+		<td>map tones to digits. This is only useful for
+		detecting DTMF tones, in which case it shows the
+		DTMF digit as digits rather than as codes
+
+<tr>
+	<td><code>-C</code> &lt;alg&gt;
+		<td>enable signal categorisation with specified
+		algorithm
+
+<tr>
+	<td><code>-c 1</code>
+		<td>enable detection of call progress tones
+
+<tr>
+	<td><code>-T</code> &lt;type&gt;
+		<td>the type of tone detection to use. One of these
+		values:
+		<table border>
+		<tr> <th class=bg>value<th class=bg>meaning 
+		<tr> <td>e<td>tone end detection
+		<tr> <td>l<td>tone length detection
+		<tr> <td>s<td>tone start detection
+		</table>
+		
+
+<tr>
+	<td><code>-g</code> &lt;duration&gt;
+		<td>enable grunt detection with specified duration
+
+<tr>
+	<td><code>-m</code> &lt;module&gt;
+		<td>The Prosody module to use. This is the number of the
+		module on the card.
+<tr>
+	<td><code>-o</code> &lt;tonemode&gt;
+		<td>enable tone detection with specified mode for
+		minimum tone duration (one of
+		"<code>1</code>", "<code>40</code>",
+		"<code>64</code>")
+
+<tr>
+	<td><code>-R</code> &lt;timeslot&gt;
+		<td>the output timeslot to use as sidetone reference for
+		isolated word recognition (see
+		<a href="test_timeslots.html">Test program timeslots</a>).
+		Note that this is an <strong>output</strong> timeslot -
+		not an input. It should be a timeslot which is currently
+		being used to generate the output which is to be regarded
+		as sidetone by the recogniser.
+		
+
+<tr>
+	<td><code>-s</code> &lt;toneset&gt;
+		<td>select tone set to use for tone detection
+
+<tr>
+	<td><code>-t</code> &lt;timeslot&gt;
+		<td>timeslot to use (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>).
+		
+
+<tr>
+	<td><code>-x</code> &lt;card&gt;
+		<td>Use Prosody processor modules on this card, specified as
+		described in
+		<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a>
+
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/detraw -x x:1.2.3.4/mykey -t 64:0 -o 1 -a 1
+</pre>
+<p>
+would listen for DTMF digits using Prosody processor modules on the card with address 1.2.3.4 and key mykey.
+<p>
+When the program detects anything, it prints a description of what was
+detected. For example:
+<pre>
+	Digit: 42 (*) 0
+</pre>
+<p>
+means that it detected the DTMF digit <code>*</code>.
+<p>
+The source code for this program is provided (detraw.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

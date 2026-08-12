@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody program: pxdiagutil</title>
+</head>
+<body>
+<h1>Prosody program: pxdiagutil</h1>
+<p>
+This tool may be used by customers under guidance from Aculab technical support
+to obtain diagnostic information from a Prosody X card. It may also be used to
+determine DSP resource usage when customer application is running. 
+<p>
+Go to directory $(TiNG)/test. 
+<p>
+Run <code>pxdiagutil</code> with the appropriate options (the program is 
+<span class=type-LINUX>../util/gen-LINUX_V6/pxdiagutil</span>,
+<span class=type-SOL>../util/gen-SOL_32_V6/pxdiagutil</span>, or 
+<span class=type-WINNT>../util/gen-WINNT_V6/pxdiagutil</span> 
+depending on which operating system you are using). 
+<p>
+Command line options are: 
+<table>
+  <tr>
+    <td><code>-i</code> ip-address 
+    <td>Specifies the IP address for Prosody X card on which is the module 
+      to be examined 
+  <tr>
+    <td><code>-k</code> security-key 
+    <td>Specifies the security key for Prosody X card on which is the module 
+      to be examined 
+  <tr>
+    <td><code>-m</code> module 
+    <td>Specifies the module to to be examined 
+      (default 0). 
+  <tr>
+    <td><code>-d</code> dump-file 
+    <td>Specifies a dumpfile to be used in conjunction with dump commands
+  <tr>
+    <td><code>-v</code> verbose-level 
+    <td>Specifies a number which controls the amount of commentary printed 
+      during command execution. Larger numbers generate more output.
+  <tr>
+    <td>&lt;command&gt; 
+    <td>name of pxdiagutil command to be executed - see below. 
+  <tr>
+    <td>[command params] 
+    <td>optional additional parameters specific to command - see below. 
+</tr>
+</table>
+<p>
+The set of possible pxdiagutil commands are as follows:
+<table>
+  <tr>
+    <td><code>dump</code> 
+    <td>Generate very large diagnostic dump for crashed DSP into dump file.
+  <tr>
+    <td><code>dump_nosdr</code> 
+    <td>Generate smaller diagnostic dump for crashed or runing DSP into dump file.
+  <tr>
+    <td><code>dump_asspsdr</code> 
+    <td>Generate medium size diagnostic dump for crashed DSP into dump file.
+  <tr>
+    <td><code>dump_withipb</code> 
+    <td>Generate very large diagnostic dump with extra register info for crashed DSP into dump file.
+  <tr>
+    <td><code>mem</code> hex-address hex-length 
+    <td>Dump DSP memory as hex octets or as generated binary dump file if -d specified.
+  <tr>
+    <td><code>aggmem</code> hex-address hex-length 
+    <td>Dump aggregator memory as hex octets or as generated binary dump file if -d specified.
+  <tr>
+    <td><code>kernel</code>
+    <td>Output kernel version and epoch count.
+  <tr>
+    <td><code>status</code>
+    <td>Determine running kernel version, state of DSP (running, crashed etc) and its uptime.
+  <tr>
+    <td><code>dspcpu</code>
+    <td>Get snapshot of DSP CPU load over last second, maximum and average (use cpumon for more accurate picture)
+  <tr>
+    <td><code>heap</code>
+    <td>Report remaining M2 and SDRAM space, useful for resource evaluations.
+  <tr>
+    <td><code>m1left</code>
+    <td>Report amount of fast code space remaining for algorithm download before overflow M2 has to be used.
+  <tr>
+    <td><code>tdmmem</code>
+    <td>Report amount of memory used for TDM timeslot buffers.
+  <tr>
+    <td><code>tdmtssamps</code> rx port ts
+    <td>Dump 16 bit samples shown as hex from buffer for signal received by DSP (rx). Assumes timeslot is set up in companding mode and 160 samples are shown. Values are normalised 16 bit linear values (x8 for A-Law and x4 for mu-Law)
+  <tr>
+    <td><code>tdmtssamps</code> tx port ts
+    <td>As above but for signal transmitted by DSP
+  <tr>
+    <td><code>vmptxs</code>
+    <td>List VMP tx tasks
+  <tr>
+    <td><code>vmprxs</code>
+    <td>List VMP rx tasks
+  <tr>
+    <td><code>asspdump</code>
+    <td>Generate dump of current live ASSP connection state into dump file.
+  <tr>
+    <td><code>ping6</code>
+    <td>Send IPv6 PiNG from DSP.
+  <tr>
+    <td><code>nr6</code>
+    <td>Output IPv6 address information for DSP.
+</tr>
+</table>
+<p>
+For example, 
+<pre>
+	../util/gen-LINUX_V6/pxdiagutil -i 172.16.1.220 -k mykey -d dump.out1 dump
+</pre>
+<p>
+produces diagnostic binary dump in file named dump.out which may then
+be sent to Aculab support.
+</body>
+</html>
+

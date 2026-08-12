@@ -1,0 +1,422 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_status</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_status</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_status(struct sm_vmprx_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_status_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a name="enum-kSMVMPrxStatus">enum kSMVMPrxStatus</a> {
+		<a href="#field-kSMVMPrxStatusRunning">kSMVMPrxStatusRunning</a>,
+		<a href="#field-kSMVMPrxStatusStopped">kSMVMPrxStatusStopped</a>,
+		<a href="#field-kSMVMPrxStatusDetectTone">kSMVMPrxStatusDetectTone</a>,
+		<a href="#field-kSMVMPrxStatusEndTone">kSMVMPrxStatusEndTone</a>,
+		<a href="#field-kSMVMPrxStatusGotPorts">kSMVMPrxStatusGotPorts</a>,
+		<a href="#field-kSMVMPrxStatusNewSSRC">kSMVMPrxStatusNewSSRC</a>,
+		<a href="#field-kSMVMPrxStatusUnhandledPayload">kSMVMPrxStatusUnhandledPayload</a>,
+		<a href="#field-kSMVMPrxStatusCodecSpecific">kSMVMPrxStatusCodecSpecific</a>,
+		<a href="#field-kSMVMPrxStatusGotPortsIPv6">kSMVMPrxStatusGotPortsIPv6</a>,
+		<a href="#field-kSMVMPrxStatusNewSSRCIPv6">kSMVMPrxStatusNewSSRCIPv6</a>,
+		<a href="#field-kSMVMPrxStatusSTUNBindRequest">kSMVMPrxStatusSTUNBindRequest</a>,
+		<a href="#field-kSMVMPrxStatusSTUNBindResponse">kSMVMPrxStatusSTUNBindResponse</a>,
+		<a href="#field-kSMVMPrxStatusJBResync">kSMVMPrxStatusJBResync</a>,
+		<a href="#field-kSMVMPrxStatusProfileSpecific">kSMVMPrxStatusProfileSpecific</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-tone-id">id</a>;				/* out */
+			double <a href="#field-u-tone-volume">volume</a>;				/* out */
+			unsigned <a href="#field-u-tone-duration">duration</a>;			/* out */
+		} <a href="#field-u-tone">tone</a>;						/* out */
+		struct {
+			int <a href="#field-u-ports-RTP_Port">RTP_Port</a>;				/* out */
+			int <a href="#field-u-ports-RTCP_Port">RTCP_Port</a>;				/* out */
+			<a href="../apitype.html#type-in_addr">struct in_addr</a> <a href="#field-u-ports-address">address</a>;			/* out */
+		} <a href="#field-u-ports">ports</a>;					/* out */
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-run-no_data">no_data</a>;			/* out */
+		} <a href="#field-u-run">run</a>;						/* out */
+		struct {
+			<a href="../apitype.html#type-in_addr">struct in_addr</a> <a href="#field-u-ssrc-address">address</a>;			/* out */
+			int <a href="#field-u-ssrc-port">port</a>;				/* out */
+			int <a href="#field-u-ssrc-ssrc">ssrc</a>;				/* out */
+		} <a href="#field-u-ssrc">ssrc</a>;						/* out */
+		struct {
+			int <a href="#field-u-payload-type">type</a>;				/* out */
+		} <a href="#field-u-payload">payload</a>;					/* out */
+		struct {
+			int <a href="#field-u-codec_specific-payload_type">payload_type</a>;			/* out */
+		} <a href="#field-u-codec_specific">codec_specific</a>;				/* out */
+		struct {
+			int <a href="#field-u-ports_ipv6-RTP_Port">RTP_Port</a>;				/* out */
+			int <a href="#field-u-ports_ipv6-RTCP_Port">RTCP_Port</a>;				/* out */
+			<a href="../apitype.html#type-in6_addr">struct in6_addr</a> <a href="#field-u-ports_ipv6-address">address</a>;		/* out */
+		} <a href="#field-u-ports_ipv6">ports_ipv6</a>;					/* out */
+		struct {
+			<a href="../apitype.html#type-in6_addr">struct in6_addr</a> <a href="#field-u-ssrc_ipv6-address">address</a>;		/* out */
+			int <a href="#field-u-ssrc_ipv6-port">port</a>;				/* out */
+			int <a href="#field-u-ssrc_ipv6-ssrc">ssrc</a>;				/* out */
+		} <a href="#field-u-ssrc_ipv6">ssrc_ipv6</a>;					/* out */
+		struct {
+			int <a href="#field-u-bind_request-recv_port">recv_port</a>;				/* out */
+			<a name="enum-kSMAddressType">enum kSMAddressType</a> {
+				<a href="#field-kSMAddressTypeIPv4">kSMAddressTypeIPv4</a>,
+				<a href="#field-kSMAddressTypeIPv6">kSMAddressTypeIPv6</a>,
+			} <a href="#field-u-bind_request-address_type">address_type</a>;				/* out */
+			union {
+				<a href="../apitype.html#type-in_addr">struct in_addr</a> <a href="#field-u-bind_request-address-ipv4">ipv4</a>;		/* out */
+				<a href="../apitype.html#type-in6_addr">struct in6_addr</a> <a href="#field-u-bind_request-address-ipv6">ipv6</a>;		/* out */
+			} <a href="#field-u-bind_request-address">address</a>;				/* out */
+			int <a href="#field-u-bind_request-port">port</a>;				/* out */
+			<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-u-bind_request-priority">priority</a>;			/* out */
+			int <a href="#field-u-bind_request-use_candidate">use_candidate</a>;			/* out */
+			int <a href="#field-u-bind_request-remote_is_controlling">remote_is_controlling</a>;		/* out */
+		} <a href="#field-u-bind_request">bind_request</a>;					/* out */
+		struct {
+			int <a href="#field-u-bind_response-recv_port">recv_port</a>;				/* out */
+			char <a href="#field-u-bind_response-transaction_id">transaction_id[12]</a>;		/* out */
+			<a name="enum-kSMVMPrxSTUNResult">enum kSMVMPrxSTUNResult</a> {
+				<a href="#field-kSMVMPrxSTUNResultSuccess">kSMVMPrxSTUNResultSuccess</a>,
+				<a href="#field-kSMVMPrxSTUNResultError">kSMVMPrxSTUNResultError</a>,
+				<a href="#field-kSMVMPrxSTUNResultInvalid">kSMVMPrxSTUNResultInvalid</a>,
+				<a href="#field-kSMVMPrxSTUNResultTimeout">kSMVMPrxSTUNResultTimeout</a>,
+			} <a href="#field-u-bind_response-result">result</a>;				/* out */
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-bind_response-error_code">error_code</a>;			/* out */
+			<a href="apifn-sm_vmprx_status.html#enum-kSMAddressType">enum kSMAddressType</a> <a href="#field-u-bind_response-address_type">address_type</a>;	/* out */
+			union {
+				<a href="../apitype.html#type-in_addr">struct in_addr</a> <a href="#field-u-bind_response-address-ipv4">ipv4</a>;		/* out */
+				<a href="../apitype.html#type-in6_addr">struct in6_addr</a> <a href="#field-u-bind_response-address-ipv6">ipv6</a>;		/* out */
+			} <a href="#field-u-bind_response-address">address</a>;				/* out */
+			int <a href="#field-u-bind_response-port">port</a>;				/* out */
+			int <a href="#field-u-bind_response-local_was_controlling">local_was_controlling</a>;		/* out */
+		} <a href="#field-u-bind_response">bind_response</a>;				/* out */
+		struct {
+			<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-u-jbresync-timestamp">timestamp</a>;			/* out */
+			<a href="../apitype.html#type-tSM_UT64">tSM_UT64</a> <a href="#field-u-jbresync-localtimeref">localtimeref</a>;			/* out */
+		} <a href="#field-u-jbresync">jbresync</a>;					/* out */
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-profile_specific-notification_code">notification_code</a>;		/* out */
+		} <a href="#field-u-profile_specific">profile_specific</a>;				/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SM_VMPRX_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Returns the current status of the VMP[rx] or an error to indicate that
+an error has occurred.
+<p>
+When the VMP[rx] event, obtained from
+<a href="apifn-sm_vmprx_get_event.html">sm_vmprx_get_event()</a>,
+is signalled the user must call this function to determine the nature
+of the status change. The change in status may indicate that an error 
+occurred whilst processing a user request or it may be notifiying the 
+user of a change to the previous state of the VMP[rx].
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to interrogate
+
+<dt><a name="field-status">status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMVMPrxStatusRunning">kSMVMPrxStatusRunning</a>
+<dd>The VMP[rx] is running normally.
+
+<dt><a name="field-kSMVMPrxStatusStopped">kSMVMPrxStatusStopped</a>
+<dd>Indicates that the VMP[rx] has stopped processing RTP and that it is
+safe to destroy
+
+<dt><a name="field-kSMVMPrxStatusDetectTone">kSMVMPrxStatusDetectTone</a>
+<dd>Indicates that a tone has been received by the vmprx
+
+<dt><a name="field-kSMVMPrxStatusEndTone">kSMVMPrxStatusEndTone</a>
+<dd>Indicates that the tone being received by the vmprx has ended
+
+<dt><a name="field-kSMVMPrxStatusGotPorts">kSMVMPrxStatusGotPorts</a>
+<dd>Indicates that IPv4 port information is available. In addition to being
+reported with this status, this information can
+be retrieved with
+<a href="apifn-sm_vmprx_get_ports.html">sm_vmprx_get_ports()</a>
+at any time until the VMP[x] is stopped.
+
+<dt><a name="field-kSMVMPrxStatusNewSSRC">kSMVMPrxStatusNewSSRC</a>
+<dd>Indicates that a new SSRC value from an IPv4 endpoint is being used.
+
+<dt><a name="field-kSMVMPrxStatusUnhandledPayload">kSMVMPrxStatusUnhandledPayload</a>
+<dd>Indicates that a packet was received with a payload type that could not 
+be handled
+
+<dt><a name="field-kSMVMPrxStatusCodecSpecific">kSMVMPrxStatusCodecSpecific</a>
+<dd>Indicates that codec specific status information is available
+
+<dt><a name="field-kSMVMPrxStatusGotPortsIPv6">kSMVMPrxStatusGotPortsIPv6</a>
+<dd>Indicates that IPv6 port information is available. In addition to being
+reported with this status, this information can
+be retrieved with
+<a href="apifn-sm_vmprx_get_ports.html">sm_vmprx_get_ports()</a>
+at any time until the VMP[x] is stopped.
+
+<dt><a name="field-kSMVMPrxStatusNewSSRCIPv6">kSMVMPrxStatusNewSSRCIPv6</a>
+<dd>Indicates that a new SSRC value from and IPv6 endpoint is being used.
+
+<dt><a name="field-kSMVMPrxStatusSTUNBindRequest">kSMVMPrxStatusSTUNBindRequest</a>
+<dd>Indicates that a STUN bind request has been received.
+
+<dt><a name="field-kSMVMPrxStatusSTUNBindResponse">kSMVMPrxStatusSTUNBindResponse</a>
+<dd>Indicates that a STUN bind response has been received.
+
+<dt><a name="field-kSMVMPrxStatusJBResync">kSMVMPrxStatusJBResync</a>
+<dd>Indicates that a jitter buffer resync has occurred.
+
+<dt><a name="field-kSMVMPrxStatusProfileSpecific">kSMVMPrxStatusProfileSpecific</a>
+<dd>Indicates that profile specific plugin has detected a a state transition. This information should be 
+be retrieved with
+<a href="apifn-sm_vmprx_status_profile_specific.html">sm_vmprx_status_profile_specific()</a>
+.
+
+</dl>
+<dt><a name="field-u">u</a><dd>Additional information relating to the current status of the VMP[rx]
+
+
+<dl>
+<dt><a name="field-u-tone">tone</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMVMPrxStatusDetectTone">kSMVMPrxStatusDetectTone</a>
+or 
+<a class=pref href="#field-kSMVMPrxStatusEndTone">kSMVMPrxStatusEndTone</a>.
+
+
+<dl>
+<dt><a name="field-u-tone-id">id</a><dd>The RFC2833 identifier for the recognised tone
+
+<dt><a name="field-u-tone-volume">volume</a><dd>The volume of the tone expressed in dBm0
+
+<dt><a name="field-u-tone-duration">duration</a><dd>The duration of the tone.
+
+</dl>
+<dt><a name="field-u-ports">ports</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMVMPrxStatusGotPorts">kSMVMPrxStatusGotPorts</a>.
+
+
+<dl>
+<dt><a name="field-u-ports-RTP_Port">RTP_Port</a><dd>The UDP port number on which this VMP[rx] is listening for RTP
+
+<dt><a name="field-u-ports-RTCP_Port">RTCP_Port</a><dd>The UDP port number on which this VMP[rx] is listening for RTCP
+
+<dt><a name="field-u-ports-address">address</a><dd>The address on which this VMP[rx] is listening.
+
+</dl>
+<dt><a name="field-u-run">run</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMVMPrxStatusRunning">kSMVMPrxStatusRunning</a>.
+
+
+<dl>
+<dt><a name="field-u-run-no_data">no_data</a><dd>Non zero when the VMP[rx] is experiencing a
+loss of data that has reached the threshold set by
+<a href="apifn-sm_vmprx_config_dataloss.html">sm_vmprx_config_dataloss()</a>
+
+</dl>
+<dt><a name="field-u-ssrc">ssrc</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMVMPrxStatusNewSSRC">kSMVMPrxStatusNewSSRC</a>.
+
+
+<dl>
+<dt><a name="field-u-ssrc-address">address</a><dd>The address from which the SSRC was received.
+
+<dt><a name="field-u-ssrc-port">port</a><dd>The UDP port number from which the SSRC was received.
+
+<dt><a name="field-u-ssrc-ssrc">ssrc</a><dd>The new SSRC value.
+
+</dl>
+<dt><a name="field-u-payload">payload</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMVMPrxStatusUnhandledPayload">kSMVMPrxStatusUnhandledPayload</a>.
+
+
+<dl>
+<dt><a name="field-u-payload-type">type</a><dd>The payload type identifier from the RTP packet
+
+</dl>
+<dt><a name="field-u-codec_specific">codec_specific</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMVMPrxStatusCodecSpecific">kSMVMPrxStatusCodecSpecific</a>
+
+
+<dl>
+<dt><a name="field-u-codec_specific-payload_type">payload_type</a><dd>The payload type identifier for the codec
+
+</dl>
+<dt><a name="field-u-ports_ipv6">ports_ipv6</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMVMPrxStatusGotPortsIPv6">kSMVMPrxStatusGotPortsIPv6</a>.
+
+
+<dl>
+<dt><a name="field-u-ports_ipv6-RTP_Port">RTP_Port</a><dd>The UDP port number on which this VMP[rx] is listening for RTP
+
+<dt><a name="field-u-ports_ipv6-RTCP_Port">RTCP_Port</a><dd>The UDP port number on which this VMP[rx] is listening for RTCP
+
+<dt><a name="field-u-ports_ipv6-address">address</a><dd>The address on which this VMP[rx] is listening.
+
+</dl>
+<dt><a name="field-u-ssrc_ipv6">ssrc_ipv6</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMVMPrxStatusNewSSRCIPv6">kSMVMPrxStatusNewSSRCIPv6</a>.
+
+
+<dl>
+<dt><a name="field-u-ssrc_ipv6-address">address</a><dd>The address from which the SSRC was received.
+
+<dt><a name="field-u-ssrc_ipv6-port">port</a><dd>The UDP port number from which the SSRC was received.
+
+<dt><a name="field-u-ssrc_ipv6-ssrc">ssrc</a><dd>The new SSRC value.
+
+</dl>
+<dt><a name="field-u-bind_request">bind_request</a><dd>This field is only valid if the status is 
+<a class=pref href="#field-kSMVMPrxStatusSTUNBindRequest">kSMVMPrxStatusSTUNBindRequest</a>
+
+
+<dl>
+<dt><a name="field-u-bind_request-recv_port">recv_port</a><dd>The port the STUN bind request was received on.
+
+<dt><a name="field-u-bind_request-address_type">address_type</a><dd>The type of the request's source address.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMAddressTypeIPv4">kSMAddressTypeIPv4</a>
+<dd>An IPv4 address is present.
+
+<dt><a name="field-kSMAddressTypeIPv6">kSMAddressTypeIPv6</a>
+<dd>An IPv6 address is present.
+
+</dl>
+<dt><a name="field-u-bind_request-address">address</a><dd>
+
+<dl>
+<dt><a name="field-u-bind_request-address-ipv4">ipv4</a><dd>The IPv4 address from which the STUN bind request was received from.
+Only valid when
+<a class=pref href="#field-u-bind_request-type">type</a>
+is
+<a class=pref href="#field-kSMAddressTypeIPv4">kSMAddressTypeIPv4</a>.
+
+<dt><a name="field-u-bind_request-address-ipv6">ipv6</a><dd>The IPv6 address from which the STUN bind request was received from.
+Only valid when
+<a class=pref href="#field-u-bind_request-type">type</a>
+is
+<a class=pref href="#field-kSMAddressTypeIPv6">kSMAddressTypeIPv6</a>.
+
+</dl>
+<dt><a name="field-u-bind_request-port">port</a><dd>The port from which the STUN bind request was received from.
+
+<dt><a name="field-u-bind_request-priority">priority</a><dd>The priority value from the STUN bind request.
+
+<dt><a name="field-u-bind_request-use_candidate">use_candidate</a><dd>An indication of whether the STUN bind request included a 
+USE-CANDIDATE attribute. Non-zero when the attribute is present.
+
+<dt><a name="field-u-bind_request-remote_is_controlling">remote_is_controlling</a><dd>An indication of ICE role from the STUN bind request. It is zero 
+if the remote agent is in the controlled role and non-zero otherwise.
+
+</dl>
+<dt><a name="field-u-bind_response">bind_response</a><dd>This field is only valid if the status is 
+<a class=pref href="#field-kSMVMPrxStatusSTUNBindResult">kSMVMPrxStatusSTUNBindResult</a>
+
+
+<dl>
+<dt><a name="field-u-bind_response-recv_port">recv_port</a><dd>The port the STUN bind result was received on.
+
+<dt><a name="field-u-bind_response-transaction_id">transaction_id</a><dd>The transaction ID used for the request.
+
+<dt><a name="field-u-bind_response-result">result</a><dd>The result type.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMVMPrxSTUNResultSuccess">kSMVMPrxSTUNResultSuccess</a>
+<dd>A valid success response was received.
+
+<dt><a name="field-kSMVMPrxSTUNResultError">kSMVMPrxSTUNResultError</a>
+<dd>A valid error response was received.
+
+<dt><a name="field-kSMVMPrxSTUNResultInvalid">kSMVMPrxSTUNResultInvalid</a>
+<dd>A invalid response was received.
+
+<dt><a name="field-kSMVMPrxSTUNResultTimeout">kSMVMPrxSTUNResultTimeout</a>
+<dd>No response was received.
+
+</dl>
+<dt><a name="field-u-bind_response-error_code">error_code</a><dd>The value of the first ERROR-CODE attribute, or zero if no such 
+attribute is present.
+
+<dt><a name="field-u-bind_response-address_type">address_type</a><dd>The type of the reflexive address in the response.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMAddressTypeIPv4">kSMAddressTypeIPv4</a>
+<dd>An IPv4 address is present.
+
+<dt><a name="field-kSMAddressTypeIPv6">kSMAddressTypeIPv6</a>
+<dd>An IPv6 address is present.
+
+</dl>
+<dt><a name="field-u-bind_response-address">address</a><dd>
+
+<dl>
+<dt><a name="field-u-bind_response-address-ipv4">ipv4</a><dd>The reflexive IPv4 address.
+Only valid when
+<a class=pref href="#field-u-bind_response-address_type">address_type</a>
+is
+<a class=pref href="#field-kSMAddressTypeIPv4">kSMAddressTypeIPv4</a>.
+
+<dt><a name="field-u-bind_response-address-ipv6">ipv6</a><dd>The reflexive IPv6 address.
+Only valid when
+<a class=pref href="#field-u-bind_response-address_type">address_type</a>
+is
+<a class=pref href="#field-kSMAddressTypeIPv6">kSMAddressTypeIPv6</a>.
+
+</dl>
+<dt><a name="field-u-bind_response-port">port</a><dd>The reflexive port.
+
+<dt><a name="field-u-bind_response-local_was_controlling">local_was_controlling</a><dd>An indication of local ICE role when the STUN bind request was sent. 
+It is zero if the local agent was in the controlled role and non-zero 
+otherwise.
+
+</dl>
+<dt><a name="field-u-jbresync">jbresync</a><dd>This field is only valid if the status is 
+<a class=pref href="#field-kSMVMPrxStatusJBResync">kSMVMPrxStatusJBResync</a>
+
+
+<dl>
+<dt><a name="field-u-jbresync-timestamp">timestamp</a><dd>The timestamp to which the VMP[rx] resynchronised.
+
+<dt><a name="field-u-jbresync-localtimeref">localtimeref</a><dd>A local time reference in uints of microseconds (to aid in calculating stream synchronisation delays).
+
+</dl>
+<dt><a name="field-u-profile_specific">profile_specific</a><dd>This field is only valid if the status is 
+<a class=pref href="#field-kSMVMPrxStatusProfileSpecific">kSMVMPrxStatusProfileSpecific</a>
+
+
+<dl>
+<dt><a name="field-u-profile_specific-notification_code">notification_code</a><dd>A profile specific notification code.
+
+</dl>
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources existed to create the VMP[rx]</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

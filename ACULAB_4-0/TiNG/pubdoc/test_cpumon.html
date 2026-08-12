@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: cpumon</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: cpumon</h1>
+<p>
+This monitors a Prosody DSP, recording the amount of its CPU time
+that is being used for processing. It records this information in
+considerable detail, allowing you to find both long-term CPU usage as
+well as very short term effects.
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have downloaded the firmware module
+<a href="gen/softmodindex.html#cpumon">cpumon</a>.
+<p>
+Run <code>cpumon</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/cpumon</span> or
+<span class="type-WINNT"> gen-WINNT_V6/cpumon</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table>
+<tr>
+	<td><code>-m</code> &lt;module&gt;
+		<td>The Prosody module to use. This is the number of the
+		module on the card.
+<tr>
+	<td><code>-x</code> &lt;cardspec&gt;
+		<td>Specifies the Prosody card to use see
+		<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a>.
+
+<tr>
+	<td><code>-X &lt;maxrx&gt;</code>
+		<td>record this many samples, 0 means run
+		continuously with no limit
+
+<tr>
+	<td>&lt;file&gt;
+		<td>name of file into which the CPU usage data is to
+		be recorded.
+		
+
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/cpumon -x x:1.2.3.4/mykey out.32
+</pre>
+<p>
+record CPU usage into <code>out.32</code>.
+<p>
+The data is recorded as a sequence of 32-bit numbers, each of which
+is one measurement. The numbers are stored least significant byte
+first. A file in this format can be converted to a text list of
+decimal numbers with the Prosody diag program
+<a href="diag_int2text.html">int2text</a>. On current 
+ProsodyX hardware, with the current firmware kernel, a measurement value
+of 10,000 represents the maximum amount of CPU time available. A value
+larger than these may be recorded, and this indicates that the CPU is
+falling behind in its processing which will lead to undetected
+overruns and underruns.
+<p>
+The program closes the file and exits when you give it any input
+(i.e. when you hit RETURN).
+<p>
+The source code for this program is provided (cpumon.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

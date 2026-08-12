@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: diagnostic programs: outcall</title>
+</head>
+<body>
+<h1>Prosody installation guide: diagnostic programs: outcall</h1>
+<p>
+This is a very simple application which only makes outgoing calls.
+It is normally used with Prosody test programs for test or
+diagnostic purposes because it provides a handy way to keep a call
+open while several independent Prosody test programs send or receive
+data, but it does not use any Prosody functionality itself.
+<p>
+Go to directory $(TiNG)/diag.
+<p>
+This is a standalone program that requires no Prosody facilities, so
+you can run it on a system which does not have Prosody installed (but
+it must have the Aculab call driver installed and running).
+<p>
+Run <code>outcall</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/outcall</span> or
+<span class="type-WINNT">gen-WINNT_V6/outcall</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table border>
+<tr>
+	<td><code>-c</code>
+		<td>report charing information, if available.
+		(uses CNF_CALL_CHARGE).
+
+<tr>
+	<td><code>-o &lt;origin&gt;</code>
+		<td>the number to provide as the calling number
+
+<tr>
+	<td><code>-p &lt;port&gt;</code>
+		<td>the port on which to make the call.
+
+<tr>
+	<td><code>-P</code>
+		<td>timeslot specified is preferred value and can be
+		changed during negotiation. Otherwise
+		the timeslot cannot be changed. (uses CNF_TSPREFER)
+
+<tr>
+	<td><code>-s</code>
+		<td>sending complete indicator. Indicates that the
+		supplied destination number may contain a '!'
+		character which indicates that the call setup should
+		mark the number as complete.
+		(uses CNF_COMPLETE)
+
+<tr>
+	<td><code>-t &lt;timeslotlist&gt;</code>
+		<td>the timeslot on which to make the call.
+
+<tr>
+	<td><code>-w</code>
+		<td>wait for local disconnect. This allows more
+		status to be reported if the remote party clears the
+		call (uses CNF_REM_DISC).
+<tr>
+	<td><code>-x</code> cardspec
+		<td>The card to use.
+
+<tr>
+	<td>&lt;dest&gt;
+		<td>the number to call.
+
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/outcall -p 2 -t 1 123456
+</pre>
+<p>
+calls '123456' using timeslot 1 on port 2.
+<p>
+The program reports status changes just like
+<a href="diag_incall.html">incall</a> except, of course, it will have
+<code>OUT</code> in status reports indicating an outgoing call
+instead of <code>IN</code>. Here is an example of an outgoing call:
+<pre>
+	2.1: EV_WAIT_FOR_OUTGOING
+	2.1: EV_OUTGOING_PROCEEDING
+	2.1: @33.1 OUT sc=0 '' -> '' as '123456'
+	2.1: EV_CALL_CONNECTED
+	q
+	exitting
+	1.1: EV_IDLE
+</pre>
+<p>
+It can be stopped with the '<code>q</code>' command, which clears the
+call (as shown abive in the example) and then makes the program exit.
+<p>
+See the documentation for the Aculab call control API (particularly
+the call_openout() function) for an explanation of the different
+CNF options.
+<p>
+The source code for this program is provided (outcall.c).
+<hr>
+<p>
+This is one of the <a href="install_diag.html">Prosody diagnostic
+programs </a>.
+</body>
+</html>

@@ -1,0 +1,6 @@
+sm_sntp_config	iPsSNTPtSAdiUiUi_
+sm_sntp_config_ipv6	iPsSNTPtSA6dUiUi_
+sm_sntp_create	iPsSNTPtMte1_2_SIdSI6d_
+sm_sntp_destroy	iSNTPt
+sm_sntp_get_event	iPsSNTPtEt_
+sm_sntp_status	iPsSNTPte1_3_usi___

@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody H.223 Mux: API: sm_h223mux_new_session</title>
+</head>
+<body class=version-Prel>
+<h1>Prosody H.223 Mux: API: sm_h223mux_new_session</h1>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_h223mux_new_session(struct sm_h223mux_new_session_parms *<a href="#field-sessionp">sessionp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-sessionp">*sessionp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_new_session_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-level">level</a>;						/* in */
+	<a name="enum-kSMH223muxTransmissionBitOrder">enum kSMH223muxTransmissionBitOrder</a> {
+		<a href="#field-kSMH223muxTransmissionBitOrderLSBFirst">kSMH223muxTransmissionBitOrderLSBFirst</a>,
+		<a href="#field-kSMH223muxTransmissionBitOrderMSBFirst">kSMH223muxTransmissionBitOrderMSBFirst</a>,
+	} <a href="#field-bit_order">bit_order</a>;						/* in */
+} SM_H223MUX_NEW_SESSION_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This function will create and initialise an H.223 session.
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to create the new session on.
+
+<dt class=version-Prel><a name="field-level">level</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mobile startup level for the new session.
+
+<dt class=version-Prel><a name="field-bit_order">bit_order</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Network bit order for transmission of H.223 data.
+
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxTransmissionBitOrderLSBFirst">kSMH223muxTransmissionBitOrderLSBFirst</a>
+<dd>The output bytes from the H.223 session to the network will be sent LSB first.
+
+<dt><a name="field-kSMH223muxTransmissionBitOrderMSBFirst">kSMH223muxTransmissionBitOrderMSBFirst</a>
+<dd>The output bytes from the H.223 session to the network will be sent MSB first.
+
+</dl>
+</div>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosh223api.html">Prosody H.223 Mux API</a>.
+</body>
+</html>

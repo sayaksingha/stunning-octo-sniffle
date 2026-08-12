@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: ansrec</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: ansrec</h1>
+<p>
+This is a very simple recording application. It answers answers an
+incoming call and records the entire call into a file. It does not play
+any prompts and uses the same file for every call (overwriting it). It
+stops recording when the caller hangs up. The recorded file has no
+headers or other formatting of any kind - just the data. The test
+program <a href="test_ansplay.html">ansplay</a> can use these files directly.
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have the call control driver initialised. This is documented
+separately in the call control documentation.
+<p>
+You must have downloaded firmware modules as listed below.
+<p>
+Run <code>ansrec</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/ansrec</span> or
+<span class="type-WINNT"> gen-WINNT_V6/ansrec</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table>
+<tr>
+	<td><code>-e 1</code>
+		<td>use silence elimination
+
+<tr>
+	<td><code>-F</code> &lt;format&gt;
+		<td>record in this format. The known formats can
+		be listed by specifying a question mark
+		(<code>?</code>).
+
+<tr>
+	<td><code>-P</code> &lt;N&gt;
+		<td>The number of channels to allocate per module
+
+<tr>
+	<td><code>-q</code> &lt;duration&gt;
+		<td>stop recording on silence. The duration is specified
+		in milliseconds.
+
+<tr>
+	<td><code>-t</code> &lt;timeslot&gt;
+		<td>timeslot to use (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>)
+
+<tr>
+	<td><code>-x</code> &lt;serialno&gt;
+		<td>A card serial number with no Prosody
+		module specification in <code>[...]</code> after it.
+		All Prosody modules on that card are used.
+<tr>
+	<td>&lt;file&gt;
+		<td>name of file into which data is to be recorded
+
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/ansrec -x 12345678 -F ALawPCM@8000 -t 64:0 rec1.dat
+</pre>
+<p>
+would record A-law encoded speech into <code>rec1.dat</code> using the
+card with serial number 12345678.
+<p>
+Note that this program cannot switch data between a Prosody module on
+one card and a call answered on another card.
+<p>
+The firmware modules that are required depend on the options you
+specify. Here are the details:
+<p>
+<table border>
+<tr>
+	<th class=bg>Module<th class=bg>When needed
+
+<tr>
+	<td><a href="gen/softmodindex.html#datafeed">datafeed</a>
+		<td>always on Prosody X
+
+<tr>
+	<td><a href="gen/softmodindex.html#grunt">grunt</a>
+		<td>If you use '<code>-e 1</code>' for silence elimination
+
+<tr>
+	<td><a href="gen/softmodindex.html#inchan">inchan</a>
+		<td>always
+
+<tr>
+	<td><a href="gen/softmodindex.html#sixkin">sixkin</a>
+		<td>when the recording format is ACUBLKPCM@6000,
+		ALawPCM@6000, OKIADPCM@6000, ULawPCM@6000 or otherwise
+		sampled at 6000 Hz
+
+<tr>
+	<td><a href="gen/softmodindex.html#8_to_11">8_to_11</a>
+		<td>when the recording format is 
+		sampled at 11000 Hz
+
+<tr>
+	<td><a href="gen/softmodindex.html#recA">recA</a>
+		<td>when the recording format is
+		ALawPCM@6000 or ALawPCM@8000
+
+<tr>
+	<td><a href="gen/softmodindex.html#recima">recima</a>
+		<td>when the recording format is IMAADPCM
+
+<tr>
+	<td><a href="gen/softmodindex.html#recmu">recmu</a>
+		<td>when the recording format is
+		ULawPCM@6000 or ULawPCM@8000
+
+<tr>
+	<td><a href="gen/softmodindex.html#recoki">recoki</a>
+		<td>when the recording format is
+		OKIADPCM@6000 or OKIADPCM@8000
+
+</table>
+<p>
+While the program is running it shows status changes in some detail.
+Layer 1 statistics are printed like this:
+<pre>
+	0: +nos +los usr=f3
+</pre>
+<p>
+This is about port 0, and the details are as returned by
+<code>call_l1_stats()</code>. Information about a particular call
+appears like this:
+<pre>
+	0.1: CS_WAIT_FOR_INCOMING
+</pre>
+<p>
+This relates to timeslot 1 on port 0, and reports the state from
+<code>call_state()</code>.
+<p>
+While it is recording, it prints the speed at which the data is
+arriving. You can use the '<code>q</code>' command to stop the
+program (this clears all calls and the program exits when the calls
+have cleared).
+<p>
+The source code for this program is provided (ansrec.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

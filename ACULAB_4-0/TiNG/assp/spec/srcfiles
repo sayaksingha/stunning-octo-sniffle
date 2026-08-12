@@ -1,0 +1,11 @@
+#!/bin/sh
+find * -type f |
+	grep -v '\.wav$' |
+	grep -v '/t/' |
+	grep -v '/vss/' |
+	grep -v '/errs/' |
+	grep -v '/gen[-/]' |
+	grep -v '^gen[-/]' |
+	grep -v '/tags$' |
+	grep -v '^assp-[lv]$' |
+	sort 

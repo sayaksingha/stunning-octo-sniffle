@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody high level FILE play/record: API: sm_record_file_progress_istatus</title>
+</head>
+<body>
+<h1>Prosody high level FILE play/record: API: sm_record_file_progress_istatus</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_record_file_progress_istatus(<a href="../apitype.html#type-SM_FILE_RECORD_PARMS">SM_FILE_RECORD_PARMS</a> *<a href="#field-file_parms">file_parms</a>, int <a href="#field-initial_status">initial_status</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="apifn-sm_record_file_start.html">sm_record_file_start()</a>
+to start recording that has not yet indicated that it has
+finished.
+<dt><a name="field-initial_status">initial_status</a>
+<dd>
+A recent status returned from
+<a href="apifn-sm_record_status.html">sm_record_status()</a>.
+</dl>
+<h2>Description</h2>
+<p>
+Transfers data from a recording channel to file for a
+previously initiated record unless the channel has insufficient
+buffered data to collect, or all data in recording has
+been collected, or an error occurs.
+<p>
+If the current record status for the channel is not known, then
+the
+<a href="apifn-sm_record_file_progress.html">sm_record_file_progress()</a>
+variant of the call must be used.
+<p>
+On return if the status field is still set to a value of
+<code>ERR_SM_PENDING</code> then further calls to this routine
+will be required to complete the file record. If the status is
+zero then recording successfully completed, otherwise the
+record has been terminated on error, and the status will be set
+to a corresponding error code.
+<p>
+Note: this routine must be periodically invoked following a call
+to
+<a href="apifn-sm_record_file_start.html">sm_record_file_start()</a>.
+This may either be done explicitly by the application, or
+alternatively through a call to
+<a href="apifn-sm_record_file_complete.html">sm_record_file_complete()</a>
+which will handle the scheduling of calls to
+<a href="apifn-sm_record_file_progress.html">sm_record_file_progress()</a>
+on behalf of the application.
+<p>
+Note that the
+<a href="apifn-sm_record_start.html#field-sampling_rate">sampling_rate</a>
+of the
+<a href="apifn-sm_record_file_start.html#field-record_parms">record_parms</a>
+structure is not updated to the recorded sample rate, as returned by
+<a href="apifn-sm_record_status.html">sm_record_status()</a>.
+If the recording is to a WAV file, then this is must be done by the application 
+before closing the WAV file. Otherwise the WAV header will not have the correct 
+values.
+<h2>Returns</h2>
+<p>The same value as stored in the status field of the structure
+pointed to by
+<a class=pref href="#field-file_parms">file_parms</a>
+which is 0 or <code>ERR_SM_PENDING</code>
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_PENDING - no error but record has not yet finished</ul>
+<hr>
+<p>This function is part of the <a href="../highapi_playrec.html">Prosody high level FILE play/record API</a>.
+</body>
+</html>

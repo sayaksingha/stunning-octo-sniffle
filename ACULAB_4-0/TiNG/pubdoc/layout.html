@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody: layout of the distribution</title>
+</head>
+<body>
+<h1>Prosody: layout of the distribution</h1>
+<p>
+If you want to build some of the software manually, or you want to use an
+automated tool other than GNU make, you need to know how the software
+layout works.
+<p>
+When you install <a href="index.html">Prosody
+TiNG</a>, a directory <code>TiNG</code> is created and
+within that there are subdirectories containing the various parts of the
+distribution. Each part is as self-contained as possible. None of the
+Makefiles will build anything outside its own directory. Each directory
+may contain the following:
+<p>
+<img src="gen/dirs.png" alt="diagram of directory structure">
+<dl>
+
+<dt>Makefile
+<dd>
+This is the main Makefile. It contains rules and dependencies that
+are independent of the operating system (e.g. rules which use Perl
+scripts). It will include (with the
+<code>include</code> directive) an operating system specific
+Makefile.inc from the operating system specific subdirectory.
+
+<dt>WINNT_V6, LINUX_V6, etc directories
+<dd>
+These contain the files used only when building for a particular
+target. In particular, each contains a <code>Makefile.inc</code> which
+contains operating system specific rules. This makefile is not
+intended to be used directly - only by being included from the main
+Makefile.
+
+<dt>gen directory
+<dd>
+'gen' means 'generated'. The Makefile uses this directory for all
+output files which are independent of the operating system type.
+
+<dt>gen-WINNT_V6, gen-LINUX_V6, etc directories
+<dd>
+Like the 'gen' directory, these are used for output files. The files
+put in these directories are those which depend on the operating
+system type. For example, if <code>x.c</code> is C program code then
+when it is compiled into <code>x.o</code> the object file is put into
+one of these 'gen' directories.
+
+<dt>errs
+<dd>
+This directory is used to record the results of running any of the
+rules in the Makefile. For example, if a rule runs the compiler to
+produce <code>gen/x.out</code> then any errors, warnings, or other
+commentary printed by the compiler will be put into
+<code>errs/gen/x.out</code>. Similarly, when the file
+<code>gen-LINUX_V6/x.out</code> is built, any build messages are put into
+<code>errs/gen-LINUX_V6/x.out</code>.
+
+</dl>
+<h2>Understanding the Makefiles</h2>
+<p>
+Although GNU make has many powerful features, the Makefiles only use
+a few and are organised in a very regular manner to make them easy to
+understand. Each Makefile starts by defining symbols. Apart from a
+few which hold things like compiler options, most are lists of object
+files.
+<p>
+There is an extra complexity for WINNT because the same Makefile can
+build using either the Microsoft compiler or gcc. To allow this, the
+symbol for program <code>prog</code> is instead two symbols, one for
+each compiler. One, defined as
+<code>LINK_OBJS</code>, is for the Microsft compiler, and the
+other, <code>LINK_GCC_OBJS</code>, is for gcc. A GNU make feature is
+used to define the gcc one:
+<pre>
+	LINK_GCC_OBJS = $(subst .obj,.o,$(LINK_OBJS))
+</pre>
+<p>
+This <code>subst</code> directive replaces the string
+"<code>.obj</code>" with the string "<code>.o</code>".
+In general, the syntax: <code>$(subst X,Y,Z)</code> means
+string <code>Z</code> with all occurrences of <code>X</code> replaced
+with <code>Y</code>.
+<p>
+In some Makefiles there are other similar pairs of symbols (usually
+with one containing <code>_MS_</code> and the other containing
+<code>_GCC_</code>) which handle differences between the two ways of
+building.
+<p>
+The first target is called <code>all</code>. It lists all the targets that
+can be built.
+<p>
+At this point a target-specific <code>Makefile.inc</code> is
+included, which will contain the next rules.
+<p>
+There is a rule describing how to build a file called
+"<code>.exists</code>". This is used to ensure that appropriate output
+directories are always created before any rule tries to put any file
+into them. Creation of the "<code>.exists</code>" file (which is
+otherwise unused) creates the directory.
+<p>
+Next there is a section containing the dependency for each target and
+the link command used to build it.
+<p>
+Almost at the end there are any pattern-based rules. These use a GNU
+extension. A rule in the form:
+<pre>
+	target-list: target-pattern: source-pattern
+		commands
+</pre>
+<p>
+matches each item in the <code>target-list</code> against the
+<code>target-pattern</code> and specifies how to build it from the
+files that match the <code>source-pattern</code>. For example:
+<pre>
+	gen/one.o gen/two.o gen/three.o: gen/%.o: %.c
+		cc -c -o $@ $<
+</pre>
+<p>
+is equivalent to these three rules:
+<pre>
+	gen/one.o: one.c
+		cc -c -o $@ $<
+
+	gen/two.o: two.c
+		cc -c -o $@ $<
+
+	gen/three.o: three.c
+		cc -c -o $@ $<
+</pre>
+<p>
+<p>
+And finally there's a line:
+<pre>
+	include $(shell find gen-$(TiNGTARGET) -name \*.M)
+</pre>
+<p>
+which includes all the <code>.M</code> files of automatically generated
+dependencies. When you build a file <code>foo.o</code>, the file
+<code>foo.M</code> is also created which describes the files used to
+build it. When a file is built by using gcc, the option
+<code>-MD</code> is used to generate this information. On Windows NT,
+if the Microsoft compiler is used then a perl script generates the
+<code>.M</code> file as there is no suitable option to make the
+compiler do it. Even gcc needs a helper perl script since for versions
+before 3.0 the output is in the wrong format.
+
+<h2><code>test</code> and <code>diag</code> directories</h2>
+<p>
+These directories contain various programs, each of which has its own
+directory. However, since the Makefiles for these programs have a lot in
+common, they include two shared <code>Makefile.inc</code> files. One is
+(relative to the program) in <code>..</code> (i.e. in <code>test</code>
+or <code>diag</code> itself), and the other is in a target-specific
+directory, for example, <code>../LINUX_V6/Makefile.inc</code> for Linux
+32-bit.
+<p>
+These programs also generate parts of the Makefiles automatically from
+files called <code>objlist</code> in the program directory and a
+target-specific subdirectory. For example, the <code>locplay</code>
+program has <code>locplay/objlist</code> and
+<code>locplay/LINUX_V6/objlist</code> for Linux. These files provide a
+very easy way to see which object files are required by a program.
+They consist of lines with two columns, the first identifying where a
+file comes from (e.g. a library name) and the second being the name
+of the object file. These files are converted into a piece of
+Makefile by the script <code>libutil/obj2make.pl</code>.
+
+</body>
+</html>

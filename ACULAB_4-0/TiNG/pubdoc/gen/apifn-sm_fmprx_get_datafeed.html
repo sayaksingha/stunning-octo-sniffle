@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody FMP processing: API: sm_fmprx_get_datafeed</title>
+</head>
+<body>
+<h1>Prosody FMP processing: API: sm_fmprx_get_datafeed</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_fmprx_get_datafeed(struct sm_fmprx_datafeed_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_fmprx_datafeed_parms {
+	<a href="../apitype.html#type-tSMFMPrxId">tSMFMPrxId</a> <a href="#field-fmprx">fmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* out */
+} SM_FMPRX_DATAFEED_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Request a datafeed identifier from a FMP[rx]. This identifer can 
+subsequently be used in a call to 
+<a href="apifn-sm_channel_datafeed_connect.html">sm_channel_datafeed_connect()</a>
+or
+<a href="apifn-sm_fmptx_datafeed_connect.html">sm_fmptx_datafeed_connect()</a>
+to connect a FMP[rx] to a speech channel (tSMChannelId) or a FMP[tx]
+respectively. Datafeed connections can only be made between objects
+allocated on the same <code>tSMModuleId</code>.
+<p>
+Requires the modules
+<a href="softmodindex.html#datafeed">datafeed</a>
+<a href="softmodindex.html#fmprx">fmprx</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-fmprx">fmprx</a><dd>The fmp[rx] from which to obtain a datafeed
+
+<dt><a name="field-datafeed">datafeed</a><dd>The datafeed object associated with the FMP[rx]
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosfmpapi.html">Prosody FMP processing API</a>.
+</body>
+</html>

@@ -1,0 +1,6 @@
+.	anydetraw.o
+Testlib	errcode_sm.o
+Testlib	error.o
+Testlib	cardopen.o
+Testlib	modopen.o
+apilib

@@ -1,0 +1,5 @@
+Generic companded input. This is required for any form of
+processing on incoming data which is a speech or analogue
+signal. The only input which does not need it is digital data
+communications. If this module has not been downloaded,
+no recording, conferencing or detection will work.

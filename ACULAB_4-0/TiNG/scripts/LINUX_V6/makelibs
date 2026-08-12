@@ -1,0 +1,88 @@
+#!/bin/bash
+unset LC_ALL LC_COLLATE
+failed_libs=0
+failed_diag_test=0
+
+if [ "X$ACULAB_ROOT" == "X" ]
+then
+	echo "ACULAB_ROOT is not set - has setV6.sh been sourced?"
+	exit 1
+fi
+cd ../../
+export TiNGTARGET=LINUX_V6
+if [ X$1 == Xclean ]
+then
+	rm -f "$ACULAB_ROOT/bin/t0"
+	for i in libutil apilib adsilib highapi class rtcplib
+	do (
+		echo [makelibs]: cleaning TiNG $i
+		cd $i
+
+		rm -f gen-$TiNGTARGET/* errs/gen-$TiNGTARGET/*
+	)
+	done
+	for d in test/Testlib diag/* test/*
+	do
+		test -f $d/$TiNGTARGET/objlist && (cd $d; rm -f gen-$TiNGTARGET/* errs/gen-$TiNGTARGET/*)
+	done
+	rm -f "$ACULAB_ROOT/lib/libTiNG.a"
+else
+	for i in libutil apilib adsilib highapi
+	do 
+		if ((!$failed_libs))
+		then
+			(
+				echo [makelibs]: making TiNG $i
+				cd $i
+
+				if [ $i == libutil ] && [ ! -x "$ACULAB_ROOT/bin/t0" ] 
+				then
+					make gen-$TiNGTARGET/t0
+					cp gen-$TiNGTARGET/t0 "$ACULAB_ROOT/bin/"
+				fi
+				make
+			) || failed_libs=1
+		fi
+	done
+	if ((!$failed_libs)) && [ X$1 != Xlibonly ]
+	then
+		for d in class rtcplib
+		do
+			if ((!$failed_diag_test))
+			then
+				(cd $d; make) || failed_diag_test=1
+			fi
+		done
+		for d in test/Testlib diag/* test/*
+		do
+			if ((!$failed_diag_test)) && [ -f $d/$TiNGTARGET/objlist ]
+			then
+				(cd $d; make) || failed_diag_test=1
+			fi
+		done
+	fi
+	rm -f "$ACULAB_ROOT/lib/libTiNG.a"
+
+	if ((!$failed_libs))
+	then
+		ld -r -o "$ACULAB_ROOT/lib/TiNG.o" apilib/gen-$TiNGTARGET/TiNGcore.o apilib/gen-$TiNGTARGET/prosody_x.o || failed_libs=1
+		ar cr "$ACULAB_ROOT/lib/libTiNG.a" "$ACULAB_ROOT/lib/TiNG.o" highapi/gen-$TiNGTARGET/sm{c,{,bf}{h,wav}}lib.o libutil/gen-$TiNGTARGET/{bfile,bfopen}.o || failed_libs=1
+		rm -f "$ACULAB_ROOT/lib/TiNG.o"
+	fi
+fi
+echo
+if (( $failed_libs ))
+then
+echo "*** makelibs failed to build the TiNG library"
+echo " If you have just upgraded TiNG, running 'makelibs clean'"
+echo "  and then makelibs again may resolve this problem"
+elif (( $failed_diag_test ))
+then
+echo "*** makelibs failed to build the TiNG diagnostic and test programs"
+echo " While this is not a fatal error, you may experience"
+echo "  problems when building your application"
+echo " If you have just upgraded TiNG, running 'makelibs clean'"
+echo "  and then makelibs again may resolve this problem"
+else
+echo done.
+fi

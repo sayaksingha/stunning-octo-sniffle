@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody SNTP Client: API: sm_sntp_status</title>
+</head>
+<body>
+<h1>Prosody SNTP Client: API: sm_sntp_status</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_sntp_status(struct sm_sntp_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sntp_status_parms {
+	<a href="../apitype.html#type-tSMSNTPId">tSMSNTPId</a> <a href="#field-sntp">sntp</a>;						/* in */
+	<a name="enum-kSMSNTPStatus">enum kSMSNTPStatus</a> {
+		<a href="#field-kSMSNTPStatusRunning">kSMSNTPStatusRunning</a>,
+		<a href="#field-kSMSNTPStatusStopped">kSMSNTPStatusStopped</a>,
+		<a href="#field-kSMSNTPStatusSync">kSMSNTPStatusSync</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	union {
+		struct {
+			int <a href="#field-u-sync-has_sync">has_sync</a>;				/* out */
+		} <a href="#field-u-sync">sync</a>;						/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SM_SNTP_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+returns the status of the SNTP client.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-sntp">sntp</a><dd>The SNTP client.
+
+<dt><a name="field-status">status</a><dd>The status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMSNTPStatusRunning">kSMSNTPStatusRunning</a>
+<dd>The SNTP client is running
+
+<dt><a name="field-kSMSNTPStatusStopped">kSMSNTPStatusStopped</a>
+<dd>The SNTP client is not running
+
+<dt><a name="field-kSMSNTPStatusSync">kSMSNTPStatusSync</a>
+<dd>The SNTP client synchronisation state has changed
+
+</dl>
+<dt><a name="field-u">u</a><dd>Additional information relating to the current status of the SNTP client
+
+
+<dl>
+<dt><a name="field-u-sync">sync</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMSNTPStatusSync">kSMSNTPStatusSync</a>.
+
+
+<dl>
+<dt><a name="field-u-sync-has_sync">has_sync</a><dd>An indicator of whether the SNTP client is synchronised with the NTP server
+
+</dl>
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prossntp.html">Prosody SNTP Client API</a>.
+</body>
+</html>

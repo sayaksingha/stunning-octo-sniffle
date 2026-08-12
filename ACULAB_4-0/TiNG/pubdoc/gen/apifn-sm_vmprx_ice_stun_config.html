@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_ice_stun_config</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_ice_stun_config</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_ice_stun_config(struct sm_vmprx_ice_stun_config_parms *<a href="#field-configp">configp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_ice_stun_config_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a name="enum-kSMICERole">enum kSMICERole</a> {
+		<a href="#field-kSMICERoleNone">kSMICERoleNone</a>,
+		<a href="#field-kSMICERoleLite">kSMICERoleLite</a>,
+		<a href="#field-kSMICERoleControlled">kSMICERoleControlled</a>,
+		<a href="#field-kSMICERoleControlling">kSMICERoleControlling</a>,
+	} <a href="#field-local_role">local_role</a>;						/* in */
+	char *<a href="#field-local_ice_ufrag">local_ice_ufrag</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-local_ice_ufrag_length">local_ice_ufrag_length</a>;			/* in */
+	char *<a href="#field-local_ice_pwd">local_ice_pwd</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-local_ice_pwd_length">local_ice_pwd_length</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT64">tSM_UT64</a> <a href="#field-role_tiebreaker">role_tiebreaker</a>;				/* in */
+} SM_VMPRX_ICE_STUN_CONFIG_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Enables or disables ICE compatible STUN on the VMP[rx]. See 
+<a href="http://www.ietf.org/rfc/rfc5245.txt">IETF RFC 5245</a> and
+<a href="http://www.ietf.org/rfc/rfc5389.txt">IETF RFC 5389</a> 
+for more details.
+<p>
+This requires the module
+<a href="softmodindex.html#icestun">icestun</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] being configured.
+
+<dt><a name="field-local_role">local_role</a><dd>The role of the local ICE agent.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMICERoleNone">kSMICERoleNone</a>
+<dd>The VMP[rx] does not handle STUN packets.
+
+<dt><a name="field-kSMICERoleLite">kSMICERoleLite</a>
+<dd>The local ICE agent is an ice-lite agent.
+
+<dt><a name="field-kSMICERoleControlled">kSMICERoleControlled</a>
+<dd>The local ICE agent is controlled.
+
+<dt><a name="field-kSMICERoleControlling">kSMICERoleControlling</a>
+<dd>The local ICE agent is controlling.
+
+</dl>
+<dt><a name="field-local_ice_ufrag">local_ice_ufrag</a><dd>The local ICE username fragment.
+
+<dt><a name="field-local_ice_ufrag_length">local_ice_ufrag_length</a><dd>The length of the local ICE username fragment.
+
+<dt><a name="field-local_ice_pwd">local_ice_pwd</a><dd>The local ICE password.
+
+<dt><a name="field-local_ice_pwd_length">local_ice_pwd_length</a><dd>The length of the local ICE password.
+
+<dt><a name="field-role_tiebreaker">role_tiebreaker</a><dd>The ICE role tiebreaker value.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

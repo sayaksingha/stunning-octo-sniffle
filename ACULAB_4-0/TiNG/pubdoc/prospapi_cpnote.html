@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+
+<title>Prosody speech processing: Notes on adding call progress tones</title>
+</head>
+<body>
+<h1>Prosody speech processing: Notes on adding call progress tones</h1>
+<p>
+<ul>
+<li> There is only one active repertoire of call-progress tones at any time.
+<li> The set of call-progress tones uses a given tone-set (modified using
+<a href="gen/apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>).
+<li> The default call-progress repertoire uses tone set 1, defined in
+<a href="prospapi_intones.html"> Prosody speech processing:
+pre-loaded input tones</a>
+<li> A tone can be added to the call-progress repertoire using
+<a href="gen/apifn-sm_add_input_cptone.html">sm_add_input_cptone()</a>,
+as long as it uses this same tone set.
+<li> If use of a different tone-set is required, the entire current
+repertoire of call-progress tones must be discarded and a new repertoire
+created based on the new tone-set.
+<li> To do this, create the new tone set using
+<a href="gen/apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>,
+use
+<a href="gen/apifn-sm_reset_input_cptones.html">sm_reset_input_cptones()</a>,
+with the new tone-set id, and build the new
+call-progress repertoire from scratch.
+<li>
+Call progress tones are specified as a sequence of tones, each with a
+frequency and a duration. The algorithm wakes up every time a tone
+starts or stops, then looks to see if the detected sequence matches any
+of the specified sequences in the Call Progress repertoire.
+<li>
+In the event that the cadence is not symmetrical, the state sequence
+should be in reverse order. i.e. <code>states[0]</code> is later in time
+than <code>states[1]</code>. An example of this is the S.I.T. tone,
+where the sequence is <samp>tone 2 - silence - tone 3 - silence - tone
+4</samp>.
+<li> The tone-ids used in call progress tone definition must be
+incremented by 1, and a tone-id of zero is used to specify silence.
+<li>Durations are stored internally as multiples of 32ms, so it is
+useful to round durations before specifying them. This way you can be
+sure of what durations are actually used.
+<li>If the minimum duration for a state is zero, then the tone will be
+recognised even if it never occurs.
+<li class="version-v1">
+	<span class=header-v1>Only on Prosody version 1:</span>
+In order to detect long periods of silence efficiently, the maximum
+duration for a silent state is 2528ms (0x4f x 32ms). After this
+duration, the algorithm will wake up and move to the next state. The
+next state may also be silence.
+<li class="version-v1">
+	<span class="header-v1">Only on Prosody version 1:</span>
+The previous rule also applies to any tone with index 1. Maximum
+duration in this case is 1248ms (0x27 x 32ms).
+<li class="version-TiNG">
+	<span class="header-TiNG">Only on Prosody version 2 (TiNG):</span>
+If a maximum duration is specified as <code>~0U</code> (the
+largest unsigned integer value) this means that there is no maximum
+duration. When checking a tone specified in this way, the software
+considers the tone to have matched as soon as it has persisted for the
+minimum duration. For all other maximum values, the software must
+wait until the end of the tone so that it can check that its duration
+does not exceed the maximum.
+<li class="version-TiNG">
+	<span class="header-TiNG">Only on Prosody version 2 (TiNG):</span>
+An entry in the call progress tone table will match an incoming tone
+which contains the correct sequence of tones even if the sequence
+does not start at the first item in the table. For example, the
+S.I.T. tone, whose pattern is: <code>tone 2, silence, tone 3, silence,
+tone 4, silence</code>
+will match any of these six incoming sequences:
+<p>
+<table>
+	<tr>
+		<th>No<th colspan=11>Sequence
+	
+	<tr>
+		<th>1
+		<td><code>tone 2,</code>
+		<td><code>silence,</code>
+		<td><code>tone 3,</code>
+		<td><code>silence,</code>
+		<td><code>tone 4,</code>
+		<td><code>silence,</code>
+	
+	<tr>
+		<th>2
+		<td>
+		<td><code>silence,</code>
+		<td><code>tone 3,</code>
+		<td><code>silence,</code>
+		<td><code>tone 4,</code>
+		<td><code>silence,</code>
+		<td><code>tone 2,</code>
+	
+	<tr>
+		<th>3
+		<td>
+		<td>
+		<td><code>tone 3,</code>
+		<td><code>silence,</code>
+		<td><code>tone 4,</code>
+		<td><code>silence,</code>
+		<td><code>tone 2,</code>
+		<td><code>silence,</code>
+	
+	<tr>
+		<th>4
+		<td>
+		<td>
+		<td>
+		<td><code>silence,</code>
+		<td><code>tone 4,</code>
+		<td><code>silence,</code>
+		<td><code>tone 2,</code>
+		<td><code>silence,</code>
+		<td><code>tone 3,</code>
+	
+	<tr>
+		<th>5
+		<td>
+		<td>
+		<td>
+		<td>
+		<td><code>tone 4,</code>
+		<td><code>silence,</code>
+		<td><code>tone 2,</code>
+		<td><code>silence,</code>
+		<td><code>tone 3,</code>
+		<td><code>silence,</code>
+	
+	<tr>
+		<th>6
+		<td>
+		<td>
+		<td>
+		<td>
+		<td>
+		<td><code>silence,</code>
+		<td><code>tone 2,</code>
+		<td><code>silence,</code>
+		<td><code>tone 3,</code>
+		<td><code>silence,</code>
+		<td><code>tone 4,</code>
+	
+	</table>
+<li class="version-TiNG">
+	<span class="header-TiNG">Only on Prosody version 2 (TiNG):</span>
+If a tone set is used which has both <code>Nl</code> tones in
+band 1, denoted <code>L[0]..L[Nl-1]</code>, and <code>Nh</code> tones in
+band 2, denoted <code>H[0]..H[Nh-1]</code>, then any
+combination of tones, <code>L[i]</code> with <code>H[j]</code> will
+have a
+<a href="gen/apifn-sm_add_input_cptone.html#field-states-freq_id">freq_id</a>
+value of <code>i + Nl * j</code>. For example, if there are two
+tones in band 1, 350 Hz and 900 Hz, and three tones
+in band 2, 500 Hz, 700 Hz, and 1234 Hz, then
+the possible combinations are:
+<p>
+<table border>
+<tr> <th> <th>tones with 500 Hz
+	<th>tones with 700 Hz
+	 <th>tones with 1234 Hz
+
+<tr> <th>tones with 350 Hz
+	<td>1 is 350 + 500
+	 <td>3 is 350 + 700
+	 <td>5 is 350 + 1234
+
+<tr> <th>tones with 900 Hz
+	<td>2 is 900 + 500
+	 <td>4 is 900 + 700
+	 <td>6 is 900 + 1234
+
+</table>
+</ul>
+
+</body>
+</html>

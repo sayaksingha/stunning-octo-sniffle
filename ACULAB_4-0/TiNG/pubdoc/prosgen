@@ -1,0 +1,1844 @@
+	Prosody generic
+secname sort
+version deprecated
+	Hardware reset a module
+apifn	sm_reset_module
+	A value obtained from
+fnref	sm_open_module
+	which indicates the module to be reset
+param	tSMModuleId module
+	This function is deprecated. Since a module only needs to be reset
+	when downloading a new kernel, the download program should be used
+	to reset a module.
+	<p>
+	Performs hardware reset on given module,
+ref	module,
+	which will then require a new firmware download before it may be
+	used for speech processing.
+	<p>
+	Any channels previously associated with the module must be
+	released before invoking this call.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+error	ERR_SM_CHANNEL_ALLOCATED - channels still allocated on module
+version +
+
+	Determine if firmware running, obtain module workload
+apifn	sm_get_module_info
+params	sm_module_info_parms moduleinfop
+	A value obtained from
+fnref	sm_open_module
+	which indicates the module on which information is required.
+field	tSMModuleId module in
+	Indicator of whether or not firmware is running on this module.
+	Zero if firmware is not running.
+	Note that this refers to the kernel, not individual software
+	modules.
+field	tSM_INT firmware_running out
+	This field is obsolete.
+field	tSM_INT firmware_id out
+	The percentage (0..100) average work load of the module over the last
+	second.
+field	tSM_INT average_loading out
+	The percentage (0..100) peak work load of the module over the
+	last second.
+field	tSM_INT max_loading out
+	The position of the module on its carrier card.
+field	tSM_INT module_slot out
+	The number of the first stream accessible to this module.
+field	tSM_INT min_stream out
+	The count of streams accessible to this module.
+field	tSM_INT stream_count out
+unstruct
+	Fetches information about a module.
+	Note that fields apart from
+ref	module_slot
+	,
+ref	min_stream
+	and
+ref	stream_count
+	are undefined for Prosody S and for Prosody X. The <a href="../protocol_cpumon.html">cpumon</a>
+	facility should be used to obtain work load information.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+
+	Return information about a TDM stream associated with a module
+apifn	sm_get_stream_info
+params	sm_stream_info_parms streaminfop
+	A value obtained from
+fnref	sm_open_module
+	which indicates the module on which information is required.
+field	tSMModuleId module in
+	Stream number for which information required (or index of that stream relative to module)
+field	tSM_INT stream in
+	The serial number of card providing this stream.
+field	char serial_no[kSMMaxSerialNoText] out
+	Serial port on card providing this stream
+field	tSM_INT serial_port_ix out
+	The count of timeslots in this stream.
+field	tSM_INT timeslot_count out
+unstruct
+	Retrieves information about a TDM stream associated with ProsodyS virtual card
+	and provided by a thin TDM interface card installed in system. 
+	<p>
+	On entry the parameter
+ref stream
+	indicates module TDM stream for which information is required.
+	On return the parameter
+ref serial_no
+	indicates serial number of thin TDM interface card, 
+ref	serial_port_ix
+	indicates stream index (starting from zero) relative to that thin TDM interface card.
+ref	timeslot_count
+	indicates number of timeslots in stream.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+
+version deprecated
+	Determine what firmware has been downloaded.
+apifn	sm_get_firmware_info
+params	sm_fwinfo_parms fp
+	A value obtained from
+fnref	sm_open_module
+	which indicates the module to examine.
+field	tSMModuleId module in
+	The position to examine. Start this at zero and each successive
+	call will advance it to consider the next position.
+field	tSM_UT32 position inout
+	The task type code of the firmware module. This value is zero if
+	this position is empty.
+field	tSM_UT32 tasktypecode out
+	The version code of the firmware module. This value is zero if
+	this position is empty.
+field	tSM_UT32 version out
+unstruct
+	<strong>Obsolete function that is not supported on ProsodyX cards or 
+	with ProsodyS v3 servers.</strong>
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+version	+
+
+version deprecated
+	Control assignment of channels to external bus timeslots
+apifn	sm_config_module_switching
+params	sm_config_module_sw_parms configp
+	A value obtained from
+fnref	sm_open_module
+	which indicates the module to configure.
+field	tSMModuleId module in
+	Controls whether output timeslots should be assigned automatically.
+	The value 1 enables automatic assignment, 0 selects assignment
+	by the application.
+field	tSM_INT auto_assign_out_ts in
+	Controls whether input timeslots should be assigned automatically.
+	The value 1 enables automatic assignment, 0 selects assignment
+	by the application.
+field	tSM_INT auto_assign_in_ts in
+	The first stream from which output timeslots are to be
+	automatically assigned.
+field	tSM_INT out_st0 in
+	The second stream from which output timeslots are to be
+	automatically assigned.
+field	tSM_INT out_st1 in
+	The lowest numbered timeslot to use for automatic assignment of
+	output timeslots.
+	This field is ignored.
+field	tSM_INT out_base_ts in
+	The data encoding used on timeslots automatically allocated
+	within this stream.
+enumstart	kSMTimeslotType
+	Signals encoded with A-law companding.
+enum	kSMTimeslotTypeALaw
+	Signals encoded with mu-law companding.
+enum	kSMTimeslotTypeMuLaw
+	Digital data - no companding used.
+enum	kSMTimeslotTypeData
+enumend	in_type in
+	The first stream from which input timeslots are to be
+	automatically assigned.
+field	tSM_INT in_st0 in
+	The second stream from which input timeslots are to be
+	automatically assigned.
+field	tSM_INT in_st1 in
+	The lowest numbered timeslot to use for automatic assignment of
+	input timeslots.
+	This field is ignored.
+field	tSM_INT in_base_ts in
+	The data encoding used on timeslots automatically allocated
+	within this stream.
+enumref	kSMTimeslotType	out_type in
+unstruct
+	Overrides default or configured assignment scheme used by driver to
+	associate channels with timeslots on card external bus.
+	The streams which can be used with this call depend on the type
+	of Prosody carrier card being used. On the ISA Prosody card, the
+	accessible streams are on the external bus (MVIP), while on
+	other cards they are special internal streams which are only
+	accessible to Prosody and the switch driver.
+	<p>
+	When a channel is allocated, it can have an associated external
+	bus MVIP or SCbus timeslot automatically assigned to it.
+	Alternatively, timeslot assignment may be left to the
+	application which can call
+fnref	sm_switch_channel_output
+	or
+fnref	sm_switch_channel_input
+	following channel allocation to explicitly assign an external
+	bus timeslot.
+	<p>
+	If output channel timeslots for module
+ref	module
+	are to be assigned by the application through calls to
+fnref	sm_switch_channel_output,
+	then
+ref	auto_assign_out_ts
+	must be set to zero.
+	<p>
+	If output channel timeslots for module
+ref	module
+	are to be automatically assigned, then
+ref	auto_assign_out_ts
+	must be set to 1 and the fields
+ref	out_st0,
+ref	out_st1
+	and
+ref	out_base_ts
+	must be set up to specify the external bus streams and timeslots
+	to be assigned.
+	<p>
+	If SCbus external bus timeslots are to be assigned,
+ref	out_st0
+	and
+ref	out_st1
+	should both be set to 24 (the stream assigned to the SCbus) and
+ref	out_base_ts
+	should be set to the first SCbus timeslot to be assigned for
+	this module.
+	<p>
+	If MVIP external bus timeslots are to be assigned,
+ref	out_st0
+	and
+ref	out_st1
+	should be set to DSo stream numbers (0..7) for the first 32 and
+	second 32 timeslots assigned, and
+ref	out_base_ts
+	must be set to zero.
+	<p>
+	If input channel timeslots for module
+ref	module
+	are to be assigned by the application through calls to
+fnref	sm_switch_channel_input,
+	then
+ref	auto_assign_in_ts
+	must be set to zero.
+	<p>
+	If input channel timeslots for module
+ref	module
+	are to be automatically assigned, then
+ref	auto_assign_in_ts
+	must be
+	set to 1 and the fields
+ref	in_st0,
+ref	in_st1
+	and
+ref	in_base_ts
+	must be set up to specify the external bus streams and timeslots
+	to be assigned.
+	<p>
+	If SCbus external bus timeslots are to be assigned,
+ref	in_st0
+	and
+ref	in_st1
+	should both be set to 24 (the stream assigned to the SCbus) and
+ref	in_base_ts
+	should be set to the first SCbus timeslot to be
+	assigned for this module.
+	<p>
+	If MVIP external bus timeslots are to be assigned,
+ref	in_st0
+	and
+ref	in_st1
+	should be set to DSi stream numbers (0..7) for the first 32 and
+	second 32 timeslots assigned, and
+ref	in_base_ts
+	must be set to zero.
+	<p>
+	The use of automatic timeslot assignment is not recommended.
+	It prevents the sharing of a timeslot between multiple
+	channels (which is useful when debugging as it permits the
+	recording of an input without interfering with normal
+	processing of that input). Normally it is trivial to assign
+	timeslots explicitly (for example, by deriving the timeslot
+	number from some property of a call, such as the port and
+	timeslot number of the call).
+	<p>
+	The use of automatic timeslot assignment is not supported on
+	ProsodyS or ProsodyX.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+error	ERR_SM_FIRMWARE_NOT_RUNNING - if no firmware running on module.
+error	ERR_SM_WRONG_MODULE_TYPE - attempt to configure switching on inappropriate module type
+version +
+
+	Allocate a channel on a specific module
+apifn	sm_channel_alloc_placed
+params	sm_channel_alloc_placed_parms channelp
+	The allocated channel.
+field	tSMChannelId channel out
+	The type of channel to allocate.
+enumstart	kSMChannelType
+	An input channel, which can be used to record data, recognise
+	digits and tones etc.
+enum	kSMChannelTypeInput
+	An output channel, which can be used to replay data, generate
+	tones, dial DTMF digits etc.
+enum	kSMChannelTypeOutput
+	A channel that may operate either in input mode or in output
+	mode (but not both simultaneously, except for DTMF
+	detection).
+	Resources required by a channel are allocated only as soon as they are
+	needed, so there is no advantage in using a half-duplex channel
+	over a full-duplex channel, and since it is typically more
+	complicated for an application to handle half-duplex channels
+	than full-duplex channels, it is recommended that full-duplex
+	channels always be used in preference to half-duplex channels.
+enum	kSMChannelTypeHalfDuplex
+	A channel that may operate both in input mode and in output mode
+	(simultaneous input and output possible).
+enum	kSMChannelTypeFullDuplex
+enumend	type in
+	A value obtained from
+fnref	sm_open_module
+	which indicates the module where the channel is to be allocated.
+field	tSMModuleId module in
+	Bitmask of required capabilities, or zero to indicate that the
+	default capabilities are required.
+	This field is ignored.
+field	tSM_INT caps_mask in
+unstruct
+	Allocates, on a specific module, a new channel to generate
+	output data and/or process input data. The
+ref	type
+	parameter determines which kind of channel is allocated
+	<p>
+	If the call completes successfully, the parameter
+ref	channel
+	will be set to the identifier for that channel.
+	<p>
+	The task of supporting this channel is assigned by the driver to
+	the module specified by the
+ref	module
+	parameter.
+	<p>
+	The
+ref	caps_mask
+	parameter is ignored.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if no suitable output channel free
+error	ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified
+
+	Configure the sample rate for a channel's output
+apifn	sm_channel_set_output_rate
+params	sm_channel_set_output_rate_parms ratep
+	The channel to be configured.
+field   tSMChannelId channel in
+	The sample rate.
+field	tSM_INT sample_rate in
+unstruct
+	Configures the sample rate (in samples per second) to be used
+	by the output half of a channel.
+	<p>
+	The sample rate should be configured before using the channel
+	for any operation (such as replay) which depends on it. otherwise
+	it will default to 8000 samples per second.
+	<p>
+	If a channel is connected to a timeslot using
+fnref	sm_switch_channel_output
+	the sample rate must be 8000, whether set explicitly or allowed to
+	default to 8000.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_TYPE - if channel has no output
+
+	Switch channel data to TDM timeslot
+apifn	sm_switch_channel_output
+params	sm_switch_channel_parms switchp
+	The channel from which the output is to be switched.
+field	tSMChannelId channel in
+	The destination stream.
+field	tSM_INT st in
+	The destination timeslot.
+field	tSM_INT ts in
+	The data encoding used on this timeslot.
+enumref	kSMTimeslotType	type in
+unstruct
+	Assigns (or de-assigns) a timeslot to
+ref	channel.
+	No timeslot can be used as output by more than one channel at a
+	time.
+	<p>
+	This function can be used with Prosody X cards in TDM only applications
+	for backward compatibility. For new applications it is recommended that 
+fnref	sm_tdmtx_create
+	and 
+fnref	sm_tdmtx_datafeed_connect
+	be used.
+	To use this function with a Prosody X 
+	card the module
+modref	datafeed
+	must be downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_TYPE - if channel has no output
+error	ERR_SM_BAD_PARAMETER - if invalid parameter specified or channel is associated with BR module
+
+	Switch data from TDM timeslot to channel
+apifn	sm_switch_channel_input
+params	sm_switch_channel_parms switchp
+	The channel to which the input is to be switched.
+field	tSMChannelId channel in
+	The source stream.
+field	tSM_INT st in
+	The source timeslot.
+field	tSM_INT ts in
+	The data encoding used on this timeslot.
+enumref	kSMTimeslotType	type in
+unstruct
+	Assigns (or de-assigns) a timeslot to
+ref	channel.
+	The same timeslot may be used as input
+	to several channels.
+	<p>
+	This function can be used with Prosody X cards in TDM only applications
+	for backward compatibility. For new applications it is recommended that 
+fnref	sm_tdmrx_create
+	and 
+fnref	sm_tdmrx_get_datafeed
+	be used.
+	To use this function with a Prosody X 
+	card the module
+modref	datafeed
+	must be downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_TYPE - if channel has no input
+error	ERR_SM_BAD_PARAMETER - if invalid parameter specified or channel is associated with BR module
+
+	Release a previously allocated channel
+apifn	sm_channel_release -dtor
+	The channel to release.
+param	tSMChannelId channel
+	Releases previously allocated channel. All resources used by the
+	channel are freed. Any operations in progress on the channel are
+	aborted. It is an error to attempt to refer to a channel which
+	has been released.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Get channel information so data can be switched through to it
+apifn	sm_channel_info
+params	sm_channel_info_parms infop
+	The channel whose information is required.
+field	tSMChannelId channel in
+	Obsolete parameter
+field	tSM_INT card out
+	The channel's output stream.
+field	tSM_INT ost out
+	The channel's output timeslot.
+field	tSM_INT ots out
+	The output timeslot type.
+enumref	kSMTimeslotType otype out
+	The channel's input stream.
+field	tSM_INT ist out
+	The channel's input timeslot.
+field	tSM_INT its out
+	The input timeslot type.
+enumref	kSMTimeslotType itype out
+	Obsolete parameter.
+field	tSM_INT group out
+	Obsolete parameter.
+field	tSM_INT caps_mask out
+unstruct
+	This call allows an application to locate a previously allocated
+	speech processing resource so that a data can be switched
+	through to it by means of a call to the Aculab switch driver
+	API.
+	<p>
+	If 
+ref	channel
+	is an identifier for a previously allocated
+	input, half-duplex, or full-duplex channel, then the parameters
+ref	ist,
+	and 
+ref	its
+	returned by this call
+	may be assigned to the <code>ost</code> and <code>ots</code>
+	parameters of a switch driver CONNECT_MODE call to
+	sw_set_output, with &lt;ist, its&gt; in the OUTPUT_PARMS
+	parameter block being set to the source of the data to be
+	processed by the channel.
+	<p>
+	If 
+ref	channel
+	is an identifier for a previously allocated
+	output, half-duplex, or full-duplex channel, then the parameters
+ref	ost,
+	and 
+ref	ots
+	returned by this call may be assigned to the ist and its
+	parameters of a switch driver CONNECT_MODE call to sw_set_output
+	with &lt;ost, ots&gt; int the OUTPUT_PARMS parameter block being
+	set to the destination for data to be generated by the channel.
+	<p>
+	The parameter
+ref	card
+	is an obsolete parameter set to the value -1
+	<p>
+	The parameter
+ref	group
+	is an obsolete parameter set to the value zero.
+	<p>
+	The parameter
+ref	caps_mask
+	is an obsolete parameter set to the value zero.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+version deprecated
+	Map channel identifier to integer
+apifn	sm_get_channel_ix
+	The channel whose index value is to be returned.
+param	tSMChannelId channel
+	Converts a channel identifier to a integer index unique to that
+	channel.
+	<p>
+version	TiNG
+	The index returned is in the range 0 &lt;= index &lt; (256*32) and
+	is unique only between channels on the same card. Note that
+	this function is provided solely to implement backward
+	compatibility with the pre-V6 API, and will be removed when
+	pre-V6 backward compatibility support is withdrawn.
+version	+
+explain
+	Channel index value (greater than or equal to zero)
+retval
+error	ERR_SM_DEVERR - device error
+version +
+
+	Determine channel type
+apifn	sm_get_channel_type
+	The channel whose type is to be returned.
+param	tSMChannelId channel
+	Given a channel identifier, 
+ref	channel,
+	returns its type as was specified for
+fnref	sm_channel_alloc_placed
+	<a href="apifn-sm_channel_alloc_placed.html#field-type">type</a> parameter
+	when channel allocated.
+explain
+	Channel type value (greater than or equal to zero)
+retval
+error	ERR_SM_DEVERR - device error
+
+	Associate event with specific/any channel
+apifn	sm_channel_set_event
+params	sm_channel_set_event_parms eventp
+	The channel with which an event is to be associated.
+field	tSMChannelId channel in
+	The type of the event to associate.
+	One of these values:
+	<code>kSMEventTypeReadData</code>,
+	<code>kSMEventTypeWriteData</code>, or
+	<code>kSMEventTypeRecog</code>.
+field	tSM_INT event_type in
+	Controls the scope of events: none, one channel, or any channel.
+	One of these values:
+	<code>kSMChannelNoEvent</code>,
+	<code>kSMChannelSpecificEventNonIdle</code>,
+	<code>kSMChannelSpecificEvent</code>, or
+	<code>kSMAnyChannelEvent</code>.
+field	tSM_INT issue_events in
+	The event to associate.
+field	tSMEventId event in
+unstruct
+	This call may be used to control read/write and/or recognition
+	event notification for channels.
+	<p>
+	Channel associated events must be allocated through a call to
+fnref	smd_ev_create.
+	<p>
+	In general an application can hibernate in an operating system
+	specific way waiting for data activity on specific channels, or
+	on any channel.
+	<p>
+	A channel may have events associated with reading data, writing
+	data and recognition. The
+ref	event_type
+	parameter should be set to the type required as follows:
+	<p>
+	<table border cellpadding=5>
+	<tr> <th>Type</th> <th>Associated with</th> </tr>
+	<tr>
+		<td>kSMEventTypeReadData</td>
+		<td>Recording of data</td>
+	</tr>
+	<tr>
+		<td>kSMEventTypeWriteData</td>
+		<td>Replay of data, dial completion, tone generation</td>
+	</tr>
+	<tr>
+		<td>kSMEventTypeRecog</td>
+		<td>Recognition of tone, digit etc</td>
+	</tr>
+	</table>
+	<p>
+	To enable channel specific event notification for a particular
+	channel, set
+ref	channel
+	to the required channel,
+ref	issue_events
+	to <code>kSMChannelSpecificEvent</code>, and
+ref	event
+	to an operating system specific event handle.
+	<p>
+	To specify the event to be used when waiting for
+	read/write/recognition activity on any channel, set
+ref	channel
+	to <code>kSMNullChannelId</code>,
+ref	issue_events
+	to <code>kSMAnyChannelEvent</code>, and
+ref	event 
+	to an operating system specific event handle. To disable further
+	use of this event make the same call but with
+ref	issue_events
+	set to <code>kSMChannelNoEvent</code>.
+	<p>
+	To enable &quot;any channel&quot; event notification for a
+	particular channel, set
+ref	channel
+	to the required channel,
+ref	issue_events
+	to <code>kSMAnyChannelEvent</code>, the
+ref	event
+	parameter is not used.
+	<p>
+	To disable read/write/recognition event notification for a
+	particular channel, set
+ref	channel
+	to the required channel, and
+ref	issue_events
+	to <code>kSMChannelNoEvent</code>.
+	<p>
+	By default, no events are associated with a channel.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Return information about card hosting one or more modules
+apifn	sm_get_card_info
+params	sm_card_info_parms cardinfop
+	The card about which information is required
+field	tSMCardId card in
+	The type of the card
+enumstart	kSMCarrierCardType
+	The card type has not been determined.
+enum	kSMCarrierCardTypeYetUnknown
+	Obsolete card type.
+enum	kSMCarrierCardTypeISAS2
+	Obsolete card type.
+enum	kSMCarrierCardTypeBR4
+	Obsolete card type.
+enum	kSMCarrierCardTypeBR8
+	Obsolete card type.
+enum	kSMCarrierCardTypePCIP1
+	Obsolete card type.
+enum	kSMCarrierCardTypePCIC1
+	A Prosody S virtual 'card'. This is a software entity which
+	emulates a digital access card and provides a number of channels
+	of telephony via the host's IP (Internet Protocol) communications.
+enum	kSMCarrierCardTypePS
+	A Prosody X card. This is a card which is controlled by IP
+	(Internet Protocol).
+enum	kSMCarrierCardTypePX
+enumend	card_type out
+	Obsolete parameter.
+field	tSM_INT card_detected out
+	The number of modules on this card.
+field	tSM_INT module_count out
+	Obsolete parameter.
+field	tSM_UT32 physical_address out
+	Obsolete parameter.
+field	tSM_UT32 io_address out
+	Obsolete parameter.
+field	tSM_UT32 physical_irq out
+const	kSMMaxSerialNoText 16
+	The serial number of this card.
+field	char serial_no[kSMMaxSerialNoText] out
+unstruct
+	Retrieves information about card hosting Prosody modules
+	installed in system. 
+	<p>
+	On return,
+ref	card_type
+	will be set to one of the following values:
+	<p>
+	<table border cellpadding=5>
+	<tr> <th>Card Type</th> <th>Use</th> </tr>
+	<tr>
+		<td>kSMCarrierCardTypeYetUnknown</td>
+		<td>Card type not yet determined by driver.</td>
+	</tr>
+	<tr>
+		<td>kSMCarrierCardTypeISAS2</td>
+		<td>Obsolete card.</td>
+	</tr>
+	<tr>
+		<td>kSMCarrierCardTypeBR4</td>
+		<td>Obsolete card.</td>
+	</tr>
+	<tr>
+		<td>kSMCarrierCardTypeBR8</td>
+		<td>Obsolete card.</td>
+	</tr>
+	<tr>
+		<td>kSMCarrierCardTypePCIP1</td>
+		<td>Obsolete card.</td>
+	</tr>
+	<tr>
+		<td>kSMCarrierCardTypePCIC1</td>
+		<td>Obsolete card.</td>
+	</tr>
+	<tr>
+		<td>kSMCarrierCardTypePS</td>
+		<td>Prosody S virtual 'card'</td>
+	</tr>
+	<tr>
+		<td>kSMCarrierCardTypePX</td>
+		<td>Prosody X card</td>
+	</tr>
+	</table>
+	<p>
+	The parameter 
+ref	card_detected
+	is obsolete.
+	<p>
+	The number of modules detected on the card is returned in
+ref	module_count.
+	<p>
+	The parameters
+ref	physical_address
+	, 
+ref	io_address
+	, and
+ref	physical_irq
+	are obsolete.
+	<p>
+	Some carrier cards have a machine readable serial number. For
+	such cards the serial number is returned as a zero terminated
+	text string in the character array
+ref	serial_no.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - if no such card exists
+
+	Return information about card hardware revision
+apifn	sm_get_card_rev
+params	sm_card_rev_parms cardrevp
+	The card about which information is required
+field	tSMCardId card in
+	main revision information
+field	tSM_INT rev[8] out rev
+const	kSMMaxRevAddText 64
+	additional revision information
+field	char rev_additional[kSMMaxRevAddText] out
+unstruct
+	Obsolete call - not applicable to Prosody X or Prosody S.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - if no such card exists
+
+	Return driver version information
+apifn	sm_get_driver_info
+params	sm_driver_info_parms drvinfop
+	Major version number
+field	tSM_INT major out
+	Minor version number
+field	tSM_INT minor out
+	Version step.
+field	tSM_INT step out
+	Indicator of custom software
+field	tSM_INT custom out
+	Quality code
+field	tSM_INT quality out
+	Part of build code
+field	tSM_INT buildno0 out
+	Another part of build code
+field	tSM_INT buildno1 out
+unstruct
+	Retrieves information about TiNG library version controlling Prosody
+	modules installed in system.
+	<p>
+	On return, the parameters
+ref	major,
+ref	minor
+	and
+ref	step
+	will be set to the values <code>X</code>, <code>Y</code>, and
+	<code>Z</code> respectively of the three element version no. for
+	the library <code>X.Y.Z</code>.
+	<p>
+	The
+ref	custom
+	parameter will be set to a non-zero value if the driver build is
+	a custom special build of the driver for a specific customer.
+	<p>
+	The
+ref	quality
+	parameter will be set to one of the following character values:
+	<p>
+	<table border cellpadding=5>
+	<tr> <th>Quality</th> <th>Character</th> </tr>
+	<tr>
+		<td>'B'</td>
+		<td>Beta quality version</td>
+	</tr>
+	<tr>
+		<td>'T'</td>
+		<td>Test version</td>
+	</tr>
+	<tr>
+		<td>'D'</td>
+		<td>Development (or alpha quality) version</td>
+	</tr>
+	<tr>
+		<td>'I'</td>
+		<td>Released version</td>
+	</tr>
+	</table>
+	<p>
+	The
+ref	buildno0
+	and
+ref	buildno1
+	parameters are for Aculab use only. However, note that it is essential to include these two
+	parameters when describing the version to Aculab support staff.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Create operating system event for channel
+apifn	smd_ev_create
+	The created event
+param	tSMEventId* eventId
+	The channel that this event will be associated with
+param	tSMChannelId channelId
+	The type of the event to create. One of these values:
+	<code>kSMEventTypeReadData</code>,
+	<code>kSMEventTypeWriteData</code>, or
+	<code>kSMEventTypeRecog</code>.
+param	int eventType
+	Indicator of whether the event is for 'any channel' use or a
+	single specific channel. One of the following values:
+	<code>kSMChannelSpecificEvent</code>,
+	<code>kSMChannelSpecificEventNonIdle</code>, or
+	<code>kSMAnyChannelEvent</code>.
+param	int eventChannelBinding
+	Creates an operating system event object suitable for use with
+	a specific channel indicated by
+ref	channelId
+	(the parameter
+ref	eventChannelBinding
+	must be set to <code>kSMChannelSpecificEvent</code> in this
+	case) or, alternatively, creates an operating system event object for
+	collective use by all nominated channels (in which case
+ref	channelId
+	must be set to <code>kSMNullChannelId</code> and
+ref	eventChannelBinding
+	to <code>kSMAnyChannelEvent</code>).
+version	TiNG
+	See the document
+	<a href="../anychan.html">Prosody TiNG: any channel operation</a>
+	for how to use 'any channel' events.
+	<p>
+	An application which waits on a channel-specific event will be woken
+	whenever the channel is ready for servicing. This includes whenever
+	an operation on the channel may have a status change to report, as
+	well as whenever there is no operation in progress on the channel
+	(because the channel is ready to start a new operation).
+	<p>
+	An application which waits on an 'any channel' event will be woken
+	when any of the channels which have been associated with that
+	event are ready for servicing. In this case a channel which has no
+	operation in progress is not considered to be ready for
+	servicing. This is because 'any channel' events are provided for
+	backward compatibility with Prosody version 1, which had this
+	behaviour.
+	<p>
+	Note that an application may sometimes be woken even though no
+	status change is found. This happens in certain cases where the
+	API library discovers when checking the status that the change is
+	not of a type appropriate to report to the application (which may
+	be because it related to a facility not currently in use or because
+	it is only for internal purposes within the library).
+version	+
+	<p>
+	The
+ref	eventType
+	parameter indicates which type of event should be created, see
+fnref	sm_channel_set_event
+	API call description for more details.
+	<p>
+	An identifier for the new event object is stored in the location
+	pointed at by
+ref	eventId.
+	You can wait on the event as described in
+fnref	smd_ev_wait.
+explain
+	0
+retval
+error	ERR_SM_NO_RESOURCES - if event could not be created
+error	ERR_SM_DEVERR - device error
+
+	Wait for notification of operating system event
+apifn	smd_ev_wait
+param	tSMEventId eventId
+	Wait until given event occurs.
+	<p>
+	Application developers may prefer to use the underlying
+	operating system calls instead of this call, allowing them to
+	exploit event wait timeouts, waiting for multiple events etc.
+	The use of events on each operating system is described in
+	<a href="../events.html">Prosody events</a>.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Free previously created operating system event
+apifn	smd_ev_free -dtor
+param	tSMEventId eventId
+	<p>
+	Release operating system resources associated with use of event
+	previously allocated by
+fnref	smd_ev_create.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Closes a card, finishing potential use with Prosody.
+apifn	sm_close_prosody
+params	sm_close_prosody_parms closep
+	The card to close.
+field	tSMCardId card_id in
+unstruct
+	Reverses the effect of
+fnref	sm_open_prosody_x, 
+	or
+fnref	sm_open_prosody_s_v3.
+	If, after closing the card, you want to use Prosody API
+	functions which refer to this card you must invoke
+fnref	sm_open_prosody_x, 
+	or
+fnref	sm_open_prosody_s_v3
+	again.
+	It is a serious error to close a card on which there are
+	open modules.
+explain
+	0
+retval
+
+	Open a Prosody module
+apifn	sm_open_module -dtor
+params	sm_open_module_parms module_parmsp
+	The card,
+	which has been opened (e.g. with
+fnref	sm_open_prosody_x
+	) and on which is the module to be opened,
+field	tSMCardId card_id in
+	The physical module number of the module to open. This is the
+	zero-based index of the module on the card specified by
+ref	card_id.
+	The module numbers refer to positions on the card, so a card
+	which has connectors for plugging in a module will always use
+	the same number for a module plugged into a particular position
+	regardless of which other positions are occupied.
+field	tSM_UT32 module_ix in
+	The opened module.
+field	tSMModuleId module_id out
+unstruct
+	Opens a specified Prosody module.
+explain
+	0
+retval
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+
+	Configure module for API related traffic to be encrypted
+apifn	sm_sec_module
+params	sm_sec_module_parms module_parmsp
+	An id for an open module previously obtained from
+fnref	sm_open_module
+field	tSMModuleId module_id in
+	If non-zero causes bulk data (e.g. replay data) sent to module to be 
+	excluded from encryption.
+field	tSM_INT exclude_data_to_module in
+	If non-zero causes bulk data (e.g. record data) sent from module to be 
+	excluded from encryption.
+field	tSM_INT exclude_data_from_module in
+	An id from an external encryption library used to identify a previously 
+	agreed key for use with this module.
+field	tSM_INT key_id in
+	The context from an external encryption library used by TiNG library in 
+	callbacks.
+field	char* context in
+	The callback with type void (*)(tSM_INT,tSM_INT,void*,tSM_UT8*) from an 
+	external encryption library used by TiNG library to encrypt and decrypt 
+	messages.
+field	tSMSecCallback encdec in
+unstruct
+	Sets up encrypted communication with module.  Must be used in conjunction 
+	with a compatible external encryption library, for example
+	kmlib3des.
+	If encryption is required, this function must be invoked immediately after 
+	calling
+fnref	sm_open_module.
+	Requires an encryption capable kernel to be running on the module.
+explain
+	0
+retval
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+
+	Obtain an event for a module
+apifn	sm_module_get_event
+params	sm_module_event_parms eventp
+	The module 
+field	tSMModuleId module_id in
+	The event identifier
+field	tSMEventId event out
+unstruct
+	If the call completes successfully 
+ref	event
+	will hold the tSMEventId belonging to 
+ref	module_id.
+	The tSMEventId is valid until the module is closed using 
+fnref	sm_close_module.
+	This event will be signalled when a status change occurs on the 
+	module. When the event is signalled the user must call 
+fnref	sm_module_status
+	to discover the nature of the status change.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Report the status of a Prosody module connection
+apifn	sm_module_status
+params	sm_module_status_parms statusp
+	The value obtained from
+fnref	sm_open_module
+	to be closed.
+field	tSMModuleId module_id in
+enumstart kSMModuleStatus
+	The module connection is running.
+enum	kSMModuleStatusRunning
+	The module connection has been shutdown.
+enum	kSMModuleStatusShutdown
+enumend status out
+unstruct
+	Reports the status of a Prosody module connection that was opened with
+fnref	sm_open_module.
+	Card types that use asynchronous control methods may block in
+fnref sm_close_module.
+	After using
+fnref sm_shutdown_module
+	to initiate the closing of a module, this function will report a status of
+ref	kSMModuleStatusShutdown
+	when
+fnref sm_close_module
+	will not block. 
+explain
+	0
+retval
+
+	Initiate the closing of a Prosody module
+apifn	sm_shutdown_module
+params	sm_shutdown_module_parms shutdownp
+	The value obtained from
+fnref	sm_open_module
+	to be closed.
+field	tSMModuleId module_id in
+unstruct
+	Initiates the closing of a Prosody module that was opened with
+fnref	sm_open_module.
+	Card types that use asynchronous control methods may block in
+fnref sm_close_module.
+	This function initiates the close procedure and does not block.
+	The resources used are not released until
+fnref sm_close_module
+	is called, which may still block unless
+fnref sm_module_status
+	has reported a status of
+	<a href="apifn-sm_module_status.html#field-kSMModuleStatusShutdown">
+	kSMModuleStatusShutdown</a>.
+	It is a serious error to close a module on which there are
+	open channels.
+explain
+	0
+retval
+
+	Close a Prosody module
+apifn	sm_close_module -dtor
+params	sm_close_module_parms closep
+	The value obtained from
+fnref	sm_open_module
+	to be closed.
+field	tSMModuleId module_id in
+unstruct
+	Closes a Prosody module that was opened with
+fnref	sm_open_module.
+	Note that this function only releases any resources allocated
+	by
+fnref	sm_open_module
+	and does not tidy up other resources connected with the module
+	which may have been allocated by other API functions or the
+	application.
+	It is a serious error to close a module on which there are
+	open channels.
+explain
+	0
+retval
+
+version	deprecated
+	Return the module on which a channel is located.
+apifn	sm_get_channel_module_id int
+	The channel to locate.
+param	tSMChannelId channel
+	Given a channel returns the module on which the channel is
+	located.
+	<p>
+	Note that this function no longer implemented, 
+	and shall eventually be withdrawn from the API.
+explain
+	Always returns the error ERR_SM_NOT_IMPLEMENTED
+retval
+version	+
+
+version	deprecated
+	Return the card on which a module is located.
+apifn	sm_get_module_card_id
+	a value obtained from
+fnref	sm_open_module
+	which indicates the module to locate.
+param	tSMModuleId mod_id
+	Given a module returns the card on which the module is
+	located.
+	<p>
+	Note that this function is deprecated. It is present only to
+	permit certain backward compatibility functionality to be
+	implemented, should <strong>not</strong> be used by
+	applications, and shall eventually be withdrawn from the API.
+explain
+	tSMCardId
+retval
+version	+
+
+version	deprecated
+	Determine switch driver associated with card
+apifn	sm_get_card_switch_id
+	The card whose associated switch driver index is to be
+	determined.
+param	tSMCardId card
+	Given a Prosody carrier card, returns card ID for use in switch
+	driver API calls such as <code>sw_set_output</code>.
+	<p>
+	Note that this function is deprecated. It is present only to
+	permit certain backward compatibility functionality to be
+	implemented, should <strong>not</strong> be used by
+	applications, and shall eventually be withdrawn from the API.
+explain
+	Switch card ID
+retval
+version	+
+
+	Create a TDM[rx] endpoint
+apifn	sm_tdmrx_create
+params	sm_tdmrx_create_parms tdmrxp
+	The newly created TDM[rx].
+field	tSMTDMrxId tdmrx out
+	A value obtained from 
+fnref	sm_open_module
+	which indicates the module where the TDM[rx] is to be allocated.
+field	tSMModuleId module in
+	The TDM stream to which the TDM[rx] will be attached
+field	tSM_INT stream in
+	The TDM timeslot to which the TDM[rx] will be attached
+field	tSM_INT timeslot in
+	The data encoding used on this timeslot.
+enumref	kSMTimeslotType	type in
+unstruct
+	Allocates, on a specific module, a new TDM[rx] to receive
+	incoming TDM data. The TDM[rx] will receive it's data from the
+	specified
+ref	stream
+	and
+ref	timeslot.
+	The streams which can be used with this call depend on the type
+	of Prosody carrier card being used. They are special internal
+	streams which are only accessible to Prosody and the switch
+	driver.
+	All data received by the
+ref	tdmrx
+	can be read from its datafeed. The datafeed may be obtained using
+fnref	sm_tdmrx_get_datafeed.
+	<p>
+	If the call completes successfully, the parameter
+ref	tdmrx
+	will be set to the identifier for that tdmrx.
+	<p>
+	On Prosody X this function requires the module
+modref	datafeed
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources exist to create the TDM[rx]
+
+	Create a TDM[tx] endpoint
+apifn	sm_tdmtx_create
+params	sm_tdmtx_create_parms tdmtxp
+	The newly created TDM[tx].
+field	tSMTDMtxId tdmtx out
+	A value obtained from 
+fnref	sm_open_module
+	which indicates the module where the TDM[tx] is to be allocated.
+field	tSMModuleId module in
+	The TDM stream to which the TDM[tx] will be attached
+field	tSM_INT stream in
+	The TDM timeslot to which the TDM[tx] will be attached
+field	tSM_INT timeslot in
+	The data encoding used on this timeslot.
+enumref	kSMTimeslotType	type in
+unstruct
+	Allocates, on a specific module, a new TDM[tx] to send TDM data. The TDM[tx] will send it's data
+	to the specified 
+ref	stream
+	and
+ref	timeslot.
+	The streams which can be used with this call depend on the type
+	of Prosody carrier card being used. They are special internal
+	streams which are only accessible to Prosody and the switch
+	driver.
+	The
+ref	tdmtx
+	will begin sending data when it has been succesfully connected to a 
+	valid datafeed using
+fnref	sm_tdmtx_datafeed_connect.
+	<p>
+	If the call completes successfully, the parameter
+ref	tdmtx
+	will be set to the identifier for that tdmtx.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources exist to create the TDM[tx]
+
+	Destroy a previously allocated TDM[rx]
+apifn	sm_tdmrx_destroy -dtor
+	A tSMTDMrxId that has been prevously created by a call to 
+fnref	sm_tdmrx_create
+	.
+param	tSMTDMrxId tdmrx
+	Destroys
+ref	tdmrx
+	and invalidates the tSMTDMrxId.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Destroy a previously allocated TDM[tx]
+apifn	sm_tdmtx_destroy -dtor
+	A tSMTDMtxId that has been prevously created by a call to 
+fnref	sm_tdmtx_create
+	.
+param	tSMTDMtxId tdmtx
+	Destroys
+ref	tdmtx
+	and invalidates the tSMTDMtxId.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Obtain a datafeed from a TDM[rx]
+apifn	sm_tdmrx_get_datafeed
+params	sm_tdmrx_datafeed_parms datafeedp
+	The tdm[rx] from which to obtain a datafeed
+field	tSMTDMrxId tdmrx in
+	The datafeed object associated with the TDM[rx]
+field	tSMDatafeedId datafeed out
+unstruct
+	Request a datafeed identifier from a TDM[rx]. This identifer can 
+	subsequently be used in a call to any of the
+	<code>*_datafeed_connect()</code> functions except
+fnref	sm_tdmtx_datafeed_connect.
+	It is valid until the TDM[rx] is destroyed.
+	Datafeed connections can only be made between objects allocated
+	on the same <code>tSMModuleId</code>.
+	<p>
+	Requires the module
+modref  datafeed
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Connect a datafeed to a TDM[tx]
+apifn	sm_tdmtx_datafeed_connect
+params	sm_tdmtx_datafeed_connect_parms datafeedp
+	The datafeed acting as a source of data
+field	tSMDatafeedId data_source in
+	The TDM[tx] that will receive the data
+field	tSMTDMtxId tdmtx in
+unstruct
+	Connects a datafeed to a TDM[tx]. The
+ref	data_source
+	must be a datafeed obtained from any of the
+	<code>*_get_datafeed()</code> functions except
+fnref	sm_tdmrx_get_datafeed.
+	The TDM[tx]
+ref	tdmtx
+	will receive any data that is generated by the output task from which 
+ref	data_source
+	was derived.
+	<p>
+	To disconnect a TDM[tx] from a datafeed, specify 
+	<code>kSMNullDatafeedId</code> as the tSMDatafeedId in
+ref	data_source
+	<p>
+	Requires the module
+modref	datafeed
+	to have been downloaded.
+explain
+	0
+retval
+
+	Obtain a datafeed from an output channel
+apifn	sm_channel_get_datafeed
+params	sm_channel_datafeed_parms datafeedp
+	The output channel from which to obtain a datafeed
+field	tSMChannelId channel in
+	The datafeed object associated with the output channel
+field	tSMDatafeedId datafeed out
+unstruct
+	Request a datafeed identifier from an output channel. This identifer 
+	can subsequently be used in a call to any of the
+	<code>*_datafeed_connect()</code> functions
+	to connect the output from the channel to a destination.
+	It is valid until the channel is released.
+	Datafeed connections can only be made between objects allocated
+	on the same <code>tSMModuleId</code>.
+	<p>
+	Requires the module
+modref	datafeed
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Connect a datafeed to a channel
+apifn	sm_channel_datafeed_connect
+params	sm_channel_datafeed_connect_parms datafeedp
+	The datafeed acting as a source of data
+field	tSMDatafeedId data_source in
+	The channel that will receive the data
+field	tSMChannelId channel in
+unstruct
+	Connects a datafeed to an input channel. The
+ref	data_source
+	must be a datafeed obtained a call to any of the
+	<code>*_get_datafeed()</code> functions.
+	The input channel, 
+ref	channel,
+	will receive any data that is generated by the object from which 
+ref	data_source
+	was derived.
+	<p>
+	To disconnect a channel from a datafeed, specify 
+	<code>kSMNullDatafeedId</code> as the tSMDatafeedId in
+ref	data_source.
+	<p>
+	Requires the module
+modref	datafeed
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Create a UDP data collector
+apifn	sm_udp_collector_create
+params	sm_udp_collector_create_parms dp
+	The newly created collector.
+field	tSMCollectorId collector out
+	A value obtained from 
+fnref	sm_open_module
+	which indicates the module where the collector to be allocated.
+field	tSMModuleId module in
+enumstart	kSMCollectorType
+	The collector is to receive IPv4 packets
+enum	kSMCollectorTypeIPv4
+	The collector is to receive IPv6 packets
+enum	kSMCollectorTypeIPv6
+enumend	type in
+	The address on which this UDP collector is to listen if
+ref	type
+	is 
+ref	kSMCollectorTypeIPv4.
+field	in_addr address in
+	The address on which this UDP collector is to listen if
+ref	type
+	is 
+ref	kSMCollectorTypeIPv6.
+field	in6_addr ipv6_address in
+unstruct
+	Allocates, on a specific module, a new UDP collector
+	to receive incoming UDP data. If the call completes
+	successfully, the parameter
+ref	collector
+	will be set to the identifier for that collector.
+	<p>
+	A collector is automatically allocated a port number for
+	incoming UDP data, this information may be obtained from
+fnref	sm_collector_status.
+	<p>
+	This requires the module
+modref	fromudp
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Obtain an event for a collector
+apifn	sm_collector_get_event
+params	sm_collector_event_parms eventp
+	The collector 
+field	tSMCollectorId collector in
+	The event identifier
+field	tSMEventId event out
+unstruct
+	If the call completes successfully 
+ref	event
+	will hold the tSMEventId belonging to 
+ref	collector.
+	The tSMEventId is valid until the collector is destroyed using 
+fnref	sm_collector_destroy.
+	This event will be signalled when a status change occurs on the 
+	collector. When the event is signalled the user must call 
+fnref	sm_collector_status
+	to discover the nature of the status change.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Determine collector status
+apifn	sm_collector_status
+params	sm_collector_status_parms statusp
+	The collector to interrogate
+field	tSMCollectorId collector in
+enumstart kSMCollectorStatus
+	The collector is running normally.
+enum	kSMCollectorStatusRunning
+	Indicates that IPv4 port information is available.
+enum	kSMCollectorStatusGotPorts
+	Indicates that UDP packets are being received from a new IPv4 source.
+enum	kSMCollectorStatusNewPeer
+	Indicates that IPv6 port information is available.
+enum	kSMCollectorStatusGotPortsIPv6
+	Indicates that UDP packets are being received from a new IPv6 source.
+enum	kSMCollectorStatusNewPeerIPv6
+enumend status out
+	Additional information relating to the current status of the collector
+union
+	This field is only valid if the status is
+ref	kSMCollectorStatusGotPorts.
+struct
+	The address on which this collector is listening.
+field	in_addr address out
+	The UDP port number on which this collector is listening
+field	int port out
+unstruct	ports
+	This field is only valid if the status is
+ref	kSMCollectorStatusNewPeer.
+struct
+	The address from which the data was received.
+field	in_addr address out
+	The UDP port number from which the data was received.
+field	int port out
+unstruct	peer
+	This field is only valid if the status is
+ref	kSMCollectorStatusGotPortsIPv6.
+struct
+	The address on which this collector is listening.
+field	in6_addr address out
+	The UDP port number on which this collector is listening
+field	int port out
+unstruct	ports_ipv6
+	This field is only valid if the status is
+ref	kSMCollectorStatusNewPeerIPv6.
+struct
+	The address from which the data was received.
+field	in6_addr address out
+	The UDP port number from which the data was received.
+field	int port out
+unstruct	peer_ipv6
+unstruct	u
+unstruct
+	Returns the current status of the collector or an error to
+	indicate that an error has occurred.
+	<p>
+	When the collector event, obtained from
+fnref	sm_collector_get_event,
+	is signalled the user must call this function to determine the nature
+	of the status change. The change in status may indicate that an error 
+	occurred whilst processing a user request or it may be notifiying the 
+	user of a change to the previous state of the collector.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources existed to create the collector
+
+	Connect a collector to a channel
+apifn	sm_channel_collector_connect
+params	sm_channel_collector_connect_parms dp
+	The collector which the channel should use as a source of data
+field	tSMCollectorId source in
+	The channel that will receive the data
+field	tSMChannelId channel in
+unstruct
+	Connects a collector to an output channel, replacing the
+	previous collector connected to it. The
+ref	source
+	must be a collector created by a call to
+fnref	sm_udp_collector_create.
+	or the value <code>kSMNullCollectorId</code>.
+	The output channel, 
+ref	channel,
+	will use data collector as its source of
+	data (e.g. for replay or transmit operations).
+	<p>
+	There must be no operation in progress (e.g. replay) on the output
+	half of the channel when this function is called.
+	<p>
+	The default collector for a channel is
+	<code>kSMNullCollectorId</code>, which collects data through the API
+	(e.g. via
+fnref	smdc_tx_data).
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Destroy a data collector
+apifn	sm_collector_destroy -dtor
+	A tSMCollectorId that has been prevously created by a call to 
+fnref	sm_udp_collector_create.
+param	tSMCollectorId collector
+	Destroys
+ref	collector
+	invalidating the tSMCollectorId.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Create a UDP data dispatcher
+apifn	sm_udp_dispatcher_create
+params	sm_udp_dispatcher_create_parms dp
+	The newly created dispatcher.
+field	tSMDispatcherId dispatcher out
+	A value obtained from 
+fnref	sm_open_module
+	which indicates the module where the dispatcher to be allocated.
+field	tSMModuleId module in
+enumstart	kSMDispatcherType
+	The dispatcher is to receive IPv4 packets
+enum	kSMDispatcherTypeIPv4
+	The dispatcher is to receive IPv6 packets
+enum	kSMDispatcherTypeIPv6
+enumend	type in
+	The SOCKADDR_IN structure specifying the destination IP address
+	and port for the UDP stream. A struct SOCKADDR_IN must be
+	configured with an address family, an IP address and a port.
+	Note that most operating systems define this structure such that
+	fields are in network byte order.
+	The structure must be correctly cast such that an IP V4 
+	address is specified.
+	<br>
+	This field is ignored unless
+ref	type
+	is
+ref kSMDispatcherTypeIPv4.
+field	SOCKADDR_IN destination in
+	The SOCKADDR_IN structure allows you to specify the source IP
+	address and port for the UDP stream. A struct SOCKADDR_IN must
+	be configured with an address family. The IP address may be
+	specified, or the value INADDR_ANY may be used to indicate
+	that any suitable address may be used. The port number may be
+	specified, or the value zero may be used to indicate that a
+	suitable port number is to be automatically allocated and
+	used.
+	Note that most operating systems define this structure such that
+	fields are in network byte order.
+	The structure must be correctly cast such that an IP V4 
+	address is specified.
+	<br>
+	This field is ignored unless
+ref	type
+	is
+ref kSMDispatcherTypeIPv4.
+field	SOCKADDR_IN source in
+	The Type Of Service (TOS) indicator to be sent in the UDP packets
+	<br>
+	This field is ignored unless
+ref	type
+	is
+ref kSMDispatcherTypeIPv4.
+field	int TOS in
+	The SOCKADDR_IN6 structure specifying the destination IP address
+	and port for the UDP stream. A struct SOCKADDR_IN6 must be
+	configured with an address family, an IPv6 address and a port.
+	Note that most operating systems define this structure such that
+	fields are in network byte order.
+	<br>
+	This field is ignored unless
+ref	type
+	is
+ref kSMDispatcherTypeIPv6.
+field	SOCKADDR_IN6 destination_ipv6 in
+	The SOCKADDR_IN6 structure allows you to specify the source IPv6
+	address and port for the UDP stream. A struct SOCKADDR_IN6 must
+	be configured with an address family. The IPv6 address may be
+	specified, or the value INADDR_ANY may be used to indicate
+	that any suitable address may be used. The port number may be
+	specified, or the value zero may be used to indicate that a
+	suitable port number is to be automatically allocated and
+	used.
+	Note that most operating systems define this structure such that
+	fields are in network byte order.
+	<br>
+	This field is ignored unless
+ref	type
+	is
+ref kSMDispatcherTypeIPv6.
+field	SOCKADDR_IN6 source_ipv6 in
+unstruct
+	Allocates, on a specific module, a new UDP dispatcher
+	to transmit data. If the call completes
+	successfully, the parameter
+ref	dispatcher
+	will be set to the identifier for that dispatcher.
+	<p>
+	This requires the module
+modref	toudp
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Connect a channel to a dispatcher
+apifn	sm_channel_dispatcher_connect
+params	sm_channel_dispatcher_connect_parms dp
+	The dispatcher to which the channel should pass data
+field	tSMDispatcherId dest in
+	The channel that will produce the data
+field	tSMChannelId channel in
+unstruct
+	Connects an input channel to a dispatcher, replacing the
+	previous dispatcher connected to it. The
+ref	dest
+	must be a dispatcher created by a call to
+fnref	sm_udp_dispatcher_create.
+	or the value <code>kSMNullDispatcherId</code>.
+	The input channel, 
+ref	channel,
+	will use data dispatcher to pass on data it produces
+	(e.g. for record or receive operations).
+	<p>
+	There must be no operation in progress (e.g. record) on the input
+	half of the channel when this function is called.
+	<p>
+	The default dispatcher for a channel is
+	<code>kSMNullDispatcherId</code>, which dispatches data through
+	the API (e.g. via
+fnref	smdc_rx_data).
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Destroy a data dispatcher
+apifn	sm_dispatcher_destroy -dtor
+	A tSMDispatcherId that has been prevously created by a call to 
+fnref	sm_udp_dispatcher_create.
+param	tSMDispatcherId dispatcher
+	Destroys
+ref	dispatcher
+	invalidating the tSMDispatcherId.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Generate a name from an error code
+apifn	sm_error_name -noinit char*
+params	sm_error_name_parms errp
+	The error code whose name is required.
+field	tSM_INT code in
+	The generated name.
+field	char name[80] out
+unstruct
+	Generates a name for the supplied Prosody error code. The name is
+	one of the <a href="error.html">standard names</a>, unless the
+	error code is unrecognised, in which case a suitable representation
+	is used.
+explain
+	Returns the address of the
+ref	name
+	field in the supplied parameter structure. This allows the function
+	return value to be used as a parameter to another function call.
+	For example:
+	<pre>
+	printf("Error calling sm_replay_start(): %s\n", sm_error_name(&amp;e));
+	</pre>
+	<p>
+	Since this is never null, it can be safely used immediately.
+retval
+
+	Redirect the data received by an input channel to a datafeed
+apifn	sm_channel_input_data_redirect
+params	sm_channel_input_data_redirect_parms redp
+	The channel to redirect the received data on
+field	tSMChannelId channel in
+	Enables (non-zero) or disables (zero) the redirection of data
+field	tSM_INT	enable in
+	The datafeed which the received data is passed to when redirected
+field	tSMDatafeedId datafeed out
+unstruct
+	When
+ref	enable
+	is non-zero, request a datafeed identifier from an input channel that 
+	will carry the data usually retrieved through the api (e.g. 
+fnref	sm_get_recorded_data
+	). This identifer can subsequently be used in a call to any of the
+	<code>*_datafeed_connect()</code> functions to connect the input data 
+	from the channel to a destination. Note though that the data will be
+	raw octets and not audio data, so the destination must be expecting 
+	raw octets.	The identifier is valid until the channel is released or 
+	this function is called	with
+ref enable
+	set to zero.
+	<p>
+	There must be no operation in progress (e.g. record) on the input
+	half of the channel when this function is called.
+	<p>
+	Datafeed connections can only be made between objects allocated
+	on the same <code>tSMModuleId</code>.
+	<p>
+	Requires the modules
+modref	datafeed
+	and
+modref redirect
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Provide alternative source data to an output channel
+apifn	sm_channel_output_source_datafeed_connect
+params	sm_channel_output_source_datafeed_connect_parms outsrcp
+	The channel to connect the source to
+field	tSMChannelId channel in
+	The datafeed supplying the data
+field	tSMDatafeedId data_source in
+	The number of octets to collect before data is ready
+field	tSM_INT threshold in
+	The data ready timeout in milliseconds. Zero means no timeout is used.
+field	tSM_INT timeout in
+unstruct
+	Connects a datafeed to an output channel. The output channel
+	will use the datafeed as its source of data (e.g. for replay or transmit 
+	operations).
+	<p>
+	The data can be buffered before being made available to the output 
+	channel for processing. The buffer will wait until it has either
+ref	threshold
+	octets of data, or
+ref	timeout
+	milliseconds have passed since data was last provided to the buffer, 
+	before allowing the output channel to process the data. This buffering 
+	is repeated if the buffer underruns.
+	<p>
+	There must be no operation in progress (e.g. replay) on the output
+	half of the channel when this function is called.
+	<p>
+	Datafeed connections can only be made between objects allocated
+	on the same <code>tSMModuleId</code>.
+	<p>
+	Requires the modules
+modref	datafeed
+	and
+modref redirect
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+

@@ -1,0 +1,5 @@
+Converter to allow playing of 6kHz signals at 8kHz. This is
+used in conjunction with a replay to play data which was
+recorded as a 6kHz variant of a format normally used at 8kHz.
+Such a variant is used to reduce the size of the recorded data
+by 25%.

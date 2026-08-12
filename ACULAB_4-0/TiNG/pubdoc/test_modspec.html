@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Test programs: Specifying Prosody Processor modules</title>
+</head>
+<body>
+<h1>Test programs: Specifying Prosody Processor modules</h1>
+<p>
+There are three different ways in which a test program may let you
+specify a Prosody processor module:
+<ul>
+<li>Programs which specify <a href="#initone">A single module on the command line</a> - for example,
+<a href="test_cpumon.html">cpumon</a>.
+<li>Programs which specify <a href="#initmulti">A list of modules on the command line</a> - for
+example, <a href="test_locplay.html">locplay</a>.
+<li><a href="#cmd">By command while the test program is running</a> - for
+example, <a href="test_tonedet.html">tonedet</a>.
+</ul>
+
+<h2><a name="initone">A single module on the command line</a></h2>
+<p>
+Some test programs require you to specify a single Prosody processor. They
+use the <code>-x</code> option to specify a card and the
+<code>-m</code> option to specify a Prosody processor
+module on that card. The name of the card has this format:
+<ol>
+<li>A portion which specifies the type of Prosody card. This is:
+	<ul>
+	<li><code>s3</code> for Prosody S (v3)
+	<li><code>x</code> for Prosody X
+	</ul>
+<li>A colon (<code>:</code>)
+<li>A portion specific to the type of Prosody
+	<ul>
+	<li>For Prosody S (v3) it is the Prosody S server address, optional port, and security key
+	<li>For Prosody X it is the Prosody X card address and security key
+	</ul>
+</ol>
+<p>
+For example, module 1 on the Prosody X
+card voipgw.example.com which has security key '2AGgcFm5' would be
+specified as <code>-x x:voipgw.example.com/2AGgcFm5 -m 1</code>.
+<p>
+
+<h2><a name="initmulti">A list of modules on the command line</a></h2>
+<p>
+Some test programs allow you to specify a list of Prosody processor
+modules. These programs use the <code>-x</code> option to specify the
+list of module specifications separated by commas.
+Each module specification consists of the name of a card (as would be
+used to specify 
+<a href="#initone">A single module on the command line</a>) followed by
+a list of numbers in square brackets,
+<code>[]</code>, separated by comma. This list is a list of modules on that
+card. It may be omitted, in which case all modules on the card are used.
+<p>
+For example, the specification:
+<pre>
+	-x x:10.202.163.63/mykey,x:1.2.3.4/hello[3]
+</pre>
+<p>
+assuming card 10.202.163.63 has four Prosody processor modules, specifies that
+these modules should be used:
+<ol>
+	<li>Module 0 on card 10.202.163.63 using security key 'mykey'
+	<li>Module 1 on card 10.202.163.63 using security key 'mykey'
+	<li>Module 2 on card 10.202.163.63 using security key 'mykey'
+	<li>Module 3 on card 10.202.163.63 using security key 'mykey'
+	<li>Module 3 on Prosody X card 1.2.3.4 using security key 'hello'
+</ol>
+
+<h2><a name="cmd">By command while the test program is running</a></h2>
+<p>
+For test programs that implement a command to select a Prosody module,
+the method uses the <code>m</code> command as follows.
+<p>
+Initially, a module is specified with a full description like this:
+<pre>
+	m+x:prosgw.example.com/2AGgcFm5[1]
+</pre>
+<p>
+The description is the same as would be used to specify
+<a href="#initmulti">a list of modules on the command line</a>.
+When you specify a module like this, it is opened, subsequent
+commands refer to it until you select a different module, and it can
+later be referred to by number in a simpler way:
+<pre>
+	m2
+</pre>
+<p>
+If your specification refers to more than one module, then all are
+opened, and the first one is selected. You can use the command
+<code>m?</code> to see the list of modules you have opened.
+<p>
+For example,
+<pre>
+	m+x:prosgw.example.com/2AGgcFm5[3]
+		selects module 3 on Prosody X card prosgw.example.com which has security key '2AGgcFm5'
+</pre>

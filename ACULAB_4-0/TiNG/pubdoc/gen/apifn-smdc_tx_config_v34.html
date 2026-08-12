@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody data communications: API: smdc_tx_config_v34</title>
+</head>
+<body>
+<h1>Prosody data communications: API: smdc_tx_config_v34</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int smdc_tx_config_v34(struct smdc_tx_config_v34_parms *<a href="#field-configp">configp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_tx_config_v34_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCV34Mode">enum kSMDCV34Mode</a> {
+		<a href="#field-kSMDCV34ModeOriginating">kSMDCV34ModeOriginating</a>,
+		<a href="#field-kSMDCV34ModeAnswering">kSMDCV34ModeAnswering</a>,
+	} <a href="#field-mode">mode</a>;							/* in */
+	<a name="enum-kSMDCV34Polling">enum kSMDCV34Polling</a> {
+		<a href="#field-kSMDCV34ModeNormal">kSMDCV34ModeNormal</a>,
+		<a href="#field-kSMDCV34ModePolling">kSMDCV34ModePolling</a>,
+	} <a href="#field-polling">polling</a>;						/* in */
+	<a href="apifn-smdc_rx_config_v34.html#enum-kSMDCV34Duplex">enum kSMDCV34Duplex</a> <a href="#field-duplex">duplex</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-min_bitrate">min_bitrate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_bitrate">max_bitrate</a>;					/* in */
+} SMDC_TX_CONFIG_V34_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a channel's output for data communications using the V.34
+protocol. The V.34 modem operates in a duplex manner (even when
+<a class=pref href="#field-duplex">duplex</a>
+is
+<a class=pref href="#field-kSMDCV34HalfDuplex">kSMDCV34HalfDuplex</a>),
+so
+<a class=pref href="#field-channel">channel</a>
+must be a full-duplex channel and its input half must also be
+configured using
+<a href="apifn-smdc_rx_config_v34.html">smdc_rx_config_v34()</a>.
+<p>
+The channel output is reserved for this data communications
+configuration until
+<a href="apifn-smdc_line_status_v34.html">smdc_line_status_v34()</a>
+returns the status
+<a href="apifn-smdc_line_status.html#field-kSMDCLinkStatusNotConnected">
+kSMDCLinkStatusNotConnected</a>. No other activity can take place
+on the channel during this time.
+<p>
+While the output half of a channel is configured for data
+communications, a write event associated with this channel
+using
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event()</a>
+will be set while the channel is ready to accept more data or
+there may be a status change to report.
+See
+<a href="apifn-smdc_tx_control.html">smdc_tx_control()</a>
+for details of how this works. When an application discovers
+that this event is set, it may check the status using
+<a href="apifn-smdc_tx_status.html">smdc_tx_status()</a>.
+However, an application may simply try
+<a href="apifn-smdc_tx_data.html">smdc_tx_data()</a>
+immediately and check status when it refuses to accept data.
+<p>
+Requires the module
+<a href="softmodindex.html#v34fdx">v34fdx</a>
+to have been downloaded if configuring for full duplex operation.
+<p>
+Requires the module
+<a href="softmodindex.html#v34">v34</a>
+to have been downloaded if configuring for half duplex operation.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to configure.
+
+<dt><a name="field-mode">mode</a><dd>The negotiation procedure for V.34 modems requires that one modem be
+nominated as the originator and the other is the answerer. In
+half-duplex mode the originating modem is the one which can transmit
+on the primary channel.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCV34ModeOriginating">kSMDCV34ModeOriginating</a>
+<dd>This modem is the originating modem.
+
+<dt><a name="field-kSMDCV34ModeAnswering">kSMDCV34ModeAnswering</a>
+<dd>This modem is the answering modem.
+
+</dl>
+<dt><a name="field-polling">polling</a><dd>V.34 half-duplex mode can only transmit data on the primary channel
+in one direction. There is no turnaround procedure, so to reverse the
+data flow the modem must be destroyed and a new modem created.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCV34ModeNormal">kSMDCV34ModeNormal</a>
+<dd>Primary channel data is transferred from the originating modem to the
+answering modem.
+
+<dt><a name="field-kSMDCV34ModePolling">kSMDCV34ModePolling</a>
+<dd>Primary channel data is transferred from the answering modem to the
+originating modem.
+
+</dl>
+<dt><a name="field-duplex">duplex</a><dd>Selects full-duplex or half-duplex operation. The transmitter and
+receiver must both be configured with the same value for this
+parameter.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCV34HalfDuplex">kSMDCV34HalfDuplex</a>
+<dd>Configures the channel for half-duplex. Only one channel may transmit
+at the full modem speed at a time, or both may transmit on a much
+slower control channel.
+
+<dt><a name="field-kSMDCV34FullDuplex">kSMDCV34FullDuplex</a>
+<dd>Configures the channel for full-duplex. Both channels may
+transmit at the full modem speed simultaneously.
+
+</dl>
+<dt><a name="field-min_bitrate">min_bitrate</a><dd>The minimum bitrate to negotiate for the primary channel when it is
+transmitting data, in bits/second.
+
+<dt><a name="field-max_bitrate">max_bitrate</a><dd>The maximum bitrate to negotiate for the primary channel when it is
+transmitting data, in bits/second.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - a parameter value is bad<li>ERR_SM_WRONG_CHANNEL_STATE - channel is already busy</ul>
+<hr>
+<p>This function is part of the <a href="../prosdc.html">Prosody data communications API</a>.
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody Guide - how to use data communications</title>
+</head>
+<body>
+<h1>Prosody Guide - how to use data communications</h1>
+<p>
+Prosody communications functionality can be divided into two broad
+groups called speech and data. Speech refers to the use of signals
+which are intended to represent an audio signal: data refers to all
+the other forms of communication. Prosody can handle many data formats
+other than the A-law and mu-law used by speech. The document
+<a href="prosdc_config.html">Prosody data communications Protocols and
+Encodings</a> shows all of them. However, all of these formats are
+handled in the same way through the
+<a href="prosdc.html">Prosody data communications API</a>.
+
+<h2>The basics</h2>
+<p>
+To transmit data you need a Prosody channel which can perform output. This
+means one of the following:
+<ul>
+<li>It is an output channel
+<li>It is a full-duplex channel
+<li>It is a half-duplex channel and not being used for input
+</ul>
+<p>
+The output from the channel must also have been connected
+appropriately. See
+<a href="howto_datafeed.html">Prosody Guide - how to use datafeeds</a> for
+how to do this.
+<p>
+To receive data you need a Prosody channel which can perform input. This
+means one of the following:
+<ul>
+<li>It is an input channel
+<li>It is a full-duplex channel
+<li>It is a half-duplex channel and not being used for output
+</ul>
+<p>
+The input from the channel must also have been connected
+appropriately. See
+<a href="howto_datafeed.html">Prosody Guide - how to use datafeeds</a> for
+how to do this.
+<p>
+If transmission depends on reception, you must use a single full-duplex
+channel for both. This is the case for V.110 because the transmitter
+reports the flow-control status of the receiver.
+
+<h2>Using the data communications API</h2>
+<p>
+A channel must be configured for data communications using
+<a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a>.
+Depending on the protocol being used, it may be necessary to use
+<a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a> to
+make the protocol connect. Then you can use events to wait until the
+channel is ready. When a wait wakes up, you can:
+<ul>
+	<li>call
+<a href="gen/apifn-smdc_rx_status.html">smdc_rx_status()</a> and
+<a href="gen/apifn-smdc_line_status.html">smdc_line_status()</a> to
+check the status of the receiver (unless you have configured only a
+transmitter)
+	<li>call
+<a href="gen/apifn-smdc_tx_status.html">smdc_tx_status()</a> and
+<a href="gen/apifn-smdc_line_status.html">smdc_line_status()</a> to
+check the status of the transmitter (unless you have configured only a
+receiver)
+	<li>call
+<a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a> to attempt to
+receive data
+	<li>call
+<a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a> to attempt to
+transmit data
+</ul>
+<p>
+To allow for maximum efficiency, 
+<a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a> and
+<a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a> refuse to
+transfer data if there is a possible status change. This allows you to
+avoid checking the status if you are ready to transfer data except when
+a status change is likely.
+
+<p>
+<img src="gen/dcflow.png" alt="diagram of function calls with data communications">
+<p>
+In addition, 
+<a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a>,
+<a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a>, and
+<a href="gen/apifn-smdc_rx_control.html">smdc_rx_control()</a> may be
+used as necessary on the channel while it is performing data
+communications.

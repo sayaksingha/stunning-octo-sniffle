@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody signal path processing: API: sm_path_pitchshift</title>
+</head>
+<body>
+<h1>Prosody signal path processing: API: sm_path_pitchshift</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_path_pitchshift(struct sm_path_pitchshift_parms *<a href="#field-pitchshiftp">pitchshiftp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-pitchshiftp">*pitchshiftp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_pitchshift_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	float <a href="#field-shift">shift</a>;						/* in */
+} SM_PATH_PITCHSHIFT_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures pitch shifting on a signal path.
+<p>
+Requires the module
+<a href="softmodindex.html#pitchshift">pitchshift</a>.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path to be configured
+
+<dt><a name="field-shift">shift</a><dd>The number of octaves by which the signal is to be shifted.
+Values less than zero cause a downward shift (for example, the
+value <code>-0.08333</code> configures a shift down one semitone),
+values greater than zero cause an upward shift, and the value
+zero disables pitch shifting.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prospath.html">Prosody signal path processing API</a>.
+</body>
+</html>

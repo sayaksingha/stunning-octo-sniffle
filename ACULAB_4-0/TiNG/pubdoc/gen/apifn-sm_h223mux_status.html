@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody H.223 Mux: API: sm_h223mux_status</title>
+</head>
+<body class=version-Prel>
+<h1>Prosody H.223 Mux: API: sm_h223mux_status</h1>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_h223mux_status(struct sm_h223mux_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_status_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a name="enum-kSMH223muxStatus">enum kSMH223muxStatus</a> {
+		<a href="#field-kSMH223muxStatusRunning">kSMH223muxStatusRunning</a>,
+		<a href="#field-kSMH223muxStatusStopped">kSMH223muxStatusStopped</a>,
+		<a href="#field-kSMH223muxStatusSessionStarted">kSMH223muxStatusSessionStarted</a>,
+		<a href="#field-kSMH223muxStatusCreateSessionFailed">kSMH223muxStatusCreateSessionFailed</a>,
+		<a href="#field-kSMH223muxStatusDeleteSessionFailed">kSMH223muxStatusDeleteSessionFailed</a>,
+		<a href="#field-kSMH223muxStatusSetCapsFailed">kSMH223muxStatusSetCapsFailed</a>,
+		<a href="#field-kSMH223muxStatusAddEntryFailed">kSMH223muxStatusAddEntryFailed</a>,
+		<a href="#field-kSMH223muxStatusOpenLCFailed">kSMH223muxStatusOpenLCFailed</a>,
+		<a href="#field-kSMH223muxStatusCloseLCFailed">kSMH223muxStatusCloseLCFailed</a>,
+		<a href="#field-kSMH223muxStatusReconfigLevelChange">kSMH223muxStatusReconfigLevelChange</a>,
+		<a href="#field-kSMH223muxStatusReconfigFailed">kSMH223muxStatusReconfigFailed</a>,
+		<a href="#field-kSMH223muxStatusInternalError">kSMH223muxStatusInternalError</a>,
+		<a href="#field-kSMH223muxStatusVideoPFrameDrop">kSMH223muxStatusVideoPFrameDrop</a>,
+		<a href="#field-kSMH223muxStatusVideoPFrameSend">kSMH223muxStatusVideoPFrameSend</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-session_transport-level">level</a>;				/* out */
+		} <a href="#field-u-session_transport">session_transport</a>;				/* out */
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-internal_error-num_errors">num_errors</a>;			/* out */
+		} <a href="#field-u-internal_error">internal_error</a>;				/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SM_H223MUX_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+returns the status of the H.223 mux.
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux.
+
+<dt class=version-Prel><a name="field-status">status</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxStatusRunning">kSMH223muxStatusRunning</a>
+<dd>The H.223 session is running.
+
+<dt><a name="field-kSMH223muxStatusStopped">kSMH223muxStatusStopped</a>
+<dd>The H.223 session has stopped and it is now safe to destroy.
+
+<dt><a name="field-kSMH223muxStatusSessionStarted">kSMH223muxStatusSessionStarted</a>
+<dd>H.223 session has started and the setup level has been negotiated successfully.
+
+<dt><a name="field-kSMH223muxStatusCreateSessionFailed">kSMH223muxStatusCreateSessionFailed</a>
+<dd>H.223 session creation has failed.
+
+<dt><a name="field-kSMH223muxStatusDeleteSessionFailed">kSMH223muxStatusDeleteSessionFailed</a>
+<dd>H.223 session deletion has failed.
+
+<dt><a name="field-kSMH223muxStatusSetCapsFailed">kSMH223muxStatusSetCapsFailed</a>
+<dd>The setting of terminal capabilities has failed.
+
+<dt><a name="field-kSMH223muxStatusAddEntryFailed">kSMH223muxStatusAddEntryFailed</a>
+<dd>Multiplex table entry addition has failed.
+
+<dt><a name="field-kSMH223muxStatusOpenLCFailed">kSMH223muxStatusOpenLCFailed</a>
+<dd>Open logical channel request has failed.
+
+<dt><a name="field-kSMH223muxStatusCloseLCFailed">kSMH223muxStatusCloseLCFailed</a>
+<dd>Close logical channel request has failed.
+
+<dt><a name="field-kSMH223muxStatusReconfigLevelChange">kSMH223muxStatusReconfigLevelChange</a>
+<dd>Level has changed as a result of a reconfiguration request.
+
+<dt><a name="field-kSMH223muxStatusReconfigFailed">kSMH223muxStatusReconfigFailed</a>
+<dd>Multiplex reconfiguration request has failed.
+
+<dt><a name="field-kSMH223muxStatusInternalError">kSMH223muxStatusInternalError</a>
+<dd>The H.223 session encountered one or more internal errors during processing.  These
+errors are likely to result in missing data.  Note that such errors are not fatal
+and the H.223 session will continue to run.  These status reports are throttled in 
+order to maintain a sensibly low rate of reporting even in the event of a high rate
+of errors.
+
+<dt><a name="field-kSMH223muxStatusVideoPFrameDrop">kSMH223muxStatusVideoPFrameDrop</a>
+<dd>The video logical channel has entered a busy situation and will now drop all subsequent
+P-frames added to the transmit queue until an I-frame is received.
+
+<dt><a name="field-kSMH223muxStatusVideoPFrameSend">kSMH223muxStatusVideoPFrameSend</a>
+<dd>An I-frame has been received on the video channel queue after entering a busy situation,
+so subsequent P-frames will now be sent.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-u">u</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Additional information relating to the current status of the H.223 mux.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-u-session_transport">session_transport</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMH223muxStatusSessionStarted">kSMH223muxStatusSessionStarted</a>
+or
+<a class=pref href="#field-kSMH223muxStatusReconfigLevelChange">kSMH223muxStatusReconfigLevelChange</a>.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-u-session_transport-level">level</a><dd>The H.223 transport level negotiated for the session.
+
+</dl>
+</div>
+<dt><a name="field-u-internal_error">internal_error</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMH223muxStatusInternalError">kSMH223muxStatusInternalError</a>.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-u-internal_error-num_errors">num_errors</a><dd>The number of internal errors encountered by the H.223 session covered
+by this status report.
+
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosh223api.html">Prosody H.223 Mux API</a>.
+</body>
+</html>

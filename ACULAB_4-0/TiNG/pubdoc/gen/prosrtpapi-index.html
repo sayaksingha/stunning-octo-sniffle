@@ -1,0 +1,887 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API</h1>
+<p>
+The following functions are provided by the
+<a href="../prosrtpapi.html">Prosody RTP processing API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr>
+	<td><a href="apifn-sm_rtcphand_config_bandwidth.html">sm_rtcphand_config_bandwidth()</a>
+	<td>&nbsp;
+	<td>Configure bandwidth for a RTCP handler to use
+
+	<tr>
+	<td><a href="apifn-sm_rtcphand_config_options.html">sm_rtcphand_config_options()</a>
+	<td>&nbsp;
+	<td>Configure options for RTCP protocol
+
+	<tr>
+	<td><a href="apifn-sm_rtcphand_config_reports.html">sm_rtcphand_config_reports()</a>
+	<td>&nbsp;
+	<td>Configure local reporting by an RTCP handler
+
+	<tr>
+	<td><a href="apifn-sm_rtcphand_config_sdes.html">sm_rtcphand_config_sdes()</a>
+	<td>&nbsp;
+	<td>Configure an RTCP SDES item
+
+	<tr>
+	<td><a href="apifn-sm_rtcphand_create.html">sm_rtcphand_create()</a>
+	<td>&nbsp;
+	<td>Create RTCP handler
+
+	<tr>
+	<td><a href="apifn-sm_rtcphand_destroy.html">sm_rtcphand_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy a previously allocated RTCP handler
+
+	<tr>
+	<td><a href="apifn-sm_rtcphand_get_data.html">sm_rtcphand_get_data()</a>
+	<td>&nbsp;
+	<td>Get data from an RTCP handler
+
+	<tr>
+	<td><a href="apifn-sm_rtcphand_get_event.html">sm_rtcphand_get_event()</a>
+	<td>&nbsp;
+	<td>Obtain an event for a RTCP handler
+
+	<tr>
+	<td><a href="apifn-sm_rtcphand_request_statistics.html">sm_rtcphand_request_statistics()</a>
+	<td>&nbsp;
+	<td>Provoke an RTCP handler into providing statistics
+
+	<tr>
+	<td><a href="apifn-sm_rtcphand_status.html">sm_rtcphand_status()</a>
+	<td>&nbsp;
+	<td>Determine RTCP handler status
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_authentication_hmac_sha1.html">sm_vmprx_config_authentication_hmac_sha1()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[rx] to use HMAC-SHA1 authentication
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_authentication_null.html">sm_vmprx_config_authentication_null()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[rx] to use no authentication
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_alaw.html">sm_vmprx_config_codec_alaw()</a>
+	<td>&nbsp;
+	<td>Configure an A-law codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_amrnb.html">sm_vmprx_config_codec_amrnb()</a>
+	<td>&nbsp;
+	<td>Configure an AMR-NB codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_amrwb.html">sm_vmprx_config_codec_amrwb()</a>
+	<td>&nbsp;
+	<td>Configure an AMR-WB codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_comfort_noise.html">sm_vmprx_config_codec_comfort_noise()</a>
+	<td>&nbsp;
+	<td>Configure an RFC 3389 comfort noise codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_evrc.html">sm_vmprx_config_codec_evrc()</a>
+	<td>&nbsp;
+	<td>Configure an EVRC codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_g722.html">sm_vmprx_config_codec_g722()</a>
+	<td>&nbsp;
+	<td>Configure a G.722 64 kbit/s (7 kHz) codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_g722_1.html">sm_vmprx_config_codec_g722_1()</a>
+	<td>&nbsp;
+	<td>Configure a G.722.1 codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_g723_1.html">sm_vmprx_config_codec_g723_1()</a>
+	<td>&nbsp;
+	<td>Configure a G.723.1 codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_g726.html">sm_vmprx_config_codec_g726()</a>
+	<td>&nbsp;
+	<td>Configure a G.726 codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_g728.html">sm_vmprx_config_codec_g728()</a>
+	<td>&nbsp;
+	<td>Configure a G.728 codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_g729ab.html">sm_vmprx_config_codec_g729ab()</a>
+	<td>&nbsp;
+	<td>Configure a G.729 AB codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_g729i.html">sm_vmprx_config_codec_g729i()</a>
+	<td>&nbsp;
+	<td>Configure a G.729 I codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_gsmefr.html">sm_vmprx_config_codec_gsmefr()</a>
+	<td>&nbsp;
+	<td>Configure a GSM-EFR codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_gsmfr.html">sm_vmprx_config_codec_gsmfr()</a>
+	<td>&nbsp;
+	<td>Configure a GSM-FR codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_gsmhr.html">sm_vmprx_config_codec_gsmhr()</a>
+	<td>&nbsp;
+	<td>Configure a GSM-HR codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_ilbc.html">sm_vmprx_config_codec_ilbc()</a>
+	<td>&nbsp;
+	<td>Configure an iLBC codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_isac.html">sm_vmprx_config_codec_isac()</a>
+	<td>&nbsp;
+	<td>Configure an iSAC codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_l16.html">sm_vmprx_config_codec_l16()</a>
+	<td>&nbsp;
+	<td>Configure an L16 codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_l8.html">sm_vmprx_config_codec_l8()</a>
+	<td>&nbsp;
+	<td>Configure an L8 codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_melpe.html">sm_vmprx_config_codec_melpe()</a>
+	<td>&nbsp;
+	<td>Configure a MELPe codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_mulaw.html">sm_vmprx_config_codec_mulaw()</a>
+	<td>&nbsp;
+	<td>Configure a mu-law codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_opus.html">sm_vmprx_config_codec_opus()</a>
+	<td>&nbsp;
+	<td>Configure a Opus codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_rfc2833.html">sm_vmprx_config_codec_rfc2833()</a>
+	<td>&nbsp;
+	<td>Configure an RFC2833 codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_rfc4040.html">sm_vmprx_config_codec_rfc4040()</a>
+	<td>&nbsp;
+	<td>Configure an RFC4040 codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_rttext.html">sm_vmprx_config_codec_rttext()</a>
+	<td>&nbsp;
+	<td>Configure an real-time text codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_silk.html">sm_vmprx_config_codec_silk()</a>
+	<td>&nbsp;
+	<td>Configure a Skype SILK codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_smv.html">sm_vmprx_config_codec_smv()</a>
+	<td>&nbsp;
+	<td>Configure an SMV codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_speex.html">sm_vmprx_config_codec_speex()</a>
+	<td>&nbsp;
+	<td>Configure a Speex codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_speex_mode.html">sm_vmprx_config_codec_speex_mode()</a>
+	<td>&nbsp;
+	<td>Configure the Speex codec mode for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_sse.html">sm_vmprx_config_codec_sse()</a>
+	<td>&nbsp;
+	<td>Configure an SSE codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_codec_tetra.html">sm_vmprx_config_codec_tetra()</a>
+	<td>&nbsp;
+	<td>Configure a TETRA speech codec for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_dataloss.html">sm_vmprx_config_dataloss()</a>
+	<td>&nbsp;
+	<td>Configure data loss threshold for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_encryption_aes_cm.html">sm_vmprx_config_encryption_aes_cm()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[rx] to use AES-CM encryption
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_encryption_aes_f8.html">sm_vmprx_config_encryption_aes_f8()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[rx] to use AES-f8 encryption
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_encryption_null.html">sm_vmprx_config_encryption_null()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[rx] to use no encryption
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_forwarding.html">sm_vmprx_config_forwarding()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[rx] to forward packet payloads
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_jitter.html">sm_vmprx_config_jitter()</a>
+	<td>&nbsp;
+	<td>Configure the jitter buffer belonging to a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_jitter_mode.html">sm_vmprx_config_jitter_mode()</a>
+	<td>&nbsp;
+	<td>Configure the mode of the jitter buffer belonging to a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_jitter_resync_notify.html">sm_vmprx_config_jitter_resync_notify()</a>
+	<td>&nbsp;
+	<td>Configure notification of VMP[rx] jitter buffer resyncs
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_profile_specific.html">sm_vmprx_config_profile_specific()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[rx] to process profile specific RTP extensions using a ProsodyS plugin.
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_sample_rate.html">sm_vmprx_config_sample_rate()</a>
+	<td>&nbsp;
+	<td>Configure the sampling rate for to a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_sprt.html">sm_vmprx_config_sprt()</a>
+	<td>&nbsp;
+	<td>Associate a VMP[rx] with a SPRT end point
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_tones.html">sm_vmprx_config_tones()</a>
+	<td>&nbsp;
+	<td>Configure tone handling for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_config_unhandled_payload_reporting.html">sm_vmprx_config_unhandled_payload_reporting()</a>
+	<td>&nbsp;
+	<td>Configure unhandled payload reporting for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_create.html">sm_vmprx_create()</a>
+	<td>&nbsp;
+	<td>Create a VMP[rx] endpoint
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_destroy.html">sm_vmprx_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy a previously allocated VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_get_datafeed.html">sm_vmprx_get_datafeed()</a>
+	<td>&nbsp;
+	<td>Obtain a datafeed from a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_get_event.html">sm_vmprx_get_event()</a>
+	<td>&nbsp;
+	<td>Obtain an event for a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_get_ports.html">sm_vmprx_get_ports()</a>
+	<td>&nbsp;
+	<td>Get the RTP and RTCP port information from a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_ice_stun_change_role.html">sm_vmprx_ice_stun_change_role()</a>
+	<td>&nbsp;
+	<td>Change the ICE role on a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_ice_stun_config.html">sm_vmprx_ice_stun_config()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[rx] to use ICE compatible STUN
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_ice_stun_remote_credentials.html">sm_vmprx_ice_stun_remote_credentials()</a>
+	<td>&nbsp;
+	<td>Set the remote ICE credentials
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_ice_stun_send_bind_request.html">sm_vmprx_ice_stun_send_bind_request()</a>
+	<td>&nbsp;
+	<td>Request transmission of STUN bind requests
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_set_rtcphand.html">sm_vmprx_set_rtcphand()</a>
+	<td>&nbsp;
+	<td>Configures the RTCP handler which handles RTCP for the VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_status.html">sm_vmprx_status()</a>
+	<td>&nbsp;
+	<td>Determine VMP[rx] status
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_status_codec_amrnb.html">sm_vmprx_status_codec_amrnb()</a>
+	<td>&nbsp;
+	<td>Get AMR-NB status from a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_status_codec_amrwb.html">sm_vmprx_status_codec_amrwb()</a>
+	<td>&nbsp;
+	<td>Get AMR-WB status from a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_status_codec_sse.html">sm_vmprx_status_codec_sse()</a>
+	<td>&nbsp;
+	<td>Get SSE status from a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_status_discard_codec_specific.html">sm_vmprx_status_discard_codec_specific()</a>
+	<td>&nbsp;
+	<td>Discard VMP[rx] codec specific status information
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_status_profile_specific.html">sm_vmprx_status_profile_specific()</a>
+	<td>&nbsp;
+	<td>Get profile specific status generated by profile specific ProsodyS plugin from a VMP[rx]
+
+	<tr>
+	<td><a href="apifn-sm_vmprx_stop.html">sm_vmprx_stop()</a>
+	<td>&nbsp;
+	<td>Instructs a VMP[rx] to stop processing RTP
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config.html">sm_vmptx_config()</a>
+	<td>&nbsp;
+	<td>Configure the basic options for a VMP[tx] to use IPv4
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_authentication_hmac_sha1.html">sm_vmptx_config_authentication_hmac_sha1()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use HMAC-SHA1 authentication
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_authentication_null.html">sm_vmptx_config_authentication_null()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use no authentication
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_alaw.html">sm_vmptx_config_codec_alaw()</a>
+	<td>&nbsp;
+	<td>Configure an A-law codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_amrnb.html">sm_vmptx_config_codec_amrnb()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use AMR-NB
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_amrnb_cmr.html">sm_vmptx_config_codec_amrnb_cmr()</a>
+	<td>&nbsp;
+	<td>Set the mode request of an AMR-NB codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_amrnb_mode.html">sm_vmptx_config_codec_amrnb_mode()</a>
+	<td>&nbsp;
+	<td>Set the mode of an AMR-NB codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_amrwb.html">sm_vmptx_config_codec_amrwb()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use AMR-WB
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_amrwb_cmr.html">sm_vmptx_config_codec_amrwb_cmr()</a>
+	<td>&nbsp;
+	<td>Set the mode request of an AMR-WB codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_amrwb_mode.html">sm_vmptx_config_codec_amrwb_mode()</a>
+	<td>&nbsp;
+	<td>Set the mode of an AMR-WB codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_comfort_noise.html">sm_vmptx_config_codec_comfort_noise()</a>
+	<td>&nbsp;
+	<td>Configure RFC 3389 comfort noise codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_evrc.html">sm_vmptx_config_codec_evrc()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use EVRC
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_g722.html">sm_vmptx_config_codec_g722()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use G.722 64 kbit/s (7 kHz) codec
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_g722_1.html">sm_vmptx_config_codec_g722_1()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use G.722.1
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_g723_1.html">sm_vmptx_config_codec_g723_1()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use G.723.1
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_g726.html">sm_vmptx_config_codec_g726()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use G.726
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_g728.html">sm_vmptx_config_codec_g728()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use G.728
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_g729ab.html">sm_vmptx_config_codec_g729ab()</a>
+	<td>&nbsp;
+	<td>Configure G.729 AB codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_g729i.html">sm_vmptx_config_codec_g729i()</a>
+	<td>&nbsp;
+	<td>Configure G.729 I codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_gsmefr.html">sm_vmptx_config_codec_gsmefr()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use GSM-EFR
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_gsmfr.html">sm_vmptx_config_codec_gsmfr()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use GSM-FR
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_gsmhr.html">sm_vmptx_config_codec_gsmhr()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use GSM-HR
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_ilbc.html">sm_vmptx_config_codec_ilbc()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use iLBC
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_isac.html">sm_vmptx_config_codec_isac()</a>
+	<td>&nbsp;
+	<td>Configure an iSAC codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_l16.html">sm_vmptx_config_codec_l16()</a>
+	<td>&nbsp;
+	<td>Configure an L16 codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_l8.html">sm_vmptx_config_codec_l8()</a>
+	<td>&nbsp;
+	<td>Configure an L8 codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_melpe.html">sm_vmptx_config_codec_melpe()</a>
+	<td>&nbsp;
+	<td>Configure a MELPe codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_mulaw.html">sm_vmptx_config_codec_mulaw()</a>
+	<td>&nbsp;
+	<td>Configure an mu-law codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_opus.html">sm_vmptx_config_codec_opus()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use an Opus codec
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_opus_mode.html">sm_vmptx_config_codec_opus_mode()</a>
+	<td>&nbsp;
+	<td>Change the configuration of an Opus codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_rfc2833.html">sm_vmptx_config_codec_rfc2833()</a>
+	<td>&nbsp;
+	<td>Configure RFC 2833 codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_rfc4040.html">sm_vmptx_config_codec_rfc4040()</a>
+	<td>&nbsp;
+	<td>Configure RFC 4040 codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_rttext.html">sm_vmptx_config_codec_rttext()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to transmit real-time text
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_silk.html">sm_vmptx_config_codec_silk()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use a Skype SILK codec
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_silk_mode.html">sm_vmptx_config_codec_silk_mode()</a>
+	<td>&nbsp;
+	<td>Change the configuration of a SILK codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_smv.html">sm_vmptx_config_codec_smv()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use SMV
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_speex.html">sm_vmptx_config_codec_speex()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use a Speex codec
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_speex_mode.html">sm_vmptx_config_codec_speex_mode()</a>
+	<td>&nbsp;
+	<td>Set the mode of a Speex codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_sse.html">sm_vmptx_config_codec_sse()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use SSE
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_codec_tetra.html">sm_vmptx_config_codec_tetra()</a>
+	<td>&nbsp;
+	<td>Configure TETRA speech codec for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_encryption_aes_cm.html">sm_vmptx_config_encryption_aes_cm()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use AES-CM encryption
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_encryption_aes_f8.html">sm_vmptx_config_encryption_aes_f8()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use AES-f8 encryption
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_encryption_null.html">sm_vmptx_config_encryption_null()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to use no encryption
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_ipv6.html">sm_vmptx_config_ipv6()</a>
+	<td>&nbsp;
+	<td>Configure the basic options for a VMP[tx] to use IPv6
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_isac_rate.html">sm_vmptx_config_isac_rate()</a>
+	<td>&nbsp;
+	<td>Configure an iSAC codec transmission rate for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_profile_specific.html">sm_vmptx_config_profile_specific()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[tx] to encode profile specific RTP extensions using a ProsodyS plugin.
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_sample_rate.html">sm_vmptx_config_sample_rate()</a>
+	<td>&nbsp;
+	<td>Configure the sampling rate for to a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_tag.html">sm_vmptx_config_tag()</a>
+	<td>&nbsp;
+	<td>Configure the tag behaviour of a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_config_tones.html">sm_vmptx_config_tones()</a>
+	<td>&nbsp;
+	<td>Configure tone handling for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_create.html">sm_vmptx_create()</a>
+	<td>&nbsp;
+	<td>Create a VMP[tx] endpoint
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_create_csrc_list.html">sm_vmptx_create_csrc_list()</a>
+	<td>&nbsp;
+	<td>Create an object to hold a CSRC list
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_create_toneset.html">sm_vmptx_create_toneset()</a>
+	<td>&nbsp;
+	<td>Configure a set of tones for use with RFC 2833 generation.
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_csrc_list_set.html">sm_vmptx_csrc_list_set()</a>
+	<td>&nbsp;
+	<td>Sets the CSRC list contents
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_datafeed_connect.html">sm_vmptx_datafeed_connect()</a>
+	<td>&nbsp;
+	<td>Connect a datafeed to a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_destroy.html">sm_vmptx_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy a previously allocated VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_destroy_csrc_list.html">sm_vmptx_destroy_csrc_list()</a>
+	<td>&nbsp;
+	<td>Destroy a CSRC list
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_destroy_toneset.html">sm_vmptx_destroy_toneset()</a>
+	<td>&nbsp;
+	<td>Destroy a toneset
+
+	<tr class=version-Prel>
+	<td><a href="apifn-sm_vmptx_generate_jitter.html">sm_vmptx_generate_jitter()</a>
+	<td>P
+	<td>Configure a VMP[tx] to add jitter
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_generate_tones.html">sm_vmptx_generate_tones()</a>
+	<td>&nbsp;
+	<td>Generate rfc2833 tones using a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_generate_tones_abort.html">sm_vmptx_generate_tones_abort()</a>
+	<td>&nbsp;
+	<td>Abort generating rfc2833 tones using a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_get_event.html">sm_vmptx_get_event()</a>
+	<td>&nbsp;
+	<td>Obtain an event for a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_propagate_rtcp_sr_ntp.html">sm_vmptx_propagate_rtcp_sr_ntp()</a>
+	<td>&nbsp;
+	<td>Propogate given relationship between samples and NTP time in transmitted RTCP generated SRs
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_send_sse.html">sm_vmptx_send_sse()</a>
+	<td>&nbsp;
+	<td>Send SSE from a VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_set_csrc.html">sm_vmptx_set_csrc()</a>
+	<td>&nbsp;
+	<td>Configures the CSRC list sent by the VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_set_profile_specific.html">sm_vmptx_set_profile_specific()</a>
+	<td>&nbsp;
+	<td>Sets profile specific parameters for a VMP [tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_set_rtcphand.html">sm_vmptx_set_rtcphand()</a>
+	<td>&nbsp;
+	<td>Configures the RTCP handler which handles RTCP for the VMP[tx]
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_status.html">sm_vmptx_status()</a>
+	<td>&nbsp;
+	<td>Determine VMP[tx] status
+
+	<tr>
+	<td><a href="apifn-sm_vmptx_stop.html">sm_vmptx_stop()</a>
+	<td>&nbsp;
+	<td>Instructs a VMP[tx] to stop sending RTP
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_config_codec_rfc3984.html">sm_vidmprx_config_codec_rfc3984()</a>
+	<td>D
+	<td>Configure an RFC 3984 / H.264 de-packetiser for a VidMP[rx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_config_codec_rfc4629.html">sm_vidmprx_config_codec_rfc4629()</a>
+	<td>D
+	<td>Configure an RFC 4629 / H.263 de-packetiser for a VidMP[rx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_config_dataloss.html">sm_vidmprx_config_dataloss()</a>
+	<td>D
+	<td>Configure data loss threshold for a VidMP[rx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_config_jitter.html">sm_vidmprx_config_jitter()</a>
+	<td>D
+	<td>Configure the jitter buffer belonging to a VidMP[rx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_config_unhandled_payload_reporting.html">sm_vidmprx_config_unhandled_payload_reporting()</a>
+	<td>D
+	<td>Configure unhandled payload reporting for a VidMP[rx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_create.html">sm_vidmprx_create()</a>
+	<td>D
+	<td>Create a VidMP[rx] endpoint
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_destroy.html">sm_vidmprx_destroy()</a>
+	<td>D
+	<td>Destroy a previously allocated VidMP[rx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_get_datafeed.html">sm_vidmprx_get_datafeed()</a>
+	<td>D
+	<td>Obtain a datafeed from a VidMP[rx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_get_event.html">sm_vidmprx_get_event()</a>
+	<td>D
+	<td>Obtain an event for a VidMP[rx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_get_ports.html">sm_vidmprx_get_ports()</a>
+	<td>D
+	<td>Get the RTP and RTCP port information from a VidMP[rx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_ice_stun_change_role.html">sm_vidmprx_ice_stun_change_role()</a>
+	<td>D
+	<td>Change the ICE role on a VidMP[rx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_ice_stun_config.html">sm_vidmprx_ice_stun_config()</a>
+	<td>D
+	<td>Configure a VidMP[rx] to use ICE compatible STUN
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_ice_stun_remote_credentials.html">sm_vidmprx_ice_stun_remote_credentials()</a>
+	<td>D
+	<td>Set the remote ICE credentials
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_ice_stun_send_bind_request.html">sm_vidmprx_ice_stun_send_bind_request()</a>
+	<td>D
+	<td>Send a STUN bind request
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_status.html">sm_vidmprx_status()</a>
+	<td>D
+	<td>Determine VidMP[rx] status
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_stop.html">sm_vidmprx_stop()</a>
+	<td>D
+	<td>Instructs a VidMP[rx] to stop processing RTP
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmprx_sync_media.html">sm_vidmprx_sync_media()</a>
+	<td>D
+	<td>Instructs a VidMP[rx] to attempt to synchronise its media with the stream 
+from a VMP[rx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmptx_config.html">sm_vidmptx_config()</a>
+	<td>D
+	<td>Configure the basic options for a VidMP[tx] to use IPv4
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmptx_config_codec_rfc3984.html">sm_vidmptx_config_codec_rfc3984()</a>
+	<td>D
+	<td>Configure an RFC 3984 / H.264 packetiser for a VidMP[tx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmptx_config_codec_rfc4629.html">sm_vidmptx_config_codec_rfc4629()</a>
+	<td>D
+	<td>Configure an RFC 4629 / H.263 packetiser for a VidMP[tx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmptx_config_ipv6.html">sm_vidmptx_config_ipv6()</a>
+	<td>D
+	<td>Configure the basic options for a VidMP[tx] to use IPv6
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmptx_create.html">sm_vidmptx_create()</a>
+	<td>D
+	<td>Create a VidMP[tx] endpoint
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmptx_datafeed_connect.html">sm_vidmptx_datafeed_connect()</a>
+	<td>D
+	<td>Connect a datafeed to a VidMP[tx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmptx_destroy.html">sm_vidmptx_destroy()</a>
+	<td>D
+	<td>Destroy a previously allocated VidMP[tx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmptx_get_event.html">sm_vidmptx_get_event()</a>
+	<td>D
+	<td>Obtain an event for a VidMP[tx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmptx_status.html">sm_vidmptx_status()</a>
+	<td>D
+	<td>Determine VidMP[tx] status
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vidmptx_stop.html">sm_vidmptx_stop()</a>
+	<td>D
+	<td>Instructs a VidMP[tx] to stop sending RTP
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vmprx_config_codec.html">sm_vmprx_config_codec()</a>
+	<td>D
+	<td>Configure a codec for a VMP[rx]
+
+	<tr class=version-deprecated>
+	<td><a href="apifn-sm_vmptx_config_codec.html">sm_vmptx_config_codec()</a>
+	<td>D
+	<td>Configure a codec for a VMP[tx]
+
+</table>
+<p>
+Key to <strong>W</strong> column:
+<table border>
+<tr class=version-Prel><th>P
+	<td>	Preliminary documentation - this functionality is under development. It 
+	could be changed or withdrawn, and may not be implemented in this release
+
+<tr class=version-deprecated><th>D
+	<td>Deprecated
+</table>
+<p>
+This document is also available as
+<a href="prosrtpapi-whole.html">a single file</a>.
+</body>
+</html>

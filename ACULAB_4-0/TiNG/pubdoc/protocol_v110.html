@@ -1,0 +1,453 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="v110.css">
+<title>Prosody data communications Protocols: V.110</title>
+</head>
+<body>
+<h1>Prosody data communications Protocols: V.110</h1>
+<p>
+V.110 is an ITU-T standard data communications protocol.
+<p>
+This protocol implements the both the transmitter and the receiver for
+V.110. Since the protocol implements flow control, both halves must work
+together to co-ordinate the data flow.
+<p>
+V.110 uses a fixed framing pattern to carry the data. This pattern also
+may carry control bits. For most of the speeds supported, the same
+80 bit framing pattern is used which is shown here:
+<table border>
+	<tr>
+		<th align=left>FIRST
+		<th colspan=6>
+		<th align=left>LAST
+	
+	<tr>
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D0
+		<td class=data>D1
+		<td class=data>D2
+		<td class=data>D3
+		<td class=data>D4
+		<td class=data>D5
+		<td class=s>S1
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D6
+		<td class=data>D7
+		<td class=data>D8
+		<td class=data>D9
+		<td class=data>D10
+		<td class=data>D11
+		<td class=x>X
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D12
+		<td class=data>D13
+		<td class=data>D14
+		<td class=data>D15
+		<td class=data>D16
+		<td class=data>D17
+		<td class=s>S3
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D18
+		<td class=data>D19
+		<td class=data>D20
+		<td class=data>D21
+		<td class=data>D22
+		<td class=data>D23
+		<td class=s>S4
+	
+	<tr>
+		<td class=one>1
+		<td class=e>E1
+		<td class=e>E2
+		<td class=e>E3
+		<td class=e>E4
+		<td class=e>E5
+		<td class=e>E6
+		<td class=e>E7
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D24
+		<td class=data>D25
+		<td class=data>D26
+		<td class=data>D27
+		<td class=data>D28
+		<td class=data>D29
+		<td class=s>S6
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D30
+		<td class=data>D31
+		<td class=data>D32
+		<td class=data>D33
+		<td class=data>D34
+		<td class=data>D35
+		<td class=x>X
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D36
+		<td class=data>D37
+		<td class=data>D38
+		<td class=data>D39
+		<td class=data>D40
+		<td class=data>D41
+		<td class=s>S8
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D42
+		<td class=data>D43
+		<td class=data>D44
+		<td class=data>D45
+		<td class=data>D46
+		<td class=data>D47
+		<td class=s>S9
+	
+</table>
+<p>When this pattern is used, it carries three
+status bits, E1, E2, and E3, which help identify the speed. This
+pattern can be restricted to 1, 2, or 4 bits of the 8-bit timeslot to
+produce slower speeds. These are the possible speeds:
+<table border>
+<tr>
+	<th><th colspan=4>Bits used per timeslot
+
+<tr>
+	<th>E3E2E1
+	<th>1
+	<th>2
+	<th>4
+	<th>8
+
+<tr>
+	<td align=center>001
+	<td align=right>600
+	<td align=right class=nonacc>(1200)
+	<td align=right class=nonacc>(2400)
+	<td align=right class=nonacc>(4800)
+
+<tr>
+	<td align=center>010
+	<td align=right>1200
+	<td align=right class=nonacc>(2400)
+	<td align=right class=nonacc>(4800)
+	<td align=right class=nonacc>(9600)
+
+<tr>
+	<td align=center>011
+	<td align=right>2400
+	<td align=right class=nonacc>(4800)
+	<td align=right class=nonacc>(9600)
+	<td align=right class=nonacc>(19200)
+
+<tr>
+	<td align=center>100
+	<td align=right class=nonstd>(3000)
+	<td align=right class=nonstd>(6000)
+	<td align=right>12000
+	<td align=right class=nonstd>(24000)
+
+<tr>
+	<td align=center>101
+	<td align=right class=nonstd>(3600)
+	<td align=right>7200
+	<td align=right>14400
+	<td align=right class=nonstd>(28800)
+
+<tr>
+	<td align=center>110
+	<td align=right>4800
+	<td align=right>9600
+	<td align=right>19200
+	<td align=right>38400
+	
+</table>
+<p>
+Speeds in brackets can be selected by the use of the E bits, but are not
+defined in V.110. Such speeds can only be selected for transmission if there
+is no standard encoding for that speed (e.g. 9600 always uses the 2 bits per
+timeslot encoding).
+<p>
+The receiver selects the data rate automatically from the E1/E2/E3 bits,
+but the number of bits per timeslot is the same as the transmitter setting.
+The automatic selection occurs when the E bits are encountered in the
+frame. This means that when the E bits change, data in the first half of
+the frame may be misinterpreted. However, this should not occur in normal
+operation as the speed is typically changed only during the initial
+handshake when the X bit is OFF preventing data transfer.
+<p>
+The S and X bits control handshaking and are handled automatically.
+<p>
+The D bits are used to carry user data. However, depending on the
+speed being used, not all may carry user data, and each user data bit
+may be encoded in several frame bits. This is done as follows:
+<table border>
+<tr><th>Encoding (E3E2E1)<th>User bits per frame<th>Effect
+<tr>
+	<td>001
+	<td>6
+	<td>Bits other than multiples of eight are copies of the
+	previous bit. (e.g. D0, D1, ... D7 are all the same and only
+	encode a single bit of user data).
+
+<tr>
+	<td>010
+	<td>12
+	<td>Bits other than multiples of four are copies of the
+	previous bit.
+
+<tr>
+	<td>011
+	<td>24
+	<td>Odd numbered bits are each copies of the previous bit.
+
+<tr>
+	<td>100
+	<td>30
+	<td>Bits D10, D11, D14, D15, D18, D19, D21, D22, D23, D34, D35,
+	D38, D39, D42, D43, D45, D46, and D47 are fill bits used only
+	for padding. They are ignored by the receiver.
+
+<tr>
+	<td>101
+	<td>36
+	<td>Bits D10, D11, D14, D15, D18, D19, D34, D35, D38, D39, D42,
+	and D43 are fill bits used only
+	for padding. They are ignored by the receiver.
+
+<tr>
+	<td>110
+	<td>48
+	<td>All bits are user data
+
+</table>
+<p>
+Where a user data bit is sent in several frame bits, the current receiver
+implementation uses only the first copy. In principle, it would be
+entitled to use any copy, or use all copies in an error-correction
+scheme.
+<p>
+The speed of 48000 bps is also supported, but as this uses a different frame
+format which does not include E bits, there is no automatic adjustment
+possible after this speed has been selected. This frame format is:
+<table border>
+	<tr>
+		<th align=left>FIRST
+		<th colspan=6>
+		<th align=left>LAST
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D0
+		<td class=data>D1
+		<td class=data>D2
+		<td class=data>D3
+		<td class=data>D4
+		<td class=data>D5
+		<td class=s>S1
+	
+	<tr>
+		<td class=zero>0
+		<td class=data>D6
+		<td class=data>D7
+		<td class=data>D8
+		<td class=data>D9
+		<td class=data>D10
+		<td class=data>D11
+		<td class=x>X
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D12
+		<td class=data>D13
+		<td class=data>D14
+		<td class=data>D15
+		<td class=data>D16
+		<td class=data>D17
+		<td class=s>S3
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D18
+		<td class=data>D19
+		<td class=data>D20
+		<td class=data>D21
+		<td class=data>D22
+		<td class=data>D23
+		<td class=s>S4
+	
+</table>
+<p>
+The speed of 56000 bps is not supported.
+<p>
+The non-standard speed of 64000 bps is also supported through the use of
+the RA0 stage directly on the data channel. Since there is no framing
+and no initial handshake, the receiver will decode any arbitrary garbage
+prior to the channel being switched through.
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic data communications
+documentation.
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_v110.h"</code> to get the
+	appropriate declarations.
+<p>
+	The protocol value is <code>kSMDCProtocolV110</code>.
+<p>
+	The config_data pointer must point to one of these structs:
+<pre>
+	typedef struct smdc_v110_config_parms {
+		unsigned long speed;
+		int format;
+	} SMDC_V110_CONFIG_PARMS;
+</pre>
+<p>
+	Where '<code>speed</code>' is the speed in bits per second and
+	'<code>format</code>' is either '<code>kSMDCFormatAsync</code>'
+	or '<code>kSMDCFormatSync</code>'.
+<p>
+	The possible speeds are given in the table above.
+<p>
+	Async connections are only available as 8 bits, no parity,
+	one stop bit. The transmitter does not perform stop bit deletion.
+<p>
+	The firmware module <a href="gen/softmodindex.html#v110">v110</a>
+	must have been downloaded.
+<p>
+	This protocol does not use encodings, so the 'encoding' field
+	must be set to the value kSMDCConfigEncodingNone.
+<p>
+
+<h3><a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a></h3>
+<p>
+	[note] the transmit channel starts sending framing
+	pattern with S=X=OFF as soon as it is configured. The Connect
+	commands allow the initial handshake to proceed (S=X=ON as
+	soon as framing is received).
+<p>
+	[note] The RTS commands have no effect.
+<p>
+	The Disconnect command has no effect.
+<p>
+	There is an extra command available, kSMDCLineCtlSetAux
+	which allows the value of the S, X, and E bits to be overridden.
+	It uses two extra fields in the smdc_line_control_parms struct,
+	namely aux_mask and aux_toggle. Each bit in these two fields
+	controls one of the fifteen auxiliary bits in the V.110 frame.
+	The bits are (in order of transmission): S1, X2, S3, S4, E1, E2,
+	E3, E4, E5, E6, E7, S6, X7, S8, and S9. These are defined
+	symbolically in the header file as <code>kSMDCV110Aux_S1</code> etc.
+	The four combinations possible are:
+	<p>
+	<table border>
+	<tr>
+		<th>in aux_mask<th>in aux_toggle<th>value sent
+	
+	<tr>
+		    <td>0<td>0<td>0
+	
+	<tr>
+		    <td>0<td>1<td>1
+	
+	<tr>
+		    <td>1<td>0<td>normal
+	
+	<tr>
+		    <td>1<td>1<td>inverted
+	
+	</table>
+<p>
+	The 'normal' behaviour of bits E1, E2, and E3 is essential for
+	the remote end to decode the frames correctly, so these should
+	not be changed.
+	To avoid affecting bits indiscriminately, the suggested way to
+	set the aux_mask field is like this example to set X=OFF:
+<pre>
+	p.aux_mask = ~(kSMDCV110Aux_X2 | kSMDCV110Aux_X7);
+	p.aux_toggle = kSMDCV110Aux_X2 | kSMDCV110Aux_X7;
+</pre>
+<p>
+	which guarantees that the only bits affected are the X bits.
+	(Note that 0=ON and 1=OFF according to the V.110 standard, which
+	is somewhat confusing).
+	Usually the auxiliary bits are controlled in groups:
+<p>
+	<table border>
+	<tr>
+		<td>S1, S3, S6, S8	<td>called SA
+	
+	<tr>
+		<td>S4, S9		<td>called SB
+	
+	<tr>
+		<td>X2, X7		<td>called X
+	
+	<tr>
+		<td>E1, E2, E3	<td>set automatically from the speed
+	
+	<tr>
+		<td>E4, E5, E6	<td>for adjusting sync clock
+		(not needed or implemented for Prosody)
+	
+	<tr>
+		<td>E7		<td>fixed at 1 (X.30 compatibility)
+	
+	</table>
+<p>
+	The <a href="gen/apifn-smdc_line_control.html#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>
+	command is <strong>not</strong> supported by this protocol.
+
+<h3><a href="gen/apifn-smdc_line_status.html">smdc_line_status()</a></h3>
+<p>
+	The tx_status field is not updated
+	and always indicates an idle connection.
+
+<h3><a href="gen/apifn-smdc_tx_status.html">smdc_tx_status()</a></h3>
+<p>
+	The status 'empty' is never reported.
+
+<h3><a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a></h3>
+<p>
+	The only notification implemented is NotifyOnCapacity.
+
+<h3><a href="gen/apifn-smdc_rx_status.html">smdc_rx_status()</a></h3>
+<p>
+	Reporting of overrun is not implemented.
+
+<h3><a href="gen/apifn-smdc_rx_control.html">smdc_rx_control()</a></h3>
+<p>
+	Stop and resume are not implemented.
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+<p>
+Each octet represents data received, with bits having been received
+least significant bit first. For async encoding, start and stop bits
+have been removed and do not appear in the data received.
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+<p>
+Each octet represents data to be transmitted least significant bit first.
+For async encoding, start and stop bits will be added.
+
+</body>

@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>pathtest - mod command</title>
+</head>
+<body>
+<h1>pathtest - mod command</h1>
+<p>
+There are two forms of the <code>mod</code> command. The first form adds
+a module to the list of available modules, and the second selects one of the
+available modules as the one to be used.
+
+<h2>Adding a module</h2>
+<p>
+The command to add a card is <code>mod +$N</code> where the
+<code>$N</code> is the module number on the current card as selected by the
+<a href="card.html">card</a> command.
+
+<h2>Using a module</h2>
+<p>
+When the command "<code>mod $N</code>", where <code>$N</code> is a
+number, selects the Nth module. For exmaple, if no modules are open, then
+<pre>
+mod +2
+mod +4
+mod 0
+</pre>
+<p>
+opens the modules in positions two and four on the current card, and selects
+the first of these (the module in position two) for use.
+<hr>
+<p>
+This is a command understood by the <a href="pathtest.html">pathtest</a>
+test program.

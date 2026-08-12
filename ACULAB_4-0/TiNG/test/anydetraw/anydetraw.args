@@ -1,0 +1,12 @@
+-TiNGtrace
+a	map		unsigned
+c	cptone		unsigned
+T	type		string
+g	grunt		unsigned
+M	tonemode	unsigned
+n	numchan		unsigned
+s	toneset		unsigned
+t	timeslot	timeslot
+C	catsig_alg	unsigned
+m	module		unsigned
+x	serialnumber	string

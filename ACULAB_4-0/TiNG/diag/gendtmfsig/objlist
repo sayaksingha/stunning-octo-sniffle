@@ -1,0 +1,4 @@
+.	gendtmfsig.o
+libutil	alaw.o
+libutil	gasdev.o
+libutil	random.o

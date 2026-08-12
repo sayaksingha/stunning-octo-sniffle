@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Protocols: V.17 rx</title>
+</head>
+<body>
+<h1>Prosody data communications Protocols: V.17 rx</h1>
+<p>
+V.17 is an ITU-T standard modem.
+<p>
+This protocol implements the receiver for V.17. Since it is only a
+receiver, it only uses the input half of a channel. Typically the output
+half is configured for <a href="protocol_v17tx.html">V.17 tx</a>.
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic data communications
+documentation.
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_v17.h"</code> to get the
+	appropriate declarations.
+<p>
+	The protocol value is <code>kSMDCProtocolV17rx</code>.
+<p>
+	The config_data pointer must point to one of these structs:
+<pre>
+	typedef struct smdc_v17_config_parms {
+		tSM_INT speed;
+	} SMDC_V17_CONFIG_PARMS;
+</pre>
+<p>
+	'<code>speed</code>' is the data rate in bits per second. This
+	must be one of the standard speeds: 7200, 9600, 12000, or 14400.
+<p>
+	This protocol can use these encodings: SYNC, ASYNC, HDLC.
+<p>
+	The firmware modules <a href="gen/softmodindex.html#v29rx">v17rx</a>
+	and <a href="gen/softmodindex.html#inchan">inchan</a> must have been
+	downloaded.
+
+<h3><a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a></h3>
+<p>
+	Three commands are applicable, kSMDCLineCtlCmdSuspend, kSMDCLineCtlCmdResume
+	and kSMDCLineCtlCmdResumeMonitorCarrier.
+<p>
+	Following a V.17 receiver successfully receiving a long train sequence, 
+	the suspend command may be used to disable the V.17 receiver in such a 
+	way that the coefficients calculated for line circuit are preserved. 
+	Subsequently the resume command may be used to re-activate the V.17 receiver 
+	for reception of short train prefixed data using this same set of coefficients.
+<p>
+	When suspended, the receiver may be asked to monitor the existence of
+	carrier. This can be used to determine if the far end is still transmitting when 
+	it is suspected that carrier loss has occurred prematurely. The receiver must 
+	be suspended again before the resume command can be used.
+
+<h3><a href="gen/apifn-smdc_line_status.html">smdc_line_status()</a></h3>
+
+<h3><a href="gen/apifn-smdc_tx_status.html">smdc_tx_status()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	output half of a channel.
+
+<h3><a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	output half of a channel.
+
+<h3><a href="gen/apifn-smdc_rx_status.html">smdc_rx_status()</a></h3>
+
+<h3><a href="gen/apifn-smdc_rx_control.html">smdc_rx_control()</a></h3>
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	output half of a channel.
+</body>

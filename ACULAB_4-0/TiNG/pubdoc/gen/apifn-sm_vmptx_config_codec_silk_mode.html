@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_codec_silk_mode</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_codec_silk_mode</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_codec_silk_mode(struct sm_vmptx_config_codec_silk_mode_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_config_codec_silk_mode_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-sample_rate">sample_rate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-internal_rate">internal_rate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-bit_rate">bit_rate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-frames_per_packet">frames_per_packet</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-packet_loss">packet_loss</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-complexity">complexity</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-use_fec">use_fec</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-use_dtx">use_dtx</a>;					/* in */
+} SM_VMPTX_CONFIG_CODEC_SILK_MODE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Modifies the configuration of the SILK codec.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] for which to change the codec parameters.
+
+<dt><a name="field-sample_rate">sample_rate</a><dd>Sample rate of the audio being encoded. This must be the same as that
+previously specified when
+<a href="apifn-sm_vmptx_config_codec_silk.html">sm_vmptx_config_codec_silk()</a>
+was called to configure the VMP[tx].
+
+<dt><a name="field-internal_rate">internal_rate</a><dd>Maximum sample rate used internally by the codec. See
+<a href="apifn-sm_vmptx_config_codec_silk.html">sm_vmptx_config_codec_silk()</a>
+for more details.
+
+<dt><a name="field-bit_rate">bit_rate</a><dd>The target bit rate. See
+<a href="apifn-sm_vmptx_config_codec_silk.html">sm_vmptx_config_codec_silk()</a>
+for more details.
+
+<dt><a name="field-frames_per_packet">frames_per_packet</a><dd>The number of frames to send per packet. See
+<a href="apifn-sm_vmptx_config_codec_silk.html">sm_vmptx_config_codec_silk()</a>
+for more details.
+
+<dt><a name="field-packet_loss">packet_loss</a><dd>An estimate of the current level of packet loss. See
+<a href="apifn-sm_vmptx_config_codec_silk.html">sm_vmptx_config_codec_silk()</a>
+for more details.
+
+<dt><a name="field-complexity">complexity</a><dd>The complexity of the algorithms used. See
+<a href="apifn-sm_vmptx_config_codec_silk.html">sm_vmptx_config_codec_silk()</a>
+for more details.
+
+<dt><a name="field-use_fec">use_fec</a><dd>Non-zero to include data for "forward error correction" (FEC). See
+<a href="apifn-sm_vmptx_config_codec_silk.html">sm_vmptx_config_codec_silk()</a>
+for more details.
+
+<dt><a name="field-use_dtx">use_dtx</a><dd>Non-zero to suppress transmission of data during silence. See
+<a href="apifn-sm_vmptx_config_codec_silk.html">sm_vmptx_config_codec_silk()</a>
+for more details.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

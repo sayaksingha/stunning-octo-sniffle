@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody program: modload</title>
+</head>
+<body>
+<h1>Prosody program: modload</h1>
+<p>
+This downloads one or more firmware modules to a Prosody X card. Note that the firmware kernel
+must have been downloaded already.
+Firmware modules for Prosody X cards have the filename suffix <code>.sob</code>.
+<p>
+Go to directory $(TiNG)/test.
+<p>
+Run <code>modload</code> with the appropriate options (the program is
+<span class="type-LINUX">../modload/gen-LINUX_V6/modload</span> or
+<span class="type-WINNT">../modload/gen-WINNT_V6/modload</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table>
+<tr>
+    <td><code>-i</code> ip-address 
+    <td>Specifies the IP address for Prosody X card on which is the module 
+      where the firmware is to be loaded 
+
+<tr>
+    <td><code>-k</code> security-key 
+    <td>Specifies the security key for Prosody X card on which is the module 
+      where the firmware is to be loaded 
+
+<tr>
+	<td><code>-m</code> module
+		<td>Specifies the module to which the firmware is to
+		be downloaded (default 0). Multiple modules may be 
+		specified by repeating this option specifying additional
+		modules.
+
+<tr>
+	<td><code>-p</code> placement
+		<td>Allows explicit placement of firmware code into slower
+		memory. Possible directives are "m2" or "sdram". For large
+		load sets of firmware that do not all fit in fast (m1) memory
+		this directive allows user control over which algorithms 
+		reside in fast memory and which in slower (m2 or sdram) memory.
+
+<tr>
+	<td><code>-f</code> placement
+		<td>For use in conjunction with -p placement option.  Allows 
+		explicit placement of small critical code/data sections into 
+		faster memory when main bulk of code has been placed in slower
+		memory. Possible directives are "m1" or "m2". Best performance
+		obtained when critical code placed in "m1" allowing higher
+		channel counts for large codecs placed on loading into "sdram".
+
+<tr>
+	<td><code>-M</code> mapfile
+		<td>Specifies a file into which a symbol map is
+		produced. This map file is only needed for debugging
+		the firmware. (default: no map file)
+
+<tr>
+	<td><code>-v</code> verbose-level
+		<td>Specifies a number which controls the amount of
+		commentary printed during the download. Larger numbers
+		generate more output. Currently the maximum commentary
+		is produced when the value is 2 or more.
+	
+<tr>
+	<td><code>-d</code> &lt;dir-path&gt
+		<td>Specifies a directory path where firmware modules
+		are located.
+
+<tr>
+	<td>&lt;download-file&gt;
+		<td>name of file which contains the firmware to
+		download. As an alternative to specifying a list
+		of download-files, it is possible to specify a single
+		".lyt" suffixed <a href="prog_modload_layout.html">layout</a> file.
+		
+
+</table>
+<p>
+For example,
+<pre>
+	../util/gen-LINUX_V6/modload -i 172.16.1.220 -k mykey -v1 -d ../starcore/gen datafeed.sob inchan.sob outchan.sob
+</pre>
+<p>
+downloads the <a href="gen/softmodindex.html#datafeed">datafeed</a>, inchan and outchan
+modules. 
+<p>
+For convenience a shell script or batch file is provided
+called <code>lmx</code> which supplies some of the parameters for download of a single firmware module. For this
+example, you could use it like this instead of using modload directly:
+<pre>
+	lmx datafeed -i 172.16.1.220 -k mykey -v1
+	lmx inchan -i 172.16.1.220 -k mykey -v1
+	lmx outchan -i 172.16.1.220 -k mykey -v1
+</pre>
+<p>
+Note that the name of the firmware module to be downloaded comes
+first.
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

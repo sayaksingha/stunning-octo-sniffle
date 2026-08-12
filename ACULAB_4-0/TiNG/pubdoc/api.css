@@ -1,0 +1,52 @@
+@import url(TiNG.css);
+
+dt {
+	font-weight: bold;
+}
+
+.version-Ps {
+	font-family: "Arial", sans-serif;
+	background-color:#ccccff;
+}
+
+.version-TiNG {
+	font-family: "Arial", sans-serif;
+	background-color:#ccffcc;
+}
+
+.header-TiNG {
+	font-family: "Arial", sans-serif;
+	background-color:#ccffcc;
+	font-weight: bold;
+}
+
+.version-Prel {
+	font-family: "Arial", sans-serif;
+	background-color:silver;
+}
+
+.header-Prel {
+	font-family: "Arial", sans-serif;
+	background-color:silver;
+	font-weight: bold;
+}
+
+.version-deprecated {
+	font-family: "Arial", sans-serif;
+	background-color:#eebb33;
+}
+
+.header-deprecated {
+	font-family: "Arial", sans-serif;
+	background-color:#eebb33;
+	font-weight: bold;
+}
+
+/*
+ * this would be nice, but no browser supports it!
+ *div.c-code {
+ *	font-family: monospace;
+ *	white-space: pre;
+ *}
+*/
+

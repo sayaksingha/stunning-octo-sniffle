@@ -1,0 +1,957 @@
+// DESCRIPTION: Fax over ip decoder
+// GENTIME: Tue Aug  3 16:18:43 2021
+// VERS: 0x00014910 0x00007490
+// RESHINT: RESTBL 52 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x72 0x70 0x66 0x69 0x00 0x00 0x00 0x80 0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x49 0x10 0x00 0x00 0x74 0x90 
+(section
+".default"
+(alignment #0)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/alg_ifp_util.eln::.default" (sym ".default::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.default" (sym ".default::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))
+(defsym ".default::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0" (sym ".default::@start")))
+(data))
+(section
+".text"
+(alignment #F)
+(symtab
+(defsym "_IFPAlgDecodeLength" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/alg_ifp_util.eln::TextStart_alg_ifp_util" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/alg_ifp_util.eln::.text" (sym ".text::@start"))
+(defsym "F_IFPAlgDecodeLength_end" (+ #32 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/alg_ifp_util.eln::.align_0" (+ #32 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/alg_ifp_util.eln::FuncEnd_IFPAlgDecodeLength" (+ #32 (sym ".text::@start")))
+(defsym "_IFPAlgReverse8Buff" (+ #40 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/alg_ifp_util.eln::L16" (+ #56 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/alg_ifp_util.eln::L15" (+ #64 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/alg_ifp_util.eln::L10" (+ #82 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/alg_ifp_util.eln::L14" (+ #82 (sym ".text::@start")))
+(defsym "F_IFPAlgReverse8Buff_end" (+ #84 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/alg_ifp_util.eln::TextEnd_alg_ifp_util" (+ #84 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/alg_ifp_util.eln::FuncEnd_IFPAlgReverse8Buff" (+ #84 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v134" (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::TextStart_ifprx" (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.text" (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_2" (+ #8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_3" (+ #E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_4" (+ #14 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L284" (+ #4A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L403" (+ #96 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_24" (+ #98 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_25" (+ #9E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_26" (+ #A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_0" (+ #A2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_134" (+ #A2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv134_end" (+ #A2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v135" (+ #B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_29" (+ #B8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_37" (+ #D4 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_1" (+ #D6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_135" (+ #D6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv135_end" (+ #D6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v136" (+ #E0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_40" (+ #E6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_41" (+ #EC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L291" (+ #15A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L289" (+ #16A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L405" (+ #172 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_64" (+ #178 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_65" (+ #17E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v137" (+ #180 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_136" (+ #180 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv136_end" (+ #180 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_68" (+ #186 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_69" (+ #18C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_70" (+ #194 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L296" (+ #1EA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L304" (+ #244 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L302" (+ #258 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L310" (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L298" (+ #278 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L406" (+ #286 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_112" (+ #288 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_113" (+ #28E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_114" (+ #294 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_2" (+ #296 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_137" (+ #296 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv137_end" (+ #296 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v114" (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_3" (+ #306 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_114" (+ #306 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv114_end" (+ #306 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v115" (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_133" (+ #318 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_139" (+ #33A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_4" (+ #33C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_115" (+ #33C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv115_end" (+ #33C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v116" (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_142" (+ #346 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_148" (+ #36C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_5" (+ #36E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_116" (+ #36E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv116_end" (+ #36E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v117" (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_151" (+ #376 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_157" (+ #3A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_6" (+ #3A2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_117" (+ #3A2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv117_end" (+ #3A2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v120" (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_160" (+ #3B6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_161" (+ #3BC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_163" (+ #3CA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L7" (+ #3D2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_182" (+ #42C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_183" (+ #432 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_184" (+ #438 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_7" (+ #43A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_120" (+ #43A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv120_end" (+ #43A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v121" (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_187" (+ #44A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_188" (+ #44C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_189" (+ #452 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_200" (+ #494 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_201" (+ #496 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_202" (+ #498 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_8" (+ #49A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_121" (+ #49A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv121_end" (+ #49A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v123" (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_205" (+ #4AA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_206" (+ #4B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_207" (+ #4B8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L390" (+ #4E4 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L28" (+ #502 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L391" (+ #540 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L37" (+ #55A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L381" (+ #55A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_240" (+ #5A2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_241" (+ #5A8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_242" (+ #5AE (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v124" (+ #5B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_123" (+ #5B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv123_end" (+ #5B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_245" (+ #5B8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_246" (+ #5BE (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_248" (+ #5CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L314" (+ #610 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L56" (+ #69E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L319" (+ #740 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L325" (+ #7A2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L328" (+ #7B8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L329" (+ #812 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L58" (+ #83E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L50" (+ #8B6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L65" (+ #8D8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L68" (+ #8F6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L72" (+ #922 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L76" (+ #942 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L63" (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_397" (+ #966 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_398" (+ #96C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_399" (+ #972 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_9" (+ #974 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_124" (+ #974 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv124_end" (+ #974 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v125" (+ #980 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_402" (+ #988 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_403" (+ #98E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_405" (+ #998 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L331" (+ #9D0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L88" (+ #A46 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L89" (+ #A6C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L93" (+ #A94 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L94" (+ #ACA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L99" (+ #AD4 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L100" (+ #B0A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L105" (+ #B14 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L106" (+ #B7E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L86" (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L80" (+ #B98 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L398" (+ #BD6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L111" (+ #BD6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_514" (+ #BDC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_515" (+ #BE2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_516" (+ #BE8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_a" (+ #BEA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_125" (+ #BEA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv125_end" (+ #BEA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v127" (+ #BF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_519" (+ #BF6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_520" (+ #BFC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_522" (+ #C0A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L164" (+ #C7C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L179" (+ #CE0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L183" (+ #CF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L189" (+ #D14 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L153" (+ #D80 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L151" (+ #DAC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L399" (+ #DAE (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_596" (+ #DB4 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_597" (+ #DBA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_598" (+ #DC0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_b" (+ #DC2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_127" (+ #DC2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv127_end" (+ #DC2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v128" (+ #DD0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_601" (+ #DD8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_602" (+ #DDE (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_604" (+ #DE4 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L199" (+ #E48 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L204" (+ #ED2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L206" (+ #ED8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L212" (+ #F12 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L216" (+ #F20 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L228" (+ #F70 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L339" (+ #FEE (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L340" (+ #1002 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L343" (+ #1062 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L350" (+ #10AE (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L353" (+ #110E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L356" (+ #1120 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L357" (+ #1128 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L359" (+ #114C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L363" (+ #1192 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L365" (+ #11CA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L335" (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L202" (+ #11EC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L197" (+ #122E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L195" (+ #123C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_815" (+ #1246 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_816" (+ #124C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_817" (+ #1252 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_c" (+ #1254 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_128" (+ #1254 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv128_end" (+ #1254 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v130" (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_820" (+ #1266 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_821" (+ #126C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_823" (+ #1280 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L256" (+ #12E2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L262" (+ #132C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L370" (+ #13A4 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L366" (+ #140E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L401" (+ #143A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_913" (+ #1440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_914" (+ #1446 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_915" (+ #144C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_d" (+ #144E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_130" (+ #144E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv130_end" (+ #144E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v131" (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_918" (+ #1458 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_919" (+ #145E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_924" (+ #147E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_925" (+ #1484 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_e" (+ #1486 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_131" (+ #1486 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv131_end" (+ #1486 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v132" (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_928" (+ #1496 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_929" (+ #149C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_931" (+ #14AC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L268" (+ #14F6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L272" (+ #154A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L278" (+ #155A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L270" (+ #1566 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_975" (+ #156C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_976" (+ #1572 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_977" (+ #1578 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.align_f" (+ #157A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_132" (+ #157A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv132_end" (+ #157A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v133" (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_980" (+ #1586 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_983" (+ #1598 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L280" (+ #15C2 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L282" (+ #15CA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_996" (+ #15D0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::DW_997" (+ #15D6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::TextEnd_ifprx" (+ #15D8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::FuncEnd_133" (+ #15D8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::Fv133_end" (+ #15D8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))
+(defsym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0" (+ #90 (sym ".text::@start"))))
+(data // Offset:0x0
+{96C06E34EC3CC081449193B8371A8080656994C3371D803F96C37EC8CC81C08292C345911491EC1891BC94C0DC9C9F7041910000000000000000000000000000CA4090C0EA19EA8994C0EA39843B96C09A4A2A03800896C093482B03800E94C093B9EB3B366BEADB98C03918800175C4EAFCCA4976E992D0DC1D92D0CB4090C090819F71B86DA100786FA100B86EA10096C09620280D801494C09E209F2094C0E748C08432} // Offset:0xA5
+(emit (+ #4 (<< (& #C0000000 (sym "_tingKRTPMalloc")) #FFFFFFE5) (<< (& #E000 (sym "_tingKRTPMalloc")) #FFFFFFF8))) // Offset:0xA6
+(emit (+ #20 (<< (& #1F00 (sym "_tingKRTPMalloc")) #FFFFFFF8))) // Offset:0xA7
+(emit (& #FF (sym "_tingKRTPMalloc"))) // Offset:0xA8
+(emit (+ #80 (<< (& #3F000000 (sym "_tingKRTPMalloc")) #FFFFFFE8))) // Offset:0xA9
+(emit (<< (& #FF0000 (sym "_tingKRTPMalloc")) #FFFFFFF0)) // Offset:0xAA
+{1E95C84E96C060E4E8F1C94696C0C5852E0F803C94C04897841D32} // Offset:0xC5
+(emit (+ #4 (<< (& #C0000000 (sym "_KillTask")) #FFFFFFE5) (<< (& #E000 (sym "_KillTask")) #FFFFFFF8))) // Offset:0xC6
+(emit (+ #20 (<< (& #1F00 (sym "_KillTask")) #FFFFFFF8))) // Offset:0xC7
+(emit (& #FF (sym "_KillTask"))) // Offset:0xC8
+(emit (+ #80 (<< (& #3F000000 (sym "_KillTask")) #FFFFFFE8))) // Offset:0xC9
+(emit (<< (& #FF0000 (sym "_KillTask")) #FFFFFFF0)) // Offset:0xCA
+{94C0F541E8EE98C0C08131} // Offset:0xD5
+(emit (+ #4 (<< (& #C0000000 (+ #96 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #96 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xD6
+(emit (+ #20 (<< (& #1F00 (+ #96 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xD7
+(emit (& #FF (+ #96 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xD8
+(emit (+ #80 (<< (& #3F000000 (+ #96 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xD9
+(emit (<< (& #FF0000 (+ #96 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xDA
+{98C0C38432} // Offset:0xDF
+(emit (+ #4 (<< (& #C0000000 (sym "_memset")) #FFFFFFE5) (<< (& #E000 (sym "_memset")) #FFFFFFF8))) // Offset:0xE0
+(emit (+ #20 (<< (& #1F00 (sym "_memset")) #FFFFFFF8))) // Offset:0xE1
+(emit (& #FF (sym "_memset"))) // Offset:0xE2
+(emit (+ #80 (<< (& #3F000000 (sym "_memset")) #FFFFFFE8))) // Offset:0xE3
+(emit (<< (& #FF0000 (sym "_memset")) #FFFFFFF0)) // Offset:0xE4
+{F34196C06C30EDEFCCB094C0C8ACED7A94C0EAEFEBEF94C091BDEB7996C0C3810901A08098C0EA3C32} // Offset:0x10D
+(emit (+ #1 (<< (& #C0000000 (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x10E
+(emit (+ #20 (<< (& #1F00 (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x10F
+(emit (& #FF (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x110
+(emit (+ #80 (<< (& #3F000000 (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x111
+(emit (<< (& #FF0000 (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x112
+{98C0EF3834} // Offset:0x117
+(emit (+ #1 (<< (& #C0000000 (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x118
+(emit (+ #20 (<< (& #1F00 (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x119
+(emit (& #FF (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x11A
+(emit (+ #80 (<< (& #3F000000 (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x11B
+(emit (<< (& #FF0000 (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x11C
+{94C0919D939B02924497E76894C09E219F2196219F71000000000000000000000000000096C09F20280980141B91EFE8C1842B0D803C32} // Offset:0x153
+(emit (+ #4 (<< (& #C0000000 (sym "_tingKSzRTPFree")) #FFFFFFE5) (<< (& #E000 (sym "_tingKSzRTPFree")) #FFFFFFF8))) // Offset:0x154
+(emit (+ #20 (<< (& #1F00 (sym "_tingKSzRTPFree")) #FFFFFFF8))) // Offset:0x155
+(emit (& #FF (sym "_tingKSzRTPFree"))) // Offset:0x156
+(emit (+ #80 (<< (& #3F000000 (sym "_tingKSzRTPFree")) #FFFFFFE8))) // Offset:0x157
+(emit (<< (& #FF0000 (sym "_tingKSzRTPFree")) #FFFFFFF0)) // Offset:0x158
+{589532} // Offset:0x15B
+(emit (+ #4 (<< (& #C0000000 (sym "_SubtaskDtor")) #FFFFFFE5) (<< (& #E000 (sym "_SubtaskDtor")) #FFFFFFF8))) // Offset:0x15C
+(emit (+ #20 (<< (& #1F00 (sym "_SubtaskDtor")) #FFFFFFF8))) // Offset:0x15D
+(emit (& #FF (sym "_SubtaskDtor"))) // Offset:0x15E
+(emit (+ #80 (<< (& #3F000000 (sym "_SubtaskDtor")) #FFFFFFE8))) // Offset:0x15F
+(emit (<< (& #FF0000 (sym "_SubtaskDtor")) #FFFFFFF0)) // Offset:0x160
+{E8EF9F219F710000000000000000000094C09620972094C09E209F2096C0F9C7280C80141A94EFE896C0C94F290C800498C0EEEC32} // Offset:0x195
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x196
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x197
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x198
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x199
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x19A
+{94C0E8ECCA4E96C06469CA46ECEE94C6EC4461E598C72A0B804890C0C38198C0CB4E32} // Offset:0x1BD
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x1BE
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x1BF
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x1C0
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x1C1
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x1C2
+{94C0939BE8EC96C075E0CB46C947D5AC96C091BB2B0D800794C0909D802124E975E08007D5A8801394C0ED61C1FF98C0919D31} // Offset:0x1F5
+(emit (+ #4 (<< (& #C0000000 (+ #172 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #172 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1F6
+(emit (+ #20 (<< (& #1F00 (+ #172 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1F7
+(emit (& #FF (+ #172 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x1F8
+(emit (+ #80 (<< (& #3F000000 (+ #172 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x1F9
+(emit (<< (& #FF0000 (+ #172 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1FA
+(emit #32) // Offset:0x1FB
+(emit (+ #4 (<< (& #C0000000 (sym "_ReplyBadMsgRange")) #FFFFFFE5) (<< (& #E000 (sym "_ReplyBadMsgRange")) #FFFFFFF8))) // Offset:0x1FC
+(emit (+ #20 (<< (& #1F00 (sym "_ReplyBadMsgRange")) #FFFFFFF8))) // Offset:0x1FD
+(emit (& #FF (sym "_ReplyBadMsgRange"))) // Offset:0x1FE
+(emit (+ #80 (<< (& #3F000000 (sym "_ReplyBadMsgRange")) #FFFFFFE8))) // Offset:0x1FF
+(emit (<< (& #FF0000 (sym "_ReplyBadMsgRange")) #FFFFFFF0)) // Offset:0x200
+{E8EF94C09E219F2194C0962197219F7194C09620972094C09E209F2096C0E758280980141F91F9CD94C0EEE8F14596C0C94E290C800432} // Offset:0x237
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x238
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x239
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x23A
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x23B
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x23C
+{94C0E8ECCC4F37D0CC4790C098C0EC4432} // Offset:0x24D
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x24E
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x24F
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x250
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x251
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x252
+{E8EC96C0D027F1C5C581801E96C234692664AF619CC0D02664E034692664A961C94694C0F2CE849598C02F0A801C67E0E8EE27E9599A94C092BA806196C077D5F742F44332} // Offset:0x297
+(emit (+ #4 (<< (& #C0000000 (sym "_LookupFriend_")) #FFFFFFE5) (<< (& #E000 (sym "_LookupFriend_")) #FFFFFFF8))) // Offset:0x298
+(emit (+ #20 (<< (& #1F00 (sym "_LookupFriend_")) #FFFFFFF8))) // Offset:0x299
+(emit (& #FF (sym "_LookupFriend_"))) // Offset:0x29A
+(emit (+ #80 (<< (& #3F000000 (sym "_LookupFriend_")) #FFFFFFE8))) // Offset:0x29B
+(emit (<< (& #FF0000 (sym "_LookupFriend_")) #FFFFFFF0)) // Offset:0x29C
+{F24196C06E34E8F1E9E894C0E8EE802F94C0F443FF4232} // Offset:0x2B3
+(emit (+ #4 (<< (& #C0000000 (sym "_join_graph")) #FFFFFFE5) (<< (& #E000 (sym "_join_graph")) #FFFFFFF8))) // Offset:0x2B4
+(emit (+ #20 (<< (& #1F00 (sym "_join_graph")) #FFFFFFF8))) // Offset:0x2B5
+(emit (& #FF (sym "_join_graph"))) // Offset:0x2B6
+(emit (+ #80 (<< (& #3F000000 (sym "_join_graph")) #FFFFFFE8))) // Offset:0x2B7
+(emit (<< (& #FF0000 (sym "_join_graph")) #FFFFFFF0)) // Offset:0x2B8
+{F44198C0646976D7C946E8EE802733} // Offset:0x2C7
+(emit (+ #4 (<< (& #C0000000 (sym "_ReplyBadMsgTaskLoop")) #FFFFFFE5) (<< (& #E000 (sym "_ReplyBadMsgTaskLoop")) #FFFFFFF8))) // Offset:0x2C8
+(emit (+ #20 (<< (& #1F00 (sym "_ReplyBadMsgTaskLoop")) #FFFFFFF8))) // Offset:0x2C9
+(emit (& #FF (sym "_ReplyBadMsgTaskLoop"))) // Offset:0x2CA
+(emit (+ #80 (<< (& #3F000000 (sym "_ReplyBadMsgTaskLoop")) #FFFFFFE8))) // Offset:0x2CB
+(emit (<< (& #FF0000 (sym "_ReplyBadMsgTaskLoop")) #FFFFFFF0)) // Offset:0x2CC
+{22E631} // Offset:0x2CF
+(emit (+ #4 (<< (& #C0000000 (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x2D0
+(emit (+ #20 (<< (& #1F00 (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x2D1
+(emit (& #FF (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x2D2
+(emit (+ #80 (<< (& #3F000000 (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x2D3
+(emit (<< (& #FF0000 (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x2D4
+(emit #32) // Offset:0x2D5
+(emit (+ #4 (<< (& #C0000000 (sym "_ReplyBadMsgNoTask")) #FFFFFFE5) (<< (& #E000 (sym "_ReplyBadMsgNoTask")) #FFFFFFF8))) // Offset:0x2D6
+(emit (+ #20 (<< (& #1F00 (sym "_ReplyBadMsgNoTask")) #FFFFFFF8))) // Offset:0x2D7
+(emit (& #FF (sym "_ReplyBadMsgNoTask"))) // Offset:0x2D8
+(emit (+ #80 (<< (& #3F000000 (sym "_ReplyBadMsgNoTask")) #FFFFFFE8))) // Offset:0x2D9
+(emit (<< (& #FF0000 (sym "_ReplyBadMsgNoTask")) #FFFFFFF0)) // Offset:0x2DA
+{94C0C946E8EE22E631} // Offset:0x2E3
+(emit (+ #4 (<< (& #C0000000 (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x2E4
+(emit (+ #20 (<< (& #1F00 (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x2E5
+(emit (& #FF (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x2E6
+(emit (+ #80 (<< (& #3F000000 (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x2E7
+(emit (<< (& #FF0000 (+ #25A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x2E8
+{62E666E990C09CC6995732} // Offset:0x2F3
+(emit (+ #4 (<< (& #C0000000 (sym "_split_graph")) #FFFFFFE5) (<< (& #E000 (sym "_split_graph")) #FFFFFFF8))) // Offset:0x2F4
+(emit (+ #20 (<< (& #1F00 (sym "_split_graph")) #FFFFFFF8))) // Offset:0x2F5
+(emit (& #FF (sym "_split_graph"))) // Offset:0x2F6
+(emit (+ #80 (<< (& #3F000000 (sym "_split_graph")) #FFFFFFE8))) // Offset:0x2F7
+(emit (<< (& #FF0000 (sym "_split_graph")) #FFFFFFF0)) // Offset:0x2F8
+{90C06E3494C69856F44131} // Offset:0x303
+(emit (+ #4 (<< (& #C0000000 (+ #286 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #286 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x304
+(emit (+ #20 (<< (& #1F00 (+ #286 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x305
+(emit (& #FF (+ #286 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x306
+(emit (+ #80 (<< (& #3F000000 (+ #286 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x307
+(emit (<< (& #FF0000 (+ #286 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x308
+{94C0F242F94132} // Offset:0x30F
+(emit (+ #4 (<< (& #C0000000 (sym "_Msg_try_subtasks")) #FFFFFFE5) (<< (& #E000 (sym "_Msg_try_subtasks")) #FFFFFFF8))) // Offset:0x310
+(emit (+ #20 (<< (& #1F00 (sym "_Msg_try_subtasks")) #FFFFFFF8))) // Offset:0x311
+(emit (& #FF (sym "_Msg_try_subtasks"))) // Offset:0x312
+(emit (+ #80 (<< (& #3F000000 (sym "_Msg_try_subtasks")) #FFFFFFE8))) // Offset:0x313
+(emit (<< (& #FF0000 (sym "_Msg_try_subtasks")) #FFFFFFF0)) // Offset:0x314
+{E8EEE77894C09E219F2194C0962197219F71000000000000000000009AC0290B804490C0280D80143640A00059935B9594C0C482F1C43C40A100290C800890C02B0980243880A00052912C0A80040291EBEA3620A0005891EB68159341943880A00038ED8218E8F10593F5C33687A000E84445923483A0005D9090C092C39D639F710000000000000000000096C061E5E750EAE996C0E9E827EB9FF098C0321920008922F34494C0F241E8EA32} // Offset:0x3C1
+(emit (+ #4 (<< (& #C0000000 (sym "_SendMsgAndParms")) #FFFFFFE5) (<< (& #E000 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0x3C2
+(emit (+ #20 (<< (& #1F00 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0x3C3
+(emit (& #FF (sym "_SendMsgAndParms"))) // Offset:0x3C4
+(emit (+ #80 (<< (& #3F000000 (sym "_SendMsgAndParms")) #FFFFFFE8))) // Offset:0x3C5
+(emit (<< (& #FF0000 (sym "_SendMsgAndParms")) #FFFFFFF0)) // Offset:0x3C6
+{FB42E7709F710000000094C0E750EDE996C0E9E827EA9FF098C0C28133192000892294C0F244FA4232} // Offset:0x3EF
+(emit (+ #4 (<< (& #C0000000 (sym "_SendMsgAndParms")) #FFFFFFE5) (<< (& #E000 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0x3F0
+(emit (+ #20 (<< (& #1F00 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0x3F1
+(emit (& #FF (sym "_SendMsgAndParms"))) // Offset:0x3F2
+(emit (+ #80 (<< (& #3F000000 (sym "_SendMsgAndParms")) #FFFFFFE8))) // Offset:0x3F3
+(emit (<< (& #FF0000 (sym "_SendMsgAndParms")) #FFFFFFF0)) // Offset:0x3F4
+{94C0F341E8EDE7709F71000094C0E750ECE99AC0117C9FE790C027EA9FF098C0E9E8341920008E9294C0F441E8EC32} // Offset:0x423
+(emit (+ #4 (<< (& #C0000000 (sym "_SendMsgAndParms")) #FFFFFFE5) (<< (& #E000 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0x424
+(emit (+ #20 (<< (& #1F00 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0x425
+(emit (& #FF (sym "_SendMsgAndParms"))) // Offset:0x426
+(emit (+ #80 (<< (& #3F000000 (sym "_SendMsgAndParms")) #FFFFFFE8))) // Offset:0x427
+(emit (<< (& #FF0000 (sym "_SendMsgAndParms")) #FFFFFFF0)) // Offset:0x428
+{94C0F144FA42E7709F71000000000000000000000000000094C09620972094C09E209F2096C0EEE9270C809094C0E7ECEFE894C0FAECF6EBFA639AC03616807FF9E32700808096C0D3DE27E89F7832} // Offset:0x477
+(emit (+ #4 (<< (& #C0000000 (sym "_memcpy")) #FFFFFFE5) (<< (& #E000 (sym "_memcpy")) #FFFFFFF8))) // Offset:0x478
+(emit (+ #20 (<< (& #1F00 (sym "_memcpy")) #FFFFFFF8))) // Offset:0x479
+(emit (& #FF (sym "_memcpy"))) // Offset:0x47A
+(emit (+ #80 (<< (& #3F000000 (sym "_memcpy")) #FFFFFFE8))) // Offset:0x47B
+(emit (<< (& #FF0000 (sym "_memcpy")) #FFFFFFF0)) // Offset:0x47C
+{F74196C0745727E99F7832} // Offset:0x487
+(emit (+ #4 (<< (& #C0000000 (sym "_IFPAlgReverse8Buff")) #FFFFFFE5) (<< (& #E000 (sym "_IFPAlgReverse8Buff")) #FFFFFFF8))) // Offset:0x488
+(emit (+ #20 (<< (& #1F00 (sym "_IFPAlgReverse8Buff")) #FFFFFFF8))) // Offset:0x489
+(emit (& #FF (sym "_IFPAlgReverse8Buff"))) // Offset:0x48A
+(emit (+ #80 (<< (& #3F000000 (sym "_IFPAlgReverse8Buff")) #FFFFFFE8))) // Offset:0x48B
+(emit (<< (& #FF0000 (sym "_IFPAlgReverse8Buff")) #FFFFFFF0)) // Offset:0x48C
+{646096C0F74127ED9F7894C0FD42E9EE32} // Offset:0x49D
+(emit (+ #4 (<< (& #C0000000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x49E
+(emit (+ #20 (<< (& #1F00 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x49F
+(emit (& #FF (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x4A0
+(emit (+ #80 (<< (& #3F000000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x4A1
+(emit (<< (& #FF0000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x4A2
+{E8EF96C06F3FF9E3CD47676994C0E91D85B4F96327E99F70E7E994C09E219F2194C0962197219F7100000000000098C077D160E49720C0849F2094C0E750EFE832} // Offset:0x4E3
+(emit (+ #4 (<< (& #C0000000 (sym "_memset")) #FFFFFFE5) (<< (& #E000 (sym "_memset")) #FFFFFFF8))) // Offset:0x4E4
+(emit (+ #20 (<< (& #1F00 (sym "_memset")) #FFFFFFF8))) // Offset:0x4E5
+(emit (& #FF (sym "_memset"))) // Offset:0x4E6
+(emit (+ #80 (<< (& #3F000000 (sym "_memset")) #FFFFFFE8))) // Offset:0x4E7
+(emit (<< (& #FF0000 (sym "_memset")) #FFFFFFF0)) // Offset:0x4E8
+{96C0F04127E89FF096C0F4CC077C9FF096C0F44127E89FF132} // Offset:0x501
+(emit (+ #4 (<< (& #C0000000 (sym "_memcpy")) #FFFFFFE5) (<< (& #E000 (sym "_memcpy")) #FFFFFFF8))) // Offset:0x502
+(emit (+ #20 (<< (& #1F00 (sym "_memcpy")) #FFFFFFF8))) // Offset:0x503
+(emit (& #FF (sym "_memcpy"))) // Offset:0x504
+(emit (+ #80 (<< (& #3F000000 (sym "_memcpy")) #FFFFFFE8))) // Offset:0x505
+(emit (<< (& #FF0000 (sym "_memcpy")) #FFFFFFF0)) // Offset:0x506
+{F9CD96C0C18427EB9FF094C0FB42F9CB32} // Offset:0x517
+(emit (+ #4 (<< (& #C0000000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x518
+(emit (+ #20 (<< (& #1F00 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x519
+(emit (& #FF (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x51A
+(emit (+ #80 (<< (& #3F000000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x51B
+(emit (<< (& #FF0000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x51C
+{94C0F141E8EFE7709F2197219F7100000000000098C060E462E69620972094C09E209F2096C0E758290D804996C0C08C2D0F800396C094BF27EE9FF09AC027EB9FECD62127EA9FE896C0802F230080FF96C093442B03800896C0727178C1938292D363E794C6958697BD94C09783ED4131} // Offset:0x58D
+(emit (+ #4 (<< (& #C0000000 (+ #55A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #55A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x58E
+(emit (+ #20 (<< (& #1F00 (+ #55A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x58F
+(emit (& #FF (+ #55A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x590
+(emit (+ #80 (<< (& #3F000000 (+ #55A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x591
+(emit (<< (& #FF0000 (+ #55A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x592
+{9EC027EA9FEC62E678C17271230080FF98C727EE9FE890C06F3E94C6938296BD96C093432B03801E96C0968627EC9FF096C0C09027EB9FF494C0958490C098C0727178C19583ED4192C363E794D6938297BD97869584959B9CC0137C9FCF775039078006F04198C065E9CE4727EA9FE896C0FA422400807C94C3CD40CC8496C7EE1A2200804094C7949EED3C92C3ED1A98C732} // Offset:0x625
+(emit (+ #4 (<< (& #C0000000 (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x626
+(emit (+ #20 (<< (& #1F00 (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x627
+(emit (& #FF (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x628
+(emit (+ #80 (<< (& #3F000000 (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x629
+(emit (<< (& #FF0000 (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x62A
+{929D959F3456E77894C09E219F2194C0962197219F7196C06F3E9620972094C09E209F2096C0EEE9270D80C094C0E7EDEFE896C0FAF7177C9F2367E93C80A0002A0F800C90C0251882E036C0A0005097EDEF3A20A00064696C30EBEFED6494C0EB6880193480A0004097179550933BC178610795409336A0A000EAEF5D923680A000EA64C7813680A1005992EF683880A10054972E0D804D3880A0007A62ED1992BD96C091BD2D0C800196C07CC890BCE9423880A100DC9844974992D7C167E173F42418825A92C2C6FF96C06569E9EEE8EF84333640A000FA63FF6432} // Offset:0x707
+(emit (+ #4 (<< (& #C0000000 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x708
+(emit (+ #20 (<< (& #1F00 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x709
+(emit (& #FF (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x70A
+(emit (+ #80 (<< (& #3F000000 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x70B
+(emit (<< (& #FF0000 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x70C
+{3660A000FA65FD663620A000FDE6C1813640A000FAE3FFE43620A100FAE5919D90C038C0A1006E34EBED509236C0A100EB6150973680A00091BB53923A60A000D7C1D5C0EDEDC5819AC03ECD878263E7CC47ED649AC066E97EC2CB4527E89FF43E07A10890C0E8E890C075556F3E6C853C00B8446C31D441EBFE24188152EC3B3880A000409227EB9F7836A0A1004097979B3620A000F567FA633660A000FF64FA653660A000FD66FB6898C0F569FC6A90C090C09EC0F36BF66C90C090C090C090C090C09EC064E167E139058001F3EB27E99F783A80A00070E7C84527EE9F7892C260E494C6E8FECD43E91890A59083E9AB94C0C9FF84353655CB4490C0EBFE3420A000EB1E5B9390C0E9AB94C23B0480013626A000E81ECB4492C24990EBFE3420A000EB1E3480A000E88B94C0F0E98411F3E7706384616669805D98C027E99F787754F16E96C07F42FD6DF46F9AC07456F27032} // Offset:0x861
+(emit (+ #4 (<< (& #C0000000 (sym "_IFPAlgReverse8Buff")) #FFFFFFE5) (<< (& #E000 (sym "_IFPAlgReverse8Buff")) #FFFFFFF8))) // Offset:0x862
+(emit (+ #20 (<< (& #1F00 (sym "_IFPAlgReverse8Buff")) #FFFFFFF8))) // Offset:0x863
+(emit (& #FF (sym "_IFPAlgReverse8Buff"))) // Offset:0x864
+(emit (+ #80 (<< (& #3F000000 (sym "_IFPAlgReverse8Buff")) #FFFFFFE8))) // Offset:0x865
+(emit (<< (& #FF0000 (sym "_IFPAlgReverse8Buff")) #FFFFFFF0)) // Offset:0x866
+{646096C0F64127EB9F7894C0FB42E9EE32} // Offset:0x877
+(emit (+ #4 (<< (& #C0000000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x878
+(emit (+ #20 (<< (& #1F00 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x879
+(emit (& #FF (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x87A
+(emit (+ #80 (<< (& #3F000000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x87B
+(emit (<< (& #FF0000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x87C
+{E8EF94C0F4EFF3EC98C0D5C46E34FDEDF1EE3C80A00027E89FF490C027EB9F7894C0F2F0F36C39613BC1F3E7256A79C196C0F3672DFF9F2594C0F6ECFAE33860A0007F42FFE4FAE53660A000FDE6FBE8FCEA6761676884753600A100ECF1ED643680A0009BBB806B1D92E8EC3680A0005992E83B3600A100F841ED1B3660A000FF64E8ED3640A000E91DFA6532} // Offset:0x909
+(emit (+ #4 (<< (& #C0000000 (sym "_memcpy")) #FFFFFFE5) (<< (& #E000 (sym "_memcpy")) #FFFFFFF8))) // Offset:0x90A
+(emit (+ #20 (<< (& #1F00 (sym "_memcpy")) #FFFFFFF8))) // Offset:0x90B
+(emit (& #FF (sym "_memcpy"))) // Offset:0x90C
+(emit (+ #80 (<< (& #3F000000 (sym "_memcpy")) #FFFFFFE8))) // Offset:0x90D
+(emit (<< (& #FF0000 (sym "_memcpy")) #FFFFFFF0)) // Offset:0x90E
+{3620A000FB68FC6A3660A000FBE8FFE43620A000FAE5FCEA3680A1009ABB58973680A1005B929C9BEC3A94C0EB1CE83C3680A1004B92489796C0CC841B7C9F2239} // Offset:0x94F
+(emit (+ (<< (& #C0000000 (+ #84 (sym ".rom::@start"))) #FFFFFFE5) (<< (& #E000 (+ #84 (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x950
+(emit (+ #20 (<< (& #1F00 (+ #84 (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x951
+(emit (& #FF (+ #84 (sym ".rom::@start")))) // Offset:0x952
+(emit (+ #80 (<< (& #3F000000 (+ #84 (sym ".rom::@start"))) #FFFFFFE8))) // Offset:0x953
+(emit (<< (& #FF0000 (+ #84 (sym ".rom::@start"))) #FFFFFFF0)) // Offset:0x954
+{EB61EB8C94C0EBFE80952768EB195B9390C09B6196C0841F157C9F2298C03B1A8001E9EEE8EF32} // Offset:0x97B
+(emit (+ #4 (<< (& #C0000000 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x97C
+(emit (+ #20 (<< (& #1F00 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x97D
+(emit (& #FF (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x97E
+(emit (+ #80 (<< (& #3F000000 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x97F
+(emit (<< (& #FF0000 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x980
+{027C9FFFD74098C02E0B804C6E34E9EE94C09483E8EF94C091BBCB4FD0A1844F33} // Offset:0x9A1
+(emit (+ #4 (<< (& #C0000000 (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x9A2
+(emit (+ #20 (<< (& #1F00 (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x9A3
+(emit (& #FF (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x9A4
+(emit (+ #80 (<< (& #3F000000 (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x9A5
+(emit (<< (& #FF0000 (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x9A6
+{2D3CCB4730} // Offset:0x9AB
+(emit (+ #4 (<< (& #C0000000 (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x9AC
+(emit (+ #20 (<< (& #1F00 (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x9AD
+(emit (& #FF (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x9AE
+(emit (+ #80 (<< (& #3F000000 (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x9AF
+(emit (<< (& #FF0000 (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x9B0
+{929B98C0676861E5E9EEE8EF843132} // Offset:0x9BF
+(emit (+ #4 (<< (& #C0000000 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x9C0
+(emit (+ #20 (<< (& #1F00 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x9C1
+(emit (& #FF (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x9C2
+(emit (+ #80 (<< (& #3F000000 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x9C3
+(emit (<< (& #FF0000 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x9C4
+{037C9FFF98C0D74031} // Offset:0x9CD
+(emit (+ #4 (<< (& #C0000000 (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x9CE
+(emit (+ #20 (<< (& #1F00 (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x9CF
+(emit (& #FF (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x9D0
+(emit (+ #80 (<< (& #3F000000 (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x9D1
+(emit (<< (& #FF0000 (+ #95C (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x9D2
+{96C06768C181E9EE94C0E8EF841332} // Offset:0x9E1
+(emit (+ #4 (<< (& #C0000000 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x9E2
+(emit (+ #20 (<< (& #1F00 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x9E3
+(emit (& #FF (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x9E4
+(emit (+ #80 (<< (& #3F000000 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x9E5
+(emit (<< (& #FF0000 (+ #4A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x9E6
+{017C9FFFD74096C0745627EC9F40E7EC94C09E219F2194C0962197219F7100000000000000000000000096C06C309620972094C09E209F2096C0EEE8270A8020E7EA96C0F945117C9FC364E996C0FDCF251881F663E72D0F800C1397EAEF96C065E9ECEFEA6494C0EC6880154797509278414092539479E143943640A000EAEF599594C0EA64C7811B92EF6890C03480A000E91B38C0A00096B9290C800196C07F4890BCEB4296C0DF184B92CB851597D7C63AE267E133F545972418818892C2C0FF34571C7C9FC290C0EC66EC8B96C0ECFE251881643B} // Offset:0xABD
+(emit (+ (<< (& #C0000000 (+ #6C (sym ".rom::@start"))) #FFFFFFE5) (<< (& #E000 (+ #6C (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0xABE
+(emit (+ #20 (<< (& #1F00 (+ #6C (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0xABF
+(emit (& #FF (+ #6C (sym ".rom::@start")))) // Offset:0xAC0
+(emit (+ #80 (<< (& #3F000000 (+ #6C (sym ".rom::@start"))) #FFFFFFE8))) // Offset:0xAC1
+(emit (<< (& #FF0000 (+ #6C (sym ".rom::@start"))) #FFFFFFF0)) // Offset:0xAC2
+{90C0EC1B96C05B94290C804D93BC94C065E99B6196C07750E8EE842794C0FD46FA4732} // Offset:0xAE5
+(emit (+ #4 (<< (& #C0000000 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xAE6
+(emit (+ #20 (<< (& #1F00 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xAE7
+(emit (& #FF (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xAE8
+(emit (+ #80 (<< (& #3F000000 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xAE9
+(emit (<< (& #FF0000 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xAEA
+{FC4896C07456FCC8C18194C0FDC6FAC7919C37501292559596C0D545F741F9C594C0F242E8EE32} // Offset:0xB11
+(emit (+ #4 (<< (& #C0000000 (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB12
+(emit (+ #20 (<< (& #1F00 (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB13
+(emit (& #FF (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xB14
+(emit (+ #80 (<< (& #3F000000 (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xB15
+(emit (<< (& #FF0000 (+ #3B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xB16
+{FA479AC07456FAC731} // Offset:0xB1F
+(emit (+ #4 (<< (& #C0000000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB20
+(emit (+ #20 (<< (& #1F00 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB21
+(emit (& #FF (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xB22
+(emit (+ #80 (<< (& #3F000000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xB23
+(emit (<< (& #FF0000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xB24
+{16921595D3A198C0117C9FC2D745843196C07750C581F64394C0F542F94132} // Offset:0xB43
+(emit (+ #4 (<< (& #C0000000 (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB44
+(emit (+ #20 (<< (& #1F00 (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB45
+(emit (& #FF (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xB46
+(emit (+ #80 (<< (& #3F000000 (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xB47
+(emit (<< (& #FF0000 (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xB48
+{94C0E8EEFA479AC07456FAC731} // Offset:0xB55
+(emit (+ #4 (<< (& #C0000000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB56
+(emit (+ #20 (<< (& #1F00 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB57
+(emit (& #FF (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xB58
+(emit (+ #80 (<< (& #3F000000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xB59
+(emit (<< (& #FF0000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xB5A
+{98C0C0FF31} // Offset:0xB5F
+(emit (+ #4 (<< (& #C0000000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB60
+(emit (+ #20 (<< (& #1F00 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB61
+(emit (& #FF (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xB62
+(emit (+ #80 (<< (& #3F000000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xB63
+(emit (<< (& #FF0000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xB64
+{375013921495D3A296C0D5C4C582842F94C0F343F54296C0F941117C9FC232} // Offset:0xB83
+(emit (+ #4 (<< (& #C0000000 (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB84
+(emit (+ #20 (<< (& #1F00 (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB85
+(emit (& #FF (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xB86
+(emit (+ #80 (<< (& #3F000000 (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xB87
+(emit (<< (& #FF0000 (+ #440 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xB88
+{94C0E8EEFA479AC07456FAC731} // Offset:0xB95
+(emit (+ #4 (<< (& #C0000000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB96
+(emit (+ #20 (<< (& #1F00 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xB97
+(emit (& #FF (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xB98
+(emit (+ #80 (<< (& #3F000000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xB99
+(emit (<< (& #FF0000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xB9A
+{98C0C0FF31} // Offset:0xB9F
+(emit (+ #4 (<< (& #C0000000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xBA0
+(emit (+ #20 (<< (& #1F00 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xBA1
+(emit (& #FF (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xBA2
+(emit (+ #80 (<< (& #3F000000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xBA3
+(emit (<< (& #FF0000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xBA4
+{1C921B95D3A33800A100846527EC9FF098C0EC1B321920008EB294C090A4F2413A20A000311E800FFC42E9EE98C03E16800AF644F8C594C091A4FA473318800FD74096C03E16800AF64493BC371C800FD7443E16806432} // Offset:0xBFB
+(emit (+ #4 (<< (& #C0000000 (sym "_SendMsgAndParms")) #FFFFFFE5) (<< (& #E000 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0xBFC
+(emit (+ #20 (<< (& #1F00 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0xBFD
+(emit (& #FF (sym "_SendMsgAndParms"))) // Offset:0xBFE
+(emit (+ #80 (<< (& #3F000000 (sym "_SendMsgAndParms")) #FFFFFFE8))) // Offset:0xBFF
+(emit (<< (& #FF0000 (sym "_SendMsgAndParms")) #FFFFFFF0)) // Offset:0xC00
+{F6449AC06C30FAC731} // Offset:0xC09
+(emit (+ #4 (<< (& #C0000000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xC0A
+(emit (+ #20 (<< (& #1F00 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xC0B
+(emit (& #FF (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xC0C
+(emit (+ #80 (<< (& #3F000000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xC0D
+(emit (<< (& #FF0000 (+ #B88 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xC0E
+{98C0C0FF31} // Offset:0xC13
+(emit (+ #4 (<< (& #C0000000 (+ #BD6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #BD6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xC14
+(emit (+ #20 (<< (& #1F00 (+ #BD6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xC15
+(emit (& #FF (+ #BD6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xC16
+(emit (+ #80 (<< (& #3F000000 (+ #BD6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xC17
+(emit (<< (& #FF0000 (+ #BD6 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xC18
+{1392C947D5C743925A9790C0EA394A97117C9FC2D4A68439D4A994C0F9C5803523E73750E8EE290F804D3600A10092BFEEEF3600A100D121EE61841532} // Offset:0xC55
+(emit (+ #4 (<< (& #C0000000 (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xC56
+(emit (+ #20 (<< (& #1F00 (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xC57
+(emit (& #FF (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xC58
+(emit (+ #80 (<< (& #3F000000 (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xC59
+(emit (<< (& #FF0000 (+ #310 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xC5A
+{3480A000979E20E47456919F27E99FE0E7E994C09E219F2194C0962197219F7100000000000094C09620972094C09E209F2096C0EFE9270D802094C0E7EDEEE8167C9FC767692518819CD3222518816AD32125188164D3302518815ED731845598C0D734C49227ED9FF096C06F96E9EE804998C0321920008EA2F74494C0FD42F24132} // Offset:0xCDD
+(emit (+ #4 (<< (& #C0000000 (sym "_SendMsgAndParms")) #FFFFFFE5) (<< (& #E000 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0xCDE
+(emit (+ #20 (<< (& #1F00 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0xCDF
+(emit (& #FF (sym "_SendMsgAndParms"))) // Offset:0xCE0
+(emit (+ #80 (<< (& #3F000000 (sym "_SendMsgAndParms")) #FFFFFFE8))) // Offset:0xCE1
+(emit (<< (& #FF0000 (sym "_SendMsgAndParms")) #FFFFFFF0)) // Offset:0xCE2
+{E8EF9AC03F02800B67602F0A804ED33490C098C62418814890C0C18A92C2919A98C0929A31} // Offset:0xD07
+(emit (+ #4 (<< (& #C0000000 (+ #DAC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #DAC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xD08
+(emit (+ #20 (<< (& #1F00 (+ #DAC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xD09
+(emit (& #FF (+ #DAC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xD0A
+(emit (+ #80 (<< (& #3F000000 (+ #DAC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xD0B
+(emit (<< (& #FF0000 (+ #DAC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xD0C
+{98C02F0B804FD731C0FF96C095FB2518812894C0D727ECEBEC6194C1C783C48898C16CBF92FC92FC6D9692C2764396C666E83901800594C07661802F96C07262E9EFE8EE94C0CB4F803132} // Offset:0xD57
+(emit (+ #4 (<< (& #C0000000 (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xD58
+(emit (+ #20 (<< (& #1F00 (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xD59
+(emit (& #FF (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xD5A
+(emit (+ #80 (<< (& #3F000000 (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xD5B
+(emit (<< (& #FF0000 (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xD5C
+{96C0919C047C9FFF9AC06760CB4731} // Offset:0xD6B
+(emit (+ #4 (<< (& #C0000000 (+ #CF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #CF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xD6C
+(emit (+ #20 (<< (& #1F00 (+ #CF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xD6D
+(emit (& #FF (+ #CF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xD6E
+(emit (+ #80 (<< (& #3F000000 (+ #CF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xD6F
+(emit (<< (& #FF0000 (+ #CF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xD70
+{96C07561EAEBC0FF3165EA6184C3919A94C0EB62E9EF94C094BBE8EE2669CB4F841533} // Offset:0xD93
+(emit (+ #4 (<< (& #C0000000 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xD94
+(emit (+ #20 (<< (& #1F00 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xD95
+(emit (& #FF (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xD96
+(emit (+ #80 (<< (& #3F000000 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xD97
+(emit (<< (& #FF0000 (+ #340 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xD98
+{96C06760CB47C38190C0939B9CC062E6210080FFD32327EC9FE196C0848B230080FF9AC0017C9FE060E4270080FF96C09384200080FF94C09784C48596C0908427E89FE094C09584F84294C09584C08C94C09584F04194C09584E9EF94C09484E8EE918498C0918432} // Offset:0xE01
+(emit (+ #4 (<< (& #C0000000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xE02
+(emit (+ #20 (<< (& #1F00 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xE03
+(emit (& #FF (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xE04
+(emit (+ #80 (<< (& #3F000000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xE05
+(emit (<< (& #FF0000 (+ #2A0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xE06
+{919CC08C31} // Offset:0xE0B
+(emit (+ #4 (<< (& #C0000000 (+ #DAE (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #DAE (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xE0C
+(emit (+ #20 (<< (& #1F00 (+ #DAE (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xE0D
+(emit (& #FF (+ #DAE (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xE0E
+(emit (+ #80 (<< (& #3F000000 (+ #DAE (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xE0F
+(emit (<< (& #FF0000 (+ #DAE (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xE10
+{98C027ED9FECD330E9EE98C7341920008E727B6194C6FD42C78294C1F645F74532} // Offset:0xE31
+(emit (+ #4 (<< (& #C0000000 (sym "_SendMsgAndParms")) #FFFFFFE5) (<< (& #E000 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0xE32
+(emit (+ #20 (<< (& #1F00 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0xE33
+(emit (& #FF (sym "_SendMsgAndParms"))) // Offset:0xE34
+(emit (+ #80 (<< (& #3F000000 (sym "_SendMsgAndParms")) #FFFFFFE8))) // Offset:0xE35
+(emit (<< (& #FF0000 (sym "_SendMsgAndParms")) #FFFFFFF0)) // Offset:0xE36
+{94C0F441E8EF6C3027E99FE0E7E994C09E219F2194C0962197219F71000000000000000000000000000096C063E79620972094C09E209F20270B8048E7EB94C0FDDAFAD990C096C056952A0F800194C0676996BA2518844298C06769FF49290C804F9AC027EE9FE490C0251884343600A100EAECEDEC96C0EA612E0F80043880A000ED672F0B800494C0F94AF84B94C0FD4CFC4D94C0FA4EF94F3640A000F850FD5196C06C30FAC9CC8190C094C094BAE9EA96C06669C844EA4190C0EC1896C0E91C241883CAF949449694C0FA48F9CA409740933620A000FAC8F8CB90C03480A00093BA9AC0371D808090C0371A8020746D6469251883523C80A0006569371A80015597EA413A80A0007AC17D4291BA80273CE605970902A00838C155969AC07AE1DC9A30} // Offset:0xF5B
+(emit (+ #4 (<< (& #C0000000 (+ #ED8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #ED8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xF5C
+(emit (+ #20 (<< (& #1F00 (+ #ED8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xF5D
+(emit (& #FF (+ #ED8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xF5E
+(emit (+ #80 (<< (& #3F000000 (+ #ED8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xF5F
+(emit (<< (& #FF0000 (+ #ED8 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xF60
+{4596371A801E74C275E1D5AC96C0FACD2518835290C094FA666894C0F9CE802990C094F971E494C0F8CB802B96C09199037C9FFF32} // Offset:0xF95
+(emit (+ #4 (<< (& #C0000000 (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xF96
+(emit (+ #20 (<< (& #1F00 (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xF97
+(emit (& #FF (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xF98
+(emit (+ #80 (<< (& #3F000000 (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xF99
+(emit (<< (& #FF0000 (+ #370 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xF9A
+{F9CA31} // Offset:0xF9D
+(emit (+ #4 (<< (& #C0000000 (+ #F20 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #F20 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xF9E
+(emit (+ #20 (<< (& #1F00 (+ #F20 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0xF9F
+(emit (& #FF (+ #F20 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0xFA0
+(emit (+ #80 (<< (& #3F000000 (+ #F20 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0xFA1
+(emit (<< (& #FF0000 (+ #F20 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0xFA2
+{71E496C0F9CE2718831A90C0919996C0539727E99FF079C1439755967AE145961897FAC832} // Offset:0xFC7
+(emit (+ #4 (<< (& #C0000000 (sym "_IFPAlgDecodeLength")) #FFFFFFE5) (<< (& #E000 (sym "_IFPAlgDecodeLength")) #FFFFFFF8))) // Offset:0xFC8
+(emit (+ #20 (<< (& #1F00 (sym "_IFPAlgDecodeLength")) #FFFFFFF8))) // Offset:0xFC9
+(emit (& #FF (sym "_IFPAlgDecodeLength"))) // Offset:0xFCA
+(emit (+ #80 (<< (& #3F000000 (sym "_IFPAlgDecodeLength")) #FFFFFFE8))) // Offset:0xFCB
+(emit (<< (& #FF0000 (sym "_IFPAlgDecodeLength")) #FFFFFFF0)) // Offset:0xFCC
+{E81A98C06461519727EB9FEC94C0D4C0EC3C4197539631F06D1396C04296271882D894C0F3C4FC5265E996C0FDCF251882C8FAD094C0F9D1F4C83820A0005393220080F03800A800D51B90B951972469509794C0FCC880753A00A004D5A47841C840C38490C094C7E81CC1843607A0406E3995B83C00A80060E5220080F0DE82C84094C7843066E192C3D69C96C0D691C488E81C3800A0406C0C76ED94B894C0D510C08C3600A080DE026DB36661D61BDE9C3A40A80037048004C388C287049331} // Offset:0x108D
+(emit (+ #4 (<< (& #C0000000 (+ #1128 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #1128 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x108E
+(emit (+ #20 (<< (& #1F00 (+ #1128 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x108F
+(emit (& #FF (+ #1128 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x1090
+(emit (+ #80 (<< (& #3F000000 (+ #1128 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x1091
+(emit (<< (& #FF0000 (+ #1128 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1092
+{96C078C1CC41F9C896C05593200080F83C40A000D6A3D41DEC19270080F894C092BCC84196C7DD00C383C18398C7C388656190C06C2D96C76DADD518842B3A00A004D7936D85C08BE81996C0D5136DA190B83600A800DC07756A6461D41BDD1896C03B01800576EA98C03B1A8008D985419396C065693718801080A564692618814C92C3C0FF3B18800764692618813E92C3C0FF1197D4A794C078C184154197519678E141965293796842931397C94439C11493C84396C0D624200080F094C0D41CE81994C792B8C18496C7DD006C24C84392C3656194C7C088D51896C76DA06CC9843196C0C184200080F098C06C84D413E819C38C2DACD511656194C06EC992B834EDDD006561D51BDC9A36E97A443B1A80E4656984B492C3C0FF44933640A000C390C28F36ED54933A00A008D627DD05DD85559794C07AC1841545975296796142965093786840933600A80076EA52966568847692C3C0FF98C027E99FE0D6A5E8EA802D3840A000F941027C9FFA32} // Offset:0x1203
+(emit (+ #4 (<< (& #C0000000 (+ #5B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #5B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1204
+(emit (+ #20 (<< (& #1F00 (+ #5B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1205
+(emit (& #FF (+ #5B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x1206
+(emit (+ #80 (<< (& #3F000000 (+ #5B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x1207
+(emit (<< (& #FF0000 (+ #5B0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1208
+{96C0E9ED037C9FFB98C0FAD030} // Offset:0x1215
+(emit (+ #4 (<< (& #C0000000 (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1216
+(emit (+ #20 (<< (& #1F00 (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1217
+(emit (& #FF (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x1218
+(emit (+ #80 (<< (& #3F000000 (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x1219
+(emit (<< (& #FF0000 (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x121A
+{96C0FDCF27EB9FEC98C027EC9FE0D6ABE9ED94C0E8EA802F3C20A000027C9FFA90C0037C9FFB32} // Offset:0x1241
+(emit (+ #4 (<< (& #C0000000 (+ #980 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #980 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1242
+(emit (+ #20 (<< (& #1F00 (+ #980 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1243
+(emit (& #FF (+ #980 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x1244
+(emit (+ #80 (<< (& #3F000000 (+ #980 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x1245
+(emit (<< (& #FF0000 (+ #980 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1246
+{FC4198C0FAD030} // Offset:0x124D
+(emit (+ #4 (<< (& #C0000000 (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x124E
+(emit (+ #20 (<< (& #1F00 (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x124F
+(emit (& #FF (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x1250
+(emit (+ #80 (<< (& #3F000000 (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x1251
+(emit (<< (& #FF0000 (+ #11CC (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1252
+{96C0FDCF27EB9FECC0FF646894C0F8D2846194C0D7C0FCC4E84194C0EC88F8522DFF9D8F31} // Offset:0x1277
+(emit (+ #4 (<< (& #C0000000 (+ #122E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #122E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1278
+(emit (+ #20 (<< (& #1F00 (+ #122E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1279
+(emit (& #FF (+ #122E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x127A
+(emit (+ #80 (<< (& #3F000000 (+ #122E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x127B
+(emit (<< (& #FF0000 (+ #122E (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x127C
+{65699AC13718800190C03719801E3A01A10090C0EA4176C17C423883A00095BA0900A01092C37EE698C732} // Offset:0x12A7
+(emit (+ #4 (<< (& #C0000000 (+ #BF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #BF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x12A8
+(emit (+ #20 (<< (& #1F00 (+ #BF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x12A9
+(emit (& #FF (+ #BF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x12AA
+(emit (+ #80 (<< (& #3F000000 (+ #BF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x12AB
+(emit (<< (& #FF0000 (+ #BF0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x12AC
+{DE98057C9FFF96C0646A27EB9FEC92C2D7C067617B61676A2DFF9C15FDCC90C096C0479527E99FB8E7E994C09E219F2194C0962197219F7100000000000000000000000094C09620972094C09E209F209AC0270C803090C0280B804496C0E7EC2A0080501993F94794C0FB48F949290D80541495EFED2669EF3A96C05297271881A496C034CA9218EB743640A00065695E9384353480A000EEF194C0F8C7802D90C03680A000280C801434A0A0004E943480A000EE4C3480A0005E9690C09E6331} // Offset:0x136D
+(emit (+ #4 (<< (& #C0000000 (+ #143A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #143A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x136E
+(emit (+ #20 (<< (& #1F00 (+ #143A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x136F
+(emit (& #FF (+ #143A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x1370
+(emit (+ #80 (<< (& #3F000000 (+ #143A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x1371
+(emit (<< (& #FF0000 (+ #143A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1372
+{1597C48796C03ACA9218C7F8D12296C0F8C72718814A30C02B0180CB280E800496C05C962E0F8004CC4AD6422F3EDF8434D7479624E05297717F801132} // Offset:0x13AF
+(emit (+ #4 (<< (& #C0000000 (sym "_setTiNGKFault")) #FFFFFFE5) (<< (& #E000 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x13B0
+(emit (+ #20 (<< (& #1F00 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x13B1
+(emit (& #FF (sym "_setTiNGKFault"))) // Offset:0x13B2
+(emit (+ #80 (<< (& #3F000000 (sym "_setTiNGKFault")) #FFFFFFE8))) // Offset:0x13B3
+(emit (<< (& #FF0000 (sym "_setTiNGKFault")) #FFFFFFF0)) // Offset:0x13B4
+{94C0F641CD4ECD4694C0C381EF4C0395CBA21997F8C7F84A290A80441C92EDEAED3B94C095BDCDA096C03B1E8080EBEA2769EB3D94C05193804D9AC02C0B800C64E927ED9FF094C0538B803B1393F34494C0FD42F34132} // Offset:0x140B
+(emit (+ #4 (<< (& #C0000000 (+ #DD0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #DD0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x140C
+(emit (+ #20 (<< (& #1F00 (+ #DD0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x140D
+(emit (& #FF (+ #DD0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x140E
+(emit (+ #80 (<< (& #3F000000 (+ #DD0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x140F
+(emit (<< (& #FF0000 (+ #DD0 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1410
+{94C0FC4BCA4E96C06F3ECA46FCCB90C03420A000589290C03480A000E84C3480A000469094C0EA68EC4C3620A0005D92539490C03480A00050956469845325E9CA4E804D33} // Offset:0x1455
+(emit (+ #4 (<< (& #C0000000 (sym "_global_timestamp")) #FFFFFFE5) (<< (& #E000 (sym "_global_timestamp")) #FFFFFFF8))) // Offset:0x1456
+(emit (+ #20 (<< (& #1F00 (sym "_global_timestamp")) #FFFFFFF8))) // Offset:0x1457
+(emit (& #FF (sym "_global_timestamp"))) // Offset:0x1458
+(emit (+ #80 (<< (& #3F000000 (sym "_global_timestamp")) #FFFFFFE8))) // Offset:0x1459
+(emit (<< (& #FF0000 (sym "_global_timestamp")) #FFFFFFF0)) // Offset:0x145A
+{98C07C6064E0CA46C2813E80A1006E3427E99FEC646027EA9FE83660A0005F92FA42F9CA3A80A000429732192000A08394C0F146F2413A80A000409132} // Offset:0x1497
+(emit (+ #4 (<< (& #C0000000 (sym "_SendMsgAndParms")) #FFFFFFE5) (<< (& #E000 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0x1498
+(emit (+ #20 (<< (& #1F00 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0x1499
+(emit (& #FF (sym "_SendMsgAndParms"))) // Offset:0x149A
+(emit (+ #80 (<< (& #3F000000 (sym "_SendMsgAndParms")) #FFFFFFE8))) // Offset:0x149B
+(emit (<< (& #FF0000 (sym "_SendMsgAndParms")) #FFFFFFF0)) // Offset:0x149C
+{58973640A000FBC8C8A094C0F9C9F8C73420A000EB385A934A91EAF190C092C3EA4492C35C9290C092C39C63479627EE9FD0E7EE94C09E219F2194C0962197219F71000096C060E496209F2094C0E748EFE896C0E8E92300805832} // Offset:0x14F7
+(emit (+ #4 (<< (& #C0000000 (sym "_memset")) #FFFFFFE5) (<< (& #E000 (sym "_memset")) #FFFFFFF8))) // Offset:0x14F8
+(emit (+ #20 (<< (& #1F00 (sym "_memset")) #FFFFFFF8))) // Offset:0x14F9
+(emit (& #FF (sym "_memset"))) // Offset:0x14FA
+(emit (+ #80 (<< (& #3F000000 (sym "_memset")) #FFFFFFE8))) // Offset:0x14FB
+(emit (<< (& #FF0000 (sym "_memset")) #FFFFFFF0)) // Offset:0x14FC
+{94C0F341C94E96C0C9462F0880440990E76894C096219F219F710000000000000000000094C09620972094C09E209F209AC0280F801490C0270C80601A97E7EC94C0ECE9EEE896C0E8EA2A0B80441993CC4E94C0CB4FEDEB94C0E9F1ED74842D32} // Offset:0x155D
+(emit (+ #4 (<< (& #C0000000 (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x155E
+(emit (+ #20 (<< (& #1F00 (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x155F
+(emit (& #FF (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x1560
+(emit (+ #80 (<< (& #3F000000 (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x1561
+(emit (<< (& #FF0000 (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1562
+{27E99FA094C0CC46F2DF94C0F241E8EE32} // Offset:0x1573
+(emit (+ #4 (<< (& #C0000000 (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1574
+(emit (+ #20 (<< (& #1F00 (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1575
+(emit (& #FF (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x1576
+(emit (+ #80 (<< (& #3F000000 (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x1577
+(emit (<< (& #FF0000 (+ #1490 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1578
+{E9EC23E7CB4730} // Offset:0x157F
+(emit (+ #4 (<< (& #C0000000 (+ #1566 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #1566 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1580
+(emit (+ #20 (<< (& #1F00 (+ #1566 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1581
+(emit (& #FF (+ #1566 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x1582
+(emit (+ #80 (<< (& #3F000000 (+ #1566 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x1583
+(emit (<< (& #FF0000 (+ #1566 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1584
+{47931895E944149130682669B27098C038C99218ECA8CA4E843F64E994C0F8DF8457974390C092D05398439994C0EB70E9EC1D93E8EECA4EEDF194C0F1DF802D0D97F141ED505D9590C09D6398C0CA4631} // Offset:0x15D5
+(emit (+ #4 (<< (& #C0000000 (+ #155A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #155A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x15D6
+(emit (+ #20 (<< (& #1F00 (+ #155A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x15D7
+(emit (& #FF (+ #155A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x15D8
+(emit (+ #80 (<< (& #3F000000 (+ #155A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x15D9
+(emit (<< (& #FF0000 (+ #155A (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x15DA
+(emit #32) // Offset:0x15DB
+(emit (+ #4 (<< (& #C0000000 (sym "_setTiNGKFault")) #FFFFFFE5) (<< (& #E000 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x15DC
+(emit (+ #20 (<< (& #1F00 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x15DD
+(emit (& #FF (sym "_setTiNGKFault"))) // Offset:0x15DE
+(emit (+ #80 (<< (& #3F000000 (sym "_setTiNGKFault")) #FFFFFFE8))) // Offset:0x15DF
+(emit (<< (& #FF0000 (sym "_setTiNGKFault")) #FFFFFFF0)) // Offset:0x15E0
+{96C0FC41210083FACA460A97E9EE32} // Offset:0x15EF
+(emit (+ #4 (<< (& #C0000000 (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x15F0
+(emit (+ #20 (<< (& #1F00 (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x15F1
+(emit (& #FF (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x15F2
+(emit (+ #80 (<< (& #3F000000 (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x15F3
+(emit (<< (& #FF0000 (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x15F4
+{E8EA27E89FA0E7E894C09E219F2194C0962197219F7100000000000094C09E209F2096C0EFE8280B801496C05893270C8058E7EC9AC0280E804490C027E99FA850966469841B33} // Offset:0x163B
+(emit (+ #4 (<< (& #C0000000 (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x163C
+(emit (+ #20 (<< (& #1F00 (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x163D
+(emit (& #FF (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x163E
+(emit (+ #80 (<< (& #3F000000 (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x163F
+(emit (<< (& #FF0000 (+ #1450 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1640
+(emit #32) // Offset:0x1641
+(emit (+ #4 (<< (& #C0000000 (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1642
+(emit (+ #20 (<< (& #1F00 (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1643
+(emit (& #FF (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x1644
+(emit (+ #80 (<< (& #3F000000 (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x1645
+(emit (<< (& #FF0000 (+ #1580 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1646
+{E8EF21E530} // Offset:0x164B
+(emit (+ #4 (<< (& #C0000000 (+ #15CA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #15CA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x164C
+(emit (+ #20 (<< (& #1F00 (+ #15CA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x164D
+(emit (& #FF (+ #15CA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x164E
+(emit (+ #80 (<< (& #3F000000 (+ #15CA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x164F
+(emit (<< (& #FF0000 (+ #15CA (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1650
+{439632} // Offset:0x1653
+(emit (+ #4 (<< (& #C0000000 (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE5) (<< (& #E000 (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1654
+(emit (+ #20 (<< (& #1F00 (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF8))) // Offset:0x1655
+(emit (& #FF (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0")))) // Offset:0x1656
+(emit (+ #80 (<< (& #3F000000 (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFE8))) // Offset:0x1657
+(emit (<< (& #FF0000 (+ #1260 (sym ".text::@start_../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.sob_0"))) #FFFFFFF0)) // Offset:0x1658
+{E9EF27EA9FA8E7EA94C09E219F219F71}))
+(section
+".data"
+(alignment #7)
+(symtab
+(defsym "_TiNG_ftbl_ifprx" (sym ".data::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.data" (sym ".data::@start")))
+(data // Offset:0x0
+{000000000000000072706669000149108000000000000000} // Offset:0x18
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v138")) #FFFFFFE8)) // Offset:0x19
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v138")) #FFFFFFF0)) // Offset:0x1A
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v138")) #FFFFFFF8)) // Offset:0x1B
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v138"))) // Offset:0x1C
+{00000000} // Offset:0x20
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v134")) #FFFFFFE8)) // Offset:0x21
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v134")) #FFFFFFF0)) // Offset:0x22
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v134")) #FFFFFFF8)) // Offset:0x23
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v134"))) // Offset:0x24
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v135")) #FFFFFFE8)) // Offset:0x25
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v135")) #FFFFFFF0)) // Offset:0x26
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v135")) #FFFFFFF8)) // Offset:0x27
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v135"))) // Offset:0x28
+{00000050} // Offset:0x2C
+(emit (<< (& #FF000000 (sym "_RegisterOneFtbl_")) #FFFFFFE8)) // Offset:0x2D
+(emit (<< (& #FF0000 (sym "_RegisterOneFtbl_")) #FFFFFFF0)) // Offset:0x2E
+(emit (<< (& #FF00 (sym "_RegisterOneFtbl_")) #FFFFFFF8)) // Offset:0x2F
+(emit (& #FF (sym "_RegisterOneFtbl_"))) // Offset:0x30
+{00000000000000000000000000007490}))
+(section
+".rom"
+(alignment #3)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v138" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::.rom" (sym ".rom::@start"))
+(defsym "_TiNG_rtbl_ifprx" (+ #38 (sym ".rom::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v219" (+ #6C (sym ".rom::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v209" (+ #84 (sym ".rom::@start"))))
+(data // Offset:0x0
+{00008093} // Offset:0x4
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v137")) #FFFFFFE8)) // Offset:0x5
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v137")) #FFFFFFF0)) // Offset:0x6
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v137")) #FFFFFFF8)) // Offset:0x7
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v137"))) // Offset:0x8
+{0000CE53} // Offset:0xC
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v136")) #FFFFFFE8)) // Offset:0xD
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v136")) #FFFFFFF0)) // Offset:0xE
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v136")) #FFFFFFF8)) // Offset:0xF
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::v136"))) // Offset:0x10
+{00008031} // Offset:0x14
+(emit (<< (& #FF000000 (sym "_Msg_dead")) #FFFFFFE8)) // Offset:0x15
+(emit (<< (& #FF0000 (sym "_Msg_dead")) #FFFFFFF0)) // Offset:0x16
+(emit (<< (& #FF00 (sym "_Msg_dead")) #FFFFFFF8)) // Offset:0x17
+(emit (& #FF (sym "_Msg_dead"))) // Offset:0x18
+{0000E192} // Offset:0x1C
+(emit (<< (& #FF000000 (sym "_Msg_addsub")) #FFFFFFE8)) // Offset:0x1D
+(emit (<< (& #FF0000 (sym "_Msg_addsub")) #FFFFFFF0)) // Offset:0x1E
+(emit (<< (& #FF00 (sym "_Msg_addsub")) #FFFFFFF8)) // Offset:0x1F
+(emit (& #FF (sym "_Msg_addsub"))) // Offset:0x20
+{0000E092} // Offset:0x24
+(emit (<< (& #FF000000 (sym "_Msg_addsub")) #FFFFFFE8)) // Offset:0x25
+(emit (<< (& #FF0000 (sym "_Msg_addsub")) #FFFFFFF0)) // Offset:0x26
+(emit (<< (& #FF00 (sym "_Msg_addsub")) #FFFFFFF8)) // Offset:0x27
+(emit (& #FF (sym "_Msg_addsub"))) // Offset:0x28
+{0000E0A2} // Offset:0x2C
+(emit (<< (& #FF000000 (sym "_Msg_delsub")) #FFFFFFE8)) // Offset:0x2D
+(emit (<< (& #FF0000 (sym "_Msg_delsub")) #FFFFFFF0)) // Offset:0x2E
+(emit (<< (& #FF00 (sym "_Msg_delsub")) #FFFFFFF8)) // Offset:0x2F
+(emit (& #FF (sym "_Msg_delsub"))) // Offset:0x30
+{00000000} // Offset:0x34
+(emit (<< (& #FF000000 (sym "_Msg_try_subtasks")) #FFFFFFE8)) // Offset:0x35
+(emit (<< (& #FF0000 (sym "_Msg_try_subtasks")) #FFFFFFF0)) // Offset:0x36
+(emit (<< (& #FF00 (sym "_Msg_try_subtasks")) #FFFFFFF8)) // Offset:0x37
+(emit (& #FF (sym "_Msg_try_subtasks"))) // Offset:0x38
+{00000000000000017270666900000080000000010000000100000001000000000000000000000000000000000001491000007490} // Offset:0x6C
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L88")) #FFFFFFE8)) // Offset:0x6D
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L88")) #FFFFFFF0)) // Offset:0x6E
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L88")) #FFFFFFF8)) // Offset:0x6F
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L88"))) // Offset:0x70
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L88")) #FFFFFFE8)) // Offset:0x71
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L88")) #FFFFFFF0)) // Offset:0x72
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L88")) #FFFFFFF8)) // Offset:0x73
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L88"))) // Offset:0x74
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L93")) #FFFFFFE8)) // Offset:0x75
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L93")) #FFFFFFF0)) // Offset:0x76
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L93")) #FFFFFFF8)) // Offset:0x77
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L93"))) // Offset:0x78
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L99")) #FFFFFFE8)) // Offset:0x79
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L99")) #FFFFFFF0)) // Offset:0x7A
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L99")) #FFFFFFF8)) // Offset:0x7B
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L99"))) // Offset:0x7C
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L93")) #FFFFFFE8)) // Offset:0x7D
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L93")) #FFFFFFF0)) // Offset:0x7E
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L93")) #FFFFFFF8)) // Offset:0x7F
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L93"))) // Offset:0x80
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L105")) #FFFFFFE8)) // Offset:0x81
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L105")) #FFFFFFF0)) // Offset:0x82
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L105")) #FFFFFFF8)) // Offset:0x83
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L105"))) // Offset:0x84
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L68")) #FFFFFFE8)) // Offset:0x85
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L68")) #FFFFFFF0)) // Offset:0x86
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L68")) #FFFFFFF8)) // Offset:0x87
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L68"))) // Offset:0x88
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L72")) #FFFFFFE8)) // Offset:0x89
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L72")) #FFFFFFF0)) // Offset:0x8A
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L72")) #FFFFFFF8)) // Offset:0x8B
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L72"))) // Offset:0x8C
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L76")) #FFFFFFE8)) // Offset:0x8D
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L76")) #FFFFFFF0)) // Offset:0x8E
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L76")) #FFFFFFF8)) // Offset:0x8F
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L76"))) // Offset:0x90
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L65")) #FFFFFFE8)) // Offset:0x91
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L65")) #FFFFFFF0)) // Offset:0x92
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L65")) #FFFFFFF8)) // Offset:0x93
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L65"))) // Offset:0x94
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L65")) #FFFFFFE8)) // Offset:0x95
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L65")) #FFFFFFF0)) // Offset:0x96
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L65")) #FFFFFFF8)) // Offset:0x97
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/ifprx/c/ifprx.eln::L65")))))

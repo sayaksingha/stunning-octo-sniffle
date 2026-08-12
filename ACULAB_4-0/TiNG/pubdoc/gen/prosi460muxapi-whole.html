@@ -1,0 +1,317 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody I.460 Mux: API</title>
+</head>
+<body>
+<h1>Prosody I.460 Mux: API</h1>
+<p>
+The following functions are provided by the
+<a href="../prosi460muxapi.html">Prosody I.460 Mux API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr>
+	<td><a href="#sm_i460mux_create">sm_i460mux_create()</a>
+	<td>&nbsp;
+	<td>Create an I.460 Mux
+
+	<tr>
+	<td><a href="#sm_i460mux_datafeed_connect">sm_i460mux_datafeed_connect()</a>
+	<td>&nbsp;
+	<td>Connect a datafeed to an input of an I.460 MUX.
+
+	<tr>
+	<td><a href="#sm_i460mux_datafeed_disconnect">sm_i460mux_datafeed_disconnect()</a>
+	<td>&nbsp;
+	<td>Disconnect a datafeed to an I.460 MUX.
+
+	<tr>
+	<td><a href="#sm_i460mux_destroy">sm_i460mux_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy an I.460 Mux
+
+	<tr>
+	<td><a href="#sm_i460mux_get_datafeed">sm_i460mux_get_datafeed()</a>
+	<td>&nbsp;
+	<td>Get datafeed from I.460 MUX.
+
+	<tr>
+	<td><a href="#sm_i460mux_get_event">sm_i460mux_get_event()</a>
+	<td>&nbsp;
+	<td>Get an event for the I.460 mux
+
+	<tr>
+	<td><a href="#sm_i460mux_status">sm_i460mux_status()</a>
+	<td>&nbsp;
+	<td>Fetch status info on I.460 mux
+
+</table>
+<p>
+This document is also available as
+<a href="prosi460muxapi-index.html">separate pages for each function</a>.
+<hr>
+<h2><a name="sm_i460mux_create">Prosody I.460 Mux: API: sm_i460mux_create</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_i460mux_create(struct sm_i460mux_create_parms *<a href="#field-createp">createp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-createp">*createp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_i460mux_create_parms {
+	<a href="../apitype.html#type-tSMI460muxId">tSMI460muxId</a> <a href="#field-i460mux">i460mux</a>;					/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+} SM_I460MUX_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Creates an I.460 Mux.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-i460mux">i460mux</a><dd>The created mux.
+
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module on which the mux is to be created.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if no suitable output channel free<li>ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified</ul>
+<hr>
+<h2><a name="sm_i460mux_datafeed_connect">Prosody I.460 Mux: API: sm_i460mux_datafeed_connect</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_i460mux_datafeed_connect(struct sm_i460mux_datafeed_connect_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_i460mux_datafeed_connect_parms {
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-data_source">data_source</a>;				/* in */
+	<a href="../apitype.html#type-tSMI460muxId">tSMI460muxId</a> <a href="#field-i460mux">i460mux</a>;					/* in */
+	<a href="../apitype.html#type-tSMI460InputId">tSMI460InputId</a> <a href="#field-input_id">input_id</a>;				/* out */
+} SM_I460MUX_DATAFEED_CONNECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Connect a datafeed to one of the inputs of the I.460 mux.
+Up to eight datafeeds may be connected to a single I.460 mux.
+The datafeed is assumed to be carrying a datastream that has already been 
+uprated by being masked into the correct bit(s) of each octet. This can 
+be achieved by using the datatx firmware module, configured with an 
+appropriate i460_mask. It is up to the user to ensure that the masks 
+used by different datafeeds connected to the same I.460 mux do not overlap.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-data_source">data_source</a><dd>The datafeed object to be connected. 
+
+<dt><a name="field-i460mux">i460mux</a><dd>The mux to connect the datafeed to.
+
+<dt><a name="field-input_id">input_id</a><dd>The mux input to which the datafeed has been connected.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - no free inputs available</ul>
+<hr>
+<h2><a name="sm_i460mux_datafeed_disconnect">Prosody I.460 Mux: API: sm_i460mux_datafeed_disconnect</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_i460mux_datafeed_disconnect(struct sm_i460mux_datafeed_disconnect_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_i460mux_datafeed_disconnect_parms {
+	<a href="../apitype.html#type-tSMI460muxId">tSMI460muxId</a> <a href="#field-i460mux">i460mux</a>;					/* in */
+	<a href="../apitype.html#type-tSMI460InputId">tSMI460InputId</a> <a href="#field-input_id">input_id</a>;				/* in */
+} SM_I460MUX_DATAFEED_DISCONNECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Disconnect a datafeed on one of the inputs of the I.460 mux.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-i460mux">i460mux</a><dd>The mux to disconnect the datafeed from.
+
+<dt><a name="field-input_id">input_id</a><dd>The input of the mux to be disconnected.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_i460mux_destroy">Prosody I.460 Mux: API: sm_i460mux_destroy</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_i460mux_destroy(<a href="../apitype.html#type-tSMI460muxId">tSMI460muxId</a> <a href="#field-mux">mux</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-mux">mux</a>
+<dd>
+The mux to destroy. Must have been previously created by a call to
+<a href="#sm_i460mux_create">sm_i460mux_create()</a>
+.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys an I.460 Mux.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_i460mux_get_datafeed">Prosody I.460 Mux: API: sm_i460mux_get_datafeed</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_i460mux_get_datafeed(struct sm_i460mux_datafeed_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_i460mux_datafeed_parms {
+	<a href="../apitype.html#type-tSMI460muxId">tSMI460muxId</a> <a href="#field-i460mux">i460mux</a>;					/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* out */
+} SM_I460MUX_DATAFEED_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Request a datafeed identifier from an I.460 mux.
+This identifier can subsequently used in a call to 
+<a href="apifn-sm_tdmtx_datafeed_connect.html">sm_tdmtx_datafeed_connect()</a>
+or
+<a href="apifn-sm_channel_datafeed_connect.html">sm_channel_datafeed_connect()</a>.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-i460mux">i460mux</a><dd>The mux from which to obtain a datafeed.
+
+<dt><a name="field-datafeed">datafeed</a><dd>The datafeed object associated with the I.460 mux.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_i460mux_get_event">Prosody I.460 Mux: API: sm_i460mux_get_event</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_i460mux_get_event(struct sm_i460mux_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_i460mux_event_parms {
+	<a href="../apitype.html#type-tSMI460muxId">tSMI460muxId</a> <a href="#field-i460mux">i460mux</a>;					/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_I460MUX_EVENT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+The event will be signalled when a status change occurs on the mux.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-i460mux">i460mux</a><dd>The mux.
+
+<dt><a name="field-event">event</a><dd>The event identifier
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_i460mux_status">Prosody I.460 Mux: API: sm_i460mux_status</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_i460mux_status(struct sm_i460mux_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_i460mux_status_parms {
+	<a href="../apitype.html#type-tSMI460muxId">tSMI460muxId</a> <a href="#field-i460mux">i460mux</a>;					/* in */
+	<a name="enum-kSMI460muxStatus">enum kSMI460muxStatus</a> {
+		<a href="#field-kSMI460muxStatusRunning">kSMI460muxStatusRunning</a>,
+		<a href="#field-kSMI460muxStatusStopped">kSMI460muxStatusStopped</a>,
+	} <a href="#field-status">status</a>;						/* out */
+} SM_I460MUX_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+returns the status of the I.460 mux.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-i460mux">i460mux</a><dd>The mux.
+
+<dt><a name="field-status">status</a><dd>The status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMI460muxStatusRunning">kSMI460muxStatusRunning</a>
+<dd>The mux is running
+
+<dt><a name="field-kSMI460muxStatusStopped">kSMI460muxStatusStopped</a>
+<dd>The mux is not running
+
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>These functions constitute the
+<a href="../prosi460muxapi.html">Prosody I.460 Mux API</a>.
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody Guide - how to run test programs</title>
+</head>
+<body>
+<h1>Prosody Guide - how to run test programs</h1>
+<p>
+Several test programs are provided with Prosody.
+You can look at their source code to see how
+they work, or use the <a href="trace_app.html">application tracing</a>
+facilities as they run to watch them work. They all handle options
+using a <a href="command_options.html">standard option parser</a>. This
+means that you can get them to print a brief usage summary by supplying
+an invalid option such as <code>-?</code> or <code>-help</code>.
+<p>
+Before running a test program you must have downloaded any firmware it
+requires. See
+<a href="howto_download.html">Prosody Guide - how to download firmware</a>
+for how to do this.
+<p>
+Some of the test programs provided are:
+<table border>
+<tr>
+	<th rowspan=13>Speech
+	<td><a href="test_ansplay.html">ansplay</a>
+	<td>Answer an incoming call and play from a file until
+	caller hangs up (repeating the file as necessary)
+
+<tr>
+	<td><a href="test_ansrec.html">ansrec</a>
+	<td>Answer an incoming call and record everything until the
+	caller hangs up
+
+<tr>
+	<td><a href="test_detect.html">detect</a>
+	<td>Answer an incoming call and do general detection
+
+<tr>
+	<td><a href="test_detraw.html">detraw</a>
+	<td>General detection on a local timeslot
+
+<tr>
+	<td><a href="test_echocan.html">echocan</a>
+	<td>Test echo cancellation
+
+<tr>
+	<td><a href="test_hplaywav.html">hplaywav</a>
+	<td>Play a .WAV file to a local timeslot using the high-level
+	play API.
+
+<tr>
+	<td><a href="test_locplay.html">locplay</a>
+	<td>Play to a local timeslot
+
+<tr>
+	<td><a href="test_locrec.html">locrec</a>
+	<td>Record a local timeslot
+
+<tr>
+	<td><a href="test_pathtest/pathtest.html">pathtest</a>
+	<td>Test various combinations of functions which use datafeeds
+
+<tr>
+	<td><a href="test_rtpplay.html">rtpplay</a>
+	<td>Play to a RTP stream
+
+<tr>
+	<td><a href="test_rtprec.html">rtprec</a>
+	<td>Record a RTP stream
+
+<tr>
+	<td><a href="test_tonedet.html">tonedet</a>
+	<td>Test new tables for tone detection and call progress
+	detection
+
+<tr>
+	<td><a href="test_tonegen.html">tonegen</a>
+	<td>Test tone generation
+
+
+<tr>
+	<th rowspan=2>RTP
+	<td><a href="test_rtpplay.html">rtpplay</a>
+	<td>Play a file to a RTP stream
+
+<tr>
+	<td><a href="test_rtprec.html">rtprec</a>
+	<td>Record a RTP stream to a file
+
+
+<tr>
+	<th rowspan=3>Data
+	<td><a href="test_gdcrx.html">gdcrx</a>
+	<td>General data communications receive
+
+<tr>
+	<td><a href="test_gdctx.html">gdctx</a>
+	<td>General data communications transmit
+
+<tr>
+	<td><a href="test_polltest.html">polltest</a>
+	<td>Test digital data communications (not modems)
+
+
+<tr>
+	<th rowspan=1>Debug
+	<td><a href="test_cpumon.html">cpumon</a>
+	<td>Monitor Prosody DSP CPU usage
+
+<tr>
+	<th rowspan=4>Other
+	<td><a href="test_cndtest.html">cndtest</a>
+	<td>Exercise the
+	<a href="gen/apifn-sm_play_cnd_fsk.html">sm_play_cnd_fsk()</a>
+	function from the <a href="adsilib.html">ADSI library</a>.
+	
+<tr>
+	<td><a href="test_rtpclerk.html">rtpclerk</a>
+	<td>Co-ordinate use of RTP ports and addresses.
+
+<tr>
+	<td><a href="test_vmwitest.html">vmwitest</a>
+	<td>Exercise the
+	<a href="gen/apifn-sm_play_vmwi_fsk.html">sm_play_vmwi_fsk()</a>
+	function from the <a href="adsilib.html">ADSI library</a>.
+	
+
+</table>
+<p>
+There are other test programs provided which you may be asked to run
+by the Aculab support department when analysing a problem. Although
+these are not documented here, if you are asked to use them you will
+be given full details of how to use them.
+<p>
+There are also <a href="install_diag.html">diagnostic programs</a>
+supplied, but you will only need to use these if you encounter problems
+and are asked by Aculab support to run them.
+<p>
+All of the test and diagnostic programs, have the <code>-x</code> option
+which specifies the address and key of the card to use as described in 
+<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a>.
+For example:
+<pre>
+	$ test/locplay/gen-LINUX_V6/locplay -x x:1.2.3.4/TcB5xeLl -Fa -t64:0 foo.alaw
+</pre>

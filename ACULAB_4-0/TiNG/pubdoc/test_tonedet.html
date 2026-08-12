@@ -1,0 +1,326 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: tonedet</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: tonedet</h1>
+<p>
+This is a comprehensive tone detection application. It allows all the
+tone detection parameters to be specified and is suitable for testing
+non-standard tables of tones. For testing basic tone detection, there
+are two simpler programs, <a href="test_detraw.html">detraw</a> and
+<a href="test_detect.html">detect</a>.
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have these firmware modules loaded:
+<ul>
+	<li><a href="gen/softmodindex.html#datafeed">datafeed</a> (on Prosody X only)
+	<li><a href="gen/softmodindex.html#inchan">inchan</a>
+	<li><a href="gen/softmodindex.html#td">td</a>
+</ul>
+<p>
+Run <code>tonedet</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/tonedet</span> or
+<span class="type-WINNT"> gen-WINNT_V6/tonedet</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table>
+<tr>
+	<td><code>-t</code> &lt;timeslot&gt;
+		<td>timeslot to use (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>).
+
+<tr>
+	<td><code>-x</code> &lt;modspec&gt;
+		<td>Use these Prosody processor modules, specified as
+		described in
+		<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a>
+
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/tonedet -x x:1.2.3.4/mykey -t 64:0
+</pre>
+<p>
+would start the program with timeslot 64:0 configured as the timeslot
+to listen on. It does not yet start listening - it prints a prompt
+and waits for commands to be entered. The prompt looks like this:
+<pre>
+	mx:1.2.3.4/mykey[0]
+</pre>
+<p>
+which shows the Prosody processor module is correctly selected (in this
+example, module 0 on card with address 1.2.3.4). Each line entered is one command,
+which consists of one character followed by any parameters. The commands
+are:
+<table border>
+<tr>
+	<th class=bg>Character<th class=bg>Meaning
+
+<tr>
+	<td><code>f</code> FREQ1 FREQ2
+		<td>Perform
+		<a href="gen/apifn-sm_add_input_freq_coeffs.html">sm_add_input_freq_coeffs()</a>
+		to add a new frequency to the tone table. The
+		parameters are:
+		<table border style="margin-left: 10%">
+		<tr> <th>Parameter<th>Field 
+		<tr>
+		<td>FREQ1
+		<td><a href="gen/apifn-sm_add_input_freq_coeffs.html#field-lower_limit">lower_limit</a>
+		
+		<tr>
+		<td>FREQ2
+		<td><a href="gen/apifn-sm_add_input_freq_coeffs.html#field-upper_limit">upper_limit</a>
+		
+		</table>
+		For example,
+		<pre>
+		f 679.6875 710.9375
+		</pre>
+		would add the
+		lowest frequency used by DTMF tones.
+		This command responds by printing the tone
+		<a href="gen/apifn-sm_add_input_freq_coeffs.html#field-id">id</a>
+		returned.
+	
+
+<tr>
+	<td><code>t</code> ID1+N1 ID2+N2 3RD SNR MINPWR TWIST
+		<td>Perform
+		<a href="gen/apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>
+		to add a new frequency to the tone table. The
+		parameters are:
+		<table border style="margin-left: 10%">
+		<tr> <th>Parameter<th>Field 
+		<tr>
+		<td>ID1
+		<td><a href="gen/apifn-sm_add_input_tone_set.html#field-band1_first_freq_coeffs_id">band1_first_freq_coeffs_id</a>
+		
+		<tr>
+		<td>N1
+		<td><a href="gen/apifn-sm_add_input_tone_set.html#field-band1_freq_count">band1_freq_count</a>
+		
+		<tr>
+		<td>ID2
+		<td><a href="gen/apifn-sm_add_input_tone_set.html#field-band2_first_freq_coeffs_id">band2_first_freq_coeffs_id</a>
+		
+		<tr>
+		<td>N2
+		<td><a href="gen/apifn-sm_add_input_tone_set.html#field-band2_freq_count">band2_freq_count</a>
+		
+		<tr>
+		<td>3RD
+		<td><a href="gen/apifn-sm_add_input_tone_set.html#field-req_third_peak">req_third_peak</a>
+		
+		<tr>
+		<td>SNR
+		<td><a href="gen/apifn-sm_add_input_tone_set.html#field-req_signal_to_noise_ratio">req_signal_to_noise_ratio</a>
+		
+		<tr>
+		<td>MINPWR
+		<td><a href="gen/apifn-sm_add_input_tone_set.html#field-req_minimum_power">req_minimum_power</a>
+		
+		<tr>
+		<td>TWIST
+		<td><a href="gen/apifn-sm_add_input_tone_set.html#field-req_twist_for_dual_tone">req_minimum_twist_for_dual_tone</a>
+		
+		</table>
+		For example,
+		<pre>
+		t 0+4 4+4 0.0794 0.7556 1e8 10
+		</pre>
+		would add a tone set equivalent to the prefedined DTMF
+		tone set (tone set 0). This command responds by printing
+		the tone set
+		<a href="gen/apifn-sm_add_input_tone_set.html#field-id">id</a>
+		returned.
+	
+
+<tr>
+	<td><code>j</code> TSID WHAT VAL
+		<td>Perform
+		<a href="gen/apifn-sm_adjust_input_tone_set.html">sm_adjust_input_tone_set()</a>
+		to change a tone detection setting. The
+		parameters are:
+		<table border style="margin-left: 10%">
+		<tr> <th>Parameter<th>Field 
+		<tr>
+		<td>TSID
+		<td><a href="gen/apifn-sm_adjust_input_tone_set.html#field-tone_set_id">tone_set_id</a>
+		
+		<tr>
+		<td>WHAT
+		<td><a href="gen/apifn-sm_adjust_input_tone_set.html#field-parameter_id">parameter_id</a>.
+		This value may be a symbolic name (such as
+		<code>3rdPeak</code>). The symbolic names are the names
+		that would be used in a program with the
+		<code>kAdjustToneSet*Param</code> part omitted. Alternatively,
+		this value can be specified as a number and a letter, with
+		the letter indicating whether it sets an integer
+		(<code>i</code>) or floating-point (<code>f</code>) value.
+		
+		
+		<tr>
+		<td>VAL
+		<td><a href="gen/apifn-sm_adjust_input_tone_set.html#field-parameter_value">parameter_value</a>.
+		This is interpreted as either an integer
+		or a floating-point value depending on the WHAT parameter.
+		
+		</table>
+		For example,
+		<pre>
+		j 0 3rdPeak 0.0794
+		</pre>
+		would set the
+		'third peak' value for toneset 0 to its default. This could
+		also be done numerically with <code>j 0 0f 0.0794</code>
+	
+
+<tr>
+	<td><code>r TSID</code>
+		<td>Perform
+		<a href="gen/apifn-sm_reset_input_cptones.html">sm_reset_input_cptones()</a>
+		to clear the set of call-progress tones and specify the tone
+		set for new ones.
+	
+
+<tr>
+	<td><code>c</code> TID [ FID MAX MIN ]*
+		<td>Perform
+		<a href="gen/apifn-sm_add_input_cptone.html">sm_add_input_cptone()</a>
+		to add a new call-progress tone. The TID paramter is the
+		new tone ID, and the remaining parameters specify
+		the cadence of the new tone, and are repeated for each
+		element in the tone. They are:
+		<table border style="margin-left: 10%">
+		<tr> <th>Parameter<th>Field 
+		<tr>
+		<td>FID
+		<td><a href="gen/apifn-sm_add_input_cptone.html#field-states-freq_id">freq_id</a>
+		
+		<tr>
+		<td>MIN
+		<td><a href="gen/apifn-sm_add_input_cptone.html#field-states-minimum_cadence">minimum_cadence</a>
+		
+		<tr>
+		<td>MAX
+		<td><a href="gen/apifn-sm_add_input_cptone.html#field-states-maximum_cadence">maximum_cadence</a>
+		
+		</table>
+		For example,
+		<pre>
+		c 4 1 288 512 0 128 256 1 288 512
+		</pre>
+		would add a call-progress tone the same as the predefined
+		U. K. ring tone (tone 4).
+	
+
+<tr>
+	<td><code>m MODSPEC</code>
+		<td>Select the Prosody processor module to use.
+		Subsequent commands will operate on the specified
+		module. See
+		<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a> for details.
+	
+
+<tr>
+	<td><code>l c</code>
+		<td>(letter 'l') Start listening for call progress tones.
+		Listening continue until another 'l' command or until
+		the program is terminated.
+	
+
+<tr>
+	<td><code>l</code> {<code>1</code>,<code>40</code>,<code>64</code>}[<code>EL</code>] [<code>m</code>] [<code>s</code>N]
+		<td>(letter 'l') Start listening for call progress tones.
+		Listening continue until another 'l' command or until
+		the program is terminated. The parameters control the
+		fields passed to
+		<a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a>.
+		<table border style="margin-left: 10%">
+		<tr> <th>Parameter<th>Field 
+		<tr>
+		<td><code>1</code><td>
+		<a href="gen/apifn-sm_listen_for.html#field-tone_detection_mode">tone_detection_mode</a> = kSMTone*DetectionNoMinDuration
+		
+		
+		<tr>
+		<td><code>40</code><td>
+		<a href="gen/apifn-sm_listen_for.html#field-tone_detection_mode">tone_detection_mode</a> = kSMTone*DetectionMinDuration40
+		
+		
+		<tr>
+		<td><code>64</code><td>
+		<a href="gen/apifn-sm_listen_for.html#field-tone_detection_mode">tone_detection_mode</a> = kSMTone*DetectionMinDuration64
+		
+		
+		<tr>
+		<td><code>E</code><td>
+		<a href="gen/apifn-sm_listen_for.html#field-tone_detection_mode">tone_detection_mode</a> = kSMToneEndDetection*
+		
+		
+		<tr>
+		<td><code>L</code><td>
+		<a href="gen/apifn-sm_listen_for.html#field-tone_detection_mode">tone_detection_mode</a> = kSMToneLenDetection*
+		
+		
+		<tr>
+		<td><code>m</code><td>
+		<a href="gen/apifn-sm_listen_for.html#field-map_tones_to_digits">map_tones_to_digits</a> = kSMDTMFToneSetDigitMapping
+		
+		
+		<tr>
+		<td><code>s</code>N<td>
+		<a href="gen/apifn-sm_listen_for.html#field-active_tone_set_id">active_tone_set_id</a> = N
+		
+		
+		</table>
+		For example,
+		<pre>
+		l 40E m s2
+		</pre>
+		would start listening for tones in toneset 2 with
+		minimum duration 40 mS, reporting at the end of each
+		tone and mapping the tones to digits.
+	
+
+<tr>
+	<td><code>#</code> anything<td>Do nothing. This is
+	intended for use in files of commands for comments.
+
+<tr>
+	<td><code>'</code> test<td>Print the text. This is
+	intended for use in files of commands so that it's possible
+	to tell how much of the file has been read.
+
+</table>
+
+<p>
+When it detects anything, it prints a description of what was
+detected. For example:
+<pre>
+	Digit *: 42 0
+</pre>
+<p>
+means that it detected the DTMF digit <code>*</code> and that the 
+<a href="gen/apifn-sm_get_recognised.html#field-param0">param0</a> and
+<a href="gen/apifn-sm_get_recognised.html#field-param1">param1</a> fields
+from <a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a>
+were <code>42</code> and <code>0</code> respectively.
+.
+<p>
+The source code for this program is provided (detect.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

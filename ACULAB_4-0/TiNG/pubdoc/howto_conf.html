@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody Guide - how to perform conferencing</title>
+</head>
+<body>
+<h1>Prosody Guide - how to perform conferencing</h1>
+<p>
+Conferencing is the facility which allows several people to talk to
+one another as a group even though each is connected through a
+point-to-point link. Typically, it is used to handle a group of phone
+calls, which it interconnects; however it can be used with any Prosody
+data source or destination, so you can use it, for example, to record
+the conference or to mix in background music.
+
+<h2>The basics</h2>
+<p>
+To perform conferencing you need a group of Prosody channels which are
+all allocated on the same Prosody processor. While conferences can be
+built which span multiple Prosody processors (as described in
+<a href="an-largeconf.html">Prosody application note: building large
+conferences distributed over multiple Prosody modules</a>), they are
+built from conferences on a single Prosody processor.
+<p>
+Normally, conferencing uses full-duplex channels. When using the low-level
+conferencing primitives, it is possible to handle the inputs and
+outputs separately, so you can use one of the following as an input:
+<ul>
+<li>an input channel
+<li>a full-duplex channel
+<li>a half-duplex channel not being used for output (but it
+can be performing recording)
+</ul>
+<p>
+and one of these as an output:
+<ul>
+<li>an output channel
+<li>a full-duplex channel
+<li>a half-duplex channel not being used for input (but it
+can be performing detection)
+</ul>
+<p>
+The inputs and outputs must also have been connected
+appropriately. See
+<a href="howto_datafeed.html">Prosody Guide - how to use datafeeds</a> for
+how to do this.
+<p>
+When a channel is acting as an input to a conference, it can
+simultaneously perform detection and recording. Tones which are
+detected will be suppressed as they enter the conference, which means
+that outputs from the conference may contain a short portion of the
+tone, but most of it will be eliminated. It is not possible to
+guarantee complete elimination of tones without introducing
+unacceptable delays in the signal processing. A channel which is both
+acting as a conference input and performing recording will record the
+input to the conference.
+
+<h2>Using the high-level conferencing library</h2>
+<p>
+The high-level conferencing library is intended to be very simple to
+use. Each high-level conference is a group of Prosody channels
+(which must be full-duplex channels), each of which is sent the signal
+from all the others. A conference is created with
+<a href="gen/apifn-sm_conference_create.html">sm_conference_create</a>,
+Then parties are added and removed with
+<a href="gen/apifn-sm_conference_add_party.html">sm_conference_add_party</a>
+and
+<a href="gen/apifn-sm_conference_remove_party.html">sm_conference_remove_party</a>.
+Finally, the conference is deleted with
+<a href="gen/apifn-sm_conference_delete.html">sm_conference_delete</a>.
+<p>
+<img src="gen/highconfflow.png" alt="diagram of high-level conferencing functions">
+
+<h2>Using the low-level conferencing primitives</h2>
+<p>
+The low-level conferencing primitives allow greater control over the
+way conferences are built. This is mainly because they handle input
+and output independently. For example, this allows you to implement a
+conference monitor (which can hear everyone in the conference but
+cannot be heard by anyone else), a conference background (the opposite
+of a monitor - can be heard by everyone but cannot hear anyone), and a
+conference coach (which is a party who can speak privately to one of
+the conference participants).
+<p>
+A conference output is prepared using
+<a href="gen/apifn-sm_conf_prim_start.html">sm_conf_prim_start</a>.
+When this is done, the output from the channel is the output from the
+primitive conference. Since there are no inputs yet, this will be
+silent.
+A conference input is prepared using
+<a href="gen/apifn-sm_conf_prim_attach.html">sm_conf_prim_attach</a>,
+and can then be added to a primitive conference using
+<a href="gen/apifn-sm_conf_prim_add.html">sm_conf_prim_add</a>. Many
+inputs can be added to each primitive conference. and each input can
+be added to many primitive conferences. For example, a four-party
+conference (as implemented by the high-level conferencing library)
+would have these inputs and outputs:
+<ul>
+	<li>A.in and A.out for party A
+	<li>B.in and B.out for party B
+	<li>C.in and C.out for party C
+	<li>D.in and D.out for party D
+</ul>
+<p>
+and it would need to be set up like this:
+<ul>
+	<li>add each of B.in, C.in, D.in to output A.out
+	<li>add each of A.in, C.in, D.in to output B.out
+	<li>add each of A.in, B.in, D.in to output C.out
+	<li>add each of A.in, B.in, C.in to output D.out
+</ul>
+<p>
+The diagram illustrates the functions used, but only indicates the
+order in which they are called, since a full picture of even a
+four-party conference would be too big to be useful.
+<p>
+<img src="gen/lowconfflow.png" alt="diagram of conferencing primitives">
+<p>
+See also 
+<a href="an-highlevel-conf.html">Prosody application note: adding
+features to high level conferencing library</a> and
+<a href="an-record-2way.html">Prosody application note: recording
+2-party conversations</a>.

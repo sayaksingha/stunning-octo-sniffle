@@ -1,0 +1,10 @@
+Audio coding: ITU-T Rec. G.722.1, licensed from Polycom®
+========================================================
+
+The software module "g722-1.sob" is derived from Aculab modifications to ITU-T G.722.1 source code supplied by Polycom.
+
+Aculab modifications were applied to version 1.0.
+
+Note: If you or your customer is a conference service provider you must display Polycom's Licensed Trademark in your product.
+
+For further information regarding IPR related to the ITU-T G.722.1 codec, please contact Polycom, Inc (www.polycom.com).

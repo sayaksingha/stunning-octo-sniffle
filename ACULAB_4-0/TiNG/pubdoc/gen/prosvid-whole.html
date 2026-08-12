@@ -1,0 +1,1288 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody Audio Video Format (AVF): API</title>
+</head>
+<body>
+<h1>Prosody Audio Video Format (AVF): API</h1>
+<p>
+The following functions are provided by the
+<a href="../prosvid.html">Prosody Audio Video Format (AVF) API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfplay_create">sm_avfplay_create()</a>
+	<td>D
+	<td>Create AVF player
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfplay_destroy">sm_avfplay_destroy()</a>
+	<td>D
+	<td>Destroy a previously allocated AVF player
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfplay_get_datafeed">sm_avfplay_get_datafeed()</a>
+	<td>D
+	<td>Obtain a datafeed from a AVF player
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfplay_get_event">sm_avfplay_get_event()</a>
+	<td>D
+	<td>Obtain an event for a AVF player
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfplay_put_data">sm_avfplay_put_data()</a>
+	<td>D
+	<td>Write data to a AVF player
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfplay_start">sm_avfplay_start()</a>
+	<td>D
+	<td>Starts a previously allocated AVF player
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfplay_status">sm_avfplay_status()</a>
+	<td>D
+	<td>Determine AVF player status
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfplay_stop">sm_avfplay_stop()</a>
+	<td>D
+	<td>Stops a previously started AVF player.
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfplay_sync">sm_avfplay_sync()</a>
+	<td>D
+	<td>Synchronise with another AVF player
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfrec_create">sm_avfrec_create()</a>
+	<td>D
+	<td>Create AVF recorder
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfrec_datafeed_connect">sm_avfrec_datafeed_connect()</a>
+	<td>D
+	<td>Connect a datafeed to an AVF recorder
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfrec_destroy">sm_avfrec_destroy()</a>
+	<td>D
+	<td>Destroy a previously allocated AVF recorder
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfrec_get_data">sm_avfrec_get_data()</a>
+	<td>D
+	<td>Read data from a AVF recorder
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfrec_get_event">sm_avfrec_get_event()</a>
+	<td>D
+	<td>Obtain an event for a AVF recorder
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfrec_start">sm_avfrec_start()</a>
+	<td>D
+	<td>Starts a previously allocated AVF recorder 
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfrec_status">sm_avfrec_status()</a>
+	<td>D
+	<td>Determine AVF recorder status
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfrec_stop">sm_avfrec_stop()</a>
+	<td>D
+	<td>Aborts a previously allocated AVF recorder if it is active.
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_avfrec_sync">sm_avfrec_sync()</a>
+	<td>D
+	<td>Synchronise with another AVF recorder
+
+</table>
+<p>
+Key to <strong>W</strong> column:
+<table border>
+<tr class=version-deprecated><th>D
+	<td>Deprecated
+</table>
+<p>
+This document is also available as
+<a href="prosvid-index.html">separate pages for each function</a>.
+<hr>
+<h2><a name="sm_avfplay_create">Prosody Audio Video Format (AVF): API: sm_avfplay_create</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfplay_create(struct sm_avfplay_create_parms *<a href="#field-avfcp">avfcp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-avfcp">*avfcp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfplay_create_parms {
+	<a href="../apitype.html#type-tSMAVFplayId">tSMAVFplayId</a> <a href="#field-avfplay">avfplay</a>;					/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+} SM_AVFPLAY_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Creates a player which can replay an AVF stream. An AVF player is a
+task which accepts as input an AVF stream from the host, and generates
+as output one of a number of data formats including the raw unchanged
+AVF stream and linear audio.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfplay">avfplay</a>	(Deprecated)
+<dd class=version-deprecated>The created AVF player.
+
+<dt class=version-deprecated><a name="field-module">module</a>	(Deprecated)
+<dd class=version-deprecated>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module on which the AVF player is to be created.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if no suitable output channel free<li>ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified</ul>
+<hr>
+<h2><a name="sm_avfplay_destroy">Prosody Audio Video Format (AVF): API: sm_avfplay_destroy</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfplay_destroy(<a href="../apitype.html#type-tSMAVFplayId">tSMAVFplayId</a> <a href="#field-avfplay">avfplay</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-avfplay">avfplay</a>
+<dd>
+A tSMAVFplayId that has been prevously created by a call to 
+<a href="#sm_avfplay_create">sm_avfplay_create()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys
+<a class=pref href="#field-avfplay">avfplay</a>
+invalidating the tSMAVFplayId.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_avfplay_get_datafeed">Prosody Audio Video Format (AVF): API: sm_avfplay_get_datafeed</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfplay_get_datafeed(struct sm_avfplay_datafeed_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfplay_datafeed_parms {
+	<a href="../apitype.html#type-tSMAVFplayId">tSMAVFplayId</a> <a href="#field-avfplay">avfplay</a>;					/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* out */
+} SM_AVFPLAY_DATAFEED_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Request a datafeed identifier from a AVF player. This identifer can
+subsequently be used in a call to any of the *_datafeed_connect()
+functions to connect the output from the AVF player to a destination.
+It is valid until the AVF player is destroyed. Note that the type of
+data to be output - e.g. AVF AMR-NB audio stream, linear audio stream,
+AVF H.263 video stream, etc. - is set by
+<a href="#sm_avfplay_start">sm_avfplay_start()</a>
+and that it is the application writer's responsibility to ensure that
+any task (e.g. VMP[tx]) connected to the AVF player's datafeed is
+able to process this data.
+Datafeed connections can only be made between objects allocated on the
+same <code>tSMModuleId</code>.
+<p>
+Requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfplay">avfplay</a>	(Deprecated)
+<dd class=version-deprecated>The AVF player from which to obtain a datafeed
+
+<dt class=version-deprecated><a name="field-datafeed">datafeed</a>	(Deprecated)
+<dd class=version-deprecated>The datafeed object representing the signal from the AVF player.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_avfplay_get_event">Prosody Audio Video Format (AVF): API: sm_avfplay_get_event</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfplay_get_event(struct sm_avfplay_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfplay_event_parms {
+	<a href="../apitype.html#type-tSMAVFplayId">tSMAVFplayId</a> <a href="#field-avfplay">avfplay</a>;					/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_AVFPLAY_EVENT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+If the call completes successfully 
+<a class=pref href="#field-event">event</a>
+will hold the tSMEventId belonging to 
+<a class=pref href="#field-avfplay">avfplay</a>.
+The tSMEventId is valid until the AVF player is destroyed using 
+<a href="#sm_avfplay_destroy">sm_avfplay_destroy()</a>.
+This event will be signalled when a status change occurs on the 
+AVF player. When the event is signalled the user must call 
+<a href="#sm_avfplay_status">sm_avfplay_status()</a>
+to discover the nature of the status change.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfplay">avfplay</a>	(Deprecated)
+<dd class=version-deprecated>The AVF player 
+
+<dt class=version-deprecated><a name="field-event">event</a>	(Deprecated)
+<dd class=version-deprecated>The event identifier
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_avfplay_put_data">Prosody Audio Video Format (AVF): API: sm_avfplay_put_data</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfplay_put_data(struct sm_avfplay_put_data_parms *<a href="#field-datap">datap</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datap">*datap</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfplay_put_data_parms {
+	<a href="../apitype.html#type-tSMAVFplayId">tSMAVFplayId</a> <a href="#field-avfplay">avfplay</a>;					/* in */
+	char *<a href="#field-data">data</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_length">max_length</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-done_length">done_length</a>;					/* out */
+} SM_AVFPLAY_PUT_DATA_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Attempt to write data to a AVF player. Less than the
+maximum will be written when either:
+<ul>
+<li>there is a status change which must be checked
+<li>there is insufficient space and this function has been 
+forbidden to wait.
+</ul>
+<p>
+To permit maximum system throughput, this function refuses to
+write to an AVF player whose status has changed since it was last
+checked. This allows an application to avoid checking the
+status during bulk data transfer. The application only needs
+to check the status (using
+<a href="#sm_avfplay_status">sm_avfplay_status()</a>)
+when a call to
+<a href="#sm_avfplay_put_data">sm_avfplay_put_data()</a>
+returns with
+<a class=pref href="#field-done_length">done_length</a>
+equal to zero. If a status change occurs while writing data,
+<a class=pref href="#field-done_length">done_length</a>
+may indicate that some, but not all, of the data was written.
+In this case, often the most convenient way for an application to
+react is to note how much data has been sent, and to
+try to send more. Since the new attempt will indicate that
+no data was written, it means that the application does not
+need to have different cases to handle a status change at the
+beginning of the data buffer and a status change after a
+partial write.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfplay">avfplay</a>	(Deprecated)
+<dd class=version-deprecated>The AVF player
+
+<dt class=version-deprecated><a name="field-data">data</a>	(Deprecated)
+<dd class=version-deprecated>A pointer to the data to be written.
+
+<dt class=version-deprecated><a name="field-max_length">max_length</a>	(Deprecated)
+<dd class=version-deprecated>The amount of data in the buffer.
+
+<dt class=version-deprecated><a name="field-done_length">done_length</a>	(Deprecated)
+<dd class=version-deprecated>The amount of data actually written.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_avfplay_start">Prosody Audio Video Format (AVF): API: sm_avfplay_start</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfplay_start(struct sm_avfplay_start_parms *<a href="#field-avfsp">avfsp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-avfsp">*avfsp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfplay_start_parms {
+	<a href="../apitype.html#type-tSMAVFplayId">tSMAVFplayId</a> <a href="#field-avfplay">avfplay</a>;					/* in */
+	<a name="enum-kSMAVFOutputType">enum kSMAVFOutputType</a> {
+		<a href="#field-kSMAVFOutputAVFVideo">kSMAVFOutputAVFVideo</a>,
+		<a href="#field-kSMAVFOutputAVFAudio">kSMAVFOutputAVFAudio</a>,
+		<a href="#field-kSMAVFOutputLinearAudio">kSMAVFOutputLinearAudio</a>,
+	} <a href="#field-dest_type">dest_type</a>;						/* in */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u_dest_type-audio-sampling_rate">sampling_rate</a>;			/* in */
+			<a name="enum-kSMAudioDataFormat">enum kSMAudioDataFormat</a> {
+				<a href="#field-kSMAudioDataFormatALawPCM">kSMAudioDataFormatALawPCM</a>,
+				<a href="#field-kSMAudioDataFormatULawPCM">kSMAudioDataFormatULawPCM</a>,
+				<a href="#field-kSMAudioDataFormatAMRNB">kSMAudioDataFormatAMRNB</a>,
+				<a href="#field-kSMAudioDataFormat16bit">kSMAudioDataFormat16bit</a>,
+				<a href="#field-kSMAudioDataFormat8bit">kSMAudioDataFormat8bit</a>,
+			} <a href="#field-u_dest_type-audio-src_type">src_type</a>;				/* in */
+		} <a href="#field-u_dest_type-audio">audio</a>;					/* in */
+	} <a href="#field-u_dest_type">u_dest_type</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-hbuf_size">hbuf_size</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-test_mode">test_mode</a>;					/* in */
+} SM_AVFPLAY_START_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Starts the necessary tasks on the module for playback of AVF-encapsulated
+video or audio.
+<p>
+Note that, unlike most tasks, an AVF player can output different types
+of data - e.g. AVF AMR-NB audio stream, AVF H.263 video stream, etc. -
+dependant on how it is started. It is the application writer's
+responsibility to ensure that any task (e.g. VMP[tx]) connected to the
+AVF player's datafeed is able to process this data.
+<p>
+Note: The union in in the above struct is used to allow future expansion.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfplay">avfplay</a>	(Deprecated)
+<dd class=version-deprecated>A tSMAVFplayId that has been prevously created by a call to 
+<a href="#sm_avfplay_create">sm_avfplay_create()</a>.
+
+<dt class=version-deprecated><a name="field-dest_type">dest_type</a>	(Deprecated)
+<dd class=version-deprecated>The type of data to output on the datafeed.
+
+<div class=version-deprecated>
+One of these values:
+<dl>
+<dt><a name="field-kSMAVFOutputAVFVideo">kSMAVFOutputAVFVideo</a>
+<dd>Output raw AVF-encapsulated video frames. The AVF player does not
+modify or interpret the media data within these frames.
+
+<dt><a name="field-kSMAVFOutputAVFAudio">kSMAVFOutputAVFAudio</a>
+<dd>Output raw AVF-encapsulated audio frames. The AVF player does not
+modify or interpret the media data within these frames.
+
+<dt><a name="field-kSMAVFOutputLinearAudio">kSMAVFOutputLinearAudio</a>
+<dd>Output linear audio, converting the supplied AVF-encapsulated audio
+frames' payload using the audio decoder specified in the
+<a class=pref href="#field-u_dest_type-audio-src_type">src_type</a>
+field.
+
+</dl>
+</div>
+<dt class=version-deprecated><a name="field-u_dest_type">u_dest_type</a>	(Deprecated)
+<dd class=version-deprecated>
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u_dest_type-audio">audio</a><dd>This struct is valid only if
+<a class=pref href="#field-dest_type">dest_type</a>
+is
+<a class=pref href="#field-kSMAVFOutputAVFAudio">kSMAVFOutputAVFAudio</a>
+or
+<a class=pref href="#field-kSMAVFOutputLinearAudio">kSMAVFOutputLinearAudio</a>
+
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u_dest_type-audio-sampling_rate">sampling_rate</a><dd>The output sampling rate in Hz. For example, 8000 for narrowband audio. If
+set to 0, a value of 8000 is assumed.
+
+<dt><a name="field-u_dest_type-audio-src_type">src_type</a><dd>The audio encoding of the AVF-encapsulated source data.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMAudioDataFormatALawPCM">kSMAudioDataFormatALawPCM</a>
+<dd>G.711 A-law. This uses 8 bits per sample.
+
+<dt><a name="field-kSMAudioDataFormatULawPCM">kSMAudioDataFormatULawPCM</a>
+<dd>G.711 mu-law. This uses 8 bits per sample.
+
+<dt><a name="field-kSMAudioDataFormatAMRNB">kSMAudioDataFormatAMRNB</a>
+<dd>AMR-NB. The sampling rate must be 8000Hz.
+
+<dt><a name="field-kSMAudioDataFormat16bit">kSMAudioDataFormat16bit</a>
+<dd>16-bit linear coding, where each sample is a signed value (-32768 to 32767). The first octet of each sample is the less significant one.
+
+<dt><a name="field-kSMAudioDataFormat8bit">kSMAudioDataFormat8bit</a>
+<dd>8-bit unsigned linear coding, where each sample is an unsigned value (0 to 255). This is Microsoft's 8-bit format.
+
+</dl>
+</dl>
+</div>
+</dl>
+</div>
+<dt class=version-deprecated><a name="field-hbuf_size">hbuf_size</a>	(Deprecated)
+<dd class=version-deprecated>This must be set to the desired size of the playback's buffer on the module
+in bytes. For audio replays 8192 is generally a suitable value. For video 
+replays the value depends on the video content but MUST be comfortably 
+larger than the largest AVF frame to be replayed. If set to 0, for
+<a class=pref href="#field-dest_type">dest_type</a>
+<a class=pref href="#field-kSMAVFOutputAVFAudio">kSMAVFOutputAVFAudio</a>
+the assumed size is 8192, and for
+<a class=pref href="#field-dest_type">dest_type</a>
+<a class=pref href="#field-kSMAVFOutputAVFVideo">kSMAVFOutputAVFVideo</a>
+the assumed size is 32768. This value is ignored if
+<a class=pref href="#field-dest_type">dest_type</a>
+is
+<a class=pref href="#field-kSMAVFOutputLinearAudio">kSMAVFOutputLinearAudio</a>
+and, in this case, a default buffer size is used as for regular audio playback.
+
+<dt class=version-deprecated><a name="field-test_mode">test_mode</a>	(Deprecated)
+<dd class=version-deprecated>For Aculab use only: sets the test mode. Must be set to 0 for normal operation.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_avfplay_status">Prosody Audio Video Format (AVF): API: sm_avfplay_status</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfplay_status(struct sm_avfplay_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfplay_status_parms {
+	<a href="../apitype.html#type-tSMAVFplayId">tSMAVFplayId</a> <a href="#field-avfplay">avfplay</a>;					/* in */
+	<a name="enum-kSMAVFplayStatus">enum kSMAVFplayStatus</a> {
+		<a href="#field-kSMAVFplayStatusRunning">kSMAVFplayStatusRunning</a>,
+		<a href="#field-kSMAVFplayStatusUnderrun">kSMAVFplayStatusUnderrun</a>,
+		<a href="#field-kSMAVFplayStatusCompleteData">kSMAVFplayStatusCompleteData</a>,
+		<a href="#field-kSMAVFplayStatusComplete">kSMAVFplayStatusComplete</a>,
+	} <a href="#field-status">status</a>;						/* out */
+} SM_AVFPLAY_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Returns the current status of the AVF player or an error to
+indicate that a problem occurred during start-up.
+<p>
+When the event, obtained from
+<a href="#sm_avfplay_get_event">sm_avfplay_get_event()</a>,
+is signalled the user must call this function to determine the nature
+of the status change. The change in status may indicate that an error 
+occurred whilst processing a user request or it may be notifiying the 
+user of a change to the previous state of the AVF player.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfplay">avfplay</a>	(Deprecated)
+<dd class=version-deprecated>The AVF player to interrogate
+
+<dt class=version-deprecated><a name="field-status">status</a>	(Deprecated)
+<dd class=version-deprecated>
+<div class=version-deprecated>
+One of these values:
+<dl>
+<dt><a name="field-kSMAVFplayStatusRunning">kSMAVFplayStatusRunning</a>
+<dd>Indicates that there is nothing significant to report
+
+<dt><a name="field-kSMAVFplayStatusUnderrun">kSMAVFplayStatusUnderrun</a>
+<dd>Indicates that the AVF player has failed to play data because it
+did not have the data in time.
+
+<dt><a name="field-kSMAVFplayStatusCompleteData">kSMAVFplayStatusCompleteData</a>
+<dd>Indicates that the replay job is still ongoing, all required data for 
+replay has been supplied, the replay job will complete once all module 
+buffered data has been transmitted 
+
+<dt><a name="field-kSMAVFplayStatusComplete">kSMAVFplayStatusComplete</a>
+<dd>Indicates that the replay job has completed, all module buffered data 
+has been transmitted
+
+</dl>
+</div>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources existed to create</ul>
+<hr>
+<h2><a name="sm_avfplay_stop">Prosody Audio Video Format (AVF): API: sm_avfplay_stop</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfplay_stop(struct sm_avfplay_stop_parms *<a href="#field-avfsp">avfsp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-avfsp">*avfsp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfplay_stop_parms {
+	<a href="../apitype.html#type-tSMAVFplayId">tSMAVFplayId</a> <a href="#field-avfplay">avfplay</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-immediate">immediate</a>;					/* in */
+} SM_AVFPLAY_STOP_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Stops the AVF player tasks.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfplay">avfplay</a>	(Deprecated)
+<dd class=version-deprecated>A tSMAVFplayId that has been prevously created by a call to 
+<a href="#sm_avfplay_create">sm_avfplay_create()</a>.
+
+<dt class=version-deprecated><a name="field-immediate">immediate</a>	(Deprecated)
+<dd class=version-deprecated>The type of stop to perform. Set to a non zero value to stop immediately, 
+discarding any data which has been supplied but not yet played. Otherwise, 
+the play will stop once all data supplied has been played. 
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_avfplay_sync">Prosody Audio Video Format (AVF): API: sm_avfplay_sync</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfplay_sync(struct sm_avfplay_sync_parms *<a href="#field-avfsp">avfsp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-avfsp">*avfsp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfplay_sync_parms {
+	<a href="../apitype.html#type-tSMAVFplayId">tSMAVFplayId</a> <a href="#field-avfplay">avfplay</a>;					/* in */
+	<a href="../apitype.html#type-tSMAVFplayId">tSMAVFplayId</a> <a href="#field-sync_avfplay">sync_avfplay</a>;				/* in */
+} SM_AVFPLAY_SYNC_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Ensures that all future playbacks on 
+<a class=pref href="#field-avfplay">avfplay</a>
+are synchronised with those on 
+<a class=pref href="#field-sync_avfplay">sync_avfplay</a>.
+To achieve synchronised playbacks following a call to
+<a href="#sm_avfplay_sync">sm_avfplay_sync()</a>
+,
+<a href="#sm_avfplay_start">sm_avfplay_start()</a>
+must be called on both
+<a class=pref href="#field-avfplay">avfplay</a>
+and 
+<a class=pref href="#field-sync_avfplay">sync_avfplay</a>
+. The playbacks can be started in any order. Once started, the playbacks
+will not process data until at least one full AVF frame has been put to
+both. If data is supplied to one playback before the other has started,
+that data will be buffered until the other playback has received at
+least one full AVF frame. Once the playbacks begin processing data,
+they progress as usual.
+<p>
+When two playbacks are synchronised and processing data, if one playback
+is stopped then restarted it will not re-synchronise with the running
+playback and an error will be returned. If both playbacks are stopped
+then restarted, the two playbacks will synchronise as described above.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfplay">avfplay</a>	(Deprecated)
+<dd class=version-deprecated>A tSMAVFplayId that has been prevously created by a call to 
+<a href="#sm_avfplay_create">sm_avfplay_create()</a>.
+
+<dt class=version-deprecated><a name="field-sync_avfplay">sync_avfplay</a>	(Deprecated)
+<dd class=version-deprecated>The tSMAVFplayId, that has been prevously created by a call to 
+<a href="#sm_avfplay_create">sm_avfplay_create()</a>,
+of the player with which we wish to synchronise. Or, set to 0 to un-synchronise.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_avfrec_create">Prosody Audio Video Format (AVF): API: sm_avfrec_create</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfrec_create(struct sm_avfrec_create_parms *<a href="#field-vcp">vcp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-vcp">*vcp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfrec_create_parms {
+	<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-avfrec">avfrec</a>;					/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+} SM_AVFREC_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Creates a recorder which can record an AVF stream. An AVF recorder is
+a task which accepts as input one of a number of data formats -
+including a raw AVF stream and linear audio - and generates as output
+an AVF stream to the host.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfrec">avfrec</a>	(Deprecated)
+<dd class=version-deprecated>The created AVF recorder.
+
+<dt class=version-deprecated><a name="field-module">module</a>	(Deprecated)
+<dd class=version-deprecated>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module on which the AVF recorder is to be created.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if no suitable output channel free<li>ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified</ul>
+<hr>
+<h2><a name="sm_avfrec_datafeed_connect">Prosody Audio Video Format (AVF): API: sm_avfrec_datafeed_connect</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfrec_datafeed_connect(struct sm_avfrec_datafeed_connect_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfrec_datafeed_connect_parms {
+	<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-avfrec">avfrec</a>;					/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-data_source">data_source</a>;				/* in */
+} SM_AVFREC_DATAFEED_CONNECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Connects a datafeed to a AVF recorder. The
+<a class=pref href="#field-data_source">data_source</a>
+must be a datafeed obtained from 
+<a href="apifn-sm_vmprx_get_datafeed.html">sm_vmprx_get_datafeed()</a>
+Datafeed connections can only be made between objects allocated
+on the same <code>tSMModuleId</code>.
+The AVF recorder
+<a class=pref href="#field-avfrec">avfrec</a>
+will receive any data that is generated by the output task from which 
+<a class=pref href="#field-data_source">data_source</a>
+was derived. Note that the type of data accepted as input - e.g. AVF
+AMR-NB audio stream, linear audio stream, AVF H.263 video stream, etc.
+- is set by
+<a href="#sm_avfrec_start">sm_avfrec_start()</a>
+and that it is the application writer's responsibility to ensure that
+the output task provides data of the correct type.
+<p>
+To disconnect a AVF recorder from a datafeed, specify 
+<code>kSMNullDatafeedId</code> as the tSMDatafeedId in
+<a class=pref href="#field-data_source">data_source</a>
+<p>
+Requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfrec">avfrec</a>	(Deprecated)
+<dd class=version-deprecated>The AVF recorder that will receive and process the data
+
+<dt class=version-deprecated><a name="field-data_source">data_source</a>	(Deprecated)
+<dd class=version-deprecated>The datafeed acting as a source of data for the AVF recorder
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_avfrec_destroy">Prosody Audio Video Format (AVF): API: sm_avfrec_destroy</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfrec_destroy(<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-avfrec">avfrec</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-avfrec">avfrec</a>
+<dd>
+A tSMAVFrecId that has been prevously created by a call to 
+<a href="#sm_avfrec_create">sm_avfrec_create()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys
+<a class=pref href="#field-avfrec">avfrec</a>
+invalidating the tSMAVFrecId.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_avfrec_get_data">Prosody Audio Video Format (AVF): API: sm_avfrec_get_data</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfrec_get_data(struct sm_avfrec_get_data_parms *<a href="#field-datap">datap</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datap">*datap</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfrec_get_data_parms {
+	<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-avfrec">avfrec</a>;					/* in */
+	char *<a href="#field-data">data</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_length">max_length</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-done_length">done_length</a>;					/* out */
+} SM_AVFREC_GET_DATA_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Attempt to read data from a AVF recorder. Less than the
+maximum will be read when either:
+<ul>
+<li>there is a status change which must be checked
+<li>there is no more data to read
+</ul>
+<p>
+To permit maximum system throughput, this function refuses to
+read from a AVF recorder whose status has changed since it was last
+checked. This allows an application to avoid checking the
+status during bulk data transfer. The application only needs
+to check the status when a call to
+<a href="#sm_avfrec_get_data">sm_avfrec_get_data()</a>
+returns with
+<a class=pref href="#field-done_length">done_length</a>
+equal to zero. This also ensures that status changes are
+reported at the point in the data at which they occurred,
+which may be important for some applications.
+<p>
+If an error is reported, the
+<a class=pref href="#field-done_length">done_length</a>
+field indicates the amount of data which was read before the
+error occurred.
+<p>
+Any amount of data (up to
+<a class=pref href="#field-max_length">max_length</a>)
+may be returned.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfrec">avfrec</a>	(Deprecated)
+<dd class=version-deprecated>The AVF recorder.
+
+<dt class=version-deprecated><a name="field-data">data</a>	(Deprecated)
+<dd class=version-deprecated>A pointer to the buffer into which data should be read.
+
+<dt class=version-deprecated><a name="field-max_length">max_length</a>	(Deprecated)
+<dd class=version-deprecated>The amount of space in the buffer.
+
+<dt class=version-deprecated><a name="field-done_length">done_length</a>	(Deprecated)
+<dd class=version-deprecated>The amount of data actually read.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_avfrec_get_event">Prosody Audio Video Format (AVF): API: sm_avfrec_get_event</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfrec_get_event(struct sm_avfrec_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfrec_event_parms {
+	<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-avfrec">avfrec</a>;					/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_AVFREC_EVENT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+If the call completes successfully 
+<a class=pref href="#field-event">event</a>
+will hold the tSMEventId belonging to 
+<a class=pref href="#field-avfrec">avfrec</a>.
+The tSMEventId is valid until the AVF recorder is destroyed using 
+<a href="#sm_avfrec_destroy">sm_avfrec_destroy()</a>.
+This event will be signalled when a status change occurs on the 
+AVF recorder. When the event is signalled the user must call 
+<a href="#sm_avfrec_status">sm_avfrec_status()</a>
+to discover the nature of the status change.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfrec">avfrec</a>	(Deprecated)
+<dd class=version-deprecated>The AVF recorder 
+
+<dt class=version-deprecated><a name="field-event">event</a>	(Deprecated)
+<dd class=version-deprecated>The event identifier
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_avfrec_start">Prosody Audio Video Format (AVF): API: sm_avfrec_start</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfrec_start(struct sm_avfrec_start_parms *<a href="#field-avfsp">avfsp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-avfsp">*avfsp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfrec_start_parms {
+	<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-avfrec">avfrec</a>;					/* in */
+	<a name="enum-kSMAVFInputType">enum kSMAVFInputType</a> {
+		<a href="#field-kSMAVFInputAVFVideo">kSMAVFInputAVFVideo</a>,
+		<a href="#field-kSMAVFInputAVFAudio">kSMAVFInputAVFAudio</a>,
+		<a href="#field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>,
+	} <a href="#field-src_type">src_type</a>;						/* in */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u_src_type-audio-payload_type">payload_type</a>;			/* in */
+			<a href="#enum-kSMAudioDataFormat">enum kSMAudioDataFormat</a> <a href="#field-u_src_type-audio-dest_type">dest_type</a>;	/* in */
+			union {
+				struct {
+					<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u_src_type-audio-u_dest_type-amrnb-bitrate">bitrate</a>;	/* in */
+					<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u_src_type-audio-u_dest_type-amrnb-vad_enable">vad_enable</a>;	/* in */
+				} <a href="#field-u_src_type-audio-u_dest_type-amrnb">amrnb</a>;			/* in */
+			} <a href="#field-u_src_type-audio-u_dest_type">u_dest_type</a>;				/* in */
+		} <a href="#field-u_src_type-audio">audio</a>;					/* in */
+	} <a href="#field-u_src_type">u_src_type</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-hbuf_size">hbuf_size</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-test_mode">test_mode</a>;					/* in */
+} SM_AVFREC_START_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Starts the necessary tasks on the module for record of AVF-encapsulated
+video or audio.
+<p>
+If
+<a class=pref href="#field-src_type">src_type</a>
+is set to 
+<a class=pref href="#field-kSMAVFInputAVFVideo">kSMAVFInputAVFVideo</a>
+once the AVF recorder has been started, it will not emit any AVF frames
+to the host until it has received an AVF frame containing a video
+I-Frame. This helps to ensure that when the resulting video is rendered
+- e.g. by a 3GP file player - the video starts cleanly. When recording
+both audio and video,
+<a href="#sm_avfrec_sync">sm_avfrec_sync()</a>
+can be used to help achieve lipsync even when the video AVF stream to
+the host starts some time after the audio AVF stream.
+<p>
+Note that, unlike most tasks, an AVF recorder can input different types
+of data - e.g. AVF AMR-NB audio stream, AVF H.263 video stream, etc. -
+dependant on how it is started. It is the application writer's
+responsibility to ensure that the task (e.g. VMP[rx]) to which the AVF
+rec's datafeed is connected is able to generate this data.
+<p>
+Note: The unions in in the above struct are used to allow future expansion.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfrec">avfrec</a>	(Deprecated)
+<dd class=version-deprecated>A tSMAVFrecId that has been prevously created by a call to 
+<a href="#sm_avfrec_create">sm_avfrec_create()</a>.
+
+<dt class=version-deprecated><a name="field-src_type">src_type</a>	(Deprecated)
+<dd class=version-deprecated>The type of data expected as input from the datafeed.
+
+<div class=version-deprecated>
+One of these values:
+<dl>
+<dt><a name="field-kSMAVFInputAVFVideo">kSMAVFInputAVFVideo</a>
+<dd>Expect AVF-encapsulated video frames.
+
+<dt><a name="field-kSMAVFInputAVFAudio">kSMAVFInputAVFAudio</a>
+<dd>Expect AVF-encapsulated audio frames.
+
+<dt><a name="field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>
+<dd>Expect linear audio, converting the supplied AVF-encapsulated audio frames'
+payload using the audio encoder specified in the
+<a class=pref href="#field-u_src_type-audio-dest_type">dest_type</a>
+field.
+
+</dl>
+</div>
+<dt class=version-deprecated><a name="field-u_src_type">u_src_type</a>	(Deprecated)
+<dd class=version-deprecated>
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u_src_type-audio">audio</a><dd>This struct is valid only if
+<a class=pref href="#field-src_type">src_type</a>
+is
+<a class=pref href="#field-kSMAVFInputAVFAudio">kSMAVFInputAVFAudio</a>
+or
+<a class=pref href="#field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>
+
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u_src_type-audio-payload_type">payload_type</a><dd>The payload type which should be used in the output AVF. Note that on 
+AVF replay the payload type in the AVF is ignored so, in general, the 
+value supplied here is irrelevant. However if, for instance, the resulting 
+file was to be output using a streaming server, the payload type may well 
+be used. This value is ignored unless
+<a class=pref href="#field-src_type">src_type</a>
+is
+<a class=pref href="#field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>
+as it is only in this case that the AVF frames are constructed in the tasks
+started by this function.
+
+<dt><a name="field-u_src_type-audio-dest_type">dest_type</a><dd>This specifies the type of audio to be output - i.e. the encoder to be run
+on the input linear audio. It is ignored unless
+<a class=pref href="#field-src_type">src_type</a>
+is set to
+<a class=pref href="#field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>
+
+One of these values:
+<dl>
+<dt><a name="field-kSMAudioDataFormatALawPCM">kSMAudioDataFormatALawPCM</a>
+<dd>G.711 A-law. This uses 8 bits per sample.
+
+<dt><a name="field-kSMAudioDataFormatULawPCM">kSMAudioDataFormatULawPCM</a>
+<dd>G.711 mu-law. This uses 8 bits per sample.
+
+<dt><a name="field-kSMAudioDataFormatAMRNB">kSMAudioDataFormatAMRNB</a>
+<dd>AMR-NB. The sampling rate must be 8000Hz.
+
+<dt><a name="field-kSMAudioDataFormat16bit">kSMAudioDataFormat16bit</a>
+<dd>16-bit linear coding, where each sample is a signed value (-32768 to 32767). The first octet of each sample is the less significant one.
+
+<dt><a name="field-kSMAudioDataFormat8bit">kSMAudioDataFormat8bit</a>
+<dd>8-bit unsigned linear coding, where each sample is an unsigned value (0 to 255). This is Microsoft's 8-bit format.
+
+</dl>
+<dt><a name="field-u_src_type-audio-u_dest_type">u_dest_type</a><dd>
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u_src_type-audio-u_dest_type-amrnb">amrnb</a><dd>This struct is valid only if
+<a class=pref href="#field-u_src_type-audio-dest_type">dest_type</a>
+is
+<a class=pref href="#field-kSMAudioDataFormatAMRNB">kSMAudioDataFormatAMRNB</a>
+and is ignored unless
+<a class=pref href="#field-src_type">src_type</a>
+is set to
+<a class=pref href="#field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>
+
+<div class=version-deprecated>
+
+<dl>
+<dt><a name="field-u_src_type-audio-u_dest_type-amrnb-bitrate">bitrate</a><dd>The speed to use in bits per second. It must be one of the speeds which 
+the AMR codec can encode, which are: 4750, 5150, 5900, 6700, 7400, 7950, 
+10200, and 12200. 
+
+<dt><a name="field-u_src_type-audio-u_dest_type-amrnb-vad_enable">vad_enable</a><dd>Whether to enable the Voice Activity Detector.
+
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+</div>
+<dt class=version-deprecated><a name="field-hbuf_size">hbuf_size</a>	(Deprecated)
+<dd class=version-deprecated>This must be set to the desired size of the record's buffer on the module in
+bytes. For audio records 8188 is generally a suitable value. For video
+records the value depends on the video content but MUST be comfortably larger
+than the largest AVF frame to be recorded. If set to 0, for
+<a class=pref href="#field-src_type">src_type</a>
+<a class=pref href="#field-kSMAVFInputAVFAudio">kSMAVFInputAVFAudio</a>
+the assumed size is 8188, and for
+<a class=pref href="#field-src_type">src_type</a>
+<a class=pref href="#field-kSMAVFInputAVFVideo">kSMAVFInputAVFVideo</a>
+the assumed size is 32764. This value is ignored if
+<a class=pref href="#field-src_type">src_type</a>
+is
+<a class=pref href="#field-kSMAVFInputLinearAudio">kSMAVFInputLinearAudio</a>
+and, in this case, a default buffer size is used as for regular audio
+record. Note that in order to achieve optimum memory allocation on the
+Prosody X platform, this value should generally be a power of two, minus 4.
+
+<dt class=version-deprecated><a name="field-test_mode">test_mode</a>	(Deprecated)
+<dd class=version-deprecated>For Aculab use only: sets the test mode. Must be set to 0 for normal operation.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_avfrec_status">Prosody Audio Video Format (AVF): API: sm_avfrec_status</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfrec_status(struct sm_avfrec_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfrec_status_parms {
+	<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-avfrec">avfrec</a>;					/* in */
+	<a name="enum-kSMAVFrecordStatus">enum kSMAVFrecordStatus</a> {
+		<a href="#field-kSMAVFrecordStatusRunning">kSMAVFrecordStatusRunning</a>,
+		<a href="#field-kSMAVFrecordStatusOverrun">kSMAVFrecordStatusOverrun</a>,
+		<a href="#field-kSMAVFrecordStatusCompleting">kSMAVFrecordStatusCompleting</a>,
+		<a href="#field-kSMAVFrecordStatusComplete">kSMAVFrecordStatusComplete</a>,
+	} <a href="#field-status">status</a>;						/* out */
+} SM_AVFREC_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Returns the current status of the AVF recorder or an error to
+indicate that a problem occurred during start-up.
+<p>
+When the event, obtained from
+<a href="#sm_avfrec_get_event">sm_avfrec_get_event()</a>,
+is signalled the user must call this function to determine the nature
+of the status change. The change in status may indicate that an error 
+occurred whilst processing a user request or it may be notifiying the 
+user of a change to the previous state of the AVF recorder.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfrec">avfrec</a>	(Deprecated)
+<dd class=version-deprecated>The AVF recorder to interrogate
+
+<dt class=version-deprecated><a name="field-status">status</a>	(Deprecated)
+<dd class=version-deprecated>
+<div class=version-deprecated>
+One of these values:
+<dl>
+<dt><a name="field-kSMAVFrecordStatusRunning">kSMAVFrecordStatusRunning</a>
+<dd>Indicates that there is nothing significant to report
+
+<dt><a name="field-kSMAVFrecordStatusOverrun">kSMAVFrecordStatusOverrun</a>
+<dd>Indicates that the AVF recorder has lost some data because it
+did not have enough space to store it because data was not
+collected quickly enough.
+
+<dt><a name="field-kSMAVFrecordStatusCompleting">kSMAVFrecordStatusCompleting</a>
+<dd>Indicates that the record job is still ongoing, all required data for 
+record has been supplied, the record job will complete once all module 
+buffered data has been collected 
+
+<dt><a name="field-kSMAVFrecordStatusComplete">kSMAVFrecordStatusComplete</a>
+<dd>Indicates that the record job has completed, all module buffered data has 
+been collected
+
+</dl>
+</div>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources existed to create the AVF recorder</ul>
+<hr>
+<h2><a name="sm_avfrec_stop">Prosody Audio Video Format (AVF): API: sm_avfrec_stop</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfrec_stop(struct sm_avfrec_stop_parms *<a href="#field-avfsp">avfsp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-avfsp">*avfsp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfrec_stop_parms {
+	<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-avfrec">avfrec</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-immediate">immediate</a>;					/* in */
+} SM_AVFREC_STOP_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Stop the AVF recorder task.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfrec">avfrec</a>	(Deprecated)
+<dd class=version-deprecated>A tSMAVFrecId that has been prevously created by a call to 
+<a href="#sm_avfrec_create">sm_avfrec_create()</a>.
+
+<dt class=version-deprecated><a name="field-immediate">immediate</a>	(Deprecated)
+<dd class=version-deprecated>The type of stop to perform. Set to a non zero value to stop immediately, 
+discarding any data which has been recorded but not yet collected. Otherwise, 
+the record will stop once all data recorded has been collected. 
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_avfrec_sync">Prosody Audio Video Format (AVF): API: sm_avfrec_sync</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_avfrec_sync(struct sm_avfrec_sync_parms *<a href="#field-avfsp">avfsp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-avfsp">*avfsp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfrec_sync_parms {
+	<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-avfrec">avfrec</a>;					/* in */
+	<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-sync_avfrec">sync_avfrec</a>;				/* in */
+} SM_AVFREC_SYNC_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Ensures that all future records on 
+<a class=pref href="#field-avfrec">avfrec</a>
+are synchronised with those on 
+<a class=pref href="#field-sync_avfrec">sync_avfrec</a>.
+To achieve synchronised records following a call to
+<a href="#sm_avfrec_sync">sm_avfrec_sync()</a>
+,
+<a href="#sm_avfrec_start">sm_avfrec_start()</a>
+must be called on both,
+<a class=pref href="#field-avfrec">avfrec</a>
+and
+<a class=pref href="#field-sync_avfrec">sync_avfrec</a>
+. The records can be started in any order. Once started, the records
+will not process any data until the first full AVF frame arrives at
+either. This allows their internal time references to start in step
+and, therefore,	for synchronised playback of a recorded AVF stream
+pair to be achieved. Once the records begin processing data, they
+progress as usual.
+<p>
+When two records are synchronised and processing data, if one record
+is stopped then restarted it will not re-synchronise with the running
+record and an error will be returned. If both records are stopped
+then restarted, the two records will synchronise as described above.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfrec">avfrec</a>	(Deprecated)
+<dd class=version-deprecated>A tSMAVFrecId that has been prevously created by a call to 
+<a href="#sm_avfrec_create">sm_avfrec_create()</a>.
+
+<dt class=version-deprecated><a name="field-sync_avfrec">sync_avfrec</a>	(Deprecated)
+<dd class=version-deprecated>The tSMAVFrecId, that has been prevously created by a call to 
+<a href="#sm_avfrec_create">sm_avfrec_create()</a>,
+of the recorder with which we wish to synchronise. Or, set to 0 to un-synchronise.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>These functions constitute the
+<a href="../prosvid.html">Prosody Audio Video Format (AVF) API</a>.
+</body>
+</html>

@@ -1,0 +1,10 @@
+Testlib	error.o
+Testlib	eventset.o
+Testlib	cardopen.o
+Testlib	modopen.o
+.	hrecwav.o
+Testlib	fmtcode.o
+Testlib	errcode_sm.o
+highapi	smhlib.o
+highapi	smwavlib.o
+apilib

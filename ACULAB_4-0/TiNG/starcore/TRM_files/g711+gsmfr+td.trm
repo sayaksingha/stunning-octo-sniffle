@@ -1,0 +1,8 @@
+WARNING: AUTOMATICALLY GENERATED FILE - DO NOT EDIT
+
+VERSION: 1
+DESCRIPTION: VoIP gateway supporting G.711 GSM FR DTMF
+
+Modules: datafeed gsm-fr inchan outchan passthru rtcp td tonegen vmpplc vmprx vmptx vtdet 
+
+Resources: acu+g711+gsmfr+td 60 tdm_in tdm_out

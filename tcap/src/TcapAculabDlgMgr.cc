@@ -43,12 +43,14 @@ DlgMgr::~DlgMgr ()
 // PARAMETER   : none
 // RETURN      : BOOLEAN 
 //-------------------------------------------------------------------------------
-BOOLEAN DlgMgr::ReadConfig ()
+// Ab Change: Pass lCfgFile down to ensure correct configuration reading
+BOOLEAN DlgMgr::ReadConfig (TEXT* lCfgFile)
 {
    CfgRead lCfgReadObj ("DLG_MANAGER");
    TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
 
-   if (false == lCfgReadObj.CfgInit (SS7_KER_CFG))
+   // Ab Change: Initialize config with passed lCfgFile instead of SS7_KER_CFG
+   if (false == lCfgReadObj.CfgInit (lCfgFile))
    {
       printf ("%s:\33[00;31m CfgRead object intialization failed.\33[0m\n",
             gProcessName);
@@ -61,7 +63,7 @@ BOOLEAN DlgMgr::ReadConfig ()
             lInDlgStartIdx, MIN_ACU_TCAP_SHIFT_DLG, MAX_ACU_TCAP_DLG))
    {
       sprintf (lLogText,
-            "DM: Configuration read Err for ACU_TCAP_IN_DLG_SHIFT_INDX in file kernel.cfg");
+            "DM: Configuration read Err for ACU_TCAP_IN_DLG_SHIFT_INDX in file %s",lCfgFile);
       printf ("%s:\33[00;31m %s \33[0m\n", gProcessName, lLogText);
       gLog.GenerateLog (CFG02, lLogText);
       lInDlgStartIdx = 0;
@@ -72,7 +74,7 @@ BOOLEAN DlgMgr::ReadConfig ()
             mMaxDlgSize, MIN_ACU_TCAP_DLG, MAX_ACU_TCAP_DLG))
    {
       sprintf (lLogText,
-            "DM: Configuration read Err for MAX_ACU_TCAP_DLG_SIZE in file kernel.cfg");
+            "DM: Configuration read Err for MAX_ACU_TCAP_DLG_SIZE in file %s", lCfgFile);
       printf ("%s:\33[00;31m %s \33[0m\n", gProcessName, lLogText);
       gLog.GenerateLog (CFG02, lLogText);
       lCfgReadObj.CfgDeInit ();
@@ -80,25 +82,16 @@ BOOLEAN DlgMgr::ReadConfig ()
    }
    T (gTrace, printf ("%s: MAX_ACU_TCAP_DLG_SIZE = %d\n", gProcessName, mMaxDlgSize););
 
-   lCfgReadObj.CfgDeInit ();
-
    mHalfMaxDlgSize = mMaxDlgSize / 2 + lInDlgStartIdx;
    mMaxAllocateDlgSize = mMaxDlgSize / 2 - lInDlgStartIdx;
 
-   // Reading parameter fromn ipc.cfg
-   if (false == lCfgReadObj.CfgInit (SS7_IPC_CFG))
-   {
-      printf ("%s: \33[00;31m CfgRead object intialization failed.\33[0m\n",
-            gProcessName);
-      gLog.GenerateLog (CFG01, "DM: CfgRead object initializaton failed");
-      return false;
-   }
+   // Ab Change: Removed CfgDeInit() and redundant CfgInit() since we are reading from the same file lCfgFile for IPC keys as well.
 
    if (CFG_OK != lCfgReadObj.GetConfigNum ("SEM_IN_DLG_KEY",
             mInDlgSemKey, SEM_MIN, SEM_MAX))
    {
       sprintf (lLogText,
-            "DM: Configuration read Err for SEM_IN_DLG_KEY in file ipc.cfg, exiting ...");
+            "DM: Configuration read Err for SEM_IN_DLG_KEY in file %s, exiting ...", lCfgFile);
       printf ("%s: \33[00;31m %s \33[0m \n", gProcessName, lLogText);
       gLog.GenerateLog (CFG02, lLogText);
       lCfgReadObj.CfgDeInit ();
@@ -110,7 +103,7 @@ BOOLEAN DlgMgr::ReadConfig ()
             mInDlgShmKey, SHM_MIN, SHM_MAX))
    {
       sprintf (lLogText,
-            "DM: Configuration read Err for SHM_IN_DLG_POOL_KEY in file ipc.cfg, exiting ...");
+            "DM: Configuration read Err for SHM_IN_DLG_POOL_KEY in file %s, exiting ...", lCfgFile);
       printf ("%s:\33[00;31m %s \33[0m\n", gProcessName, lLogText);
       gLog.GenerateLog (CFG02, lLogText);
       lCfgReadObj.CfgDeInit ();
@@ -122,7 +115,7 @@ BOOLEAN DlgMgr::ReadConfig ()
             mDlgMgmtQKey, SHM_MIN, SHM_MAX))
    {
       sprintf (lLogText,
-            "DM: Configuration read Err for SHM_DLG_MGMT_QUEUE_KEY in file ipc.cfg, exiting ...");
+            "DM: Configuration read Err for SHM_DLG_MGMT_QUEUE_KEY in file %s, exiting ...", lCfgFile);
       printf ("%s:\33[00;31m %s \33[0m\n", gProcessName, lLogText);
       gLog.GenerateLog (CFG02, lLogText);
       lCfgReadObj.CfgDeInit ();
@@ -141,7 +134,8 @@ BOOLEAN DlgMgr::ReadConfig ()
 // PARAMETER   : none
 // RETURN      : BOOLEAN 
 //-------------------------------------------------------------------------------
-BOOLEAN DlgMgr::Init ()
+// Ab Change: Pass lCfgFile so it can be passed to ReadConfig
+BOOLEAN DlgMgr::Init (TEXT* lCfgFile)
 {
    UINT32 lMemSize;
    int lShmIdInDlgRecordPool;
@@ -156,7 +150,8 @@ BOOLEAN DlgMgr::Init ()
       return false;
    }
 
-   if (false == this->ReadConfig ())
+   // Ab Change: Call ReadConfig with lCfgFile
+   if (false == this->ReadConfig (lCfgFile))
    {
       sprintf (lLogText, "DM: DlgMgr ReadConfig Failed");
       printf ("%s:\33[00;31m %s \33[0m\n", gProcessName, lLogText);
@@ -503,21 +498,23 @@ DlgRecord * DlgMgr::UpdateDlgInfo (unsigned int &dlgId, DlgRecord & dlgRecord)
    unsigned int lDlgId;
    TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
 
-   //   if ( dlgId > mHalfMaxDlgSize)
+   // Ab Change: Fixed bounds checking to prevent buffer overflow when an out-of-bounds dlgId is provided by the application.
+   if (dlgId == 0 || dlgId > mMaxDlgSize)
    {
-      //      TERR(gTrace, printf("%s: In UpdateDlgInfo() :Invalid dlg Id - %d\n", gProcessName, dlgId);)
-      //      return NULL;
+      char errText[MAX_LOG_TEXT_LEN + 1];
+      sprintf(errText, "DM: In UpdateDlgInfo() :Invalid dlg Id - %d (Max %d)", dlgId, mMaxDlgSize);
+      TERR(gTrace, printf("%s: %s\n", gProcessName, errText);)
+      gLog.GenerateLog(ACUTCAP156, 3, errText); // Using a valid log type, or just skip gLog
+      return NULL;
    }
+
    Lock (SEM_FOR_IN_DLG_POOL);
 
    lDlgId = dlgId;
 
-   // if(dlgId >= 1 && dlgId <= mHalfMaxDlgSize)
-   {
-      memcpy (&(mInDlgRecordPool[lDlgId]), &dlgRecord, sizeof (DlgRecord));
+   memcpy (&(mInDlgRecordPool[lDlgId]), &dlgRecord, sizeof (DlgRecord));
 
-      UnLock (SEM_FOR_IN_DLG_POOL);
-   }
+   UnLock (SEM_FOR_IN_DLG_POOL);
 
    //snprintf(lLogText, MAX_LOG_TEXT_LEN, "In UpdateDlgInfo() - Got Info For DlgId:%d StoredDlgId:%d TransPtr:%08X InvokeId:%d InsertTime:%ld Ssn:%d LocalTid:%08X LocalTidLen:%d DestTid:%08X DestTidLen:%d DlgType:%d Restarted:%d Opcode:%d SsapInstance:%d", dlgId, dlgRecord.dlgId, dlgRecord.trans, dlgRecord.invokeId, dlgRecord.insertTime, dlgRecord.ssn, dlgRecord.origTransId, dlgRecord.origTransIdLen, dlgRecord.destTransId, dlgRecord.destTransIdLen, dlgRecord.dlgType, dlgRecord.restarted, dlgRecord.opCode, dlgRecord.ssapInstance);
    sprintf (lLogText,

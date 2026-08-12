@@ -1,0 +1,5 @@
+Volume control, automatic gain control, and addition of
+a background signal. These can all be used with
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a>,
+<a href="apifn-sm_replay_adjust.html">sm_replay_adjust()</a> or
+<a href="apifn-sm_record_start.html">sm_record_start()</a>.

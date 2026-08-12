@@ -1,0 +1,14 @@
+sm_fmprx_create	iPsFMrMte1_2_SIdSI6d_
+sm_fmprx_destroy	iFMr
+sm_fmprx_get_datafeed	iPsFMrDt_
+sm_fmprx_get_event	iPsFMrEt_
+sm_fmprx_status	iPsFMre1_6_usiSId_sSIdi_siSI6d_sSI6di___
+sm_fmprx_stop	iPsFMr_
+sm_fmptx_config	iPsFMtSAdSAde1_3_Ui_
+sm_fmptx_config_ipv6	iPsFMtSA6dSA6de1_3_Ui_
+sm_fmptx_create	iPsFMtMt_
+sm_fmptx_datafeed_connect	iPsDtFMt_
+sm_fmptx_destroy	iFMt
+sm_fmptx_get_event	iPsFMtEt_
+sm_fmptx_status	iPsFMte1_2__
+sm_fmptx_stop	iPsFMt_

@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_play_tone</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_play_tone</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_play_tone(struct sm_play_tone_parms *<a href="#field-tonep">tonep</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-tonep">*tonep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_play_tone_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-duration">duration</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-wait_for_completion">wait_for_completion</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-tone_id">tone_id</a>;					/* in */
+} SM_PLAY_TONE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This call allows an application to generate a simple output tone
+specified by
+<a class=pref href="#field-tone_id">tone_id</a>
+on a given output channel
+<a class=pref href="#field-channel">channel</a>,
+either continuously or for a given duration.
+<p>
+The parameter
+<a class=pref href="#field-tone_id">tone_id</a>
+references one of the pre-loaded simple output tones, listed in
+<a href="../prospapi_outtones.html">
+Prosody speech processing: pre-loaded output tones</a>,
+or one previously defined through a call to
+<a href="apifn-sm_add_output_tone.html">sm_add_output_tone()</a>.
+<p>
+If the tone is to be output continuously (or until aborted with
+<a href="apifn-sm_play_tone_abort.html">sm_play_tone_abort()</a>),
+the parameter
+<a class=pref href="#field-duration">duration</a>
+should be set to zero. Otherwise
+<a class=pref href="#field-duration">duration</a>
+should be set to the required tone duration in milliseconds.
+<p>
+The
+<a class=pref href="#field-wait_for_completion">wait_for_completion</a>
+flag may be set by the application in which case this API call
+will not return until the tone has been completely output,
+however no other Prosody API function can be performed on the
+channel during this waiting period.
+Obviously setting this flag is not useful when the tone has been
+specified as being a continuous tone
+since there would then be no way to stop the tone.
+See the document <a href="../an-wait_for_completion.html">Prosody
+application note: waiting for completion</a> for examples of
+how to wait without blocking other functions.
+<p>
+Alternatively the application can wait to be notified by an
+event that tone generation of a given duration has completed.
+When a write event has been associated with channel (see
+<a href="apifn-sm_channel_set_event.html">sm_channel_set_event</a>),
+then the driver will notify the application with that event
+whenever it needs to invoke
+<a href="apifn-sm_play_tone_status.html">sm_play_tone_status()</a>.
+<p>
+This requires the module
+<a href="softmodindex.html#tonegen">tonegen</a>
+to have been downloaded.
+<p>
+The channel is reserved for playing the tone until the API has
+reported completion. If the
+<a class=pref href="#field-wait_for_completion">wait_for_completion</a>
+flag is set, then the API considers that completion has been
+reported when this API function returns, otherwise completion
+is reported only by
+<a href="apifn-sm_play_tone_status.html">sm_play_tone_status()</a>
+returning the status
+<a href="apifn-sm_play_tone_status.html#field-kSMPlayToneStatusComplete">
+kSMPlayToneStatusComplete</a>. In this case the
+application <strong>must</strong> call
+<a href="apifn-sm_play_tone_status.html">sm_play_tone_status()</a>
+repeatedly until it reports completion. It should use an event
+on the channel to notify it when to check the status.
+No other output activity can take place on the channel until the
+completion of the tone has been reported, Note that the event
+itself does not indicate completion of the tone. It is possible
+for the event to be signalled even if the tone has not yet
+completed, so it is essential that the application checks the
+status and continues waiting if the tone has not completed.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel on which the tone is to be generated.
+
+<dt><a name="field-duration">duration</a><dd>The duration of the tone, or the value zero to indicate a tone
+that will continue until explicitly aborted with
+<a href="apifn-sm_play_tone_abort.html">sm_play_tone_abort()</a>.
+
+<dt><a name="field-wait_for_completion">wait_for_completion</a><dd>An indicator of whether this function would return as soon
+as it has set up the generation of the tone (0), or wait
+until the end of the tone (non-zero).
+
+<dt><a name="field-tone_id">tone_id</a><dd>The tone to generate.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - unknown tone or inconsistent parameters</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

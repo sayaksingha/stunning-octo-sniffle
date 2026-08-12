@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_channel_set_event</title>
+</head>
+<body>
+<h1>Prosody generic: API: sm_channel_set_event</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_channel_set_event(struct sm_channel_set_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_channel_set_event_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-event_type">event_type</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-issue_events">issue_events</a>;					/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* in */
+} SM_CHANNEL_SET_EVENT_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This call may be used to control read/write and/or recognition
+event notification for channels.
+<p>
+Channel associated events must be allocated through a call to
+<a href="apifn-smd_ev_create.html">smd_ev_create()</a>.
+<p>
+In general an application can hibernate in an operating system
+specific way waiting for data activity on specific channels, or
+on any channel.
+<p>
+A channel may have events associated with reading data, writing
+data and recognition. The
+<a class=pref href="#field-event_type">event_type</a>
+parameter should be set to the type required as follows:
+<p>
+<table border cellpadding=5>
+<tr> <th>Type</th> <th>Associated with</th> </tr>
+<tr>
+	<td>kSMEventTypeReadData</td>
+	<td>Recording of data</td>
+</tr>
+<tr>
+	<td>kSMEventTypeWriteData</td>
+	<td>Replay of data, dial completion, tone generation</td>
+</tr>
+<tr>
+	<td>kSMEventTypeRecog</td>
+	<td>Recognition of tone, digit etc</td>
+</tr>
+</table>
+<p>
+To enable channel specific event notification for a particular
+channel, set
+<a class=pref href="#field-channel">channel</a>
+to the required channel,
+<a class=pref href="#field-issue_events">issue_events</a>
+to <code>kSMChannelSpecificEvent</code>, and
+<a class=pref href="#field-event">event</a>
+to an operating system specific event handle.
+<p>
+To specify the event to be used when waiting for
+read/write/recognition activity on any channel, set
+<a class=pref href="#field-channel">channel</a>
+to <code>kSMNullChannelId</code>,
+<a class=pref href="#field-issue_events">issue_events</a>
+to <code>kSMAnyChannelEvent</code>, and
+<a class=pref href="#field-event">event</a>
+to an operating system specific event handle. To disable further
+use of this event make the same call but with
+<a class=pref href="#field-issue_events">issue_events</a>
+set to <code>kSMChannelNoEvent</code>.
+<p>
+To enable &quot;any channel&quot; event notification for a
+particular channel, set
+<a class=pref href="#field-channel">channel</a>
+to the required channel,
+<a class=pref href="#field-issue_events">issue_events</a>
+to <code>kSMAnyChannelEvent</code>, the
+<a class=pref href="#field-event">event</a>
+parameter is not used.
+<p>
+To disable read/write/recognition event notification for a
+particular channel, set
+<a class=pref href="#field-channel">channel</a>
+to the required channel, and
+<a class=pref href="#field-issue_events">issue_events</a>
+to <code>kSMChannelNoEvent</code>.
+<p>
+By default, no events are associated with a channel.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel with which an event is to be associated.
+
+<dt><a name="field-event_type">event_type</a><dd>The type of the event to associate.
+One of these values:
+<code>kSMEventTypeReadData</code>,
+<code>kSMEventTypeWriteData</code>, or
+<code>kSMEventTypeRecog</code>.
+
+<dt><a name="field-issue_events">issue_events</a><dd>Controls the scope of events: none, one channel, or any channel.
+One of these values:
+<code>kSMChannelNoEvent</code>,
+<code>kSMChannelSpecificEventNonIdle</code>,
+<code>kSMChannelSpecificEvent</code>, or
+<code>kSMAnyChannelEvent</code>.
+
+<dt><a name="field-event">event</a><dd>The event to associate.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

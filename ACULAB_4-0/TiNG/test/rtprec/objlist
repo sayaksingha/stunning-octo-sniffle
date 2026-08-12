@@ -1,0 +1,11 @@
+Testlib	error.o
+Testlib	cardlist.o
+Testlib	modlist.o
+Testlib	eventset.o
+.	rtprec.o
+Testlib	fmtcode.o
+Testlib	errcode_sm.o
+Testlib	taistamp.o
+Testlib	rtpclerk_cli.o
+Testlib	rtprx_codec.o
+apilib

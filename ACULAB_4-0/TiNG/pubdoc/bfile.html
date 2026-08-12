@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>BFILE library</title>
+</head>
+<body>
+<h1>BFILE library</h1>
+<p>
+The BFILE library provides buffered access to open files or other
+objects which have similar semantics to files. It provides
+functionality similar to the fread() and fwrite() functions in the
+standard stdio library. Its main differences are:
+<ul>
+<li>The buffering can be applied to any object as the library provides a
+way to specify how it accesses the underlying object.
+<li>It does not use <code>errno</code>. The use of global variables
+is inappropriate for communication with libraries since it is
+inefficient (especially for multi-threaded programs).
+<li>It does not split the specification of the buffer into arbitrary
+'size' and 'number of elements', which the library has to
+multiply together, preventing compile-time optimisation, and leading
+to ambiguous return status if an item was partially read or written.
+<li>The end-of-file condition is less likely to be confused with error
+conditions.
+<li>Errors are <em>sticky</em> ensuring that they are handled.
+Every function which operates on a <code>BFILE</code> object returns
+zero to indicate success, or an errno value if an error occurs. Errors
+are also 'sticky', so a <code>BFILE</code> object which has experienced
+an error will keep returning the error code for all operations attempted
+until <a href="bfile_bferror.html">bferror()</a> is called. This
+avoids the need to continually check for errors when performing a
+sequence of small reads, writes, and seeks.
+</ul>
+
+<h2>Functions provided</h2>
+<p>
+The library can be regarded as implementing a class for general
+buffered access and two subclasses implementing buffered access for
+files specified by filename and for Windows HANDLEs.
+<p>
+Core functions in <code>bfile.c</code>:
+<ul>
+<li><a href="bfile_ctor.html">
+	bfile(), bfile_dtor() - create and destroy a BFILE</a>
+<li><a href="bfile_bfsetup.html">bfsetup() - buffered file setup</a>
+<li><a href="bfile_bfread.html">bfread() - buffered file read</a>
+<li><a href="bfile_bfseek.html">bfseek() - buffered file seek</a>
+<li><a href="bfile_bfwrite.html">bfwrite() - buffered file write</a>
+<li><a href="bfile_bfflush.html">bfflush() - buffered file flush</a>
+<li><a href="bfile_bferror.html">bferror() - buffered file error status</a>
+</ul>
+<p>
+Supplementary functions:
+<ul>
+<li><a href="bfile_bfopenhandle.html">
+	bfopenhandle() - buffered file setup for Windows HANDLEs</a>
+	in <code>bfhandle.c</code>
+<li><a href="bfile_bfopen.html">
+	bfopen() - buffered file setup for files by filename</a>
+	in <code>bfopen.c</code>
+</ul>
+
+<p>
+The <em>BFILE</em> library is distributed with
+<a href="index.html">Prosody</a> which uses it in some of its high
+level libraries.
+
+</body>
+</html>

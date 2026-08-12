@@ -1,0 +1,807 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: configuring universal tone detection</title>
+</head>
+<body>
+<h1>Prosody application note: configuring universal tone detection</h1>
+<h2>Introduction</h2>
+<p>
+This application note describes how to extend the Prosody's default tone
+detection capability. The application note
+<a href="an-dtmf-det-issues.html">DTMF Detection Issues</a> covers some
+frequent problems encountered when detecting tones.
+
+<h2>Types of Tone Detection</h2>
+<p>
+There are two types of tone detection - simple and complex. A simple
+tone is detected if the signal meets detection criteria instantaneously.
+A complex tone (such as a call progress tone) is defined as a sequence
+of simple tones, with specified cadence.
+<p>
+For both types of tone detection, the maximum range of the detection
+algorithm is 250Hz to 3406.25Hz, but the range may be further limited
+using
+<a href="gen/apifn-sm_adjust_input_tone_set.html">sm_adjust_input_tone_set()</a>.
+The two pre-loaded tonesets have default range limits as follows:
+<ul>
+<li>DTMF toneset: range 625Hz to 3406.25Hz
+<li>Call progress toneset: range 250Hz to 3406.25Hz
+</ul>
+
+<h2>Simple tones, Top-Down</h2>
+<p>
+When starting simple tone detection
+<a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a> is given an
+<code>active_tone_set_id</code>.
+<p>
+There are two default tonesets, and more tonesets can be defined using
+<a href="gen/apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>.
+<p>
+A toneset defines the set of frequencies, frequency pairing (in the
+case of dual tones) and various signal parameters, such as
+signal-to-noise ratio, which must be satisfied.
+<pre>
+typedef struct sm_input_tone_set_parms {
+	tSMModuleId	module;
+	tSM_INT	band1_first_freq_coeffs_id;
+	tSM_INT	band1_freq_count;
+	tSM_INT	band2_first_freq_coeffs_id;
+	tSM_INT	band2_freq_count;
+
+	double	req_third_peak;
+	double	req_signal_to_noise_ratio;
+	double	req_minimum_power;
+	double	req_twist_for_dual_tone;
+	tSM_INT	id;
+} SM_INPUT_TONE_SET_PARMS;
+</pre>
+<p>
+Frequencies such as <code>band1_first_freq_coeffs_id</code> are defined
+with reference to the Input Frequency Table, which specifies lower and
+upper frequency boundaries for individual tones. There is one Input
+Frequency Table. Extra coefficients (tones) can be added using
+<a href="gen/apifn-sm_add_input_freq_coeffs.html">sm_add_input_freq_coeffs()</a>.
+A band may be defined to have zero elements. This is done when a
+tone set is defined for single component tone detection. A zero length
+band2 indicates that the tones to be detected are simply the tones
+indicated by band 1 with no second frequency component.
+<p>
+Here is an illustration of how the default two tonesets relate to the
+table of frequencies.
+<p>
+<img src="gen/tonetbl.png" alt="diagram of frequency table and tonesets">
+<p>
+The default toneset 0 has four frequencies in both bands, so it
+detects all the combinations of these - the sixteen DTMF tones.
+
+<h2>Aside - DTMF Detection</h2>
+<p>
+DTMF signals each have two tones, a low tone and a high tone. There are
+four possible low tones, and four possible high tones. The digits are
+defined to use tone indexes in the following order:
+<table border>
+<tr>
+<th>DIGIT<th>low index<th>high index<th>centre frequencies Hz
+
+<tr> <td>'1'<td>0<td>0<td>697 + 1209 
+<tr> <td>'2'<td>0<td>1<td>697 + 1336 
+<tr> <td>'3'<td>0<td>2<td>697 + 1477 
+<tr> <td>'A'<td>0<td>3<td>697 + 1633 
+<tr> <td>'4'<td>1<td>0<td>770 + 1209 
+<tr> <td>'5'<td>1<td>1<td>770 + 1336 
+<tr> <td>'6'<td>1<td>2<td>770 + 1477 
+<tr> <td>'B'<td>1<td>3<td>770 + 1633 
+<tr> <td>'7'<td>2<td>0<td>852 + 1209 
+<tr> <td>'8'<td>2<td>1<td>852 + 1336 
+<tr> <td>'9'<td>2<td>2<td>852 + 1477 
+<tr> <td>'C'<td>2<td>3<td>852 + 1633 
+<tr> <td>'*'<td>3<td>0<td>941 + 1209 
+<tr> <td>'0'<td>3<td>1<td>941 + 1336 
+<tr> <td>'#'<td>3<td>2<td>941 + 1477 
+<tr> <td>'D'<td>3<td>3<td>941 + 1633 
+</table>
+<p>
+When detecting DTMF tones on Prosody, using
+<a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a>:
+<ul>
+<li>If the parameter <code>map_tones_to_digits</code> is set to
+<code>kSMDTMFToneSetDigitMapping</code>, then
+<a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a> will
+yield a type of <code>kSMRecognisedDigit</code>, and the ASCII
+representation of the digit will be held in <code>param0</code>.
+<li>If the parameter <code>map_tones_to_digits</code> is reset, then
+<a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a> will
+yield a type of <code>kSMRecognisedTone</code>, and
+<code>param0</code> and <code>param1</code> will hold
+the indexes, as in the table above.
+</ul>
+
+<h2>DTMF Detection Toneset</h2>
+<p>
+The toneset for DTMF detection specifies two bands of tones.
+<p>
+Band 1 is the set of 4 low tones, Band 2 is the set of 4 high tones. The
+tones in each band are defined with reference to the Input Frequency
+Table. Band 1 starts at tone id 0 (in the table of C2.1), Band 2 starts
+at tone id 4.
+<p>
+That is:
+<pre>
+DTMFToneSet.band1_first_freq_coeffs_id = 0; // DTMF Frequency 1 (684.5 to 709.5Hz)
+DTMFToneSet.band1_freq_count = 4;
+DTMFToneSet.band2_first_freq_coeffs_id = 4; // DTMF Frequency 5 (1188.9 to 1229.1Hz)i
+DTMFToneSet.band2_freq_count = 4;
+</pre>
+<p>
+Other parameters are explained in the description of
+<a href="gen/apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>.
+
+<h2>Call Progress Toneset</h2>
+<p>
+Call-progress detection is enabled by setting
+<code>enable_cptone_recognition</code>
+in a call to <a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a>.
+When this is enabled, the parameter <code>active_tone_set_id</code> is ignored.
+<p>
+The toneset used by default is toneset 1. This can be changed - see below.
+
+<h2>Defining a Toneset, Bottom-Up</h2>
+<p>
+As an example, we will add a tone set to detect R2 CAS Forward tones,
+defined according to ITU Q.455 as follows:
+<p>
+Any pairing of frequencies 1980, 1860, 1740, 1620, 1500, 1380 Hz.
+Frequency ranges of +/- 10Hz must be detected.
+<p>
+In order to define a toneset from scratch, we must first define
+frequency detection limits in the frequency table.
+<table border>
+<tr> <th>Centre (Hz)<th>Low cut-off (Hz)<th>High cut-off (Hz) 
+<tr> <td>1380<td>1370<td>1390 
+<tr> <td>1500<td>1490<td>1510 
+<tr> <td>1620<td>1610<td>1630 
+<tr> <td>1740<td>1730<td>1750 
+<tr> <td>1860<td>1850<td>1870 
+<tr> <td>1980<td>1970<td>1990 
+</table>
+<p>
+These frequency limits should be added to the tone frequency table as
+follows. They will each be assigned an id, which here is stored in the
+array <code>r2idx</code>:
+<pre>
+int define_r2_freqs(tSMModuleId module, int r2idx[6])
+{
+	int i, rc;
+	SM_INPUT_FREQ_COEFFS_PARMS ifcp;
+	double lowfreqs[6] = {1370, 1490, 1610, 1730, 1850, 1970 };
+	double highfreqs[6] = {1390, 1510, 1630, 1750, 1870, 1990 };
+
+	for(i=0; i<=6; i++) {
+		memset(&amp;ifcp, 0, sizeof(ifcp));
+		ifcp.module = module;
+		ifcp.lower_limit = lowfreqs[i];
+		ifcp.upper_limit = highfreqs[i];
+		rc = sm_add_input_freq_coeffs(&amp;ifcp);
+		if (rc) return rc;	// error
+		r2idx[i] = ifcp.id;
+	}
+	return rc;
+}
+</pre>
+<p>
+The R2 Toneset is then created as follows:
+<pre>
+int add_tone_set(tSMModuleId module, int r2idx[6], int *r2tone_set_id)
+{
+	SM_INPUT_TONE_SET_PARMS itsp;
+	int r2tone_set_id;
+	int rc;
+	
+	memset(&amp;itsp, 0, sizeof(itsp));
+	itsp.module = module;
+	itsp.band1_first_freq_coeffs_id = r2idx[0];
+	itsp.band1_freq_count = 6;
+	itsp.band2_first_freq_coeffs_id = r2idx[0];
+	itsp.band2_freq_count = 6;
+	
+	itsp.req_third_peak = 0.01;		// Max disturbing frequency -20dB
+	itsp.req_signal_to_noise_ratio = 0;	// None specified: rely on disturb. frequency
+	itsp.req_minimum_power = -30;		// approx -30dBm0
+	itsp.req_twist_for_dual_tone = 5.0;	// approx 7dB
+	
+	rc = sm_add_input_tone_set(&amp;itsp);
+	if (!rc) {
+		*r2tone_set_id = itsp.id;
+	}
+	return rc;
+}
+</pre>
+<p>
+Any pairing of the component frequencies is allowed, so both Band 1 and
+Band 2 start at r2idx[0], and have 6 component frequencies. The
+floating-point parameters specified are approximate, and if accurate
+detect/reject boundaries are required, the parameters must be
+empirically optimised.
+<p>
+In TiNG the above calls provide tonesets that are persistent for the
+life of the process they were called in. This is different from Prosody
+1, when the tonesets were persistent until the firmware was downloaded
+again.
+<p>
+Tones are detected per channel using
+<a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a> and
+<a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a>
+in a similar way to detection of DTMF tones, as follows:
+<pre>
+int listen_for_r2(tSMChannelId channel, int r2tone_set_id)
+{
+	SM_LISTEN_FOR_PARMS smlfp;
+	int rc;
+	
+	memset(&amp;smlfp, 0, sizeof(smlfp));
+	smlfp.channel = channel;
+	smlfp.active_tone_set_id = r2tone_set_id;
+	smlfp.tone_detection_mode = kSMToneDetectMinDuration64;
+	
+	return sm_listen_for(&amp;smlfp);
+}
+</pre>
+<p>
+Events may be set, as required, as in the example DTMF.C.
+There are 15 possible outcomes of the tone detection, corresponding to
+the 15 combinations of R2 frequencies. ITU Q.441 states that the 'value'
+of each combination of tones is as follows:
+<table border>
+<tr>
+<th>Tone pair (indexes)<th>Frequencies (Hz)<th>value
+
+<tr> <td>0 + 1<td>1380 + 1490<td>1 
+<tr> <td>0 + 2<td>1380 + 1610<td>2 
+<tr> <td>1 + 2<td>1490 + 1610<td>3 
+<tr> <td>0 + 3<td>1380 + 1730<td>4 
+<tr> <td>1 + 3<td>1490 + 1730<td>5 
+<tr> <td>2 + 3<td>1610 + 1730<td>6 
+<tr> <td>0 + 4<td>1380 + 1850<td>7 
+<tr> <td>1 + 4<td>1490 + 1850<td>8 
+<tr> <td>2 + 4<td>1610 + 1850<td>9 
+<tr> <td>3 + 4<td>1730 + 1850<td>10 
+<tr> <td>0 + 5<td>1380 + 1970<td>11 
+<tr> <td>1 + 5<td>1490 + 1970<td>12 
+<tr> <td>2 + 5<td>1610 + 1970<td>13 
+<tr> <td>3 + 5<td>1730 + 1970<td>14 
+<tr> <td>4 + 5<td>1730 + 1970<td>15 
+</table>
+<p>
+The result is obtained as follows:
+<pre>
+int get_r2_result(tSMChannelId channel, int *result)
+{
+	SM_RECOGNISED_PARMS recog;
+	int rc;
+	static int map_parms_to_value[6][6] = {	{-1,  1,  2,  4,  7, 11},
+						{ 1, -1,  3,  5,  8, 12},
+						{ 2,  3, -1,  6,  9, 13},
+						{ 4,  5,  6, -1, 10, 14},
+						{ 7,  8,  9, 10, -1, 15},
+						{11, 12, 13, 14, 15. -1}); 
+	
+	memset(&amp;recog, 0, sizeof(recog));
+	recog.channel = channel;
+	
+	rc = sm_get_recognised(&amp;recog);
+	if (!rc) {
+		*result = map_parms_to_value[recog.param0][recog.param1];
+	}
+	return rc;
+}
+</pre>
+
+<h2>Adding single tones to the default DTMF Toneset</h2>
+<p>
+As explained in an earlier section, the default DTMF toneset consists
+of two bands, each of four different sets of frequencies. In this
+section we add extra tones to the DTMF toneset, so that they can be
+detected in parallel with DTMF detection. Further, the extra tones to be
+detected are single tones, as opposed to dual tones. The two tones to be
+added in this case are Fax CNG (1100Hz) and Fax CED (2100Hz).
+<p>
+The DTMF toneset has two bands, each of four frequencies, making up 16
+tone pairs. We wish to add an extra 2 tone pairs, i.e. (1100 + 0) and
+(2100 + 0). We must therefore add two frequencies (1100 and 2100) to one
+band and a null frequency (0) to the other band. Also, we have decided
+not to detect the digits 'A' 'B' 'C' and 'D', so the 1633 frequency is
+removed from the higher band. The bands are now as follows ('L'
+symbolises DTMF low tone, 'H' symbolises DTMF high tone):
+<table border>
+<tr>
+<th>Band 1 (Hz):<td>697<td>770<td>852<td>941<td>1100<td>2100
+
+<tr>
+<th>Tone<td>L0<td>L1<td>L2<td>L3<td>CNG<td>CED
+
+</table>
+<p>
+<table border>
+<tr>
+<th>Band 2 (Hz):<td>1209<td>1336<td>1477<td>0
+
+<tr>
+<th>Tone<td>H0<td>H1<td>H2<td>CNG/CED
+
+</table>
+<p>
+First, we establish that the default pre-loaded DTMF tone frequencies
+cannot be used. This is because bands of tones must have consecutive
+IDs. That is, 1100 must come immediately after 941. Therefore, we
+must add all these tones, in the correct order, to the end of the tone
+frequency table.
+<pre> 
+int add_tone_freqs(tSMModuleId module, int *first_freq_id)
+{
+	SM_INPUT_FREQ_COEFFS_PARMS coeff;
+	int rc, i;
+	
+	static float lolimit[10] = { 679.6875f, 742.1875f, 835.9375f, 914.0625f, 990f, 
+	1880f, 1179.6875f, 1304.6875f, 1445.3125f, 0 };
+	static float hilimit[10] = { 710.9375f, 789.0625f, 867.1875f, 960.9375f, 1210f, 
+	2320f, 1242.1875f, 1367.1875f, 1507.8125f, 0 };
+	
+	for(i=0; i<10; i++) {
+		memset(&amp;coeff, 0, sizeof(coeff));
+		coeff.module = module;
+		coeff.lower_limit = lolimit[i];
+		coeff.upper_limit = hilimit[i];
+		
+		rc = sm_add_input_freq_coeffs(&amp;coeff); 
+		if (rc) return rc;
+		if (!i) {
+			*first_freq_id = coeff.id;
+		}
+	}
+	return 0;
+}
+</pre>
+<p>
+The important index to remember is that of the first tone in the series,
+here stored in <code>first_freq_id</code>. The frequency bands are then
+defined as follows. The req_* coefficients are taken from the default DTMF
+recognition toneset.
+<pre>
+int add_tone_set(tSMModuleId module, int first_freq_id, int *tone_set_id)
+{
+	SM_INPUT_TONE_SET_PARMS tone_set;
+	
+	memset(&amp;tone_set, 0, sizeof(tone_set));
+	
+	tone_set.module = module;
+	tone_set.band1_first_freq_coeffs_id = first_freq_id;
+	tone_set.band1_freq_count = 6;
+	tone_set.band2_first_freq_coeffs_id = first_freq_id+6;
+	tone_set.band2_freq_count = 4;
+	
+	tone_set.req_third_peak = 0.0794;
+	tone_set.req_signal_to_noise_ratio = 0.756;
+	tone_set.req_minimum_power = -30;
+	tone_set.req_twist_for_dual_tone = 10;
+	
+	rc = sm_add_input_tone_set(&amp;tone_set);
+	if (rc) return rc;
+	*tone_set_id = tone_set.id;
+	return 0;
+}
+</pre>
+<p>
+Recognised tones will have the following <code>param0</code> and
+<code>param1</code> values:
+<table border>
+<tr>
+<td rowspan=2>&nbsp<td colspan=7 align=center>param0
+
+<tr>
+<th>&nbsp<th>0<th>1<th>2<th>3<th>4<th>5
+
+<tr>
+<td rowspan=4>param1<th>0<td>'1'<td>'4'<td>'7'<td>'*'<td>- (a)<td>- (a)
+
+<tr>
+<th>1<td>'2'<td>'5'<td>'8'<td>'0'<td>- (a)<td>- (a)
+
+<tr>
+<th>2<td>'3'<td>'6'<td>'9'<td>'#'<td>- (a)<td>- (a)
+
+<tr>
+<th>3<td>- (b)<td>- (b)<td>- (b)<td>- (b)<td>CNG<td>CED
+
+</table>
+<p>
+The invalid combinations of <code>param0</code> and <code>param1</code>
+will occur if the following tones appear on the line:
+<ul>
+<li>(a) A fax tone plus a high-frequency DTMF component tone.
+<li>(b) A low frequency DTMF component tone on its own.
+</ul>
+<p>
+These combinations will be detected, and reported to the application,
+and should be ignored.
+<pre>
+int get_detected(tSMChannelId channel, char *result)
+{
+	SM_RECOGNISED_PARMS rp;
+	int rc;
+	static char decode_detected[6][4] = {	{ '1', '2', '3', '-' },
+						{ '4', '5', '6', '-' },
+						{ '7', '8', '9', '-' },
+						{ '*', '0', '#', '-' },
+						{ '-', '-', '-', 'N' },
+						{ '-', '-', '-', 'E' } };
+	memset(&amp;rp, 0, sizeof(rp));
+	
+	rp.channel = channel;
+	
+	rc = sm_get_recognised(&amp;rp);
+	if (rc) return rc;
+	if (rp.type == kSMRecognisedTone) {
+		if (rp.param0 &gt; 5 || rp.param1 &gt; 3) {
+			// should never happen
+		} else {
+	    		*result = decode_detected[rp.param0][rp.param1];
+		    	if (*result != '-') return 0;
+		}
+	}
+	return -1;
+}
+</pre>
+
+<h2>Tone detection signal parameters</h2>
+<p>
+There are three parameters in the tone detection table which specify
+signal properties that must be satisfied by the incoming signal. A brief
+explanation of these is given in prospapi.pdf appendix C.3, but more
+information on how to calculate these is provided below.
+<p>
+The Prosody signal processing algorithm measures six entities, and performs various comparisons in order to validate the tone, as follows:
+<ul>
+<li>Primary frequency - (F1) - dominant frequency in the signal
+<li>Secondary frequency - (F2) - second strongest frequency in the signal
+<li>Primary power - (P1) - signal energy of the dominant frequency
+<li>Secondary power - (P2) - signal energy of the secondary frequency
+<li>Total power - (P0) -the total energy in the signal
+<li>Third peak power - (P3) - signal energy at the third strongest frequency in the signal.
+</ul>
+<p>
+<code>req_minimum_power</code> is the measured energy in the two
+dominant frequencies. It is simply the value of (P1 + P2).
+<p>
+<code>req_signal_to_noise_ratio</code> is the minimum value of (P1+P2) / P0.
+<p>
+It is in fact the ratio (signal power) : (signal + noise power).
+<p>
+The scaling factor for k dB is 10<sup>k/10</sup>, 
+therefore a required SNR of 6dB would be as follows:
+<ul>
+<li>P<sub>signal</sub> = P<sub>noise</sub> * 10<sup>0.6</sup> = P<sub>noise</sub> * 3.98
+<li>P<sub>signal</sub> / (P<sub>signal</sub> + P<sub>noise</sub>) = 3.98 / 4.98 = 0.8
+</ul>
+<p>
+<code>req_twist_for_dual_tone</code> is the maximum value of P1 / P2
+<p>
+To allow a maximum twist of 9dB:
+<ul>
+<li>P1 / P2 = 10<sup>0.9</sup> = 7.94
+</ul>
+<p>
+req_third_peak is the maximum value of P3 / P2. 
+<p>
+It controls the maximum energy of an interfering frequency, and can be
+used to control harmonic distortion, or interfering signals.
+<p>
+To reject a signal with an interfering frequency 20dB below the
+secondary frequency:
+<ul>
+<li>P3 / P2 = 10<sup>-2</sup> = 0.01
+</ul>
+<p>
+Please note that if a system is required to detect to rigorous limits,
+these coefficients should be optimised empirically.
+<p>
+Note also that the toneset can be adjusted using
+<a href="gen/apifn-sm_adjust_input_tone_set.html">sm_adjust_input_tone_set()</a>. 
+In particular, the <code>MinOnTime</code> and <code>MinOffTime</code>
+can be modified only by using
+<a href="gen/apifn-sm_adjust_input_tone_set.html">sm_adjust_input_tone_set()</a>.
+
+<h2>Complex Tone Detection - Call Progress Detection</h2>
+<p>
+The term 'Call Progress Detection' refers to detection of any tone,
+which is identified by frequency and cadence - that is, the duration of
+the tones, pauses, and possibly changes of tone need to be detected.
+<p>
+Call-progress detection involves an extra level of definition above
+simple tone detection (described above). This level is the Call Progress
+Tone Table (CPTonetable). By default a set of tones is pre-loaded.
+Entries in the CPTonetable specify cadences (i.e. sequences, with
+durations) of tones that are already defined for detection in the tone
+frequency table. The subset of the frequency table to be used, and the
+signal parameters are defined in a toneset. The default toneset for
+Call-Progress detection is toneset 1.
+<p>
+That is:
+<ul>
+<li>The frequency table specifies frequency limits for detected tones.
+<li>The toneset table defines:
+<ul>
+<li>a subset of the frequency table, and 
+<li>a set of signal parameters, such as signal to noise ratio
+</ul>
+<li>The CPTonetable defines cadences, referring to the subset of tones
+defined in the toneset.
+</ul>
+<p>
+The application developer may wish to:
+<ul>
+<li>Add a new call-progress tone, based on the same set of frequencies
+(i.e. the same toneset)
+<li>Add a new call-progress tone, with a new frequency, which must be
+added to the frequency table
+<li>Switch between call-progress tone tables
+</ul>
+
+<h2>Adding a call-progress tone with existing CP frequencies</h2>
+<p>
+This is the simplest modification that can be made to the call-progress
+detection table. Here we use the example of adding UK ring tone
+(this CP tone is already loaded by default):
+<ul>
+<li>Call progress detection parameters are specified as a sequence of states. 
+<li>Each state specifies a tone index, a minimum duration and a maximum
+duration.
+<li>The tone index is specified with respect to the active call-progress
+toneset.
+<li>By default, the active call-progress toneset is toneset 1.
+</ul>
+<p>
+The default toneset 1 has the following relevant values:
+<ul>
+<li><code>band1_first_freq_coeff = 8;</code>
+<li><code>band1_freq_count = 6;</code>
+<li>Entry 8 in the tone frequency table is between 304 Hz and 555 Hz
+<li>Entry 9 in the tone frequency table is between 898 Hz and 1008 Hz
+</ul>
+<p>
+U.K. Ring tone is specified as follows (repeated):
+<table border>
+<tr>
+	<td colspan=2 rowspan=2>&nbsp<th colspan=4>frequency (Hz)
+
+<tr>
+        <td>400Hz<td>OFF<td>400Hz<td>OFF
+
+<tr>
+        <th rowspan=3>time (msec)<td>nominal<td>400<td>200<td>400<td>2000
+
+<tr>
+        <td>min<td>288<td>128<td>288<td>1472
+
+<tr>
+        <td>max<td>512<td>256<td>512<td>2496
+
+</table>
+<p>
+In the two 'ON' states, the frequency id is 1. <code>freq_id</code> is
+relative to the <code>band1_first_freq_coeff</code> of the active (in
+this case default) Toneset (toneset 1) PLUS ONE. A <code>freq_id</code>
+of 0 means silence (OFF).
+<p>
+The following code segment shows how this tone would be added. 
+<p>
+Note: Two different versions of the cadence are loaded, both with the
+same result id. This is for speed of detection - the actual ring tone
+may start in any phase of its repeated cadence, and if only one cadence
+was specified in the CP tone table, the whole of the cadence would have
+to be visited before a detection occurred.
+<p>
+The entire cadence is not specified in either table entry. This is
+because the partial cadences specified are considered sufficient to
+detect this tone, and are unique with respect to other cadences in the
+table. It is important that no cadences in the table are subsets of
+other cadences, as the subset cadence will be detected unintentionally.
+The first entry detects a little after 400 + 200 + 400 = 1000 mS, while the
+second detects a little after 400 + 2000 + 400 = 2800 mS, whereas the
+complete cadence takes 400 + 200 + 400 + 2000 = 3000 mS, which is
+significantly longer.
+<pre>
+int add_uk_ring_tone(tSMModuleId module, int uk_ring_id)
+{
+	SM_INPUT_CPTONE_PARMS cp;
+	
+	memset(&amp;cp, 0, sizeof(cp));
+	cp.module = module;
+	cp.id = uk_ring_id;
+	cp.state_count = 3;
+	cp.states[0].freq_id = 1;	// On for 400ms
+	cp.states[0].minimum_cadence = 288;
+	cp.states[0].maximum_cadence = 512;
+	cp.states[1].freq_id = 0;	// Off for 200ms
+	cp.states[1].minimum_cadence = 128;
+	cp.states[1].maximum_cadence = 256;
+	cp.states[2].freq_id = 1;	// On for 400ms
+	cp.states[2].minimum_cadence = 288;
+	cp.states[2].maximum_cadence = 512;
+
+	rc = sm_add_input_cptone(&amp;cp);
+	if (rc) return rc;
+
+	memset(&amp;cp, 0, sizeof(cp));
+	cp.module = module;
+	cp.id = uk_ring_id;
+	cp.state_count = 3;
+	cp.states[0].freq_id = 1; 	// On for 400ms
+	cp.states[0].minimum_cadence = 288;
+	cp.states[0].maximum_cadence = 512;
+	cp.states[1].freq_id = 0;	// Off for 2000ms
+	cp.states[1].minimum_cadence = 1472;
+	cp.states[1].maximum_cadence = 2496;
+	cp.states[2].freq_id = 1; 	// On for 400ms
+	cp.states[2].minimum_cadence = 288;
+	cp.states[2].maximum_cadence = 512;
+
+	rc = sm_add_input_cptone(&amp;cp);
+	if (rc) return rc;
+	return 0;
+}
+</pre>
+
+<h2>Adding a call progress tone with a new frequency</h2>
+<p>
+Addition of a new frequency to those in the call-progress frequency set
+involves three stages:
+<ol>
+<li>Add the new input frequency coefficients.
+<li>Define a toneset which includes the added input frequency coefficients
+<li>Reset call progress detection, so that the new toneset is the Call Progress toneset
+<li>Add ALL call progress tones, with parameters relative to the new toneset.
+</ol>
+<p>
+For example, given the default Call-Progress tone set, add a detector
+for the following tone (repeated):
+<table border>
+<tr>
+        <td colspan=2 rowspan=2>&nbsp<th colspan=4>frequency (Hz)
+
+<tr>
+        <td>1000Hz<td>OFF<td>3000Hz<td>OFF
+
+<tr>
+        <th rowspan=3>time (msec)<td>nominal<td>400<td>200<td>400<td>200
+
+<tr>
+        <td>min<td>288<td>128<td>288<td>128
+
+<tr>
+        <td>max<td>512<td>256<td>512<td>256
+
+</table>
+<h3>Add the new input frequency coefficients</h3>
+<p>
+Assuming 10% tolerance in frequency, add the 1000Hz and 3000Hz tones, using
+<a href="gen/apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>,
+as described above. If no other tone frequencies have been added, the
+indices for these new tones will follow from 'Fax CED'.
+
+<h3>Define a toneset which includes the added input frequency coefficients</h3>
+<p>
+The new toneset includes the default call-progress frequencies (7
+frequencies, starting at index 8), and the new tones. Therefore:
+<pre>
+    ...
+    SM_INPUT_TONE_SET_PARMS tone_set;
+    ...
+    tone_set.module = module;
+    tone_set.band1_first_freq_coeffs_id = 8;
+    tone_set.band1_freq_count = 9;
+    tone_set.band2_first_freq_coeffs_id = 0; 
+    tone_set.band2_freq_count = 0;
+    tone_set.req_third_peak = 0.1;
+    tone_set.req_signal_to_noise_ratio = 0.5;
+    tone_set.req_minimum_power = -23;
+    ...
+    rc = sm_add_input_tone_set(&amp;tone_set);
+    new_tone_set_id = tone_set.id;
+</pre>
+
+<h3>Reset call progress detection, so that the new toneset is the Call Progress toneset</h3>
+<p>
+There is always one call-progress toneset. By default, this is toneset
+1. We wish to use a different toneset, which has just been loaded. The
+index of this toneset was returned by the call to
+<a href="gen/apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>.
+<p>
+Do this using
+<a href="gen/apifn-sm_reset_input_cptones.html">sm_reset_input_cptones()</a>,
+as documented.
+
+<h3>Add ALL call progress tones, with parameters relative to the new toneset.</h3>
+<p>
+Because all of the tones in the pre-loaded call-progress table were
+defined relative to toneset 1, they are no longer valid. They must all
+be re-loaded, using
+<a href="gen/apifn-sm_add_input_cptone.html">sm_add_input_cptone()</a>, as
+described above. 
+<p>
+Finally, add the new call-progress tone as follows. Remember that the
+frequency IDs are relative to the start of the section of tone table
+used in our toneset. We are using 8..16, where 15 and 16 are the two
+new tones, so their IDs are 8 and 9.
+<pre> 
+int add_custom_tone(tSMModuleId module, int custom_id)
+{
+	SM_INPUT_CPTONE_PARMS cp;
+	
+	memset(&amp;cp, 0, sizeof(cp));
+	cp.module = module;
+	cp.id = custom_id;
+	cp.state_count = 3;
+	cp.states[0].freq_id = 8;		// 1000Hz
+	cp.states[0].minimum_cadence = 288;	// On for 400ms +/- 28%
+	cp.states[0].maximum_cadence = 512;
+	cp.states[1].freq_id = 0; // Silence
+	cp.states[1].minimum_cadence = 128;	// Off for 200ms
+	cp.states[1].maximum_cadence = 256;
+	cp.states[2].freq_id = 9;		// 3000Hz
+	cp.states[2].minimum_cadence = 288;	// On for 400ms
+	cp.states[2].maximum_cadence = 512;
+
+	rc = sm_add_input_cptone(&amp;cp);
+	if (rc) return rc;
+
+	memset(&amp;cp, 0, sizeof(cp));
+	cp.id = uk_ring_id;
+	cp.state_count = 3;
+	cp.states[0].freq_id = 9; 	
+	cp.states[0].minimum_cadence = 288;	// On for 400ms
+	cp.states[0].maximum_cadence = 512;
+	cp.states[1].freq_id = 0;	
+	cp.states[1].minimum_cadence = 128;	// Off for 2000ms
+	cp.states[1].maximum_cadence = 256;
+	cp.states[2].freq_id = 8; 	
+	cp.states[2].minimum_cadence = 288;	// On for 400ms
+	cp.states[2].maximum_cadence = 512;
+
+	rc = sm_add_input_cptone(&amp;cp);
+	if (rc) return rc;
+	return 0;
+}
+</pre>
+<p>
+Once again we have included two alternative definitions of this cadence,
+to detect the tone quickly, whichever phase it starts in.
+
+<h2>Application Control of Cadence Detection</h2>
+<p>
+It is possible, using the tone detection mode
+kSMToneLenDetectionMinDurationxx to retrieve the duration of a tone from
+a call to
+<a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a>. This
+will allow a certain degree of cadence detection to be carried out by
+the user application. For example, if the combined DTMF/CNG/CED tone
+table is used, as described above, the application may be required to
+validate that the CNG tone lasts 0.5s and/or the CED tone lasts 3s. The
+application can simply check the
+<a href="gen/apifn-sm_get_recognised.html#field-param1">param1</a>
+(duration) parameter when the tone is detected.
+
+<h2>TiNG Modules for Tone Detection</h2>
+<p>
+The TiNG module required for tone detection is
+<a href="gen/softmodindex.html#td">td</a> (used by
+<a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a>).
+
+<hr>
+<p>
+<small>Document reference: AN 1352</small>
+
+</body>
+</html>

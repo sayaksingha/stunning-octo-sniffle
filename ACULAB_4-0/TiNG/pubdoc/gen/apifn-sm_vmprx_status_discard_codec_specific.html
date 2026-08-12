@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_status_discard_codec_specific</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_status_discard_codec_specific</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_status_discard_codec_specific(<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-vmprx">vmprx</a>
+<dd>
+The VMP[rx] to discard the codec specific status from
+</dl>
+<h2>Description</h2>
+<p>
+When
+<a href="apifn-sm_vmprx_status.html">sm_vmprx_status()</a>
+has reported a status of <code>kSMVMPrxStatusCodecSpecific</code>
+the codec specific status must be read before further status updates can be 
+reported. This function is used to discard such codec specific status reports
+when the application is not interested in them. As such, this function is the 
+default call for handling such status reports.
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody Guide - how to play tones</title>
+</head>
+<body>
+<h1>Prosody Guide - how to play tones</h1>
+<p>
+There are three kinds of signal that Prosody can generate for you:
+<ul>
+	<li>simple tones
+	<li>call progress tones
+	<li>DTMF digits
+</ul>
+<p>
+A simple tone is a continuous sound consisting of one or two
+frequencies. When you play a simple tone you tell Prosody how long to
+play it and what frequencies to use. This type of tone is played by
+<a href="gen/apifn-sm_play_tone.html">sm_play_tone()</a>.
+A call progress tone is a
+sequence of simple tones which go on and off in a particular
+pattern. To play one of these you tell Prosody what pattern to use
+and for how long it should repeat. This is done with
+<a href="gen/apifn-sm_play_cptone.html">sm_play_cptone()</a>.
+Finally, DTMF digits use
+standardised tones, so when you want to play these you simply tell
+Prosody which digits to send and it automatically selects the correct
+tones to use. This uses
+<a href="gen/apifn-sm_play_digits.html">sm_play_digits()</a>.
+<p>
+These three kinds of tone generation have a lot in common, so they
+will be described together and will all be described by the general
+term "playing tones".
+
+<h2>The basics</h2>
+<p>
+To play tones you need a Prosody channel which can perform output. This
+means one of the following:
+<ul>
+<li>It is an output channel
+<li>It is a full-duplex channel
+<li>It is a half-duplex channel and not being used for input
+</ul>
+<p>
+The output from the channel must also have been connected
+appropriately. See
+<a href="howto_datafeed.html">Prosody Guide - how to use datafeeds</a> for
+how to do this.
+
+<h2>Waiting for completion - simple form</h2>
+<p>
+The simplest way to play a tone is to invoke the start function
+specifying a non-zero (i.e. true) value for the
+<code>wait_for_completion</code> parameter field.
+<p>
+<img src="gen/playtonecompflow.png" alt="diagram of function calls for
+play tone waiting for completion">
+<p>
+While this has the advantage of being extremely simple, in many
+applications it is unsuitable for two reasons: the generation of tones
+cannot be aborted, and the thread which generates the tone is blocked
+for the full duration of tone generation.
+
+<h2>Waiting for completion - more powerful form</h2>
+<p>
+If you want to be able to abort the tone being played, or you want a
+single thread to be able to generate a tone while doing other work,
+operate the tone generation like this:
+<ul>
+<li>Start the tone generation specifying zero (i.e. false) for the
+<code>wait_for_completion</code> parameter field.
+<li>Use events to wait until the channel is worth checking.
+<li>Check the status with the appropriate _status() function
+<li>If the status reported is <code>...Complete</code>
+	then the replay has finished.
+</ul>
+<p>
+<img src="gen/playtoneevflow.png" alt="diagram of function calls for
+play tone using events">
+<p>
+When using this method of playing tones, it is possible to abort the
+generation of the tone before it has finished (except for playing
+digits, but they're quite short anyway). This is done by calling
+<a href="gen/apifn-sm_play_tone_abort.html">sm_play_tone_abort()</a> or
+<a href="gen/apifn-sm_play_cptone_abort.html">sm_play_cptone_abort()</a>,
+depending on which type of tone is being generated. Note that you
+still need to continue checking the status until completion is
+reported.

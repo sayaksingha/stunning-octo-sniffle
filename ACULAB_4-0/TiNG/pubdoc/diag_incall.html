@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: diagnostic programs: incall</title>
+</head>
+<body>
+<h1>Prosody installation guide: diagnostic programs: incall</h1>
+<p>
+This program answers incoming calls, showing the associated events as
+they happen. It doesn't connect the calls to anything, so it would
+normally be used in conjunction with the
+<a href="diag_switch.html">switch</a> program.
+<p>
+Go to directory $(TiNG)/diag/incall.
+<p>
+This is a standalone program that requires no Prosody facilities, so
+you can run it on a system which does not have Prosody installed (but
+it must have the Aculab call driver installed and running).
+<p>
+Run <code>incall</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/incall</span> or
+<span class="type-WINNT">gen-WINNT_V6/incall</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+
+<table border>
+<tr>
+	<td><code>-p</code> portlist
+		<td>Specifies the ports to use (the default is all).
+<tr>
+	<td><code>-t</code> timeslotlist
+		<td>Specifies the timeslots to use (the default is all).
+<tr>
+	<td><code>-x</code> cardspec
+		<td>The card to use.
+</table>
+<p>
+A list is a sequence of items, separated by commas. Each item can be a
+single value or a range, which is specified by a value, a dash, and
+another value. Values are in decimal by default, in hex if they start
+with <code>0x</code>, and in octal if they start with <code>0</code>.
+The value specifying the end of a range can also be specified by the
+single character <code>*</code> which means that the range extends as
+far as possible. For example, if the maximum possible value is six, then
+these ranges are equivalent:
+<ul>
+	<li><code>3,4-*</code>
+	<li><code>3,4-6</code>
+	<li><code>3,4,5,6</code>
+</ul>
+<p>
+When the program starts, it starts waiting for incoming calls on any
+of the timeslots you specified. If some are invalid, it ignores them.
+It reports how many timeslots it is waiting on. When reporting about a
+timeslot, it prints a line of output with the port and timeslot number
+at the start. For example, 
+<pre>
+	$ gen-LINUX_V6/incall -p0
+	0.0: invalid timeslot - ignored
+	0.16: invalid timeslot - ignored
+	Started 30 timeslots on port 0: ETS300
+	0.1: EV_WAIT_FOR_INCOMING
+	0.2: EV_WAIT_FOR_INCOMING
+	0.3: EV_WAIT_FOR_INCOMING
+	0.4: EV_WAIT_FOR_INCOMING
+	0.5: EV_WAIT_FOR_INCOMING
+	0.6: EV_WAIT_FOR_INCOMING
+	0.7: EV_WAIT_FOR_INCOMING
+	0.8: EV_WAIT_FOR_INCOMING
+	0.9: EV_WAIT_FOR_INCOMING
+	0.10: EV_WAIT_FOR_INCOMING
+	0.11: EV_WAIT_FOR_INCOMING
+	0.12: EV_WAIT_FOR_INCOMING
+	0.13: EV_WAIT_FOR_INCOMING
+	0.14: EV_WAIT_FOR_INCOMING
+	0.15: EV_WAIT_FOR_INCOMING
+	0.17: EV_WAIT_FOR_INCOMING
+	0.18: EV_WAIT_FOR_INCOMING
+	0.19: EV_WAIT_FOR_INCOMING
+	0.20: EV_WAIT_FOR_INCOMING
+	0.21: EV_WAIT_FOR_INCOMING
+	0.22: EV_WAIT_FOR_INCOMING
+	0.23: EV_WAIT_FOR_INCOMING
+	0.24: EV_WAIT_FOR_INCOMING
+	0.25: EV_WAIT_FOR_INCOMING
+	0.26: EV_WAIT_FOR_INCOMING
+	0.27: EV_WAIT_FOR_INCOMING
+	0.28: EV_WAIT_FOR_INCOMING
+	0.29: EV_WAIT_FOR_INCOMING
+	0.30: EV_WAIT_FOR_INCOMING
+	0.31: EV_WAIT_FOR_INCOMING
+</pre>
+<p>
+shows it starting to listen on a port running ETS300 call control.
+Each of the thirty valid timeslots is shown as moving into the state
+<code>EV_WAIT_FOR_INCOMING</code>. When a call arrives, it is
+automatically answered, and output similar to this is produced:
+<pre>
+	0.1: EV_INCOMING_CALL_DET
+	0.1: @32.1 IN sc=0 '45678' -> '987654' as '123456'
+	0.1: EV_CALL_CONNECTED
+</pre>
+<p>
+This shows that a call comes in on timeslot 1. The second line shows
+the data reported by the <code>call_details()</code> API function. The
+<code>@32.1</code> shows that the Aculab switch driver can switch data
+to and from this call through the pair of timeslots numbered
+<code>1</code> on stream <code>32</code>. The <code>IN</code>
+indicates that this is an incoming call (which is always the case for
+the incall program). <code>sc=0</code> shows the value of the
+<code>sending_complete</code> field (which indicates whether or not
+the destination number is guaranteed to be complete). The three
+numbers in quotes are the originating number, the connected number,
+and the destination number in that order. If the call is cleared, the
+following, or similar, will be displayed:
+<pre>
+	0.1: EV_IDLE 10 (0=NORMAL)
+	0.1: EV_WAIT_FOR_INCOMING
+</pre>
+<p>
+This shows the call being cleared and <code>incall</code> then
+starting to listen for another call on the same timeslot.
+<p>
+The source code for this program is provided (incall.c).
+<hr>
+<p>
+This is one of the <a href="install_diag.html">Prosody diagnostic
+programs </a>.
+</body>
+</html>

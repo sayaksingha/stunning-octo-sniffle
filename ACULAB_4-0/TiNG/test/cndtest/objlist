@@ -1,0 +1,7 @@
+.	cndtest.o
+Testlib	error.o
+Testlib	cardopen.o
+Testlib	modopen.o
+Testlib	errcode_sm.o
+adsilib	adsilib.o
+apilib

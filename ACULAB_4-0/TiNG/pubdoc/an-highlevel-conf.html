@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: adding features to high level conferencing library</title>
+</head>
+<body>
+<h1>Prosody application note: adding features to high level conferencing library</h1>
+<h2>Introduction</h2>
+<p>
+The high level conferencing API described in the Prosody Speech
+Processing API guide allows simple conferencing between multiple parties
+to be set up/torn down, and does not contain additional features. The
+high level conferencing library <code>highapi/smclib.c</code> that implements
+this API is provided as an open source library built over low level
+conferencing primitives which can be modified by application developers
+to include their own application specific conferencing features.
+<p>
+This application note describes how the low level conferencing
+primitives are used in the high level conferencing library
+implementation, and gives some guidance on how the library can be
+modified to introduce new conferencing features. It can also be read as
+an illustration of how to use the low level conferencing primitives for
+developers writing their own conferencing code but not using the high
+level library.
+<p>
+Note: Readers of this document should be familiar with the
+<a href="gen/prospapi-index.html">Prosody Speech Processing API</a>.
+
+<h2>Simple conferencing</h2>
+<p>
+A simple conference between <code>N</code> parties is constructed of
+<code>N</code> conferencing jobs, each conferencing job being a transmit
+job, running on the output side of a participant associated channel,
+that outputs the sum of the signals of the job's specified set of inputs.
+<p>
+For instance, if there are three parties in a simple conference,
+<code>A</code>, <code>B</code>, and <code>C</code>, each with a full
+duplex channel allocated, then the three party simple conference would be
+constructed by the high level conferencing library as the following three
+conferencing jobs:
+<pre>
+	A.out =        B.in + C.in
+	B.out = A.in        + C.in
+	C.out = A.in + B.in
+</pre>
+<p>
+It is very important to understand that it is not possible to construct such a conference merely by summing the all input signals of all the participants, and switching this summed signal to all the participant outputs:
+<pre>
+	A.out = A.in + B.in + C.in	## A will get bad echo of A
+	B.out = A.in + B.in + C.in	## B will get bad echo of B
+	C.out = A.in + B.in + C.in	## C will get bad echo of C
+</pre>
+<p>
+On first inspection, it might be thought that the amount of processing
+the DSP has to do for three conferencing jobs is three times the amount of
+work it would have to do a single job combining all participant inputs,
+thus limiting the scalability of conferencing on a Prosody module. In
+fact, the conferencing jobs are not run independently of each other,
+instead, common processing occurs in generating the output signals for
+the set of conferencing jobs running on the Prosody module.
+<p>
+A conference job is normally constructed by invoking the low level
+conferencing primitive
+<a href="gen/apifn-sm_conf_prim_start.html">sm_conf_prim_start()</a>
+on the required output channel, followed by invocations of
+<a href="gen/apifn-sm_conf_prim_add.html">sm_conf_prim_add()</a>
+for each input signal to be summed.
+<p> 
+If an <code>N</code> party simple conference is already constructed from
+N participants and <code>N</code> conference jobs, it can be grown into
+an <code>N+1</code> party conference through the following steps:
+<ul>
+<li>create one new conferencing job using
+<a href="gen/apifn-sm_conf_prim_start.html">sm_conf_prim_start()</a>
+for output to be switched to new participant, then invoke
+<a href="gen/apifn-sm_conf_prim_add.html">sm_conf_prim_add()</a>
+<code>N</code> times in order to specify set of <code>N</code> inputs to
+be summed by this job (do not add new participant's own input)
+<li>for each existing conference job, invoke
+<a href="gen/apifn-sm_conf_prim_add.html">sm_conf_prim_add()</a>
+to add the new participant's signal to the summed output switched to each
+existing participant
+</ul> 
+<p>
+The first step may be more efficiently executed using
+<a href="gen/apifn-sm_conf_prim_clone.html">sm_conf_prim_clone()</a>.
+This copies a conferencing job already running on another channel, say
+<code>X</code>, which is already outputting the sum of
+<code>(N-1)</code> participants. So following invocation of the new
+conference job using
+<a href="gen/apifn-sm_conf_prim_clone.html">sm_conf_prim_clone()</a>,
+it is only necessary to add one participant's input signal to the new
+conference job, that of <code>X</code>.
+<p>
+If an <code>N</code> party simple conference is already constructed from
+<code>N</code> participants and <code>N</code> conference jobs, it can
+be shrunk into an <code>N-1</code> party conference through the
+following steps (let participant <code>Z</code> be the leaving party):
+<ul>
+<li>for each existing conference job, invoke
+<a href="gen/apifn-sm_conf_prim_leave.html">sm_conf_prim_leave()</a>
+to remove <code>Z</code>'s input signal from summed output switched to
+each remaining participant
+<li>abort conference output job for Z using
+<a href="gen/apifn-sm_conf_prim_abort.html">sm_conf_prim_abort()</a>
+</ul>
+<p>
+The TiNG firmware modules
+<a href="gen/softmodindex.html#conf">conf</a>,
+<a href="gen/softmodindex.html#inchan">inchan</a> and
+<a href="gen/softmodindex.html#outchan">outchan</a> need to be loaded for
+conferencing to work.
+<a href="gen/softmodindex.html#inchan">inchan</a> and
+<a href="gen/softmodindex.html#outchan">outchan</a> outchan are the standard
+input and output channel modules that would normally be loaded, and
+<a href="gen/softmodindex.html#conf">conf</a> is the
+conferencing module. Modules
+<a href="gen/softmodindex.html#echocan">echocan</a> and
+<a href="gen/softmodindex.html#passthru">passthru</a>
+need to be loaded if
+echo cancellation is required. No extra modules are required for
+side-tone suppression.
+
+<h2>Echo cancellation and conferencing</h2>
+<p>
+When an echo cancelled conference is constructed, each conference job
+needs to use the echo cancelled version of its participant's input. The
+echo canceller that creates this signal needs as its reference
+signal the conference output signal being sent back to the participant
+output. The diagram below shows the signal paths used for a simple three
+party conference with echo cancellation:
+<p>
+<img src="gen/conf-3echo.png" alt="diagram of echo cancelled three-party conference">
+<p>
+When used in this configuration, the reference for the echo cancellation
+job is not a separate input channel but is the output signal being
+generated by the conferencing job running on the participant output
+channel. If a full duplex channel is used, the echo cancellation job (an
+input job) and the conference job (an output job) may be part of the same
+channel. Alternatively, if you prefer, you can use two separate input-only
+and output-only channels.
+
+<h2>Adding a conference recording feature</h2>
+<p>
+A common requirement in conferencing applications, is the ability to
+record the conversation between all participants in the conference.
+<p>
+In order to achieve this, an additional channel is required for the
+conference. This channel is used:
+<ul>
+<li>to run a new conferencing job that is total sum of all participants' inputs
+<li>to run a record job, recording output of new conferencing job (use
+<code>alt_data_source</code>)
+</ul>
+<p>
+Because the channel is required to run receive and transmit jobs
+simultaneously, it must be a full duplex channel. Normally neither the
+output nor the input of this additional channel would be switched (but
+see <a href="#AddConMon">Adding a conference monitor feature</a> below).
+<p>
+The conferencing library may be modified so that:
+<ul>
+<li>the recording channel is allocated when the simple conference is
+created, and the total summation job and recording jobs are started,
+depending on application structure a thread may require to be launched
+for recording job
+<li>each time a participant is added to the simple conference, the
+participant's input is added to the total summation job
+<li>each time a participant is removed from the simple conference, the
+participant's input is removed from the total summation job
+<li>when the conference is to be terminated, the conference recording
+job is stopped, and any necessary channel/thread/file resources freed
+</ul>
+
+<h2>Playing prompts to the conference</h2>
+<p>
+Sometimes it is necessary to play a prompt to either a specific
+conference participant, or to all participants in the conference.
+<p>
+In order to play a prompt to a specific participant, it is best to use
+the high level library to withdraw them from the conference, then invoke
+a replay job on their output channel, then re-instate them back into the
+conference.
+<p>
+In order to play a prompt to all conference participants, a special full
+duplex prompt channel can be allocated, and then the output of this
+channel switched to its input, and then the prompt channel input added
+to each participants conference job set of inputs when they enter the
+conference. Thus whenever a replay job is invoked on the prompt channel,
+all conference participants will hear the prompt.
+
+<h2><a name="AddConMon">Adding a conference monitor feature</a></h2>
+<p>
+This can be achieved using the same method as for recording the
+conversation taking place in a conference, the total summation job
+output is switched to the monitor bearer channel (recording job not
+necessary).
+
+<h2>Adding a conference coach feature</h2>
+<p>
+A coach is a special conference participant who can speak to an
+individual conference participant without been heard by other conference
+participants. The coached party will still be able to hear and
+participate in the conference with the other uncoached parties of the
+conference.
+<p>
+Assuming that a conference has at most one coach, and one coached party,
+coaching can be implemented by adding the coach input channel (signal
+from coach) to the input channel set for the coached party's conference
+job. Care must be taken that the coached party conference job is not
+used for cloning, otherwise new participants would get the coach input.
+<p>
+Typically, the signal sent to the coach would be sum of all other
+conference signals, this being so, the total summation job output (as
+used for monitor) may be switched to coach bearer channel.
+<hr>
+<p>
+<small>Document reference: AN 1368</small>
+
+</body>
+</html>
+

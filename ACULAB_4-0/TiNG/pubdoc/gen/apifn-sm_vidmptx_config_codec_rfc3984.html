@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vidmptx_config_codec_rfc3984</title>
+</head>
+<body class=version-deprecated>
+<h1>Prosody RTP processing: API: sm_vidmptx_config_codec_rfc3984</h1>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vidmptx_config_codec_rfc3984(struct sm_vidmptx_codec_rfc3984_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vidmptx_codec_rfc3984_parms {
+	<a href="../apitype.html#type-tSMVidMPtxId">tSMVidMPtxId</a> <a href="#field-vidmptx">vidmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-deaggregate">deaggregate</a>;					/* in */
+} SM_VIDMPTX_CODEC_RFC3984_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures an RFC 3984 packetiser, as defined in
+<a href="http://www.ietf.org/rfc/rfc3984.txt">IETF RFC 3984</a>,
+to the VidMP[tx] setting the payload type mapping to
+<a class=pref href="#field-payload_type">payload_type</a>.
+<p>
+The packetiser accepts Audio Video Format (AVF) frames from the
+VidMP[tx] incoming datafeed as input, and composes RTP packets as
+output.
+<p>
+A newly configured packetiser will not emit any RTP packets until it
+receives an H.264 I-Frame in the incoming AVF stream. Waiting for an
+I-Frame attempts to ensure that the video, when rendered by the remote
+endpoint, starts cleanly and without the picture disruption which will
+occur were the rendering decoder to attempt to decode P-Frames (Predicted)
+without an I-Frame as reference.
+<p>
+The packetiser will emit H.264 parameter sets over RTP whenever received
+in the incoming AVF stream. In practice, this means it will emit parameter
+sets every I-frame. Although the parameter sets are unlikely to change
+often, transmitting them with each I-frame allows more robustness against
+packet loss, the ability for a remote endpoint to start decoding on any
+I-frame (i.e. mid-stream) and appears to be the norm amongst videophones.
+<p>
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-deprecated><a name="field-vidmptx">vidmptx</a>	(Deprecated)
+<dd class=version-deprecated>The VidMP[tx] to which to add the packetiser
+
+<dt class=version-deprecated><a name="field-payload_type">payload_type</a>	(Deprecated)
+<dd class=version-deprecated>The payload type identifer to use with this packetiser (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13). Supplying a value of
+<code>-1</code> will remove any payload type configuration from the 
+packetiser preventing its use.
+
+<dt class=version-deprecated><a name="field-deaggregate">deaggregate</a>	(Deprecated)
+<dd class=version-deprecated>Allows behaviour with aggregation packets to be modified. If this parameter
+is set to 0, each aggregation packet received as input is transmitted as a
+whole. Otherwise, each such packet is split and one packet transmitted for
+each H.264 NALU. Setting this to a value other than 0 should not be necessary
+when transmitting to an	endpoint which is properly RFC3984 compliant.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

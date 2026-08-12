@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody FMP processing: API: sm_fmprx_create</title>
+</head>
+<body>
+<h1>Prosody FMP processing: API: sm_fmprx_create</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_fmprx_create(struct sm_fmprx_create_parms *<a href="#field-fmprxp">fmprxp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-fmprxp">*fmprxp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_fmprx_create_parms {
+	<a href="../apitype.html#type-tSMFMPrxId">tSMFMPrxId</a> <a href="#field-fmprx">fmprx</a>;					/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a name="enum-kSMFMPrxType">enum kSMFMPrxType</a> {
+		<a href="#field-kSMFMPrxTypeIPv4">kSMFMPrxTypeIPv4</a>,
+		<a href="#field-kSMFMPrxTypeIPv6">kSMFMPrxTypeIPv6</a>,
+	} <a href="#field-type">type</a>;							/* in */
+	<a href="../apitype.html#type-in_addr">struct in_addr</a> <a href="#field-address">address</a>;					/* in */
+	<a href="../apitype.html#type-in6_addr">struct in6_addr</a> <a href="#field-ipv6_address">ipv6_address</a>;				/* in */
+} SM_FMPRX_CREATE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Allocates, on a specific module, a new FMP[rx] to receive incoming T.38 data.
+If the call completes successfully, the parameter
+<a class=pref href="#field-fmprx">fmprx</a>
+will be set to the identifier for that fmprx.
+<p>
+A FMP[rx] is automatically allocated a port number for incoming
+RTP data, this information may be obtained by waiting for
+<a href="apifn-sm_fmprx_status.html">sm_fmprx_status()</a>
+to return the port information.
+The FMP[rx] will discard any incoming packets that do not match it's
+current configuration settings.
+<p>
+Requires the module
+<a href="softmodindex.html#fmprx">fmprx</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-fmprx">fmprx</a><dd>The newly created FMP[rx].
+
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module where the FMP[rx] is to be allocated.
+
+<dt><a name="field-type">type</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMFMPrxTypeIPv4">kSMFMPrxTypeIPv4</a>
+<dd>The FMP[rx] is to receive IPv4 packets
+
+<dt><a name="field-kSMFMPrxTypeIPv6">kSMFMPrxTypeIPv6</a>
+<dd>The FMP[rx] is to receive IPv6 packets
+
+</dl>
+<dt><a name="field-address">address</a><dd>The address on which this FMP[rx] is to listen if
+<a class=pref href="#field-type">type</a>
+is 
+<a class=pref href="#field-kSMFMPrxTypeIPv4">kSMFMPrxTypeIPv4</a>.
+
+<dt><a name="field-ipv6_address">ipv6_address</a><dd>The address on which this FMP[rx] is to listen if
+<a class=pref href="#field-type">type</a>
+is 
+<a class=pref href="#field-kSMFMPrxTypeIPv6">kSMFMPrxTypeIPv6</a>.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources exist to create the FMP[rx]</ul>
+<hr>
+<p>This function is part of the <a href="../prosfmpapi.html">Prosody FMP processing API</a>.
+</body>
+</html>

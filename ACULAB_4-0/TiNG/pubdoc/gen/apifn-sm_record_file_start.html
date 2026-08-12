@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody high level FILE play/record: API: sm_record_file_start</title>
+</head>
+<body>
+<h1>Prosody high level FILE play/record: API: sm_record_file_start</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_record_file_start(struct sm_file_record_parms *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-file_parms">*file_parms</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_file_record_parms {
+	<a href="../apitype.html#type-tSM_OPEN_FILE">tSM_OPEN_FILE</a> <a href="#field-fd">fd</a>;					/* in */
+	<a href="../apitype.html#type-SM_RECORD_PARMS">SM_RECORD_PARMS</a> <a href="#field-record_parms">record_parms</a>;				/* in */
+	int <a href="#field-status">status</a>;						/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-private_length">private_length</a>;				/* out */
+	int <a href="#field-completing">completing</a>;						/* out */
+	char <a href="#field-buffer">buffer[kSMMaxHiRecordDataBufferSize]</a>;		/* out */
+} SM_FILE_RECORD_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Prepares channel for recording of data to a file from an input
+channel previously allocated by a call to
+<a href="apifn-sm_channel_alloc_placed.html">sm_channel_alloc_placed()</a>.
+<p>
+When using the TiNG dll under Windows use of this function requires a FILE* 
+to be passed across the dll boundry. This may cause problems when the 
+application uses a different C runtime library from the TiNG dll. Since the 
+C runtime library used by the TiNG dll may change in future versions, 
+<strong>this function is deprecated when using the TiNG dll</strong>.
+<p>
+The status field is used to indicate the current status of the
+record. On return from a successful invocation of
+<a href="apifn-sm_record_file_start.html">sm_record_file_start()</a>
+it will be set to a value of <code>ERR_SM_PENDING</code> and
+will continue to have this value until recording has been
+completed, aborted or terminated on occurrence of an error.
+<p>
+The fields
+<a class=pref href="#field-private_length">private_length</a>
+and
+<a class=pref href="#field-buffer">buffer</a>
+are used internally by the high level library and should not be
+accessed by the application.
+<p>
+The recording is finished when a call to
+<a href="apifn-sm_record_file_complete.html">sm_record_file_complete()</a>
+returns.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-fd">fd</a><dd>The file into which the data is to be recorded. This must have
+been opened with C standard I/O library function
+<cite>fopen()</cite> unless the library was built for Microsoft
+Windows with the C preprecessor symbol
+<code>__SMWIN32HLIB__</code> defined, in which case it must be a
+Windows <code>HANDLE</code>. It is recommended that the
+<a href="../highapi_bf_playrec.html">
+Prosody high level BFILE play/record</a> is used where possible
+instead of rebuilding this library, since it avoids the risk of
+accidentally using the library built for the wrong type of file
+access.
+
+<dt><a name="field-record_parms">record_parms</a><dd>A structure as defined for
+<a href="apifn-sm_record_start.html">sm_record_start</a>.
+
+<dt><a name="field-status">status</a><dd>The status of the record.
+
+<dt><a name="field-private_length">private_length</a><dd>A field reserved for the library.
+
+<dt><a name="field-completing">completing</a><dd>A field reserved for the library.
+
+<dt><a name="field-buffer">buffer</a><dd>A field reserved for the library.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem accessing file to contain recorded data</ul>
+<hr>
+<p>This function is part of the <a href="../highapi_playrec.html">Prosody high level FILE play/record API</a>.
+</body>
+</html>

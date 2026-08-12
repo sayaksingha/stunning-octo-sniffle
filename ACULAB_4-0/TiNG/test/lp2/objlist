@@ -1,0 +1,10 @@
+.	lp2.o
+Testlib	cardopen.o
+Testlib	error.o
+Testlib	errcode_sm.o
+Testlib	fmtcode.o
+Testlib	modopen.o
+apilib
+call
+libutil	generic_io.o
+switch

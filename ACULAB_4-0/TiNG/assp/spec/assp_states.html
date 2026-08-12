@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Protocol states for ASSP</title>
+</head>
+<body>
+<h1>Protocol states for ASSP</h1>
+<p>
+The protocol states are:
+<ul>
+<li>CLOSED - no connection exists
+<li>WAIT-COOKIE - waiting for a reply carrying a cookie to allow a
+connection to be completed
+<li>ESTABLISHED - ready to transfer data
+<li>FIN-WAIT - a FIN has been sent, so we continue reception until we
+receive a FIN but we cannot send more data
+<li>CLOSE-WAIT - a FIN has been received, but we can continue sending as
+we have not sent a FIN
+<li>LAST-ACK - a FIN has been both sent and received and we are waiting
+for all outstanding packets to be acknowledged
+<li>RST-WAIT - a RST has been sent and we are waiting for it to be acknowledged
+<li>TIME-WAIT - FIN has been both sent and received - we are waiting a
+safe time to allow stale packets to drain from the network before
+letting the connection go idle
+</ul>
+<p>
+The protocol always starts in the CLOSED state.
+<p>
+Note that the TIME-WAIT state can be truncated at the server end if
+the cookie used to open this connection would not be capable of
+re-opening the connection and the server knows that the client has
+received an ACK it sent acknowledging the client's FIN (which it could
+tell from the REFTS field in an incoming packet). This is because the
+client would only be permitted to re-use the connection if it retains
+the sequence numbers, which protects against all stale packets apart
+from replay of the cookie.
+
+<h2>Events</h2>
+<p>
+The events which are handled by the protocol are:
+<ul>
+	<li>connect()
+	<li>abort()
+	<li>send EOF
+	<li>packet arrival
+	<li>timeout
+</ul>
+
+<h2>State transitions</h2>
+<p>
+Some protocols (such as TCP [RFC 793] and RDP [RFC 908]) support
+opening of a connection from both ends simultaneously. ASSP does not
+allow this. Instead, every connection is opened asymmetrically, with
+one end initiating the open and the other responding. This allows us
+to remove the ACK bit in the header, since without symmetric open
+every packet can carry an acknowledgement number.
+<p>
+See the <a href="gen/assp.png">state transition diagram</a> for a
+summary of the state transtions which are described in detail below:
+<table border>
+<tr><td>
+	<th>CLOSED <th>WAIT-COOKIE
+	   <th>ESTABLISHED <th>FIN-WAIT <th>CLOSE-WAIT
+	      <th>LAST-ACK <th>RST-WAIT <th>TIME-WAIT
+
+<tr><th>connect()
+	<td>WAIT-COOKIE <td>(err)
+	   <td>(err) <td>(err) <td>(err)
+	      <td>(err) <td>(err) <td>WAIT-COOKIE
+
+<tr><th>abort()
+	<td>. <td>TIME-WAIT
+	   <td>RST-WAIT <td>RST-WAIT <td>RST-WAIT
+	      <td>RST-WAIT <td>. <td>.
+
+<tr><th>send EOF
+	<td>(err) <td>(err)
+	   <td>FIN-WAIT <td>(err) <td>LAST-ACK
+	      <td>(err) <td>(err) <td>(err)
+
+<tr><th>GETCOOKIE request
+	<td>. <td>.
+	   <td>. <td>. <td>.
+	      <td>. <td>. <td>.
+
+<tr><th>COOKIE arrives
+	<td>. <td>ESTABLISHED
+	   <td>. <td>. <td>.
+	      <td>. <td>. <td>.
+
+<tr><th>SYN arrives
+	<td>ESTABLISHED <td>.
+	   <td>. <td>. <td>.
+	      <td>. <td>. <td>ESTABLISHED
+
+<tr><th>process FIN
+	<td>. <td>?
+	   <td>CLOSE-WAIT <td>LAST-ACK <td>TIME-WAIT
+	      <td>? <td>? <td>?
+
+<tr><th>get ACK for all outstanding
+	<td>. <td>.
+	   <td>. <td>. <td>.
+	      <td>TIME-WAIT <td>. <td>.
+
+<tr><th>RST arrives
+	<td>. <td>TIME-WAIT
+	   <td>TIME-WAIT <td>TIME-WAIT <td>TIME-WAIT
+	      <td>RST-WAIT <td>TIME-WAIT <td>.
+
+<tr><th>RST reply arrives
+	<td>. <td>.
+	   <td>. <td>. <td>.
+	      <td>TIME-WAIT <td>. <td>.
+
+<tr><th>erroneous packet arrives
+	<td>. <td>TIME-WAIT
+	   <td>TIME-WAIT <td>TIME-WAIT <td>TIME-WAIT
+	      <td>TIME-WAIT <td>. <td>.
+
+<tr><th>2*TTL passes
+	<td>. <td>.
+	   <td>. <td>. <td>.
+	      <td>. <td>. <td>CLOSED
+
+</table>
+
+<h3>connect()</h3>
+<p>
+If we are creating the TCB (i.e. not on the transition from TIME-WAIT),
+generate random numbers for each of SND.NXTPKT, SND.NXTSEQ, RCV.NXT,
+RCV.RECENT. Otherwise we will continue to use the existing ones, which
+protects against old packets from the previous connection, so we can
+safely truncate the TIME-WAIT state.
+<p>
+Send GET-COOKIE.
+<p>
+Go to WAIT-COOKIE.
+
+<h3>abort()</h3>
+<p>
+If we are in CLOSED, RST-WAIT or TIME-WAIT, do nothing. If we are in
+WAIT-COOKIE, go to TIME-WAIT. In other states, send a RST and go to RST-WAIT.
+
+<h3>send EOF</h3>
+<p>
+Generate a FIN packet and add to the outbound sequenced packet queue.
+Go to FIN-WAIT or LAST-ACK depending on whether we are in
+ESTABLISHED or CLOSE-WAIT.
+
+<h3>get cookie</h3>
+<p>
+We must be in the WAIT-COOKIE state, (otherwise the packet is stale and
+can be ignored). Send a SYN quoting the cookie.
+Go to ESTABLISHED.
+
+<h3>get SYN</h3>
+<p>
+Note that a SYN is alien unless it quotes a valid cookie.
+<p>
+In the CLOSED state, if it's a valid SYN, set up our sequence numbers
+based on its header (i.e. SEQ from its ACK, ACK from its SEQ, etc). Send
+an ACK. Go to ESTABLISHED.
+<p>
+In TIME-WAIT, if the SYN is a valid continuation, go to ESTABLISHED,
+otherwise ignore it. A valid continuation uses SEQ, ACK, TXTS, and REFTS
+numbers which continue from those previously used. A SYN is ignored if it
+is not a valid continuation because the client will re-try, eventually
+trying after the TIME-WAIT state has been left.
+<p>
+If we are in the ESTABLISHED or FIN-WAIT states, if it is a duplicate
+of the original SYN, it's stale so we send an ACK. Otherwise it's
+acceptable but is a protocol error, so we abandon the connection,
+report an error, send RST and go to TIME-WAIT. Note that the cookie
+protection makes it extremely likely that it is a duplicate SYN.
+
+<h3>process FIN</h3>
+<p>
+Note that FIN is a sequential option so this processing is performed
+when the user attempts to read data and gets the last of the data that
+includes the FIN.
+<p>
+In the ESTABLISHED state, go to CLOSE-WAIT. In FIN-WAIT, go to
+LAST-ACK (note that we may instantly proceed to TIME-WAIT). In other
+states, it's a protocol error, so we send a RST and go to TIME-WAIT.
+
+<h3>get RST (other than a RST reply)</h3>
+<p>
+Ignore it if we are in CLOSED, or TIME-WAIT. If we are in RST-WAIT,
+stay in RST-WAIT, sending a RST reply unless the incoming RST had
+the ACKLESS option. Otherwise, discard unacknowledged data, setting
+SND.UNA to SND.NXTSEQ, discard received data not yet delivered, setting
+RCV.NXT to the SEQ value in the RST packet, and abandon the connection
+and go to TIME-WAIT, sending a RST reply unless the incoming RST had
+the ACKLESS option.
+
+<h3>get RST reply</h3>
+<p>
+This can only happen in RST-WAIT, since that is the only state in
+which there is an outstanding RST to which there might be a reply.
+Discard unacknowledged data, setting SND.UNA to SND.NXTSEQ, discard
+received data not yet delivered, setting RCV.NXT to the SEQ value in
+the RST packet, and abandon the connection and go to TIME-WAIT.
+
+<h3>got ACK for all outstanding packets</h3>
+<p>
+In LAST-ACK our FIN has been acknowledged, go to TIME-WAIT. (Note that
+this condition may already be true when we enter LAST-ACK and therefore
+we would instantly pass through to TIME-WAIT).
+Otherwise we handle this ACK just like any other ACK.
+
+<h2>Other operations</h2>
+<p>
+When the connection moves to ESTABLISHED, the local user is notified
+(this may be by an API function returning or similar means).
+When the connection has entered the ESTABLISHED state until EOF has been
+sent, data may be written. An attempt to read after the connection
+has reached CLOSE-WAIT or LAST-ACK will indicate that there is no
+further data (e.g. EOF).
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+ITU_T General Public Licence information (ITU-T Rec. G.191 09/2005).
+====================================================================
+
+The software module "amr-wb.sob" is derived from Aculab modifications
+to 3GPP TS26.173 / ITU-T G.722.2 source code forming part of ITU-T G.191.
+Aculab modifications were applied to v7.0.0 20.Mar.2007 of this source code.
+The Aculab modified version of this G.722.2 source code is available on request.

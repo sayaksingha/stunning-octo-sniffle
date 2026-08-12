@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_codec_speex_mode</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_codec_speex_mode</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_codec_speex_mode(struct sm_vmptx_codec_speex_mode_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_codec_speex_mode_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-complexity">complexity</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-quality">quality</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-bitrate">bitrate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-denoiser">denoiser</a>;					/* in */
+} SM_VMPTX_CODEC_SPEEX_MODE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a VMP[tx] to use Speex for encoding data, as defined in
+<a href="http://www.ietf.org/rfc/rfc5574.txt">IETF RFC 5574</a>.
+<p>
+This function requires the module
+<a href="softmodindex.html#speex_vmp">speex_vmp</a>
+to have been downloaded, and must be called to make the codec operational.
+It must be called once, and only once, after each call to
+<code>sm_vmptx_config_codec_speex</code>.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to which to add this codec
+
+<dt><a name="field-complexity">complexity</a><dd>This determines the amount of processor time available to the encoding
+process. Higher complexity gives a better trade-off between quality
+and bitrate, especially for non-speech sounds (e.g. music), but it will
+give a lower channel count. A range of values from 0 to 10 may be used.
+The recommended range is from 2 to 4.
+
+<dt><a name="field-quality">quality</a><dd>This affects the quality of the encoded speech. A value between 0 and 10
+may be used. The default is 8. There is a trade-off between complexity,
+quality, bitrate, and achievable channel count. This value may be
+overridden by the <code>bitrate</code> parameter, below.
+
+<dt><a name="field-bitrate">bitrate</a><dd>This specifies the encoded data rate in bits per second. The actual
+bitrate used will be one of: 2150, 3950, 5950, 8000, 11000, 15000,
+18200, and 24600 bits per second. Only a few <code>quality</code>
+settings are compatible with each <code>bitrate</code>. In this API
+call, <code>bitrate</code> takes precedence over <code>quality</code>.
+
+<dt><a name="field-denoiser">denoiser</a><dd>Disable (0) or enable (any non-zero value, e.g. 1) pre-processing to
+reduce the audibility of background noise. Use of the denoiser will
+severely reduce the channel count.
+This field is currently ignored: the denoiser is not implemented because
+of its impact on channel count.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

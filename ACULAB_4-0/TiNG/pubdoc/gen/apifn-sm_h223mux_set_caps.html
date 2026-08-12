@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody H.223 Mux: API: sm_h223mux_set_caps</title>
+</head>
+<body class=version-Prel>
+<h1>Prosody H.223 Mux: API: sm_h223mux_set_caps</h1>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_h223mux_set_caps(struct sm_h223mux_set_caps_parms *<a href="#field-capsp">capsp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-capsp">*capsp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_set_caps_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a name="enum-kSMH223muxSetCapsRole">enum kSMH223muxSetCapsRole</a> {
+		<a href="#field-kSMH223muxSetCapsRoleLocal">kSMH223muxSetCapsRoleLocal</a>,
+		<a href="#field-kSMH223muxSetCapsRoleRemote">kSMH223muxSetCapsRoleRemote</a>,
+	} <a href="#field-role">role</a>;							/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-optional_ext">optional_ext</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-transport_with_i_frames">transport_with_i_frames</a>;			/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-video_with_AL1">video_with_AL1</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-video_with_AL2">video_with_AL2</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-video_with_AL3">video_with_AL3</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-audio_with_AL1">audio_with_AL1</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-audio_with_AL2">audio_with_AL2</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-audio_with_AL3">audio_with_AL3</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-data_with_AL1">data_with_AL1</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-data_with_AL2">data_with_AL2</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-data_with_AL3">data_with_AL3</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-maximum_AL2_sdu_size">maximum_AL2_sdu_size</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-maximum_AL3_sdu_size">maximum_AL3_sdu_size</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-maximum_delay_jitter">maximum_delay_jitter</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-max_MUX_PDU_size_capability">max_MUX_PDU_size_capability</a>;			/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-nsrp_support">nsrp_support</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-bit_rate_o">bit_rate_o</a>;					/* in */
+	struct {
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-mobile_operation_transmit_capability_o-mode_change_capability">mode_change_capability</a>;		/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-mobile_operation_transmit_capability_o-h223_AnnexA">h223_AnnexA</a>;				/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-mobile_operation_transmit_capability_o-h223_AnnexA_double_flag">h223_AnnexA_double_flag</a>;		/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-mobile_operation_transmit_capability_o-h223_AnnexB">h223_AnnexB</a>;				/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-mobile_operation_transmit_capability_o-h223_AnnexB_with_header">h223_AnnexB_with_header</a>;		/* in */
+	} <a href="#field-mobile_operation_transmit_capability_o">mobile_operation_transmit_capability_o</a>;		/* in */
+	struct {
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-mobile_multilink_frame_capability_o-maximum_sample_size">maximum_sample_size</a>;			/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-mobile_multilink_frame_capability_o-maximum_payload_length">maximum_payload_length</a>;			/* in */
+	} <a href="#field-mobile_multilink_frame_capability_o">mobile_multilink_frame_capability_o</a>;			/* in */
+	struct {
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-video_with_AL1M">video_with_AL1M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-video_with_AL2M">video_with_AL2M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-video_with_AL3M">video_with_AL3M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-audio_with_AL1M">audio_with_AL1M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-audio_with_AL2M">audio_with_AL2M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-audio_with_AL3M">audio_with_AL3M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-data_with_AL1M">data_with_AL1M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-data_with_AL2M">data_with_AL2M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-data_with_AL3M">data_with_AL3M</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-alpdu_interleaving">alpdu_interleaving</a>;			/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-H223_AnnexC_capability_o-maximum_AL1M_pdu_size">maximum_AL1M_pdu_size</a>;			/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-H223_AnnexC_capability_o-maximum_AL2M_pdu_size">maximum_AL2M_pdu_size</a>;			/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-H223_AnnexC_capability_o-maximum_AL3M_pdu_size">maximum_AL3M_pdu_size</a>;			/* in */
+		<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-H223_AnnexC_capability_o-rs_code_capability">rs_code_capability</a>;			/* in */
+	} <a href="#field-H223_AnnexC_capability_o">H223_AnnexC_capability_o</a>;				/* in */
+} SM_H223MUX_SET_CAPS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This function will set the negotiated capabilities on the H.223 multiplexer.
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to send the capabilities to.
+
+<dt class=version-Prel><a name="field-role">role</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Indicates what terminal these capabilities apply to.
+
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxSetCapsRoleLocal">kSMH223muxSetCapsRoleLocal</a>
+<dd>Capabilities relate to the local terminal.
+
+<dt><a name="field-kSMH223muxSetCapsRoleRemote">kSMH223muxSetCapsRoleRemote</a>
+<dd>Capabilities relate to the remote terminal.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-optional_ext">optional_ext</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>A bitmap field, representing the optional fields (_o) that will be present in this structure.  The
+bit values for each field are as follows :
+H223MUX_H245_CAP_O_MOBILE_OPERATION_TRANSMIT_CAP 0x04, H223MUX_H245_CAP_O_ANNEX_C 0x08, 
+H223MUX_H245_CAP_O_BIT_RATE 0x10, H223MUX_H245_CAP_O_MOBILE_MULTILINK_FRAME_CAP 0x20
+
+<dt class=version-Prel><a name="field-transport_with_i_frames">transport_with_i_frames</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates that the terminal is capable of sending and receiving
+control channel messages using LAPM I-frames as defined in ITU-T Recommendation V.42 (2002).
+
+<dt class=version-Prel><a name="field-video_with_AL1">video_with_AL1</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive video using AL1.
+
+<dt class=version-Prel><a name="field-video_with_AL2">video_with_AL2</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive video using AL2.
+
+<dt class=version-Prel><a name="field-video_with_AL3">video_with_AL3</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive video using AL3.
+
+<dt class=version-Prel><a name="field-audio_with_AL1">audio_with_AL1</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive audio using AL1.
+
+<dt class=version-Prel><a name="field-audio_with_AL2">audio_with_AL2</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive audio using AL2.
+
+<dt class=version-Prel><a name="field-audio_with_AL3">audio_with_AL3</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive audio using AL3.
+
+<dt class=version-Prel><a name="field-data_with_AL1">data_with_AL1</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive data using AL1.
+
+<dt class=version-Prel><a name="field-data_with_AL2">data_with_AL2</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive data using AL2.
+
+<dt class=version-Prel><a name="field-data_with_AL3">data_with_AL3</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates the capability to receive data using AL3.
+
+<dt class=version-Prel><a name="field-maximum_AL2_sdu_size">maximum_AL2_sdu_size</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Indicates the maximum number of octets in each SDU that the terminal can receive when
+using adaptation layer type 2.
+
+<dt class=version-Prel><a name="field-maximum_AL3_sdu_size">maximum_AL3_sdu_size</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Indicates the maximum number of octets in each SDU that the terminal can receive when
+using adaptation layer type 3.
+
+<dt class=version-Prel><a name="field-maximum_delay_jitter">maximum_delay_jitter</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Indicates the maximum peak-to-peak multiplexing jitter that the transmitter shall cause.
+Measured in milliseconds.
+
+<dt class=version-Prel><a name="field-max_MUX_PDU_size_capability">max_MUX_PDU_size_capability</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates that the transmitter is able to restrict the size of the
+H.223 MUX-PDUs that it transmits.  Has no meaning when part of a receive capability.
+
+<dt class=version-Prel><a name="field-nsrp_support">nsrp_support</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>When set to non-zero, indicates support of the Annex A/H.324 NSRP mode.
+
+<dt class=version-Prel><a name="field-bit_rate_o">bit_rate_o</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>Indicates the bit rate to transmit the bitstream output from the H.223 multiplexer.  Please
+note that this parameter is optional.
+
+<dt class=version-Prel><a name="field-mobile_operation_transmit_capability_o">mobile_operation_transmit_capability_o</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The parameters in this structure indicate the capability to transmit the multiplex layers
+described in Annex A/H.223 and Annex B/H.223.  Please note that this structure is optional.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-mobile_operation_transmit_capability_o-mode_change_capability">mode_change_capability</a><dd>When set to non-zero, indicates the terminal has the capability to change H.223 multiplex levels
+or options during a session.  The levels and options supported are listed below.  If set to zero
+the remainder of the structure will be ignored.
+
+<dt><a name="field-mobile_operation_transmit_capability_o-h223_AnnexA">h223_AnnexA</a><dd>When set to non-zero, indicates the terminal can transmit the MUX-PDUs as defined in Annex A/H.223.  
+
+<dt><a name="field-mobile_operation_transmit_capability_o-h223_AnnexA_double_flag">h223_AnnexA_double_flag</a><dd>When set to non-zero, indicates the terminal can transmit the MUX-PDUs as defined in Annex A/H.223
+with it's optional double-flag mode.
+
+<dt><a name="field-mobile_operation_transmit_capability_o-h223_AnnexB">h223_AnnexB</a><dd>When set to non-zero, indicates the terminal can transmit the MUX-PDUs as defined in AnnexB/H.223.
+
+<dt><a name="field-mobile_operation_transmit_capability_o-h223_AnnexB_with_header">h223_AnnexB_with_header</a><dd>When set to non-zero, indicates the terminal can transmit the MUX-PDUs as defined in AnnexB/H.223
+with its optional header field.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-mobile_multilink_frame_capability_o">mobile_multilink_frame_capability_o</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The parameters in this structure indicate the capability to receive and process mobile multilink
+frames.  Please note that this structure is optional.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-mobile_multilink_frame_capability_o-maximum_sample_size">maximum_sample_size</a><dd>Indicates the maximum number of octets in each sample that the terminal can process.
+
+<dt><a name="field-mobile_multilink_frame_capability_o-maximum_payload_length">maximum_payload_length</a><dd>Indicates the maximum length of frames in octets that the terminal can process.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-H223_AnnexC_capability_o">H223_AnnexC_capability_o</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The parameters in this structure indicate the capability to receive and process AL-PDUs as described
+in Annex C/H.223.  Please note that this structure is optional.
+
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-H223_AnnexC_capability_o-video_with_AL1M">video_with_AL1M</a><dd>When set to non-zero, indicates the capability to receive video using AL1M.
+
+<dt><a name="field-H223_AnnexC_capability_o-video_with_AL2M">video_with_AL2M</a><dd>When set to non-zero, indicates the capability to receive video using AL2M.
+
+<dt><a name="field-H223_AnnexC_capability_o-video_with_AL3M">video_with_AL3M</a><dd>When set to non-zero, indicates the capability to receive video using AL3M.
+
+<dt><a name="field-H223_AnnexC_capability_o-audio_with_AL1M">audio_with_AL1M</a><dd>When set to non-zero, indicates the capability to receive audio using AL1M.
+
+<dt><a name="field-H223_AnnexC_capability_o-audio_with_AL2M">audio_with_AL2M</a><dd>When set to non-zero, indicates the capability to receive audio using AL2M.
+
+<dt><a name="field-H223_AnnexC_capability_o-audio_with_AL3M">audio_with_AL3M</a><dd>When set to non-zero, indicates the capability to receive audio using AL3M.
+
+<dt><a name="field-H223_AnnexC_capability_o-data_with_AL1M">data_with_AL1M</a><dd>When set to non-zero, indicates the capability to receive data using AL1M.
+
+<dt><a name="field-H223_AnnexC_capability_o-data_with_AL2M">data_with_AL2M</a><dd>When set to non-zero, indicates the capability to receive data using AL2M.
+
+<dt><a name="field-H223_AnnexC_capability_o-data_with_AL3M">data_with_AL3M</a><dd>When set to non-zero, indicates the capability to receive data using AL3M.
+
+<dt><a name="field-H223_AnnexC_capability_o-alpdu_interleaving">alpdu_interleaving</a><dd>When set to non-zero, indicates the capability to receive and process AL-PDUs for which interleaving
+is applied.
+
+<dt><a name="field-H223_AnnexC_capability_o-maximum_AL1M_pdu_size">maximum_AL1M_pdu_size</a><dd>Indicates the maximum number of octets in each PDU that the terminal can receive when using
+adaptation layer AL1M.
+
+<dt><a name="field-H223_AnnexC_capability_o-maximum_AL2M_pdu_size">maximum_AL2M_pdu_size</a><dd>Indicates the maximum number of octets in each PDU that the terminal can receive when using
+adaptation layer AL2M.
+
+<dt><a name="field-H223_AnnexC_capability_o-maximum_AL3M_pdu_size">maximum_AL3M_pdu_size</a><dd>Indicates the maximum number of octets in each PDU that the terminal can receive when using
+adaptation layer AL3M.
+
+<dt><a name="field-H223_AnnexC_capability_o-rs_code_capability">rs_code_capability</a><dd>When set to non-zero, indicates the capability to receive the AL-PDUs for which Reed-Solomon coding
+is indicated.
+
+</dl>
+</div>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosh223api.html">Prosody H.223 Mux API</a>.
+</body>
+</html>

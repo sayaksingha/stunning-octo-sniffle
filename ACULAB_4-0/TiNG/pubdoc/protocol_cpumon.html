@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Protocols: cpumon</title>
+</head>
+<body>
+<h1>Prosody data communications Protocols: cpumon</h1>
+<p>
+This is a receive-only protocol which reads the CPU usage data from a
+Prosody processor. It has no configuration options.
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic data communications
+documentation.
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_cpu.h"</code> to get the
+	appropriate declarations.
+<p>
+	The protocol value is <code>kSMDCProtocolCpu</code>.
+<p>
+	There is no configuration for this protocol, so the config_data
+	pointer should be null (0) and the config_length should be zero.
+<p>
+	This protocol does not use encodings, so the 'encoding' field
+	must be set to the value kSMDCConfigEncodingNone.
+<p>
+	The firmware module <a href="gen/softmodindex.html#cpumon">cpumon</a>
+	must have been downloaded.
+<p>
+
+<h3><a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a></h3>
+<p>
+	[note] not useful - receiver is always connected.
+
+<h3><a href="gen/apifn-smdc_line_status.html">smdc_line_status()</a></h3>
+
+<h3><a href="gen/apifn-smdc_tx_status.html">smdc_tx_status()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	output half of a channel.
+
+<h3><a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	output half of a channel.
+
+<h3><a href="gen/apifn-smdc_rx_status.html">smdc_rx_status()</a></h3>
+<p>
+	Overrun is not monitored.
+
+<h3><a href="gen/apifn-smdc_rx_control.html">smdc_rx_control()</a></h3>
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+<p>
+The received data consists of 32-bit words, least significant byte
+first, each of which is one CPU usage measurement.
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	output half of a channel.
+</body>

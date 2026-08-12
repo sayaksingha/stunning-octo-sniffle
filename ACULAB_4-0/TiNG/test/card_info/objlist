@@ -1,0 +1,5 @@
+.	card_info.o
+Testlib	cardopen.o
+Testlib	errcode_sm.o
+Testlib	error.o
+apilib

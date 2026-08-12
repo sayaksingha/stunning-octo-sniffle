@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Protocols: CW rx</title>
+</head>
+<body>
+<h1>Prosody data communications Protocols: CW rx</h1>
+<p>
+CW is 'continuous wave' which is a method of transmitting
+data using a tone. Binary data is encoded by sending either silence
+or a tone. A tone represents a space (zero) bit, while silence
+represents a mark (one) bit. The name
+<em>continuous wave</em> comes from the world of radio
+communications. It may seem strange that a signalling system that
+starts and stops a tone can be called <em>continuous</em> but the
+name was introduced when radio communications was moving from the
+spark transmitters (which produce a burst of broad spectrum radio
+noise) to transmitters using oscillators and which therefore could
+transmit a continuous carrier at a single frequency - hence the name.
+<p>
+This protocol implements the receiver for CW. Since it is only a
+receiver, it only uses the input half of a channel. Typically the output
+half is configured for <a href="protocol_cwtx.html">CW tx</a>.
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic
+<a href="prosdc.html">data communications documentation</a>.
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_cw.h"</code> to get the
+	appropriate declarations.
+<p>
+	The protocol value is <code>kSMDCProtocolCWrx</code>.
+<p>
+The
+<a href="gen/apifn-smdc_channel_config.html#field-config_data">config_data</a>
+	pointer must point to one of these structs:
+<pre>
+	typedef struct smdc_cw_config_parms {
+		unsigned long <a href="#speed">speed</a>;
+		float <a href="#space_frequency">space_frequency</a>;
+		unsigned long <a href="#rx_carrier_off_mS">rx_carrier_off_mS</a>;
+	} SMDC_CW_CONFIG_PARMS;
+</pre>
+<p>
+	<a name="speed">'<code>speed</code>'</a> is the data rate in
+	bits per second.
+<p>
+	<a name="space_frequency">'<code>space_frequency</code>'</a> is
+	the frequency, in Hz, of the tone used to encode space ('0')
+	bits.
+<p>
+	<a name="rx_carrier_off_mS">'<code>rx_carrier_off_mS</code>'</a>
+	is the maximum duration of loss of carrier (in milliseconds)
+	that will be tolerated before deciding that the carrier has
+	gone. Of course this is equivalent to the maximum duration of
+	an uninterrupted mark ('1') signal.
+<p>
+	This protocol can use these encodings:
+	<a href="encoding_sync.html">SYNC</a>,
+	<a href="encoding_async.html">ASYNC</a>, and
+	<a href="encoding_hdlc.html">HDLC</a>.
+	Note that when using ASYNC encoding, the firmware module
+	<a href="gen/softmodindex.html#fskasyrx">fskasyrx</a>
+	is used instead of <a href="gen/softmodindex.html#asyrx">asyrx</a>,
+	and when SYNC or HDLC
+	encodings are used the firmware module 
+	<a href="gen/softmodindex.html#fskpll">fskpll</a> is required
+	in addition to the encoding module. Note that since a CW
+	signal contains no clock information, if SYNC or HDLC
+	encodings are used, the data must contain enough transitions
+	between silence and carrier (i.e. no long runs of only zeros or only
+	ones) to allow the receiver to keep locked onto the bit rate.
+<p>
+	The firmware modules <a href="gen/softmodindex.html#cwrx">cwrx</a>
+	and <a href="gen/softmodindex.html#inchan">inchan</a> must have been
+	downloaded.
+
+<h3><a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a></h3>
+<p>
+	[note] not useful - receiver is always connected
+
+<h3><a href="gen/apifn-smdc_line_status.html">smdc_line_status()</a></h3>
+
+<h3><a href="gen/apifn-smdc_tx_status.html">smdc_tx_status()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	output half of a channel.
+
+<h3><a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	output half of a channel.
+
+<h3><a href="gen/apifn-smdc_rx_status.html">smdc_rx_status()</a></h3>
+
+<h3><a href="gen/apifn-smdc_rx_control.html">smdc_rx_control()</a></h3>
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	output half of a channel.
+</body>

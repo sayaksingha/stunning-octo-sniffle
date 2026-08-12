@@ -1,0 +1,503 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>TiNG Overview</title>
+</head>
+<body>
+<h1>TiNG Overview</h1>
+<p>
+This document provides a general overview of TiNG, and attempts to
+answer these questions:
+<ul>
+<li><a href="#what">What functionality does TiNG provide?</a>
+<li><a href="#howfunc">How do you use TiNG functionality?</a>
+<li><a href="#howchan">How do channels relate to the hardware I have installed?</a>
+<li><a href="#chantype">Are there different kinds of channels?</a>
+<li><a href="#whenres">When are resources actually allocated to channels?</a>
+<li><a href="#chansts">How do I know when to check channel status?</a>
+<li><a href="#stopping">When are the various operations on a channel complete?</a>
+<li><a href="#chants">How do I connect a channel to somewhere useful?</a>
+<li><a href="#echocan">How do I use echo cancellation?</a>
+<li><a href="#config">What is the best way for my application to handle different configurations?</a>
+<li><a href="#fwdl">Should I download firmware from within my application?</a>
+<li><a href="#copyfile">Can I copy files into my own projects?</a>
+<li><a href="#otherdoc">What other documentation is available?</a>
+</ul>
+<h2><a name="what">What functionality does TiNG provide?</a></h2>
+<p>
+TiNG runs on Prosody-X cards or Prosody-S servers and provides the ability to:
+<ul>
+	<li>Input/output signals using RTP and/or TDM
+		<ul>
+			<li>TDM - ProsodyX only - A-law, mu-law and transparent
+			<li>RTP - supports many narrowband and wideband audio codecs, and some video codecs
+		</ul>
+	<li>Play files and streams of data
+		<ul>
+			<li>in various formats
+			<li>at various speeds - faster or slower than normal
+			<li>with volume and AGC adjustment
+			<li>with background audio mixed in
+		</ul>
+	<li>Generate various tones:
+		<ul>
+			<li>simple tones (from built-in list or as
+			configured)
+			<li>call progress tones (from built-in list or as
+			configured)
+			<li>DTMF
+		</ul>
+	<li>Record to files or to streams of data
+		<ul>
+			<li>in various formats
+			<li>with volume and AGC adjustment
+			<li>with silence elimination
+			<li>with tone elimination
+			<li>automatically stopping when the signal
+			falls silent
+		</ul>
+	<li>Detect of the presence of a signal (e.g. speech)
+	<li>Detect of simple tones such as DTMF (from built-in list or as
+			configured)
+	<li>Detect of call progress tones such as ringing, busy etc.
+			(from built-in list or as configured)
+	<li>Classification of a signal as a live speaker or an
+			answering machine
+	<li>Signal path processing
+		<ul>
+			<li>Echo cancellation
+			<li>Tone elimination, Gain, Mixing, Pitch shift
+			<li>Resampling
+		</ul>
+	<li>Data communications:
+		<ul>
+		<li>using modems: CW, FSK (V.21, V.23, Bell 103, Bell 202 etc), V.27, V.29, V.17, V.32, V.34
+		<li>using digital protocols: V.110, V.110RLP, HDLC, T.38
+		<li>with synchronous and asynchronous data formats
+		</ul>
+</ul>
+
+<h2><a name="howfunc">How do you use TiNG functionality?</a></h2>
+<p>
+Normally you need to create and configure signal receiver objects (typically VMPRx for RTP or TDMRx
+for TDM) to allow processing of signals coming into the system, and signal transmitter objects
+(typically VMPTx or TDMTx) to emit signals from the system.  These objects then
+need to be linked up with channels, signal processing paths, or other receiver
+or transmitter objects using <a href="howto_datafeed.html">datafeeds</a> - an 
+internal TiNG representation of a signal flow. See 
+<a href="#chants">How do I connect a channel to somewhere useful?</a> for more 
+details.
+<p>
+Channels are simply objects used by the TiNG API to
+control processing. Channels generally act as the source (output channel) or the sink (input channel) 
+of signals.  Duplex channels can be simultainuously source for one signal and sink for another signal.
+Just as an operating system might use file handles to allow you to refer to files and perform operations on the
+files, TiNG uses channels to refer to processing that you perform on these signals.  
+<p>
+When an incoming signal is connected to an input channel via a datafeed, then that channel may
+be controlled through the TiNG API to perform such functions as stream recorded data to
+the host for recording into a file, detect DTMF digits, or add the signal into a conference.
+<p>
+Conversely a output channel connected to a signal transmitter object can be set up using the
+TiNG API so that a TDM or RTP signal is generated at that point from, for example, data played from 
+a file, a tone generator, or a conference output.
+<p>
+<a href="prospath.html">Signal paths</a> are also objects used by the TiNG API to
+control processing, however rather than being a source or sink for a signal, they generally take
+a signal as input, perform some processing on it, and then pass the signal onwards.
+<p>
+When an incoming signal is connected to a signal path via a datafeed, processing elements may be 
+added to the path to apply such functions as gain, echo cancellation, or pitch shift, and then the 
+resulting signal may be connected via a datafeed to a signal transmitter object or some other
+destination (such as the input of a channel).
+<p>
+Datafeeds are created implicitly through the TiNG API, any object that is the source of a signal
+has an associated datafeed whose identifier may be obtained from that object in order to connect
+the signal to one or more other objects.
+<p>
+<h2><a name="howchan">How do channels relate to the ProsodyX hardware I have installed or to my ProsodyS server ?</a></h2>
+<p>
+When you install a Prosody-X card, it has one or
+more Prosody processors on it. These are advanced digital signal processors
+each with their own memory. Because each Prosody processor comes with its own
+private memory, they are often referred to as <em>modules</em>.  Each module runs
+a <a href="howto_download.html">downloadable</a> TiNG kernel and seperately loadable algorithm modules.
+<p>
+<img src="gen/card+mod.png" alt="Diagram of card containing modules">
+<p>
+When TiNG is used with a ProsodyS server, then its Prosody processor is represented by a single
+module on a virtual card (no kernel or algorithm downloading is required).
+<p>
+<p>You must <a href="pros_x.html">open</a> a card in order to access its modules.
+<p>
+You refer to a module in your program by using a <code>tSMModuleId</code> value.
+<p>
+The tSMModuleId values must be obtained from <a href="gen/apifn-sm_open_module.html">sm_open_module()</a>
+<p>
+When you allocate a channel, it refers to processing resources on a
+single module. A channel is always associated with one module and can
+never be split between two or more modules, nor can it move from one
+module to another.
+<p>
+<img src="gen/card+mod+chan.png" alt="Diagram of card containing modules containing channels">
+<p>
+Each module can support many channels. The maximum number it can
+support depends on what operations the channels are performing. 
+<p>
+<h2><a name="chantype">Are there different kinds of channels?</a></h2>
+<p>
+Yes. There are four kinds of channels:
+<ul>
+	<li>Input-only
+	<li>Output-only
+	<li>Half duplex
+	<li>Full duplex
+</ul>
+<p>
+An input-only channel cannot perform any operation that generates
+output (such as generating tones). An output-only channel cannot do
+anything that requires input (such as detecting tones). A half duplex
+channel can do anything, but cannot do input and output at the same
+time, while a full duplex channel can do input and output simultaneously.
+<p>
+Generally, it is a good idea to create channels which are either
+input-only or output-only as this protects you against some mistakes
+in which you use the wrong channel since the API functions will return an
+error if you try to do the wrong kind of operation on a channel.
+However, if you are using data communications, some protocols require
+that you do both the reception and transmission of data for a single
+connection on the same channel (for example, V.110).
+
+<h2><a name="whenres">When are resources actually allocated to channels?</a></h2>
+<p>
+Several different resources are used by a channel. The API library
+allocates some resources internally, such as memory to contain configuration
+information for the channel. These resources are allocated when the
+channel is allocated. Other resources are allocated on
+the Prosody processor that handles the channel. These resources are
+only allocated when an operation requires them, so for example, if
+you allocate a channel and play a file on the channel, when you
+finish playing the file, the channel is no longer using any resources
+on the Prosody processor.
+
+<h2><a name="chansts">How do I know when to check channel status?</a></h2>
+<p>
+When performing play, record and other tasks, you need to check the
+channel status so that you can find out when important changes to the
+status occur indicating things like when to supply or collect
+more data and when the task has finished. To make this checking
+efficient, a facility is available to indicate when it may be worth
+checking the status. This is provided using <em>tSMEventId</em>
+objects. You allocate one of these (with
+<a href="gen/apifn-smd_ev_create.html">smd_ev_create()</a>),
+associate it with a channel (with
+<a href="gen/apifn-sm_channel_set_event.html">sm_channel_set_event()</a>),
+and then you can wait on this event which will be signalled when you
+need to check the channel's status. You can either wait using
+<a href="gen/apifn-smd_ev_wait.html">smd_ev_wait()</a> or wait for
+one of several events in a manner which varies between operating
+systems. See <a href="events.html">Prosody events</a> for further
+details.
+
+<h2><a name="errorrep">When are errors reported?</a></h2>
+<p>
+The API implemented by the TiNG library is designed so that, as much as possible,
+it never blocks in an API call waiting for a response over IP from a Prosody processor. One consequence of this 
+is an error related to an API call that is detected by a Prosody processor rather than the library 
+is not reported in the return call of the API call, instead it is reported through an error
+return for a subsequent status call (for the object that was the subject of the API call).
+<p>
+For example, if an attempt is made to replay a mu-Law WAV file and mu-Law firmware had not been downloaded
+onto the Prosody X module, then no error would be reported for the initial 
+<a href="gen/apifn-sm_replay_start.html">sm_replay_start()</a> call, but a subsequent
+<a href="gen/apifn-sm_replay_status.html">sm_replay_status()</a> will report ERR_SM_NO_SUCH_FIRMWARE.
+
+<h2><a name="stopping">When are the various operations on a channel complete?</a></h2>
+<p>
+Some operations on a channel are started by one API call and do not
+complete before the API call returns. They are summarised in this
+table:
+<p>
+<table border>
+<tr><th colspan=2>Operation
+<tr>
+	<th>Started by
+	<th>Completed when
+
+<tr>
+	<td><a href="gen/apifn-sm_replay_start.html">sm_replay_start()</a>
+	<td><a href="gen/apifn-sm_replay_status.html">sm_replay_status()</a>
+		returns kSMReplayStatusComplete
+
+<tr>
+	<td><a href="gen/apifn-sm_record_start.html">sm_record_start()</a>
+	<td><a href="gen/apifn-sm_record_status.html">sm_record_status()</a>
+		returns kSMRecordStatusComplete
+
+<tr>
+	<td><a href="gen/apifn-sm_play_tone.html">sm_play_tone()</a>
+		[see note 1]
+	<td><a href="gen/apifn-sm_play_tone_status.html">sm_play_tone_status()</a>
+		returns kSMPlayToneStatusComplete
+
+<tr>
+	<td><a href="gen/apifn-sm_play_cptone.html">sm_play_cptone()</a>
+		[see note 1]
+	<td><a href="gen/apifn-sm_play_cptone_status.html">sm_play_cptone_status()</a>
+		returns kSMPlayCPToneStatusComplete
+
+<tr>
+	<td><a href="gen/apifn-sm_play_digits.html">sm_play_digits()</a>
+		[see note 1]
+	<td><a href="gen/apifn-sm_play_digits_status.html">sm_play_digits_status()</a>
+		returns kSMPlayDigitsStatusComplete
+
+<tr>
+	<td><a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a>
+		enabling a detection
+	<td><a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a>
+		enabling no detection
+
+<tr>
+	<td><a href="gen/apifn-sm_asr_listen_for.html">sm_asr_listen_for()</a>
+		enabling recognition
+	<td><a href="gen/apifn-sm_asr_listen_for.html">sm_asr_listen_for()</a>
+		disabling recognition
+
+<tr>
+	<td><a href="gen/apifn-sm_conf_prim_start.html">sm_conf_prim_start()</a> 
+	<td><a href="gen/apifn-sm_conf_prim_status.html">sm_conf_prim_status()</a>
+		returns kSMConfStatusStopped
+
+<tr>
+	<td><a href="gen/apifn-sm_condition_input.html">sm_condition_input()</a>
+		enabling a conditioning type
+	<td><a href="gen/apifn-sm_condition_input.html">sm_condition_input()</a>
+		enabling no conditioning type
+
+<tr>
+	<td><a href="gen/apifn-sm_catsig_listen_for.html">sm_catsig_listen_for()</a>
+		enabling a signal categorisation algorithm
+	<td><a href="gen/apifn-sm_catsig_listen_for.html">sm_catsig_listen_for()</a>
+		with non-zero <code>abort_catsig_alg</code> field
+
+<tr>
+	<td><a href="gen/apifn-sm_replay_file_start.html">sm_replay_file_start()</a> 
+	<td><a href="gen/apifn-sm_replay_file_complete.html">sm_replay_file_complete()</a>
+		returns
+
+<tr>
+	<td><a href="gen/apifn-sm_record_file_start.html">sm_record_file_start()</a> 
+	<td><a href="gen/apifn-sm_record_file_complete.html">sm_record_file_complete()</a>
+		returns
+
+<tr>
+	<td><a href="gen/apifn-sm_replay_bfile_start.html">sm_replay_bfile_start()</a> 
+	<td><a href="gen/apifn-sm_replay_bfile_complete.html">sm_replay_bfile_complete()</a>
+		returns
+
+<tr>
+	<td><a href="gen/apifn-sm_record_bfile_start.html">sm_record_bfile_start()</a> 
+	<td><a href="gen/apifn-sm_record_bfile_complete.html">sm_record_bfile_complete()</a>
+		returns
+
+<tr>
+	<td><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a>
+	<td><a href="gen/apifn-smdc_tx_status.html">smdc_tx_status()</a>
+		returns kSMDCTxStatusFinished and/or <a href="gen/apifn-smdc_rx_status.html">smdc_rx_status()</a>
+		returns kSMDCRxStatusFinished
+
+</table>
+<p>
+<dl>
+<dt>Note 1
+<dd>
+These functions take a <code>wait_for_completion</code> field. If
+this is non-zero, then the operation is already complete when the function
+returns and you should not attempt to check the status after this.
+<dt>General Note
+<dd>
+If a channel is released, any operations in progress on the channel are
+immediately stopped, no status information about such operations is reported
+or recorded anywhere, and all resources being used by the channel are
+released.
+</dl>
+
+<h2><a name="chants">How do I connect a channel to somewhere useful?</a></h2>
+<p>
+Data which is produced or received by a channel usually is conveyed over <em>RTP streams</em>
+or TDM <em>timeslots</em> (Prosody X only). <a href="howto_datafeed.html">Datafeeds</a> are used
+route data within the Prosody processor itself before it is rendered into RTP packets or TDM samples.
+<p>
+The typical sequence of TiNG API calls to connect a channel output to a previously configured VMP object
+emitting an RTP stream would be:
+<a href="gen/apifn-sm_channel_get_datafeed.html">sm_channel_get_datafeed()</a>
+ followed by 
+<a href="gen/apifn-sm_vmptx_datafeed_connect.html">sm_vmptx_datafeed_connect()</a>
+<p>
+The typical sequence of TiNG API calls to connect a signal recovered from an RTP stream by a previously configured VMPRx to a channel input would be:
+<a href="gen/apifn-sm_vmprx_get_datafeed.html">sm_vmprx_get_datafeed()</a>
+ followed by 
+<a href="gen/apifn-sm_channel_datafeed_connect.html">sm_channel_datafeed_connect()</a>
+<p>
+TDM Timeslots are connected to a digital switch matrix controlled by the Aculab
+switch driver.
+Each ProsodyX card module has a limited number of available timeslots,
+specifically 256 input timeslots and 256 output timeslots, organised into
+streams (two input and two output) of 128 timeslots each. You
+explicitly connect a channel to a timeslot via a datafeed before 
+starting an operation on the channel.
+<p>
+The typical sequence of TiNG API calls to connect a channel output to a TDM
+timeslot would be:
+<a href="gen/apifn-sm_channel_get_datafeed.html">sm_channel_get_datafeed()</a>
+ followed by 
+<a href="gen/apifn-sm_tdmtx_datafeed_connect.html">sm_tdmtx_datafeed_connect()</a>
+<p>
+The typical sequence of TiNG API calls to connect a TDM signal to a channel input would be:
+<a href="gen/apifn-sm_tdmrx_get_datafeed.html">sm_tdmrx_get_datafeed()</a>
+ followed by 
+<a href="gen/apifn-sm_channel_datafeed_connect.html">sm_channel_datafeed_connect()</a>
+<p>
+For compatibility with older TDM based applications that ran on Prosody cards prior to the 
+introduction of ProsodyX, the calls <a href="gen/apifn-sm_switch_channel_input.html">sm_switch_channel_input()</a> and
+<a href="gen/apifn-sm_switch_channel_input.html">sm_switch_channel_input()</a> allow the above connections
+to be done in one step - however use of these calls is not recommended in new applications.
+<p>
+The switch driver documentation explains the numbering of streams and timeslots for ProsodyX cards.
+<p>
+
+
+<h2><a name="echocan">How do I use echo cancellation?</a></h2>
+<p>
+You can use the function
+<a href="gen/apifn-sm_path_echocancel.html">sm_path_echocancel()</a>
+to start echo cancellation on a signal processing path. Typically the signal
+fed to the path would be a signal received from a TDM timeslot, and the signal 
+output by the path would be the result of echo cancellation.  You must also supply an
+additional <a href="#priref">reference signal</a>.
+<p>
+Alternatively the function
+<a href="gen/apifn-sm_condition_input.html">sm_condition_input()</a>
+can be used to start echo cancellation on a channel. You can then use
+the resulting channel signal for other operations, such as conferencing, which will then
+use the echo-cancelled signal. This channel is the <em>primary</em>
+and you must specify another channel to use as the <em>reference</em>.
+
+<h3><a name="priref">What are the 'primary' and 'reference'?</a></h3>
+<p>
+The <em>primary</em> is the signal being received from which echo is
+to be removed. The <em>reference</em> is the signal which may appear
+in the primary as an echo. One typical scenario is that the reference
+is a prompt which is being played through Prosody to a user and the
+primary is the signal from that user which we are feeding into a
+speech recogniser. If we want to recognise the user's speech, it may be
+necessary to remove any echo of our prompt - otherwise the speech
+recogniser would think that the prompt was the user speaking and decode
+it. This problem does not normally arise when you are doing tone
+detection instead of speech recognition because prompts do not normally
+contain the tones being detected.
+
+<h2><a name="config">What is the best way for my application to handle different configurations?</a></h2>
+<p>
+It is not as easy to give a universal answer as it may first appear.
+One obvious way to handle a variety of possible configurations is for
+the application to use API functions to discover what resources are
+available and then to use them. This approach has two main
+disadvantages: it makes the application more complex and it makes
+testing difficult.
+<p>
+The application becomes complex because the
+consequences of the presence or absence of a resource can have a
+far-reaching effect. For example, if an additional Prosody processor
+module is found, this must not cause the application to allocate channels on
+that module which later need to be connected in a conference with channels on
+another module (which is not possible). Similarly, finding fewer
+modules must not mean that channels are allocated in a way which
+overloads one module when there is spare capacity elsewhere. 
+<p>
+Testing is made difficult because you need to have each possible
+configuration available, which means lots of shutting down,
+exchanging cards, and rebooting. It also makes it difficult to test
+because parts of the application become interdependent, which
+produces more combinations to be tested.
+<p>
+There is another, less significant, disadvantage which is that if a
+system develops a fault and a resource is no longer available, the
+application will not realise that the resource is supposed to be present.
+<p>
+So if we do not let an application configure itself automatically,
+what would be a practical alternative? For many applications you can
+plan resource usage in advance. For example, in a voicemail
+application you can pre-determine which Prosody module will handle a
+call depending on which trunk and timeslot the call comes from. With
+the Prosody X PCIe card with four trunks fitted you might decide that calls
+from the first two trunks will be handled by the first Prosody module
+on that card and calls from the other two trunks will be handled by
+the second Prosody module. This makes it obvious that the two pairs
+of trunks are independent and cannot interfere with each other. It
+also makes it much easier to track down problems. For example, if
+there is a problem with one trunk which affects Prosody (such as
+distortion which prevents reliable tone detection) it is easier to
+see that it always happens in one place if the configuration is
+fixed.
+<p>
+In practice, the best way to configure an application is often some
+sort of configuration file which is read when the application starts.
+This allows the application to be adapted to a variety of
+configurations without having to worry about it doing anything
+unexpected in an unusual configuration.
+
+<h2><a name="fwdl">Should I download firmware from within my application?</a></h2>
+<p>
+While it is possible for an application to download firmware, it is
+normally better to do so before starting the application.
+This makes testing and debugging much easier because when a special
+firmware module is needed to help with a test, you can simply
+download it and run your application. If the application downloaded
+the module, it would have to be modified to download the extra
+module. For example, if you want to determine what signal is being
+processed, you might run a recording using <code>locrec</code> from
+the <code>test</code> directory, which would allow you to make a
+recording while your application was running.
+
+<h2><a name="copyfile">Can I copy files into my own projects?</a></h2>
+<p>
+Normally a project should refer to any necessary files rather than
+have local copies. This is the way libraries usually work (you
+wouldn't copy "stdio.h" into a project, would you?). If you reserve a
+particular location for Aculab software (e.g.
+<code>/opt/aculab</code> on Unix systems, or <code>C:\Program
+Files\Aculab</code> on Windows), then you can make several projects
+refer to this location, making it easier to see what versions you
+might be using. On Linux, you can use a symbolic link if
+you want to have a location which always refers to the latest
+installed version. On Windows 2000/XP you can do the same with
+<em>junctions</em> but see the comment at the end of the page
+<a href="install_unpack.html">Prosody installation guide: unpacking</a>.
+<p>
+If an external requirement (such as a version control standard)
+forces you to copy parts of a distribution into your project, be sure
+to do this in a way which avoids mixing files from different
+versions. Keep a record of which files you copied and when you
+upgrade to a later version, ensure that you remove all of them before
+copying in the files from the new version.
+<p>
+While it is not generally a good idea to copy Prosody files into your projects,
+the <code>.h</code> files in the <code>include</code> directory have been
+processed in a way which tries to make this as safe as possible. Each
+is self-contained, which reduces the possibilities for mixing
+arbitrary files from different versions. However this is not a
+complete protection. For example, you can still copy
+<code>smdrvr.h</code> from one version and <code>smbesp.h</code> from
+a different version and attempt to use both in a single application.
+
+<h2><a name="otherdoc">What other documentation is available?</a></h2>
+<p>
+All of the documentation for TiNG is listed on
+the <a href="index.html">Prosody main page</a>. Additional
+documentation can be found on the <a href="http://www.aculab.com">Aculab web site</a>.
+</body>
+</html>

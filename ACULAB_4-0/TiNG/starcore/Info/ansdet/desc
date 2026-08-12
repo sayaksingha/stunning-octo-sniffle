@@ -1,0 +1,4 @@
+Answering machine detection.
+Used by <a href="apifn-sm_catsig_listen_for.html">
+sm_catsig_listen_for()</a> to distinguish between a live
+speaker and an answering machine.

@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody DTLS processing: API: sm_dtlstx_status</title>
+</head>
+<body>
+<h1>Prosody DTLS processing: API: sm_dtlstx_status</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_dtlstx_status(struct sm_dtlstx_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_status_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* in */
+	<a name="enum-kSMDTLStxStatus">enum kSMDTLStxStatus</a> {
+		<a href="#field-kSMDTLStxStatusRunning">kSMDTLStxStatusRunning</a>,
+		<a href="#field-kSMDTLStxStatusStopped">kSMDTLStxStatusStopped</a>,
+		<a href="#field-kSMDTLStxStatusHasCapacity">kSMDTLStxStatusHasCapacity</a>,
+	} <a href="#field-status">status</a>;						/* out */
+} SM_DTLSTX_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Returns the current status of the DTLS[tx] or an error to indicate that
+a problem occurred during start-up.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>The DTLS[tx] to interrogate
+
+<dt><a name="field-status">status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMDTLStxStatusRunning">kSMDTLStxStatusRunning</a>
+<dd>Indicates that there is nothing significant to report
+
+<dt><a name="field-kSMDTLStxStatusStopped">kSMDTLStxStatusStopped</a>
+<dd>Indicates that the DTLS[tx] has stopped transmitting DTLS and that it is
+safe to destroy
+
+<dt><a name="field-kSMDTLStxStatusHasCapacity">kSMDTLStxStatusHasCapacity</a>
+<dd>The DTLS[tx] has capacity to buffer another packet.
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources existed to create the DTLS[tx]</ul>
+<hr>
+<p>This function is part of the <a href="../prosdtls.html">Prosody DTLS processing API</a>.
+</body>
+</html>

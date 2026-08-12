@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+
+<title>Prosody speech processing: pre-loaded input tones</title>
+</head>
+<body>
+<h1>Prosody speech processing: pre-loaded input tones</h1>
+<h2>Prosody speech processing: pre-loaded input frequencies</h2>
+<p>
+The following table lists the input frequencies supported by default,
+along with their corresponding identifiers (that may be used in calls
+to <a href="gen/apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>.
+<p><table border>
+<tr>
+	<th>Id
+	<th>Lower Freq rejection coefficient
+	<th>Upper Freq rejection coefficient
+	<th>Description
+
+<tr>
+	<td>0<td>679.6875<td>710.9375<td>DTMF frequency 1
+
+<tr>
+	<td>1<td>742.1875<td>789.0625<td>DTMF frequency 2
+
+<tr>
+	<td>2<td>835.9375<td>867.1875<td>DTMF frequency 3
+
+<tr>
+	<td>3<td>914.0625<td>960.9375<td>DTMF frequency 4
+
+<tr>
+	<td>4<td>1179.6875<td>1242.1875<td>DTMF frequency 5
+
+<tr>
+	<td>5<td>1304.6875<td>1367.1875<td>DTMF frequency 6
+
+<tr>
+	<td>6<td>1445.3125<td>1507.8125<td>DTMF frequency 7
+
+<tr>
+	<td>7<td>1601.5625<td>1664.0625<td>DTMF frequency 8
+
+<tr>
+	<td>8<td>304.6875<td>554.6875<td>Call Progress 1
+
+<tr>
+	<td>9<td>898.4375<td>1007.8125<td>Call Progress 2
+
+<tr>
+	<td>10<td>1335.9375<td>1460.9375<td>Call Progress 3
+
+<tr>
+	<td>11<td>1742.1875<td>1851.5625<td>Call Progress 4
+
+<tr>
+	<td>12<td>589.0<td>651.0<td>Call Progress 5
+
+<tr>
+	<td>13<td>1062.0<td>1138.0<td>Fax CNG
+
+<tr>
+	<td>14<td>2085.0<td>2115.0<td>Fax CED
+
+</table>
+</div>
+
+<p>
+
+<a name="preloadedintones"></a>
+<h2>Prosody speech processing: pre-loaded input tone sets</h2>
+<p>
+The following table lists the sets of simple (single or dual
+component frequency) input tones that may be selected as the set of
+tones to listen for on an input channel that are supported by
+default and the corresponding identifiers for the sets (that may be
+used in calls to
+<a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a>).
+Additional tone sets may be defined by an application through calls
+to <a href="gen/apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>
+<p><table border>
+<tr>
+	<td><th colspan=2>Id
+
+<tr>
+	<td><th>0<th>1
+
+<tr>
+	<td>Description of tone set
+		<td>DTMF<td>Call progress &amp; fax
+
+<tr>
+	<td>Band 1 first frequency coeff id
+		<td>0<td>* see note below
+
+<tr>
+	<td>Band 1 frequency count
+		<td>4<td>* see note below
+
+<tr>
+	<td>Band 2 first frequency coeff id
+		<td>4<td>* see note below
+
+<tr>
+	<td>Band 2 frequency count
+		<td>4<td>* see note below
+
+<tr>
+	<td>Required third peak ratio
+		<td>0.079432823<td>0.1
+
+<tr>
+	<td>Required signal to noise ratio
+		<td>0.755573455<td>0.5
+
+<tr>
+	<td>Required minimum power
+		<td>-36<td>-36
+
+<tr>
+	<td>Twist ratio for dual tone
+		<td>10<td>0
+
+<tr>
+	<td>Start of frequency range (Hz)
+		<td>250<td>250
+
+<tr>
+	<td>End of frequency range (Hz)
+		<td>3406<td>3406
+
+</table>
+<p>
+* Note about pre-loaded input tone set for call progress and fax
+<p>
+A specially constucted set of component frequency pairs is used for the preloaded toneset 1
+for call progress and fax tones. It is constructed from the 7 preloaded input frequencies 
+with ids from 8 to 14. Normally (i.e. for tonesets added through the API) all combinations of
+the specified two frequency bands are included in the set of tones to listen for. 
+With the special preloaded toneset 1 the combinations are restricted to a subset
+being the individual single tones and the addition of two dual tones. This accomodates the use
+of the toneset by the cadenced call progress tone detector to detect a range of different busy and dial tones.
+<p>
+The enumeration of specially constructed set of frequency pairs is given in this <a href="prospapi_cptones.html#enumcptones">table</a>. Note if 
+this toneset used for tone detection rather than call-progress tone detection, silence is omitted from the enumeration and the values 
+returned by <a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a> would be the value in the table minus one, so for example fax CED would be 8.
+ 
+</body>
+</html>
+
+
+

@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: Dealing with Prosody X connection failure</title>
+</head>
+<body>
+<h1>Prosody application note: Dealing with Prosody X connection failure</h1>
+<h2>Determining connection failure</h2>
+<p>
+Prosody uses UDP to communicate with a Prosody X card. UDP is an 'unreliable' 
+protocol, meaning packets can be discarded with no indication to either the 
+sender or receiver. Hence, occasional packet loss, and therefore brief 
+interruptions to the network, must be tolerated. Prosody uses a protocol known 
+as ASSP to manage the acknowledgement and retransmission of packets as needed. 
+This is handled by the API library and needs no user intervention. Usually the 
+only API visible symptom of significant, but temporary, packet loss is replay 
+underruns and recording overruns.
+<p>
+There are many different ways in which the transmission of packets between 
+the controlling application and the Prosody X can get interrupted. These 
+include cables being removed and network switch failure. In many cases, the sockets 
+interface on the controlling application's host system will provide no indication 
+of network failure and so is indistinguishable from packet loss. When the sockets 
+interface does report errors, the API library will reset the connection and start 
+returning errors, such as ERR_SM_DISCONNECTED. In these circumstances, the clean up 
+procedure given below should be followed.
+<p>
+Since the API library is not always able to determine if any packet loss is caused 
+by transient conditions or by a permanent failure, external methods must be used. 
+The Aculab 'Resource management API' provides methods for tracking which cards are 
+currently reachable and available for use.
+
+<h2>Coping with connection failure</h2>
+<p>
+When communication with a Prosody X card has failed the API is no longer informed 
+of changes to the state of any tasks running on the card. Events will not become signalled 
+(except the module event) and blocking functions will not return. In situations 
+where terminating the application is not an option, special care must be taken.
+It is necessary to avoid all blocking functions and never have an infinite wait on only 
+Prosody events. Caution is needed as some functions that normally do not block, may 
+under certain circumstances. For example, 
+<a href="gen/apifn-sm_put_replay_data.html">sm_put_replay_data()</a> can block if 
+<a href="gen/apifn-sm_replay_status.html">sm_replay_status()</a> does not report 
+<code>kSMReplayStatusHasCapacity</code>.
+
+<h3>Prosody API functions that will block</h3>
+<p>
+The functions
+<a href="gen/apifn-sm_play_tone.html">sm_play_tone()</a>,
+<a href="gen/apifn-sm_play_cptone.html">sm_play_cptone()</a>, and 
+<a href="gen/apifn-sm_play_digits.html">sm_play_digits()</a> will block when 
+<code>wait_for_completion</code> is non zero.
+The functions <a href="gen/apifn-sm_replay_abort.html">sm_replay_abort()</a> and
+<a href="gen/apifn-sm_vmprx_get_ports.html">sm_vmprx_get_ports()</a> 
+will block when <code>nowait</code> is zero. 
+<p>
+The function <a href="gen/apifn-sm_conf_prim_abort.html">sm_conf_prim_abort()</a>
+waits for confirmation that the conference has been aborted. The function 
+<a href="gen/apifn-sm_conf_prim_stop.html">sm_conf_prim_stop()</a> with a non zero
+<code>no_wait</code> should be used instead, along with
+<a href="gen/apifn-sm_conf_prim_status.html">sm_conf_prim_status()</a> to determine 
+when the conference has been stopped. The high level conference API uses 
+sm_conf_prim_abort().
+
+<h3>Releasing resources</h3>
+<p>
+Obviously, waiting for tasks to stop is not possible but channels, VMP[rx], VMP[tx], 
+RTCP handlers, etc. still need to be cleaned up. However, it is important to ensure 
+that there is no attempt to use resources after they have been freed. Channels should 
+be released with <a href="gen/apifn-sm_channel_release.html">sm_channel_release()</a> 
+and any associated events freed with 
+<a href="gen/apifn-smd_ev_free.html">smd_ev_free()</a>. Other items should be 
+destroyed using the appropriate function:
+<table border>
+<tr>
+<th>Item<th>Destroy function
+<tr><td>VMP[tx]<td><a href="gen/apifn-sm_vmptx_destroy.html">sm_vmptx_destroy()</a>
+<tr><td>VMP[tx] toneset<td><a href="gen/apifn-sm_vmptx_destroy_toneset.html">sm_vmptx_destroy_toneset()</a>
+<tr><td>VMP[tx] CSRC list<td><a href="gen/apifn-sm_vmptx_destroy_csrc_list.html">sm_vmptx_destroy_csrc_list()</a>
+<tr><td>VMP[rx]<td><a href="gen/apifn-sm_vmprx_destroy.html">sm_vmprx_destroy()</a>
+<tr><td>RTCP handler<td><a href="gen/apifn-sm_rtcphand_destroy.html">sm_rtcphand_destroy()</a>
+<tr><td>FMP[tx]<td><a href="gen/apifn-sm_fmptx_destroy.html">sm_fmptx_destroy()</a>
+<tr><td>FMP[rx]<td><a href="gen/apifn-sm_fmprx_destroy.html">sm_fmprx_destroy()</a>
+<tr><td>Data path<td><a href="gen/apifn-sm_path_destroy.html">sm_path_destroy()</a>
+</table>
+
+<h3>Closing the module</h3>
+<p>
+All resources associated with a module must be released before it is closed. It is an 
+error not to do so. The function <a href="gen/apifn-sm_close_module.html">sm_close_module()</a> 
+can be used. However, this function resets the ASSP connection to the module and blocks 
+until the DSP confirms the reset was successful, or until it can be sure there are no 
+packets related to the connection still in transit. This blocking behaviour may be 
+undesirable (can block for up to 10 minutes). Alternatively, the closing of the module 
+can be initiated using 
+<a href="gen/apifn-sm_shutdown_module.html">sm_shutdown_module()</a>. When the module 
+can be closed without blocking the module event, obtained using 
+<a href="gen/apifn-sm_module_get_event.html">sm_module_get_event()</a>,
+will become signalled and 
+<a href="gen/apifn-sm_module_status.html">sm_module_status()</a>
+will return <code>kSMModuleStatusShutdown</code>. At this point, 
+<a href="gen/apifn-sm_close_module.html">sm_close_module()</a> will no longer block.
+Once all the modules on a card have been closed the card itself can be closed.
+
+<h3>Resources on the DSP module</h3>
+<p>
+The DSP will clean up all resources related to an ASSP connection when it receives an 
+ICMP 'unreachable' packet. As this will only occur in response to an outgoing packet, 
+the timing of the clean up of DSP resources depends on the current activity. To prevent 
+DSP resources from becoming orphaned, the ASSP connection is occasionally validated 
+(every 10 minutes) during idle periods by an exchange of packets. 
+
+<h2>When connectivity is restored</h2>
+<p>
+<h3>Application has not started to clean up</h3>
+<p>
+If the DSP has not noticed the break in connectivity, then the application can 
+proceed as normal. Depending on the duration of the break in there may be replay 
+underruns and recording overruns.
+<p>
+If, however, the DSP has already cleaned up the resources the application was using, 
+the connection to the module will be reset. This will cause various functions 
+(usually the status functions) to return errors, such as ERR_SM_DISCONNECTED. When 
+this occurs the application should clean up as described above before using the 
+module again.
+
+<h3>Application has closed the module</h3>
+<p>
+Methods external to the Prosody API must be used to determine when an application 
+is able to use a module again. Whatever method is used to decide when a module is 
+available, the firmware loaded on it must be in a known state before it is used. 
+It is recommended that when a module becomes available for use, the firmware is reloaded.
+<p>
+The Aculab 'Resource management API' can be used to determine which cards are 
+available for application use. If it has been configured to load firmware on to the 
+card, it will do so and report when this has been done.
+
+</body>
+</html>

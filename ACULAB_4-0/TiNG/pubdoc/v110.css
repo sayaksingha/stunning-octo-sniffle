@@ -1,0 +1,50 @@
+@import url(TiNG.css);
+
+.one {
+	background-color:fuchsia;
+}
+
+.zero {
+	background-color:red;
+}
+
+.ign {
+	background-color:white;
+}
+
+.data {
+	background-color:yellow;
+}
+
+.crc {
+	background-color:aqua;
+}
+
+.dtx {
+	background-color:lime;
+}
+
+.e {
+	background-color:lime;
+}
+
+.x {
+	background-color:lime;
+}
+
+.s {
+	background-color:aqua;
+}
+
+.esync {
+	background-color:silver;
+}
+
+.nonstd {
+	background-color:fuchsia;
+}
+
+.nonacc {
+	color:white;
+	background-color:black;
+}

@@ -1,0 +1,848 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="v110.css">
+<title>Prosody data communications Protocols: V.110 RLP tx</title>
+</head>
+<body>
+<h1>Prosody data communications Protocols: V.110 RLP tx</h1>
+<p>
+V.110 RLP is a related to the ITU-T V.110 standard. It is the <em>Radio
+Link Protocol</em> which allows V.110 to interwork with devices like
+mobile phones which use a radio interface.
+<p>
+This protocol implements the transmitter for V.110 RLP. Since it is only
+a transmitter, it only uses the output half of a channel. Typically the
+input half is configured for <a href="protocol_v110rlprx.html">V.110 RLP
+rx</a>.
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic data communications
+documentation.
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_rlp.h"</code> to get the
+	appropriate declarations.
+<p>
+	The protocol value is <code>kSMDCProtocolV110RLPtx</code>.
+<p>
+	The config_data pointer must point to one of these structs:
+<pre>
+	typedef struct smdc_v110rlp_config_parms {
+		unsigned long speed;
+	} SMDC_V110RLP_CONFIG_PARMS;
+</pre>
+<p>
+	Where '<code>speed</code>' is the speed in bits per second
+	(6000, 12000, 24000, or 48000).
+<p>
+	The firmware module <a href="gen/softmodindex.html#v110rlpt">v110rlpt</a>
+	must have been downloaded.
+<p>
+	This protocol does not use encodings, so the 'encoding' field
+	must be set to the value kSMDCConfigEncodingNone.
+
+<h3><a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a></h3>
+<p>
+	The 'DTX' bit is controlled by the RTS commands.
+	[note] Other commands are invalid because RLP does not use an
+	initial handshake.
+<p>
+	The <a href="gen/apifn-smdc_line_control.html#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>
+	command is <strong>not</strong> supported by this protocol.
+
+
+<h3><a href="gen/apifn-smdc_line_status.html">smdc_line_status()</a></h3>
+
+<h3><a href="gen/apifn-smdc_tx_status.html">smdc_tx_status()</a></h3>
+<p>
+	The transmitter never reports 'empty'.
+<p>
+	[note] 'flow' is not useful since there is no flow
+	control mechanism.
+
+<h3><a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a></h3>
+<p>
+	The only notification implemented is NotifyOnCapacity.
+<p>
+	When setting the capacity, it is necessary to specify a
+	value one greater than the value required. i.e. to get notified
+	when space is available for at least 32 bytes, set the capacity
+	to 33 or greater.
+
+<h3><a href="gen/apifn-smdc_rx_status.html">smdc_rx_status()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	input half of a channel.
+
+<h3><a href="gen/apifn-smdc_rx_control.html">smdc_rx_control()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	input half of a channel.
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	input half of a channel.
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+<p>
+	The length of data supplied in each call should be a multiple of
+	32 bits. The data is interpreted in 256-bit pieces, but it is
+	not necessary to call smdc_tx_data() with a whole piece, nor to
+	ensure that each call describes only one piece. i.e. the calls
+	can pass any convenient amount of data (up to the maximum
+	transfer size allowed). Each piece is interpreted as follows
+	(least significant bit on the right):
+<p>
+<table border>
+	<tr>
+		<th align=left>MSB
+		<th colspan=6>
+		<th align=right>LSB
+	
+	<tr>
+		<td class=data>D7
+		<td class=data>D6
+		<td class=data>D5
+		<td class=data>D4
+		<td class=data>D3
+		<td class=data>D2
+		<td class=data>D1
+		<td class=data>D0
+	
+	<tr>
+		<td class=data>D15
+		<td class=data>D14
+		<td class=data>D13
+		<td class=data>D12
+		<td class=data>D11
+		<td class=data>D10
+		<td class=data>D9
+		<td class=data>D8
+	
+	<tr>
+		<td class=data>D23
+		<td class=data>D22
+		<td class=data>D21
+		<td class=data>D20
+		<td class=data>D19
+		<td class=data>D18
+		<td class=data>D17
+		<td class=data>D16
+	
+	<tr>
+		<td class=data>D31
+		<td class=data>D30
+		<td class=data>D29
+		<td class=data>D28
+		<td class=data>D27
+		<td class=data>D26
+		<td class=data>D25
+		<td class=data>D24
+	
+	<tr>
+		<td class=data>D39
+		<td class=data>D38
+		<td class=data>D37
+		<td class=data>D36
+		<td class=data>D35
+		<td class=data>D34
+		<td class=data>D33
+		<td class=data>D32
+	
+	<tr>
+		<td class=data>D47
+		<td class=data>D46
+		<td class=data>D45
+		<td class=data>D44
+		<td class=data>D43
+		<td class=data>D42
+		<td class=data>D41
+		<td class=data>D40
+	
+	<tr>
+		<td class=data>D55
+		<td class=data>D54
+		<td class=data>D53
+		<td class=data>D52
+		<td class=data>D51
+		<td class=data>D50
+		<td class=data>D49
+		<td class=data>D48
+	
+	<tr>
+		<td class=data>D63
+		<td class=data>D62
+		<td class=data>D61
+		<td class=data>D60
+		<td class=data>D59
+		<td class=data>D58
+		<td class=data>D57
+		<td class=data>D56
+	
+	<tr>
+		<td class=data>D71
+		<td class=data>D70
+		<td class=data>D69
+		<td class=data>D68
+		<td class=data>D67
+		<td class=data>D66
+		<td class=data>D65
+		<td class=data>D64
+	
+	<tr>
+		<td class=data>D79
+		<td class=data>D78
+		<td class=data>D77
+		<td class=data>D76
+		<td class=data>D75
+		<td class=data>D74
+		<td class=data>D73
+		<td class=data>D72
+	
+	<tr>
+		<td class=data>D87
+		<td class=data>D86
+		<td class=data>D85
+		<td class=data>D84
+		<td class=data>D83
+		<td class=data>D82
+		<td class=data>D81
+		<td class=data>D80
+	
+	<tr>
+		<td class=data>D95
+		<td class=data>D94
+		<td class=data>D93
+		<td class=data>D92
+		<td class=data>D91
+		<td class=data>D90
+		<td class=data>D89
+		<td class=data>D88
+	
+	<tr>
+		<td class=data>D103
+		<td class=data>D102
+		<td class=data>D101
+		<td class=data>D100
+		<td class=data>D99
+		<td class=data>D98
+		<td class=data>D97
+		<td class=data>D96
+	
+	<tr>
+		<td class=data>D111
+		<td class=data>D110
+		<td class=data>D109
+		<td class=data>D108
+		<td class=data>D107
+		<td class=data>D106
+		<td class=data>D105
+		<td class=data>D104
+	
+	<tr>
+		<td class=data>D119
+		<td class=data>D118
+		<td class=data>D117
+		<td class=data>D116
+		<td class=data>D115
+		<td class=data>D114
+		<td class=data>D113
+		<td class=data>D112
+	
+	<tr>
+		<td class=data>D127
+		<td class=data>D126
+		<td class=data>D125
+		<td class=data>D124
+		<td class=data>D123
+		<td class=data>D122
+		<td class=data>D121
+		<td class=data>D120
+	
+	<tr>
+		<td class=data>D135
+		<td class=data>D134
+		<td class=data>D133
+		<td class=data>D132
+		<td class=data>D131
+		<td class=data>D130
+		<td class=data>D129
+		<td class=data>D128
+	
+	<tr>
+		<td class=data>D143
+		<td class=data>D142
+		<td class=data>D141
+		<td class=data>D140
+		<td class=data>D139
+		<td class=data>D138
+		<td class=data>D137
+		<td class=data>D136
+	
+	<tr>
+		<td class=data>D151
+		<td class=data>D150
+		<td class=data>D149
+		<td class=data>D148
+		<td class=data>D147
+		<td class=data>D146
+		<td class=data>D145
+		<td class=data>D144
+	
+	<tr>
+		<td class=data>D159
+		<td class=data>D158
+		<td class=data>D157
+		<td class=data>D156
+		<td class=data>D155
+		<td class=data>D154
+		<td class=data>D153
+		<td class=data>D152
+	
+	<tr>
+		<td class=data>D167
+		<td class=data>D166
+		<td class=data>D165
+		<td class=data>D164
+		<td class=data>D163
+		<td class=data>D162
+		<td class=data>D161
+		<td class=data>D160
+	
+	<tr>
+		<td class=data>D175
+		<td class=data>D174
+		<td class=data>D173
+		<td class=data>D172
+		<td class=data>D171
+		<td class=data>D170
+		<td class=data>D169
+		<td class=data>D168
+	
+	<tr>
+		<td class=data>D183
+		<td class=data>D182
+		<td class=data>D181
+		<td class=data>D180
+		<td class=data>D179
+		<td class=data>D178
+		<td class=data>D177
+		<td class=data>D176
+	
+	<tr>
+		<td class=data>D191
+		<td class=data>D190
+		<td class=data>D189
+		<td class=data>D188
+		<td class=data>D187
+		<td class=data>D186
+		<td class=data>D185
+		<td class=data>D184
+	
+	<tr>
+		<td class=data>D199
+		<td class=data>D198
+		<td class=data>D197
+		<td class=data>D196
+		<td class=data>D195
+		<td class=data>D194
+		<td class=data>D193
+		<td class=data>D192
+	
+	<tr>
+		<td class=data>D207
+		<td class=data>D206
+		<td class=data>D205
+		<td class=data>D204
+		<td class=data>D203
+		<td class=data>D202
+		<td class=data>D201
+		<td class=data>D200
+	
+	<tr>
+		<td class=data>D215
+		<td class=data>D214
+		<td class=data>D213
+		<td class=data>D212
+		<td class=data>D211
+		<td class=data>D210
+		<td class=data>D209
+		<td class=data>D208
+	
+	<tr>
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+	
+	<tr>
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+	
+	<tr>
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+	
+	<tr>
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+	
+	<tr>
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+		<td class=ign>0
+	
+</table>
+<p>
+	The D bits are sent in the frame like this (left to right):
+<p>
+<table border>
+	<tr>
+		<th align=left>FIRST
+		<th colspan=6>
+		<th align=left>LAST
+	
+	<tr>
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D0
+		<td class=data>D1
+		<td class=data>D2
+		<td class=data>D3
+		<td class=data>D4
+		<td class=data>D5
+		<td class=data>D6
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D7
+		<td class=data>D8
+		<td class=data>D9
+		<td class=data>D10
+		<td class=data>D11
+		<td class=data>D12
+		<td class=data>D13
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D14
+		<td class=data>D15
+		<td class=data>D16
+		<td class=data>D17
+		<td class=data>D18
+		<td class=data>D19
+		<td class=data>D20
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D21
+		<td class=data>D22
+		<td class=data>D23
+		<td class=data>D24
+		<td class=data>D25
+		<td class=data>D26
+		<td class=data>D27
+	
+	<tr>
+		<td class=one>1
+		<td class=dtx>DTX
+		<td class=zero>0
+		<td class=zero>0
+		<td class=data>D28
+		<td class=data>D29
+		<td class=data>D30
+		<td class=data>D31
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D32
+		<td class=data>D33
+		<td class=data>D34
+		<td class=data>D35
+		<td class=data>D36
+		<td class=data>D37
+		<td class=data>D38
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D39
+		<td class=data>D40
+		<td class=data>D41
+		<td class=data>D42
+		<td class=data>D43
+		<td class=data>D44
+		<td class=data>D45
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D46
+		<td class=data>D47
+		<td class=data>D48
+		<td class=data>D49
+		<td class=data>D50
+		<td class=data>D51
+		<td class=data>D52
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D53
+		<td class=data>D54
+		<td class=data>D55
+		<td class=data>D56
+		<td class=data>D57
+		<td class=data>D58
+		<td class=data>D59
+	
+	<tr>
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D60
+		<td class=data>D61
+		<td class=data>D62
+		<td class=data>D63
+		<td class=data>D64
+		<td class=data>D65
+		<td class=data>D66
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D67
+		<td class=data>D68
+		<td class=data>D69
+		<td class=data>D70
+		<td class=data>D71
+		<td class=data>D72
+		<td class=data>D73
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D74
+		<td class=data>D75
+		<td class=data>D76
+		<td class=data>D77
+		<td class=data>D78
+		<td class=data>D79
+		<td class=data>D80
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D81
+		<td class=data>D82
+		<td class=data>D83
+		<td class=data>D84
+		<td class=data>D85
+		<td class=data>D86
+		<td class=data>D87
+	
+	<tr>
+		<td class=one>1
+		<td class=dtx>DTX
+		<td class=zero>0
+		<td class=one>1
+		<td class=data>D88
+		<td class=data>D89
+		<td class=data>D90
+		<td class=data>D91
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D92
+		<td class=data>D93
+		<td class=data>D94
+		<td class=data>D95
+		<td class=data>D96
+		<td class=data>D97
+		<td class=data>D98
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D99
+		<td class=data>D100
+		<td class=data>D101
+		<td class=data>D102
+		<td class=data>D103
+		<td class=data>D104
+		<td class=data>D105
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D106
+		<td class=data>D107
+		<td class=data>D108
+		<td class=data>D109
+		<td class=data>D110
+		<td class=data>D111
+		<td class=data>D112
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D113
+		<td class=data>D114
+		<td class=data>D115
+		<td class=data>D116
+		<td class=data>D117
+		<td class=data>D118
+		<td class=data>D119
+	
+	<tr>
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D120
+		<td class=data>D121
+		<td class=data>D122
+		<td class=data>D123
+		<td class=data>D124
+		<td class=data>D125
+		<td class=data>D126
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D127
+		<td class=data>D128
+		<td class=data>D129
+		<td class=data>D130
+		<td class=data>D131
+		<td class=data>D132
+		<td class=data>D133
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D134
+		<td class=data>D135
+		<td class=data>D136
+		<td class=data>D137
+		<td class=data>D138
+		<td class=data>D139
+		<td class=data>D140
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D141
+		<td class=data>D142
+		<td class=data>D143
+		<td class=data>D144
+		<td class=data>D145
+		<td class=data>D146
+		<td class=data>D147
+	
+	<tr>
+		<td class=one>1
+		<td class=dtx>DTX
+		<td class=one>1
+		<td class=zero>0
+		<td class=data>D148
+		<td class=data>D149
+		<td class=data>D150
+		<td class=data>D151
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D152
+		<td class=data>D153
+		<td class=data>D154
+		<td class=data>D155
+		<td class=data>D156
+		<td class=data>D157
+		<td class=data>D158
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D159
+		<td class=data>D160
+		<td class=data>D161
+		<td class=data>D162
+		<td class=data>D163
+		<td class=data>D164
+		<td class=data>D165
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D166
+		<td class=data>D167
+		<td class=data>D168
+		<td class=data>D169
+		<td class=data>D170
+		<td class=data>D171
+		<td class=data>D172
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D173
+		<td class=data>D174
+		<td class=data>D175
+		<td class=data>D176
+		<td class=data>D177
+		<td class=data>D178
+		<td class=data>D179
+	
+	<tr>
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+		<td class=zero>0
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D180
+		<td class=data>D181
+		<td class=data>D182
+		<td class=data>D183
+		<td class=data>D184
+		<td class=data>D185
+		<td class=data>D186
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D187
+		<td class=data>D188
+		<td class=data>D189
+		<td class=data>D190
+		<td class=data>D191
+		<td class=data>D192
+		<td class=data>D193
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D194
+		<td class=data>D195
+		<td class=data>D196
+		<td class=data>D197
+		<td class=data>D198
+		<td class=data>D199
+		<td class=data>D200
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D201
+		<td class=data>D202
+		<td class=data>D203
+		<td class=data>D204
+		<td class=data>D205
+		<td class=data>D206
+		<td class=data>D207
+	
+	<tr>
+		<td class=one>1
+		<td class=dtx>DTX
+		<td class=one>1
+		<td class=one>1
+		<td class=data>D208
+		<td class=data>D209
+		<td class=data>D210
+		<td class=data>D211
+	
+	<tr>
+		<td class=one>1
+		<td class=data>D212
+		<td class=data>D213
+		<td class=data>D214
+		<td class=data>D215
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+	
+	<tr>
+		<td class=one>1
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+	
+	<tr>
+		<td class=one>1
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+	
+	<tr>
+		<td class=one>1
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+		<td class=crc>C
+	
+</table>
+<p>
+	The bit positions marked 'DTX' are filled from the value of the
+	DTX setting.
+<p>
+	The bit positions marked 'C' are filled in with the CRC,
+	which is calculated automatically.
+<p>
+	The bit positions marked '0' or '1' are fixed framing bits.
+<p>
+	If the transmitter experiences underrun, it repeats
+	the previous frame (or sends an all-zero frame (GSM 04.21 sec 7)
+	if there was no previous frame because this is the first frame).
+</body>

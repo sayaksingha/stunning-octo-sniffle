@@ -1,0 +1,129 @@
+	Prosody Framer 
+secname sort
+
+	Create a Framer 
+apifn	sm_framer_create
+params	sm_framer_create_parms createp
+	The created framer.
+field	tSMFramerId framer out
+	A value obtained from
+fnref   sm_open_module
+	which indicates the module on which the framer is to be created.
+field   tSMModuleId module in
+unstruct
+	Creates a Framer .
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+error   ERR_SM_NO_RESOURCES - if no suitable output channel free
+error   ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified
+
+	Destroy a Framer 
+apifn	sm_framer_destroy
+	The Framer to destroy. Must have been previously created by a call to
+fnref	sm_framer_create
+	.
+param	tSMFramerId framer
+	Destroys a Framer.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Connect a datafeed to an input of a Framer .
+apifn	sm_framer_datafeed_connect
+params	sm_framer_datafeed_connect_parms datafeedp
+	The datafeed object to be connected. 
+field	tSMDatafeedId data_source in
+	The framer to connect the datafeed to.
+field	tSMFramerId framer in
+	The input to which the datafeed is to be connected.
+	If direction is 0, then the enframer-side input is connected.
+	If direction is 1, then the deframer-side input is connected.
+field	tSM_INT direction in
+unstruct
+	Connect a datafeed to one of the inputs of the Framer. 
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+error   ERR_SM_NO_RESOURCES - direction was given an illegal value
+
+	Disconnect a datafeed from a Framer.
+apifn	sm_framer_datafeed_disconnect
+params	sm_framer_datafeed_disconnect_parms datafeedp
+	The framer to disconnect the datafeed from.
+field	tSMFramerId framer in
+	The input of the framer to be disconnected.
+	If direction is 0, then the enframer-side input is disconnected.
+	If direction is 1, then the deframer-side input is disconnected.
+field   tSM_INT direction in
+unstruct
+	Disconnect a datafeed on one of the inputs of the Framer.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Get an event object for the Framer 
+apifn	sm_framer_get_event
+params	sm_framer_event_parms eventp
+	The framer.
+field	tSMFramerId framer in
+	The event identifier.
+field	tSMEventId event out
+unstruct
+	Returns an event object for the framer that can be waited on using 
+fnref	smd_ev_wait
+	.
+	The event will be signalled when a status change occurs on the framer.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Fetch status info on Framer 
+apifn	sm_framer_status
+params	sm_framer_status_parms statusp
+	The Framer.
+field	tSMFramerId framer in
+	The status.
+enumstart kSMFramerStatus
+	The framer is running
+enum	kSMFramerStatusRunning
+	The framer is not running
+enum	kSMFramerStatusStopped
+	The framer has changed state
+enum	kSMFramerStatusNewState
+enumend status out
+	The new state of the framer. Only valid when the status field is kSMFramerStatusNewState.
+	If new_state is 0, then the framer is now out of sync.
+	If new_state is 1, then the framer is now in sync.
+field	tSM_INT new_state out
+unstruct
+	Returns the status of the Framer.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Get datafeed from Framer.
+apifn	sm_framer_get_datafeed
+params	sm_framer_datafeed_parms datafeedp
+	The framer from which to obtain a datafeed.
+field	tSMFramerId framer in
+	The direction of datafeed to fetch. If direction is 0, then the enframer-side datafeed is fetched. If direction is 1, then the deframer-side datafeed is fetched.
+field	tSM_INT direction in
+	The datafeed object associated with the Framer .
+field	tSMDatafeedId datafeed out
+unstruct
+	Request a datafeed identifier from a Framer .
+	This identifier can subsequently used in a call such as
+fnref	sm_tdmtx_datafeed_connect
+	or
+fnref	sm_channel_datafeed_connect.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error

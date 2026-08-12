@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Encodings: sync</title>
+</head>
+<body>
+<h1>Prosody data communications Encodings: sync</h1>
+<p>
+SYNC is an encoding which runs in conjunction with an underlying
+protocol.
+<p>
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic data communications
+documentation.
+
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_sync.h"</code> to get the
+	appropriate declarations.
+<p>
+	The encoding type is <code>kSMDCConfigEncodingSync</code>.
+<p>
+	There is no configuration for this encoding, so the
+	encoding_config_data pointer should be null (0) and the
+	encoding_config_length should be zero.
+<p>
+	The firmware module <a href="gen/softmodindex.html#syncrx">syncrx</a>
+	must have been downloaded to
+	receive, and <a href="gen/softmodindex.html#synctx">synctx</a>
+	is required to transmit.
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+<p>
+	Data in the receive buffer appears in multiples of 8 bits.
+	Bytes are in order of reception and within a byte the least
+	significant bit is the first that was received.
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+<p>
+	Within a byte the least significant bit is the first
+	transmitted. Only multiples of 8 bits can be transmitted, so
+	data which is not a multiple of 8-bits must be padded.
+</body>

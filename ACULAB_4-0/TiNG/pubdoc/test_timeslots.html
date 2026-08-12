@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test program timeslots</title>
+</head>
+<body>
+<h1>Prosody installation guide: test program timeslots</h1>
+<p>
+The test programs must be told which timeslots to use. These must be
+switched (using the Aculab switch driver) to the desired destination.
+See Appendix A of the switch driver API guide for full details of the
+timeslot numbering for each supported card type.
+<p>
+To perform loopback testing, use the '<code>switch</code>' program in
+the <code>$(TiNG)/diag</code> directory to connect the output to the
+input. For example, on a ProsodyX card you would switch <code>64:0</code> to
+<code>64:0</code>. To connect an external call, for example on timeslot
+<code>32:1</code>, connect it both ways, e.g. <code>64:0</code> to
+<code>32:1</code> and <code>32:1</code> to <code>64:0</code>.
+Test programs such as <a href="test_ansrec.html">ansrec</a> handle this
+connection automatically. They only need to be told which timeslot to
+use. For example, on a ProsodyX card you could specify that
+<code>64:0</code> is to be used and it would make the connections to
+the incoming call.
+<hr>
+<p>
+<a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

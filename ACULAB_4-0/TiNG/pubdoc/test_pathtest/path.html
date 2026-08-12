@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>pathtest path</title>
+</head>
+<body>
+<h1>pathtest path</h1>
+
+<h2>Status codes</h2>
+<p>
+The path operations do not report status, so no status is shown.
+
+<h2>Settings</h2>
+<p>
+Settings are specified in groups, with each group containing the settings
+for each API function which controls a section of processing. The section
+names are:
+<ul>
+<li>agc
+<li>ec
+<li>mix
+</ul>
+<p>
+
+<h3>Settings for <code>agc</code></h3>
+
+<h4><code>agc agc</code> N</h4>
+<p>
+Enables (non-zero) or disables (zero) AGC.
+
+<h4><code>agc volume</code> N</h4>
+<p>
+The volume adjustment to use.
+
+<h3>Settings for <code>ec</code></h3>
+
+<h4><code>ec enable</code> N</h4>
+<p>
+Enables (non-zero) or disables (zero) echo cancellation.
+
+<h4><code>ec ref</code> SRC</h4>
+<p>
+Sets the echo cancellation reference. The source is specified with the
+name of a type of operation, with the instance number in square brackets. For example, <code>play[3]</code> is the fourth play operation.
+
+<h4><code>ec non_linear</code> N</h4>
+<p>
+Enables (non-zero) or disables (zero) non-linear processing
+
+<h4><code>ec use_agc</code> N</h4>
+<p>
+Enables (non-zero) or disables (zero) AGC.
+
+<h4><code>ec fix_agc</code> N</h4>
+<p>
+Enables (non-zero) or disables (zero) fixing the AGC gain.
+
+<h3>Settings for <code>mix</code></h3>
+
+<h4><code>mix enable</code> N</h4>
+<p>
+Enables (non-zero) or disables (zero) echo cancellation.
+
+<h4><code>mix mixin</code> SRC</h4>
+<p>
+Sets the source to be mixed in. The source is specified with the
+name of a type of operation, with the instance number in square brackets. For example, <code>play[3]</code> is the fourth play operation.
+
+<h4><code>mix volume</code> N</h4>
+<p>
+The volume adjustment to use.
+
+<h4><code>pathshift by</code> N</h4>
+<p>
+The amount of pitch shifting to use.
+<hr>
+<p>
+This is a command understood by the <a href="pathtest.html">pathtest</a>
+test program.

@@ -1,0 +1,4 @@
+Converter to allow recording at 11kHz sampling rate instead
+of 8kHz. This is used in conjunction with a recording format to
+record at a speed useful for playing directly though typical PC
+soundcards.

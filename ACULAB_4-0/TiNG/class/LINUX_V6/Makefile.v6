@@ -1,0 +1,3 @@
+CC_DEFINES := $(CC_DEFINES)
+
+include LINUX/Makefile.inc

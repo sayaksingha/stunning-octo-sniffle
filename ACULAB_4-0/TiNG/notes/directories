@@ -1,0 +1,93 @@
+			Directories
+			-----------
+
+
+When you unpack a distribution you get several directories. Here is a
+list, with a summary of what is found in each.
+
+	actiff
+		The actiff library for manipulating TIFF files.
+
+	apilib
+		Source for the API library.
+
+	call
+		A place to build the call control libraries needed
+		for some test programs
+
+	diag
+		Source for tools used for test and diagnostics.
+		These may use unpublished API calls, and should not
+		be copied for application code, since any unpublished
+		API calls maye be changed or removed without notice.
+
+	faxlib
+		The fax library.
+
+	faxtest
+		Source for test programs which use fax. They can also
+		be used as examples.
+
+	highapi
+		The high-level API libraries and header files
+
+	hsif
+		Internal interface definitions for communication
+		between host and running firmware (Host/Sharc InterFace).
+
+	libutil
+		Source used by code in other directories.
+
+	notes
+		Documentation.
+
+	switch
+		A place to build the switch libraries needed
+		for some test programs
+
+	test
+		Source for various test programs. These use the published
+		API, so they can be used as examples of how to write
+		applications.
+
+	util
+		Pre-built utility to download firmware kernel and
+		install/uninstall device drivers.
+
+In addition, there are directory names that are used in many places.
+These are:
+
+	SOL
+		Files for Solaris only.
+
+	SOL_WS
+		Files for Solaris with Workshop compiler (now Forte)
+
+	WINNT
+		Files for Windows NT only.
+
+	gen
+		Files which are generated automatically.
+
+	gen-SOL
+		Solaris-specific files which are generated automatically
+		(including those supplied pre-built).
+
+	gen-SOL_WS
+		Solaris-specific files built by or used with the Workshop
+		compiler which are generated automatically
+		(including those supplied pre-built).
+
+	gen-WINNT
+		Windows NT-specific files which are generated
+		automatically (including those suppliled pre-built).
+
+	errs
+		Errors, warnings, and other output recorded while
+		attempting to generate output files. When building any
+		file, f, the errors are recorded in errs/f (where the
+		name 'f' can include directories). For example, when
+		compiling gen-SOL/test.o any errors get recorded in
+		errs/gen-SOL/test.o. A separate errors file is used for
+		each generated file to avoid discarding errors from one
+		file while building others.

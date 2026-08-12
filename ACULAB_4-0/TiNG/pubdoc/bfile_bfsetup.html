@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>BFILE library: bfsetup() - buffered file setup</title>
+</head>
+<body>
+<h1>BFILE library: bfsetup() - buffered file setup</h1>
+<h2>Name</h2>
+<p>
+bfsetup() - buffered file setup
+
+<h2>Synopsis</h2>
+<p>
+<pre>
+#include "bfile.h"
+
+int bfsetup(BFILE *<a name="bfp">bfp</a>,
+		int (*<a name="read">read</a>)(size_t *nr, void *buf, size_t bsize, void *p),
+		int (*<a name="write">write</a>)(size_t *nw, void *buf, size_t bsize, void *p),
+		int (*<a name="seek">seek</a>)(off_t *pos, void *p, off_t offset, int whence),
+		int (*<a name="close">close</a>)(void *p),
+		void *<a name="p">p</a>);
+</pre>
+
+<h2>Decription</h2>
+<p>
+The <code>bfsetup()</code> function makes a <code>BFILE</code> object
+refer to some underlying representation.
+<p>
+Where the underlying representation is an ordinary file, the function
+<a href="bfile_bfopen.html">bfopen()</a> can be used instead.
+<p>
+It is an error to use <code>bfsetup()</code>
+on a <code>BFILE</code> object which has already been set
+up with a previous call to <code>bfsetup()</code>.
+The functions passed to <code>bfsetup()</code> are passed the
+parameter <a href="#p">p</a> every time they are called. Each must return
+0 when they succeed or an <code>errno</code> value for failure. They are:
+<dl>
+<dt><a href="#read">read</a>
+<dd>Read up to <code>bsize</code> bytes into buffer <code>buf</code>.
+Store the number of bytes read in <code>*nr</code> (even on
+error). If no data is read, this is considered to be an end of file
+condition, and the caller of <a href="bfile_bfread.html">bfread()</a> is
+guaranteed to receive exactly one end-of-file condition.
+<dt><a href="#write">write</a>
+<dd>Write up to <code>bsize</code> bytes from buffer <code>buf</code>.
+Store the number of bytes written in <code>*nw</code> (even on error).
+<dt><a href="#seek">seek</a>
+<dd>Seek to given position (<code>offset</code> and <code>whence</code>
+have the same meaning as for <code>lseek()</code>). Store the new
+position at <code>*pos</code> which is an offset from the start of the
+file.
+<dt><a href="#close">close</a>
+<dd>Close the file. This is used when the <code>BFILE</code> object
+is destroyed with <a href="bfile.html">bfile_dtor()</a>.
+</dl>
+
+<h2>Return value</h2>
+<p>
+Returns <code>0</code> if successful, or an <code>errno</code> value otherwise.
+
+<h2>See also</h2>
+<p>
+<a href="bfile_ctor.html">bfile(), bfile_dtor()</a>
+<a href="bfile_bfopen.html">bfopen()</a>.
+<a href="bfile_bfopenhandle.html">bfopenhandle()</a>.
+<a href="bfile_bfread.html">bfread()</a>.
+<a href="bfile_bfwrite.html">bfwrite()</a>.
+<a href="bfile_bfseek.html">bfseek()</a>.
+<a href="bfile_bferror.html">bferror()</a>.
+
+<hr>
+<p>
+This function is part of the <a href="bfile.html">BFILE library</a>.
+</body>
+</html>

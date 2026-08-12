@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody Guide - how to build applications to use Prosody</title>
+</head>
+<body>
+<h1>Prosody Guide - how to build applications to use Prosody</h1>
+<p>
+Applications are built from source files that include TiNG library header files, and
+the resulting objects need to be linked against a suitable TiNG library. Normally either a 
+dynamically or a statically linkable version may be used.  However in some circumstances 
+it may be necessary to link the application against just a selection of individual TiNG 
+library object files. This flexibilty can be useful when dealing with unusual build environments
+or other special circumstances.  For QNX this is the only option currently available.
+<p>
+Prosody comes with various programs and the necessary support files to
+build them, so you can also look at them to see how they are built. The
+appropriate Makefiles are provided and,
+<span class="type-WINNT">for Microsoft Windows,
+<a href="vsproj.html">Visual Studio Project files</a> are also
+provided</span>.
+<p>
+<h2>Use of TiNG header files</h2>
+<p>
+In your source code which calls Prosody APIs, you need to include the
+necessary declarations. For example, for the
+<a href="prospapi.html">Speech processing API</a> you would use:
+<pre>
+	#include "smbesp.h"
+</pre>
+<p>
+The file required for each API is specified in the
+introduction to that API's reference manual.
+<p>
+You also need to add the Prosody include directory to the list of
+include directories for the compiler to search.
+For a command-line compiler, this is normally done with a
+"<code>-I</code>directory" option, so if the Prosody package is in
+"<code>D:/Aculab/TiNG</code>", then the option might be
+<code>-I D:/Aculab/TiNG/include</code>.
+<p>
+Use of header files associated with the TiNG library require
+a pre-processor symbol to be defined indicating target system type:
+<p>
+<table border>
+<tr>
+	<th>Symbol<th>Value<th>Meaning
+
+<tr class="type-LINUX">
+	<td><code>TiNGTYPE_LINUX</code><td>anything
+		<td><strong>Use only on Linux</strong>
+		 Indicates that the component should be built for Linux
+
+<tr class="type-QNX">
+	<td><code>TiNGTYPE_QNX</code><td>anything
+		<td><strong>Use only on QNX</strong>
+		 Indicates that the component should be built for QNX
+
+<tr class="type-WINNT">
+	<td><code>TiNGTYPE_WINNT</code><td>anything
+		<td><strong>Use only on Microsoft Windows</strong>
+		 Indicates that the component should be built for Windows
+
+</table>
+<p>
+If, in source files including TiNG headers, the headers for call control, resource management or switching
+are included prior to those TiNG headers, the above pre-processor symbols will normally be defined for you 
+automatically (by virtue of definitions in acu_type.h header).
+For other source files using TiNG headers you must make the compiler define the above pre-processor symbols. For a
+command-line compiler, this is normally done with a
+"<code>-D</code>symbol<code>=</code>value" option.
+<p>
+Don't forget any other settings which may be required. These typically
+include a setting to indicate the the program is multithreaded (for
+example, to use POSIX threads you need to define
+<code>_REENTRANT</code>). All applications using the TiNG library are 
+multithreaded. Remember when building applications which use the Aculab call or
+switch drivers that you also need to define any symbols they
+require. See their documentation for full details.
+<p>
+<h2><a name="linking">Linking an application with the TiNG library</a></h2>
+<p>
+<h3>Linking an application with dynamically linked TiNG library</h3>
+<p>
+The required library file may be found in a target dependant subdirectory of <code>ACULAB_ROOT</code>.
+<ul>
+<li><span class="type-LINUX"><code>lib/libTiNGshared.so</code> (Linux 32-bit)</span>
+<li><span class="type-LINUX"><code>lib64/libTiNGshared.so</code> (Linux 64-bit)</span>
+<li><span class="type-WINNT"><code>lib/TiNG.lib</code> (Windows 32-bit)</span>.
+<li><span class="type-WINNT"><code>lib/amd64/TiNG.lib</code> (Windows 64-bit)</span>.
+</ul>
+<p>
+<span class="type-LINUX">Note for Linux - applications are typically linked with an rpath option
+so the TiNG library shared object may be located.</span>
+<p>
+<span class="type-LINUX">Linux RDTSC - Normally the TiNG library will use the RDTSC as a source of 
+clock ticks. In some environments this has been found not to be a reliable 
+source of timing information. Defining the environment variable 
+TiNG_CLOCK_MONOTONIC to be non-zero will make the library use the
+system call clock_gettime with parameter CLOCK_MONOTONIC instead.</span>
+<p>
+<p>
+<span class="type-WINNT">Like other dynamically linked libraries for Windows, the corresponding
+TiNG library DLL must be present in the application's PATH environment.  Note also that Windows applications 
+dynamically linked against TiNG library must be compiled with pre-processor symbol <code>TiNG_USE_DLL</code> 
+ defined.</span>
+<p>
+<h3>Linking an application with statically linked TiNG library</h3>
+<p>
+The required library file may be found in a target dependant subdirectory of <code>ACULAB_ROOT</code>.
+<ul>
+<li><span class="type-LINUX"><code>lib/libTiNG.a</code> (Linux 32-bit)</span>
+<li><span class="type-LINUX"><code>lib64/libTiNG.a</code> (Linux 64-bit)</span>
+</ul>
+<p>
+<span class="type-WINNT">Statically linked library files are not available for Windows.</span>
+<p>
+<h3>Linking an application with individual TiNG library object files</h3>
+<p>
+Both Prosody X and Prosody S applications need to be linked with <code>TiNGcore</code> 
+and <code>prosody_x</code> object files from the target dependant subdirectory of the 
+TiNG directory <code>apilib</code>. 
+<ul>
+<li><span class="type-LINUX"><code>apilib/gen-LINUX_V6/TiNGcore.o</code> (Linux 32-bit)</span>
+<li><span class="type-LINUX"><code>apilib/gen-LINUX_V6/prosody_x.o</code> (Linux 32-bit)</span>
+<li><span class="type-LINUX"><code>apilib/gen-LINUX_V6_AMD64/TiNGcore.o</code> (Linux 64-bit)</span>,
+<li><span class="type-LINUX"><code>apilib/gen-LINUX_V6_AMD64/prosody_x.o</code> (Linux 64-bit)</span>,
+<li><span class="type-QNX"><code>apilib/gen-QNX/TiNGcore.o</code>(QNX)</span>,
+<li><span class="type-QNX"><code>apilib/gen-QNX/prosody_x.o</code>(QNX)</span>,
+<li><span class="type-WINNT"><code>apilib/gen-WINNT_V6/prosody_x.obj</code>(Windows 32-bit)</span>.
+<li><span class="type-WINNT"><code>apilib/gen-WINNT_V6_AMD64/TiNGcore.obj</code>(Windows 64-bit)</span>.
+<li><span class="type-WINNT"><code>apilib/gen-WINNT_V6_AMD64/prosody_x.obj</code>(Windows 64-bit)</span>.
+</ul>
+<p>
+Further object files may be required if high level library calls are used such as those from <code>rtcplib</code>, <code>v8lib</code> or <code>smhlib</code>.
+<p>
+If the instructions previously described in <a href="install_buildrest.html">Building software components</a> have been followed
+you should find that these object files have been built during installation.
+<p>
+<span class="type-WINNT">Note for Windows - the pre-processor symbol <code>TiNG_USE_DLL</code> must NOT be defined when compiling source files
+that will be liked against individual TiNG library object files. Some non-TiNG header files will implicitly
+define this symbol unless the pre-processor symbol <code>ACU_DONT_USE_TING_DLL</code> is defined during compilation.</span>
+<p>
+Note that if an application is linked with individual TiNG library object files then the calls 
+<a href="gen/apifn-sm_open_prosody_x.html">sm_open_prosody_x()</a> or <a href="gen/apifn-sm_open_prosody_s_v3.html">sm_open_prosody_s_v3()</a> 
+must be used when <a href="pros_x.html">opening the card</a>.
+<p>
+<h2>Visual Studio</h2>
+<p>
+<span class="type-WINNT">Under Microsoft Windows if you want to use
+Visual Studio, please see the separate document
+<a href="using_vs.html">Prosody guide: building applications with Visual
+Studio</a> for detailed instructions on how to configure projects.
+</span>
+<h2>Building in trace</h2>
+<p>
+Finally, when debugging your application, you may find the
+<a href="trace_app.html">application tracing</a> facility of Prosody
+to be useful. Consequently, it is highly adviseable to build in an
+appropriate mechanism for enabling this trace.
+<p>
+</body>
+</html>
+

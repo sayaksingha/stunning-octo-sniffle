@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody high level BFILE play/record: API: sm_replay_bfile_start</title>
+</head>
+<body>
+<h1>Prosody high level BFILE play/record: API: sm_replay_bfile_start</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_replay_bfile_start(struct sm_bfile_replay_parms *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-file_parms">*file_parms</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_bfile_replay_parms {
+	<a href="../apitype.html#type-BFILE">BFILE</a> *<a href="#field-fd">fd</a>;						/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-offset">offset</a>;					/* in */
+	<a href="../apitype.html#type-SM_REPLAY_PARMS">SM_REPLAY_PARMS</a> <a href="#field-replay_parms">replay_parms</a>;				/* in */
+	int <a href="#field-status">status</a>;						/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-private_length">private_length</a>;				/* out */
+	int <a href="#field-completing">completing</a>;						/* out */
+	int <a href="#field-data_length_in_buffer">data_length_in_buffer</a>;				/* out */
+	char <a href="#field-buffer">buffer[kSMMaxHBReplayDataBufferSize]</a>;		/* out */
+} SM_BFILE_REPLAY_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Prepares a channel for replay of data from a file to an output
+channel previously allocated by a call to
+<a href="apifn-sm_channel_alloc_placed.html">sm_channel_alloc_placed()</a>.
+<p>
+The fields of the structure
+<a class=pref href="#field-replay_parms">replay_parms</a>
+should be set up as
+described in
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a>
+low level API call. Note the field
+<a href="apifn-sm_replay_start.html#field-data_length">data_length</a>
+should either be set to zero or to the actual number of octets
+to be replayed from the file. If it is set to zero then all of
+the data starting from
+<a class=pref href="#field-offset">offset</a>
+to the end of the file will be replayed.
+<p>
+The
+<a class=pref href="#field-status">status</a>
+field is used to indicate the current status of the
+replay. On return from a successful invocation of
+<a href="apifn-sm_replay_bfile_start.html">sm_replay_bfile_start()</a>
+it will be set to a value of <code>ERR_SM_PENDING</code> and
+will continue to have this value until replay has been
+completed, aborted or terminated on occurrence of an error.
+<p>
+The fields
+<a class=pref href="#field-private_length">private_length</a>,
+<a class=pref href="#field-data_length_in_buffer">data_length_in_buffer</a>
+and
+<a class=pref href="#field-buffer">buffer</a>
+are used internally by the high level library and should not be
+accessed by the application.
+<p>
+The replay is finished when a call to
+<a href="apifn-sm_replay_bfile_complete.html">sm_replay_bfile_complete()</a>
+returns.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-fd">fd</a><dd>The file containing the data to be played, which must have
+been opened with the <a href="../bfile.html">bfile library</a>.
+
+<dt><a name="field-offset">offset</a><dd>The offset measured in octets (starting from zero) of the first
+octet of replay data in the file referenced by
+<a class=pref href="#field-fd">fd</a>.
+
+<dt><a name="field-replay_parms">replay_parms</a><dd>A structure as defined for
+<a href="apifn-sm_replay_start.html">sm_replay_start</a>.
+
+<dt><a name="field-status">status</a><dd>The status of the replay.
+
+<dt><a name="field-private_length">private_length</a><dd>A field reserved for the library.
+
+<dt><a name="field-completing">completing</a><dd>A field reserved for the library.
+
+<dt><a name="field-data_length_in_buffer">data_length_in_buffer</a><dd>A field reserved for the library.
+
+<dt><a name="field-buffer">buffer</a><dd>A field reserved for the library.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem accessing file containing replay data</ul>
+<hr>
+<p>This function is part of the <a href="../highapi_bf_playrec.html">Prosody high level BFILE play/record API</a>.
+</body>
+</html>

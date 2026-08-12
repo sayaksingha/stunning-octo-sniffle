@@ -45,6 +45,7 @@ class DlgCleaner
       
       UINT32       mDlgTimeout;
       UINT32       mCapDlgTimeout;
+      UINT32       mSpecialSsn;
       UINT32       mMaxDlgSize;
       UINT16       mTcapMsgQKey;
       MsgQueue     mTcapMsgQ;

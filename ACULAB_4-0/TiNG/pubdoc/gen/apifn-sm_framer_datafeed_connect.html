@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody Framer: API: sm_framer_datafeed_connect</title>
+</head>
+<body>
+<h1>Prosody Framer: API: sm_framer_datafeed_connect</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_framer_datafeed_connect(struct sm_framer_datafeed_connect_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_framer_datafeed_connect_parms {
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-data_source">data_source</a>;				/* in */
+	<a href="../apitype.html#type-tSMFramerId">tSMFramerId</a> <a href="#field-framer">framer</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-direction">direction</a>;					/* in */
+} SM_FRAMER_DATAFEED_CONNECT_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Connect a datafeed to one of the inputs of the Framer. 
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-data_source">data_source</a><dd>The datafeed object to be connected. 
+
+<dt><a name="field-framer">framer</a><dd>The framer to connect the datafeed to.
+
+<dt><a name="field-direction">direction</a><dd>The input to which the datafeed is to be connected.
+If direction is 0, then the enframer-side input is connected.
+If direction is 1, then the deframer-side input is connected.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - direction was given an illegal value</ul>
+<hr>
+<p>This function is part of the <a href="../prosframerapi.html">Prosody Framer API</a>.
+</body>
+</html>

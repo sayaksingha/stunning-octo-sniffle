@@ -1,0 +1,9 @@
+.	locrec.o
+Testlib	cardlist.o
+Testlib	errcode_sm.o
+Testlib	error.o
+Testlib	eventset.o
+Testlib	fmtcode.o
+Testlib	modlist.o
+Testlib	taistamp.o
+apilib

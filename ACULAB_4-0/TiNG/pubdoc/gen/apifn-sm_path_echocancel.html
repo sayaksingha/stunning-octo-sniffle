@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody signal path processing: API: sm_path_echocancel</title>
+</head>
+<body>
+<h1>Prosody signal path processing: API: sm_path_echocancel</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_path_echocancel(struct sm_path_echocancel_parms *<a href="#field-cancelp">cancelp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-cancelp">*cancelp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_echocancel_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-enable">enable</a>;						/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-reference">reference</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-non_linear">non_linear</a>;					/* in */
+	<a name="enum-kSMPathEchoNonLinearMode">enum kSMPathEchoNonLinearMode</a> {
+		<a href="#field-kSMPathEchoNonLinearModeMuting">kSMPathEchoNonLinearModeMuting</a>,
+		<a href="#field-kSMPathEchoNonLinearModeCNG">kSMPathEchoNonLinearModeCNG</a>,
+	} <a href="#field-mode">mode</a>;							/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-use_agc">use_agc</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-fix_agc">fix_agc</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-span">span</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-delay">delay</a>;						/* in */
+	<a name="enum-kSMPathEchoToneAction">enum kSMPathEchoToneAction</a> {
+		<a href="#field-kSMPathEchoToneActionNone">kSMPathEchoToneActionNone</a>,
+		<a href="#field-kSMPathEchoTonetActionMuteTTY">kSMPathEchoTonetActionMuteTTY</a>,
+	} <a href="#field-tone_action">tone_action</a>;						/* in */
+} SM_PATH_ECHOCANCEL_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures echo cancellation on a signal path. The
+input is examined for an echo of the
+<a class=pref href="#field-reference">reference</a>
+signal, and any echo found is suppressed.
+<p>
+Non-linear echo cancellation can operate in two modes. The default is 
+non-linear echo cancellation with muting, which is suitable for large-scale 
+conferencing and/or IVR applications, where it is important that the signal 
+is completely muted whenever the caller is not speaking.
+<p>
+Non-linear echo cancellation with comfort noise generation (CNG) never mutes 
+the signal. Instead it replaces any residual traces of echo with "comfort 
+noise". This mode of operation is most appropriate to IP gateway applications 
+where background noise is desirable to maintain the illusion of continuity.
+<p>
+If tone_action is set to mute TTY, the echo cancellation algorithm will expect to 
+encounter TTY tones on its primary input and its reference. 
+Its output will be muted whenever such tones are present on its reference and for a 
+short time afterwards (thus muting echoes of tones). It will pass though TTY tones 
+present on its primary input at other times. This behaviour should only be enabled 
+if TTY tones are expected in the signal path. It would normally be used with 
+non-linear mode disabled.
+<p>
+Requires the module
+<a href="softmodindex.html#echocan">echocan</a>.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path to be configured
+
+<dt><a name="field-enable">enable</a><dd>Enables (non-zero) or disables (zero) echo cancellation of the
+input signal.
+
+<dt><a name="field-reference">reference</a><dd>The datafeed which is the reference signal. Only used if
+<a class=pref href="#field-enable">enable</a>
+is non-zero.
+
+<dt><a name="field-non_linear">non_linear</a><dd>Enables (non-zero) or disables (zero) non-linear processing. 
+The exact behaviour of the non-linear processing module is controlled
+by
+<a class=pref href="#field-mode">mode</a>
+. Negative 
+values represent the lower limit in dBm0. Positive values cause 
+the default value of -42dBm0 to be used.
+Only used if
+<a class=pref href="#field-enable">enable</a>
+is non-zero.
+
+<dt><a name="field-mode">mode</a><dd>Selects the non-linear echo cancellation mode to be used. Only used if
+<a class=pref href="#field-non_linear">non_linear</a>
+is non-zero.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMPathEchoNonLinearModeMuting">kSMPathEchoNonLinearModeMuting</a>
+<dd>Uses non-linear processing to suppress the signal whenever
+echo or background noise are dominant. This mode of operation
+is suitable for large-scale conferencing and/or IVR applications,
+where it is important that the signal is completely muted whenever
+the caller is not speaking.
+
+<dt><a name="field-kSMPathEchoNonLinearModeCNG">kSMPathEchoNonLinearModeCNG</a>
+<dd>Uses non-linear processing to replace the signal with comfort noise
+whenever echo might otherwise be audible. This mode of operation is
+most appropriate to IP gateway applications where background noise is
+desirable to maintain the illusion of continuity.
+
+</dl>
+<dt><a name="field-use_agc">use_agc</a><dd>Enables (non-zero) or disables (zero) the use of automatic gain
+control on the input signal.
+Only used if
+<a class=pref href="#field-enable">enable</a>
+is non-zero.
+
+<dt><a name="field-fix_agc">fix_agc</a><dd>Enables (non-zero) or disables (zero) holding the gain fixed at its
+current value. This can be used after the AGC gain factor has adjusted
+itself to prevent further changes.
+Only used if
+<a class=pref href="#field-enable">enable</a>
+is non-zero.
+
+<dt><a name="field-span">span</a><dd>If non-zero, sets the span (in milliseconds) of the echo cancellation.
+A side effect of this is that the input conditioning may be re-initialised.
+Only used if
+<a class=pref href="#field-enable">enable</a>
+is non-zero.
+
+<dt><a name="field-delay">delay</a><dd>If non-zero, sets delay (in milliseconds) before the reference signal is presented 
+to echo cancellation reference input (allowing application to compensate for time 
+it takes reference signal to reach the TDM circuit, so avoiding the effective span 
+being diminished by this amount). Input conditioning is re-initialised. To set a 
+zero delay, use the value -1. If zero, the delay is unchanged and input conditioning
+is not re-initialised. The default delay is zero milliseconds. 
+
+<dt><a name="field-tone_action">tone_action</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMPathEchoToneActionNone">kSMPathEchoToneActionNone</a>
+<dd>No special action on occurence of tones.
+
+<dt><a name="field-kSMPathEchoTonetActionMuteTTY">kSMPathEchoTonetActionMuteTTY</a>
+<dd>TTY tones are expected - when detected action taken to mute TTY echo but passthrough non-echo TTY.
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<p>This function is part of the <a href="../prospath.html">Prosody signal path processing API</a>.
+</body>
+</html>

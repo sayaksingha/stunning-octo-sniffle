@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_rtcphand_status</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_rtcphand_status</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_rtcphand_status(struct sm_rtcphand_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_rtcphand_status_parms {
+	<a href="../apitype.html#type-tSMRTCPHandId">tSMRTCPHandId</a> <a href="#field-rtcphand">rtcphand</a>;					/* in */
+	<a name="enum-kSMRTCPHandStatus">enum kSMRTCPHandStatus</a> {
+		<a href="#field-kSMRTCPHandStatusRunning">kSMRTCPHandStatusRunning</a>,
+	} <a href="#field-status">status</a>;						/* out */
+} SM_RTCPHAND_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Returns the current status of the RTCP handler. This
+function must be called when the event obtained from
+<a href="apifn-sm_rtcphand_get_event.html">sm_rtcphand_get_event()</a>
+is signalled and
+<a href="apifn-sm_rtcphand_get_data.html">sm_rtcphand_get_data()</a>
+indicates that no data is available for collection.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-rtcphand">rtcphand</a><dd>The RTCP handler to interrogate
+
+<dt><a name="field-status">status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMRTCPHandStatusRunning">kSMRTCPHandStatusRunning</a>
+<dd>The RTCP handler is running normally.
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

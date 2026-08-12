@@ -1,0 +1,2 @@
+.	reset.o
+libutil	generic_io.o

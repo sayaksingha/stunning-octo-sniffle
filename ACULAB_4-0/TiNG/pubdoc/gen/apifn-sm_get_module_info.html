@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_get_module_info</title>
+</head>
+<body>
+<h1>Prosody generic: API: sm_get_module_info</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_get_module_info(struct sm_module_info_parms *<a href="#field-moduleinfop">moduleinfop</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-moduleinfop">*moduleinfop</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_module_info_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-firmware_running">firmware_running</a>;				/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-firmware_id">firmware_id</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-average_loading">average_loading</a>;				/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_loading">max_loading</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-module_slot">module_slot</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-min_stream">min_stream</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-stream_count">stream_count</a>;					/* out */
+} SM_MODULE_INFO_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Fetches information about a module.
+Note that fields apart from
+<a class=pref href="#field-module_slot">module_slot</a>
+,
+<a class=pref href="#field-min_stream">min_stream</a>
+and
+<a class=pref href="#field-stream_count">stream_count</a>
+are undefined for Prosody S and for Prosody X. The <a href="../protocol_cpumon.html">cpumon</a>
+facility should be used to obtain work load information.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module on which information is required.
+
+<dt><a name="field-firmware_running">firmware_running</a><dd>Indicator of whether or not firmware is running on this module.
+Zero if firmware is not running.
+Note that this refers to the kernel, not individual software
+modules.
+
+<dt><a name="field-firmware_id">firmware_id</a><dd>This field is obsolete.
+
+<dt><a name="field-average_loading">average_loading</a><dd>The percentage (0..100) average work load of the module over the last
+second.
+
+<dt><a name="field-max_loading">max_loading</a><dd>The percentage (0..100) peak work load of the module over the
+last second.
+
+<dt><a name="field-module_slot">module_slot</a><dd>The position of the module on its carrier card.
+
+<dt><a name="field-min_stream">min_stream</a><dd>The number of the first stream accessible to this module.
+
+<dt><a name="field-stream_count">stream_count</a><dd>The count of streams accessible to this module.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists</ul>
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_codec_opus_mode</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_codec_opus_mode</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_codec_opus_mode(struct sm_vmptx_config_codec_opus_mode_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_config_codec_opus_mode_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-sample_rate">sample_rate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-bit_rate">bit_rate</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-ptime">ptime</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-packet_loss">packet_loss</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-complexity">complexity</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-use_fec">use_fec</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-use_dtx">use_dtx</a>;					/* in */
+	<a href="apifn-sm_vmptx_config_codec_opus.html#enum-kSMOPUSRate">enum kSMOPUSRate</a> <a href="#field-rate_control">rate_control</a>;				/* in */
+	<a href="apifn-sm_vmptx_config_codec_opus.html#enum-kSMOPUSSignalTypeHint">enum kSMOPUSSignalTypeHint</a> <a href="#field-signal_type_hint">signal_type_hint</a>;		/* in */
+	<a href="apifn-sm_vmptx_config_codec_opus.html#enum-kSMOPUSAppType">enum kSMOPUSAppType</a> <a href="#field-application_type">application_type</a>;			/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-disable_prediction">disable_prediction</a>;				/* in */
+} SM_VMPTX_CONFIG_CODEC_OPUS_MODE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Modifies the configuration of the Opus codec.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] for which to change the codec parameters.
+
+<dt><a name="field-sample_rate">sample_rate</a><dd>Sample rate of the audio being encoded. This must be the same as that
+previously specified when
+<a href="apifn-sm_vmptx_config_codec_opus.html">sm_vmptx_config_codec_opus()</a>
+was called to configure the VMP[tx].
+
+<dt><a name="field-bit_rate">bit_rate</a><dd>The target bit rate which the codec should aim to produce. A value of zero 
+indicates automatic rate selection. A negative value indicates maximum possible
+rate should be used. Otherwise a value in range 500 to 512000 should be specified.
+For most applications automatic rate selection would be used unless peer indicates otherwise.
+
+<dt><a name="field-ptime">ptime</a><dd>The duration in milliseconds of audio conveyed in each frame. This should be set to 
+a value of 10, 20, 40, or 60. Normally should be set to 20.
+
+<dt><a name="field-packet_loss">packet_loss</a><dd>An estimate of the current level of packet loss to which the encoded
+data will be subjected, as a percentage. Normally set to zero.
+
+<dt><a name="field-complexity">complexity</a><dd>The complexity of the algorithms used to encode the data: 0..10
+This controls the trade-off between channel count and audio quality.
+0 will give the biggest channel count; 10 will give best quality.
+
+<dt><a name="field-use_fec">use_fec</a><dd>Set to any non-zero value to include data for "forward error correction"
+(FEC) in the transmitted stream. Only recommended if really needed, as it
+reduces quality unless there is significant packet loss.
+
+<dt><a name="field-use_dtx">use_dtx</a><dd>Set to any non-zero value to suppress transmission of data during silence.
+Not recommended unless average bit rate is absolutely critical.
+
+<dt><a name="field-rate_control">rate_control</a><dd>Control variation of encoded bit rate.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMOPUSRateConstrainedVariable">kSMOPUSRateConstrainedVariable</a>
+<dd>Constrained variable rate.
+
+<dt><a name="field-kSMOPUSRateUnconstrainedVariable">kSMOPUSRateUnconstrainedVariable</a>
+<dd>Unconstrained variable rate.
+
+<dt><a name="field-kSMOPUSRateConstant">kSMOPUSRateConstant</a>
+<dd>Constant bit rate.
+
+</dl>
+<dt><a name="field-signal_type_hint">signal_type_hint</a><dd>Provides hint about nature of signal being encoded.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMOPUSSignalTypeHintNone">kSMOPUSSignalTypeHintNone</a>
+<dd>Nature of signal not known.
+
+<dt><a name="field-kSMOPUSSignalTypeHintVoice">kSMOPUSSignalTypeHintVoice</a>
+<dd>Signal to be encoded is voice.
+
+<dt><a name="field-kSMOPUSSignalTypeHintMusic">kSMOPUSSignalTypeHintMusic</a>
+<dd>Signal to be encoded is music.
+
+</dl>
+<dt><a name="field-application_type">application_type</a><dd>Provides hint about application type.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMOPUSAppTypeVoIP">kSMOPUSAppTypeVoIP</a>
+<dd>Process signal for improved speech intelligibility.
+
+<dt><a name="field-kSMOPUSAppTypeAudio">kSMOPUSAppTypeAudio</a>
+<dd>Favour faithfulness to the original input..
+
+<dt><a name="field-kSMOPUSAppTypeLowDelay">kSMOPUSAppTypeLowDelay</a>
+<dd>Configure the minimum possible coding delay by disabling certain modes of operation.
+
+</dl>
+<dt><a name="field-disable_prediction">disable_prediction</a><dd>Set to zero for default behaviour, set to 1 to disable almost all use of prediction, making frames almost completely independent.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

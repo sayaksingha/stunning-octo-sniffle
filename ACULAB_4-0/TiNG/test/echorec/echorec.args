@@ -1,0 +1,11 @@
+-TiNGtrace
+F	format		string
+a	agc		unsigned
+e	sil_elim	unsigned
+m	module		unsigned
+n	numchan		unsigned
+q	max_silence	unsigned
+r	reftimeslot	timeslot
+t	timeslot	timeslot
+v	volume		signed
+x	serialnumber	string

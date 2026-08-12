@@ -1,0 +1,52 @@
+VER = $(shell cat ../relver)
+MTAG = $(shell cat ../gen/spTiNG-ver | sed -e 's/\.//')
+
+
+#TODO add shim object support
+GCC_COMPILE=$(CFLAGS_LINUX) -c -MD -o "$@" $< 2>&1 | grep -v "declared .\+static.\+ but never defined" | t0 errs/$@; perl ../libutil/fixdep.pl $@
+
+CC_SPECIFIC_DEFINES := \
+	$(CC_DEFINES) \
+	-DTiNGTYPE_LINUX \
+
+
+CFLAGS_LINUX := \
+	$(CFLAGS_CPU) \
+	-fPIC \
+	$(CC_SPECIFIC_DEFINES) \
+	$(INCLUDES) \
+	-Wall \
+	-W \
+	-Wshadow \
+	-Wpointer-arith \
+	-Wstrict-prototypes \
+	-Wmissing-prototypes \
+	-g \
+	-O3
+
+
+all-$(TiNGTARGET): $(GEN)/Manifest $(GEN)/libTiNGshared.$(VER).$(MTAG).so
+
+dist-$(TiNGTARGET): $(GEN)/Manifest $(GEN)/libTiNGshared.$(VER).$(MTAG).so
+
+$(GEN)/Manifest: ../gen/spTiNG-mod $(GEN)/.exists errs/$(GEN)/.exists
+	echo libTiNGshared.$(VER).$(MTAG).so >$@
+
+$(GEN)/link_script: $(THIS_ENTRY_FILES) mklnk.pl TiNG_exports $(TiNGTARGET)/TiNG_exports $(GEN)/.exists errs/$(GEN)/.exists
+	perl mklnk.pl -e TiNG_exports -e TiNG_high_exports -e $(TiNGTARGET)/TiNG_exports $(GEN)/link_script $(THIS_ENTRY_FILES)
+
+$(GEN)/libTiNGshared.$(VER).$(MTAG).so: $(GEN)/link_script $(LINK_OBJS)
+	gcc $(CFLAGS_CPU) -g -shared -Wl,-soname=libTiNGshared.so,--no-undefined-version,--no-undefined,--hash-style="sysv",--version-script=$(GEN)/link_script -o $(GEN)/libTiNGshared.$(VER).$(MTAG).so $(LINK_OBJS) -lm -lpthread -lrt | t0 errs/$(GEN)/libTiNGshared.$(VER).$(MTAG).so
+
+$(SHIM_OBJS): $(GEN)/%.o: %.c $(GEN)/.exists errs/$(GEN)/.exists
+	gcc -DLOCALDEF= -DLOCALDEC=extern $(GCC_COMPILE)
+
+$(HIGH_SHIM_OBJS): $(GEN)/%.o: %.c $(GEN)/.exists errs/$(GEN)/.exists
+	gcc -DLOCALDEF= -DLOCALDEC=extern $(GCC_COMPILE)
+
+$(PCI_SHIM_OBJS): $(GEN)/%.o: %.c $(GEN)/.exists errs/$(GEN)/.exists
+	gcc -DLOCALDEF= -DLOCALDEC=extern $(GCC_COMPILE)
+
+$(SV2_SHIM_OBJS): $(GEN)/%.o: %.c $(GEN)/.exists errs/$(GEN)/.exists
+	gcc -DLOCALDEF= -DLOCALDEC=extern $(GCC_COMPILE)
+

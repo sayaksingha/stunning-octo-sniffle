@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody SPRT end point: API: sm_sprt_config_data_channel</title>
+</head>
+<body>
+<h1>Prosody SPRT end point: API: sm_sprt_config_data_channel</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_sprt_config_data_channel(struct sm_sprt_config_data_channel_parms *<a href="#field-configp">configp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_config_data_channel_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	int <a href="#field-data_channel">data_channel</a>;					/* in */
+	int <a href="#field-max_payload_length">max_payload_length</a>;					/* in */
+	int <a href="#field-max_latency">max_latency</a>;					/* in */
+} SM_SPRT_CONFIG_DATA_CHANNEL_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures the channel used for data by the SPRT end point. The default
+is channel 3, but can be either 1 or 3.
+<p>
+A packet is filled with the data passed in via the datafeed and is sent 
+when it has reached the
+<a class=pref href="#field-max_payload_length">max_payload_length</a>
+or it has had data for
+<a class=pref href="#field-max_latency">max_latency</a>
+milliseconds.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point to configure.
+
+<dt><a name="field-data_channel">data_channel</a><dd>The channel to use for data
+
+<dt><a name="field-max_payload_length">max_payload_length</a><dd>The maximum length of the payload on the data channel
+
+<dt><a name="field-max_latency">max_latency</a><dd>The data maximum latency
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prossprt.html">Prosody SPRT end point API</a>.
+</body>
+</html>

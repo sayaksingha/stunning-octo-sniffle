@@ -1,0 +1,239 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_config_module_switching</title>
+</head>
+<body class=version-deprecated>
+<h1>Prosody generic: API: sm_config_module_switching</h1>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_config_module_switching(struct sm_config_module_sw_parms *<a href="#field-configp">configp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_config_module_sw_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-auto_assign_out_ts">auto_assign_out_ts</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-auto_assign_in_ts">auto_assign_in_ts</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-out_st0">out_st0</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-out_st1">out_st1</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-out_base_ts">out_base_ts</a>;					/* in */
+	<a name="enum-kSMTimeslotType">enum kSMTimeslotType</a> {
+		<a href="#field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>,
+		<a href="#field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>,
+		<a href="#field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>,
+	} <a href="#field-in_type">in_type</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-in_st0">in_st0</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-in_st1">in_st1</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-in_base_ts">in_base_ts</a>;					/* in */
+	<a href="apifn-sm_config_module_switching.html#enum-kSMTimeslotType">enum kSMTimeslotType</a> <a href="#field-out_type">out_type</a>;				/* in */
+} SM_CONFIG_MODULE_SW_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Overrides default or configured assignment scheme used by driver to
+associate channels with timeslots on card external bus.
+The streams which can be used with this call depend on the type
+of Prosody carrier card being used. On the ISA Prosody card, the
+accessible streams are on the external bus (MVIP), while on
+other cards they are special internal streams which are only
+accessible to Prosody and the switch driver.
+<p>
+When a channel is allocated, it can have an associated external
+bus MVIP or SCbus timeslot automatically assigned to it.
+Alternatively, timeslot assignment may be left to the
+application which can call
+<a href="apifn-sm_switch_channel_output.html">sm_switch_channel_output()</a>
+or
+<a href="apifn-sm_switch_channel_input.html">sm_switch_channel_input()</a>
+following channel allocation to explicitly assign an external
+bus timeslot.
+<p>
+If output channel timeslots for module
+<a class=pref href="#field-module">module</a>
+are to be assigned by the application through calls to
+<a href="apifn-sm_switch_channel_output.html">sm_switch_channel_output()</a>,
+then
+<a class=pref href="#field-auto_assign_out_ts">auto_assign_out_ts</a>
+must be set to zero.
+<p>
+If output channel timeslots for module
+<a class=pref href="#field-module">module</a>
+are to be automatically assigned, then
+<a class=pref href="#field-auto_assign_out_ts">auto_assign_out_ts</a>
+must be set to 1 and the fields
+<a class=pref href="#field-out_st0">out_st0</a>,
+<a class=pref href="#field-out_st1">out_st1</a>
+and
+<a class=pref href="#field-out_base_ts">out_base_ts</a>
+must be set up to specify the external bus streams and timeslots
+to be assigned.
+<p>
+If SCbus external bus timeslots are to be assigned,
+<a class=pref href="#field-out_st0">out_st0</a>
+and
+<a class=pref href="#field-out_st1">out_st1</a>
+should both be set to 24 (the stream assigned to the SCbus) and
+<a class=pref href="#field-out_base_ts">out_base_ts</a>
+should be set to the first SCbus timeslot to be assigned for
+this module.
+<p>
+If MVIP external bus timeslots are to be assigned,
+<a class=pref href="#field-out_st0">out_st0</a>
+and
+<a class=pref href="#field-out_st1">out_st1</a>
+should be set to DSo stream numbers (0..7) for the first 32 and
+second 32 timeslots assigned, and
+<a class=pref href="#field-out_base_ts">out_base_ts</a>
+must be set to zero.
+<p>
+If input channel timeslots for module
+<a class=pref href="#field-module">module</a>
+are to be assigned by the application through calls to
+<a href="apifn-sm_switch_channel_input.html">sm_switch_channel_input()</a>,
+then
+<a class=pref href="#field-auto_assign_in_ts">auto_assign_in_ts</a>
+must be set to zero.
+<p>
+If input channel timeslots for module
+<a class=pref href="#field-module">module</a>
+are to be automatically assigned, then
+<a class=pref href="#field-auto_assign_in_ts">auto_assign_in_ts</a>
+must be
+set to 1 and the fields
+<a class=pref href="#field-in_st0">in_st0</a>,
+<a class=pref href="#field-in_st1">in_st1</a>
+and
+<a class=pref href="#field-in_base_ts">in_base_ts</a>
+must be set up to specify the external bus streams and timeslots
+to be assigned.
+<p>
+If SCbus external bus timeslots are to be assigned,
+<a class=pref href="#field-in_st0">in_st0</a>
+and
+<a class=pref href="#field-in_st1">in_st1</a>
+should both be set to 24 (the stream assigned to the SCbus) and
+<a class=pref href="#field-in_base_ts">in_base_ts</a>
+should be set to the first SCbus timeslot to be
+assigned for this module.
+<p>
+If MVIP external bus timeslots are to be assigned,
+<a class=pref href="#field-in_st0">in_st0</a>
+and
+<a class=pref href="#field-in_st1">in_st1</a>
+should be set to DSi stream numbers (0..7) for the first 32 and
+second 32 timeslots assigned, and
+<a class=pref href="#field-in_base_ts">in_base_ts</a>
+must be set to zero.
+<p>
+The use of automatic timeslot assignment is not recommended.
+It prevents the sharing of a timeslot between multiple
+channels (which is useful when debugging as it permits the
+recording of an input without interfering with normal
+processing of that input). Normally it is trivial to assign
+timeslots explicitly (for example, by deriving the timeslot
+number from some property of a call, such as the port and
+timeslot number of the call).
+<p>
+The use of automatic timeslot assignment is not supported on
+ProsodyS or ProsodyX.
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-deprecated><a name="field-module">module</a>	(Deprecated)
+<dd class=version-deprecated>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module to configure.
+
+<dt class=version-deprecated><a name="field-auto_assign_out_ts">auto_assign_out_ts</a>	(Deprecated)
+<dd class=version-deprecated>Controls whether output timeslots should be assigned automatically.
+The value 1 enables automatic assignment, 0 selects assignment
+by the application.
+
+<dt class=version-deprecated><a name="field-auto_assign_in_ts">auto_assign_in_ts</a>	(Deprecated)
+<dd class=version-deprecated>Controls whether input timeslots should be assigned automatically.
+The value 1 enables automatic assignment, 0 selects assignment
+by the application.
+
+<dt class=version-deprecated><a name="field-out_st0">out_st0</a>	(Deprecated)
+<dd class=version-deprecated>The first stream from which output timeslots are to be
+automatically assigned.
+
+<dt class=version-deprecated><a name="field-out_st1">out_st1</a>	(Deprecated)
+<dd class=version-deprecated>The second stream from which output timeslots are to be
+automatically assigned.
+
+<dt class=version-deprecated><a name="field-out_base_ts">out_base_ts</a>	(Deprecated)
+<dd class=version-deprecated>The lowest numbered timeslot to use for automatic assignment of
+output timeslots.
+This field is ignored.
+
+<dt class=version-deprecated><a name="field-in_type">in_type</a>	(Deprecated)
+<dd class=version-deprecated>The data encoding used on timeslots automatically allocated
+within this stream.
+
+<div class=version-deprecated>
+One of these values:
+<dl>
+<dt><a name="field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>
+<dd>Signals encoded with A-law companding.
+
+<dt><a name="field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>
+<dd>Signals encoded with mu-law companding.
+
+<dt><a name="field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>
+<dd>Digital data - no companding used.
+
+</dl>
+</div>
+<dt class=version-deprecated><a name="field-in_st0">in_st0</a>	(Deprecated)
+<dd class=version-deprecated>The first stream from which input timeslots are to be
+automatically assigned.
+
+<dt class=version-deprecated><a name="field-in_st1">in_st1</a>	(Deprecated)
+<dd class=version-deprecated>The second stream from which input timeslots are to be
+automatically assigned.
+
+<dt class=version-deprecated><a name="field-in_base_ts">in_base_ts</a>	(Deprecated)
+<dd class=version-deprecated>The lowest numbered timeslot to use for automatic assignment of
+input timeslots.
+This field is ignored.
+
+<dt class=version-deprecated><a name="field-out_type">out_type</a>	(Deprecated)
+<dd class=version-deprecated>The data encoding used on timeslots automatically allocated
+within this stream.
+
+<div class=version-deprecated>
+One of these values:
+<dl>
+<dt><a name="field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>
+<dd>Signals encoded with A-law companding.
+
+<dt><a name="field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>
+<dd>Signals encoded with mu-law companding.
+
+<dt><a name="field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>
+<dd>Digital data - no companding used.
+
+</dl>
+</div>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists<li>ERR_SM_FIRMWARE_NOT_RUNNING - if no firmware running on module.<li>ERR_SM_WRONG_MODULE_TYPE - attempt to configure switching on inappropriate module type</ul>
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

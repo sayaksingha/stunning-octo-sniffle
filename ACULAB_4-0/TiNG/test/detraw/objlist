@@ -1,0 +1,7 @@
+.	detraw.o
+.	modelset.o
+Testlib	cardopen.o
+Testlib	modopen.o
+Testlib	error.o
+Testlib	errcode_sm.o
+apilib

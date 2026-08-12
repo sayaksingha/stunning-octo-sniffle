@@ -1,0 +1,10 @@
+.	echorec.o
+Testlib	cardopen.o
+Testlib	errcode_sm.o
+Testlib	error.o
+Testlib	modopen.o
+Testlib	fmtcode.o
+apilib
+call
+libutil	generic_io.o
+switch

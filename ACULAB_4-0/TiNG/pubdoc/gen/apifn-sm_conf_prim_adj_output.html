@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_conf_prim_adj_output</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_conf_prim_adj_output</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_conf_prim_adj_output(struct sm_conf_prim_adj_output_parms *<a href="#field-confp">confp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-confp">*confp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_conf_prim_adj_output_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-volume">volume</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-agc">agc</a>;						/* in */
+} SM_CONF_PRIM_ADJ_OUTPUT_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Adjust output level for conference being output on channel
+<a class=pref href="#field-channel">channel</a>.
+The volume and agc parameters should be set as for
+<a href="apifn-sm_conf_prim_start.html">sm_conf_prim_start()</a>.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel on which the conference output has been started
+which is to be adjusted.
+
+<dt><a name="field-volume">volume</a><dd>The new value for the volume (in dB).
+
+<dt><a name="field-agc">agc</a><dd>The new value for the indicator of whether automatic gain
+control is to be enabled.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - illegal volume or agc value<li>ERR_SM_WRONG_CHANNEL_STATE - if no conference started on channel</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_codec_rttext</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_codec_rttext</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_codec_rttext(struct sm_vmptx_codec_rttext_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_codec_rttext_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-redundant_payload_type">redundant_payload_type</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-redundancy_level">redundancy_level</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-buffer_time">buffer_time</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-idle_time">idle_time</a>;					/* in */
+} SM_VMPTX_CODEC_RTTEXT_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a VMP[tx] to be able to send real-time text.
+<p>
+The packet format is described in 
+<a href="http://www.ietf.org/rfc/rfc4103.txt">IETF RFC 4103</a>.
+<p>
+A VMP[tx] that is configured to use this codec will expect to be provided 
+with octet data rather than audio. As such it will normally be connected 
+to a channel configured for data communitcations with the raw protocol and 
+no encoding. The data written to the channel must be 32 bit values, 
+presented as 4 octets with the least significant octet first. The values 
+should correspond to UCS4 characters.
+<p>
+The firmware does not attempt to ensure that composite character sequences 
+are sent in the same packet. However, there is usually only a small number 
+of characters in each call to 
+<a href="apifn-smdc_tx_data.html">smdc_tx_data()</a>
+and these blocks are normally sent in a single packet.
+<p>
+This requires the module
+<a href="softmodindex.html#rttext">rttext</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to which to add this codec
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type identifer to use with this codec (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13). Supplying a value of
+<code>-1</code> will remove any payload type configuration from the 
+codec preventing its use.
+
+<dt><a name="field-redundant_payload_type">redundant_payload_type</a><dd>The payload type identifer to use with this codec (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13) for redundant data packets. Supplying a value of
+<code>-1</code> will prevent redundancy being used.
+
+<dt><a name="field-redundancy_level">redundancy_level</a><dd>The number of redundant payloads per packet. If zero is specified, the
+default of 2 is used. To disable redundancy, set
+<a class=pref href="#field-redundant_payload_type">redundant_payload_type</a>
+to -1.
+
+<dt><a name="field-buffer_time">buffer_time</a><dd>The time in milliseconds that text may be buffered for before being
+transmitted.
+
+<dt><a name="field-idle_time">idle_time</a><dd>The time in milliseconds before an empty block is sent.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

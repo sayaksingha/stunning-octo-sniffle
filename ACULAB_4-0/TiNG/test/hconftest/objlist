@@ -1,0 +1,7 @@
+.	hconftest.o
+Testlib	cardlist.o
+Testlib	errcode_sm.o
+Testlib	error.o
+Testlib	modlist.o
+apilib
+highapi	smclib.o

@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody Guide - how to download firmware</title>
+</head>
+<body>
+<h1>Prosody Guide - how to download firmware</h1>
+<p>
+Note this section is only applicable to Prosody X.  No firmware 
+download is required for Prosody S.
+<p>
+A Prosody processor needs two kinds of firmware: a <em>kernel</em>,
+which provides the ability to run software, and the <em>firmware
+modules</em>, which implement the wide variety of Prosody functionality.
+<p>
+To find out which firmware modules are needed for an application,
+consult its documentation. If you are writing an application, see the
+documentation for any Prosody API functions you use.
+<p>
+Firmware appropriate to the type of card must be loaded. For Prosody
+processors located on Prosody X cards, firmware from a <em>starcore</em>
+directory must be used.
+
+<h2>Downloading the kernel - Prosody X cards</h2>
+<p>
+The best way to download the kernel is to use the batch/script file
+provided. This is called <code>prosody_ip_card_load_ting_kernel</code> and
+is invoked as follows to load the standard Prosody X TiNG kernel located 
+in starcore directory:
+<pre>
+	prosody_ip_card_load_ting_kernel &lt;serial number&gt; &lt;module index&gt;
+</pre>
+<p>
+For example to load kernel to first Prosody processor on card with 
+serial number 179083 it would be invoked as follows:
+<pre>
+	prosody_ip_card_load_ting_kernel 179083 0
+</pre>
+<p>
+Alternatively, the kernel may be loaded by reference to card IP address.
+Go to directory $(TiNG)/test where there is a
+script/batch file called <code>klx</code>. It is used like this:
+<pre>
+	klx -i 172.16.1.220 -k mykey -m 0
+</pre>
+<p>
+where <code>172.16.1.220</code> is the IP address of the Prosody X card, and
+<code>-m 0</code> indicates the first Prosody Processor module on that
+card (the default is module 0). It is very simple, only supplying
+defaults to the <a href="prog_kloadx.html">kloadx</a> program, whose
+documentation you should consult for details of the options it
+understands. (For example, you need to use the <code>-r</code> option to
+reset the Prosody Processor if a kernel has already been downloaded).
+<p>
+The IP address of a Prosody X card can be determined by running
+the Aculab utility program <code>acu_serno2ip</code>, specifying the
+serial number of the card, which will then output the IP address and key of
+the given card. It is used like this:
+<pre>
+	acu_serno2ip -k 179083
+</pre>
+<p>
+<p>
+<h2>After kernel download</h2>
+<p>
+When the kernel is running you can see a light rapidly flashing on the
+card. Since this light is in different places on each type of card, see
+the hardware installation manual for your card for its location.
+You can also check that the kernel is running using pxdiagutil.
+with the Prosody utility pxdiagutil.
+
+<h2>Downloading firmware modules - Prosody X cards</h2>
+<p>
+To download a firmware module you must have already
+downloaded the firmware kernel as described above.
+<p>
+The best way to download firmware modules is to use the script/batch file
+provided. This is called <code>prosody_ip_card_load_ting_fw</code> and
+is invoked as follows to load Prosody X firmware modules located in starcore directory:
+<pre>
+	prosody_ip_card_load_ting_fw &lt;serial number&gt; &lt;module index&gt; &lt;firmware module&gt; ...
+</pre>
+<p>
+For example to load modules <code>datafeed</code>, <code>td</code>, and <code>inchan</code> to 
+first Prosody processor on card with serial number 179083 it would be invoked as follows:
+<pre>
+	prosody_ip_card_load_ting_fw 179083 0 datafeed td inchan
+</pre>
+<p>
+Alternatively, firmware modules may be loaded by reference to card IP address.
+Go to directory $(TiNG)/test. There is a
+script/batch file called <code>lmx</code> to download a module.
+Use it like this:
+<pre>
+	lmx v110 -i 172.16.1.220 -k mykey
+</pre>
+<p>
+where <code>v110</code> is the name of the module to load and
+<code>172.16.1.220</code> is the card IP address as used when loading the
+kernel. As with <code>klx</code>, you add the <code>-m</code> option to
+specify a Prosody processor module (default 0) like this:
+<pre>
+	lmx v110 -i 172.16.1.220 -k mykey -m 1
+</pre>
+<p>
+This script/batch file is very simple, only supplying
+defaults to the <a href="prog_modload.html">modload</a> program, whose
+documentation you should consult for details of the options it
+understands.
+<p>
+The firmware modules are listed in
+<a href="gen/softmodindex.html">Prosody software modules</a>. If you want
+to run a test application, look at the documentation of that
+application for a list of required modules: if you are writing an
+application, details of required firmware modules are given in the
+documentation for the API functions: if you are using an application
+written by someone else, they should have provided details of the
+firmware it requires. 
+<p><em>Note in general, applications running on Prosody X
+cards will require an additional firmware module 
+<a href="gen/softmodindex.html#datafeed">datafeed</a></em>
+ 
+<p>
+The firmware modules are listed in
+<a href="gen/softmodindex.html">Prosody software modules</a>. If you want
+to run a test application, look at the documentation of that
+application for a list of required modules: if you are writing an
+application, details of required firmware modules are given in the
+documentation for the API functions: if you are using an application
+written by someone else, they should have provided details of the
+firmware it requires.
+<p>
+For complex applications using many firmware modules, firmware download
+will require more consideration in order to utilise the memory
+and CPU resources of the Prosody processor to best effect.  See 
+<a href="an-placement.html">firmware placement for more details</a>.
+

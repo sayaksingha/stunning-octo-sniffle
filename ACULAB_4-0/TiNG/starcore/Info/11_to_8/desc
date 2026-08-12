@@ -1,0 +1,5 @@
+Converter to allow playing of signals which have a sampling
+rate of 11kHz (at the 8kHz rate used by telephony timeslots). This is
+used in conjunction with a replay to play data that was recorded
+at a sampling rate often used when recording from a PC
+soundcard.

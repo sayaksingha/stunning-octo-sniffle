@@ -1,0 +1,339 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: speech processing replay and record data formats</title>
+</head>
+<body>
+<h1>Prosody application note: speech processing replay and record data formats</h1>
+<p>
+<h2>Introduction</h2>
+<p>
+This document describes the data formats provided by Prosody for
+recording and replay of speech data, as well as the characteristics of
+each format and gives some indications on when these formats are
+applicable.
+
+<h2>WAV files, VOX files and raw data streams</h2>
+<p>
+The Prosody speech API can record and replay speech data either to/from
+files (<a href="highapi_playrec.html">High level play/record API</a>)
+or data buffers (using
+<a href="gen/apifn-sm_replay_start.html">sm_replay_start()</a> and
+<a href="gen/apifn-sm_record_start.html">sm_record_start()</a>).
+<p>
+The speech data consists of a sequence of octets which
+is an encoding of a speech signal, Prosody can replay and record speech
+data encoded in a number of different ways, these different encodings
+are called speech data formats. Each Prosody speech data format has
+different characteristics, and the choice of data format used in an
+application depends on the requirements of the application and the
+capabilities of the platform hosting the application.
+<p>
+When Prosody is used to record speech data, that data is encoded into a
+sequence of octets in an explicitly specified data format from a (mu-law
+or A-law) speech signal switched to a Prosody channel input.
+<p>
+When Prosody is used to replay speech data, that data is decoded from a
+sequence of octets in an explicitly specified data format and a (mu-law
+or A-law) speech signal generated on a Prosody channel output. It is
+clearly imperative that the correct decoding algorithm is used by the
+Prosody module to generate the output speech signal from the speech
+data.
+<p>
+When speech data used with the Prosody speech processing firmware is
+stored in a file, the high level speech processing API provides a set of
+calls for handling two commonly used file formats:
+<ul>
+<li>WAV files
+<li>RAW (also known as VOX) files
+</ul>
+
+<p>
+RAW or VOX files just contain encoded speech data (they do not have any
+header). Thus it is not possible to determine the speech data format of
+a RAW file just from its contents.
+<p>
+The WAV file format is a Microsoft defined format that includes a header
+containing information about the following encoded speech data. Within
+the header a data format identifier indicates the data format of the
+speech data contained in the WAV file. These identifier values are
+defined by Microsoft (or registered with Microsoft by product vendors).
+Examples of data format identifiers are:
+<ul>
+<li>WAVE_FORMAT_ALAW
+<li>WAVE_FORMAT_MULAW
+<li>WAVE_FORMAT_OKI_ADPCM
+<li>WAVE_FORMAT_IMA_ADPCM
+<li>WAVE_FORMAT_G721
+<li>WAVE_FORMAT_PCM
+</ul>
+
+<p>
+WAV data formats require more than the identifier to completely
+describe them. For example the format <code>WAVE_FORMAT_PCM</code>
+simply states that the data in the file is in the form of uniformly
+quantized samples. The sampling rate is the frequency at which the
+samples must be output in order to reproduce the original speed and
+pitch. The sample size is the number of bits in each sample (the
+numerical accuracy of the sample). Further, the data in a WAV file can
+be mono (one channel) or stereo (two parallel channels).
+Thus common data formats used by WAV
+players (and recorders) are:
+<ul>
+<li>WAVE_FORMAT_PCM, sample rate 8000Hz, 8 bits per sample  (Telephone quality)
+<li>WAVE_FORMAT_PCM, sample rate 32000Hz, 16 bits per sample (Radio quality)
+<li>WAVE_FORMAT_PCM, sample rate 44100Hz, 16 bits per sample (CD quality)
+<li>WAVE_FORMAT_PCM, sample rate 22050Hz, 16 bits per sample
+<li>WAVE_FORMAT_PCM, sample rate 11025Hz, 16 bits per sample
+</ul>
+
+<p>
+WAVE_FORMAT_ALAW and WAVE_FORMAT_MULAW are almost always sampled at
+8000Hz and are both implicitly 8 bits per sample. Hence 64 kilobits per
+second (Kbps).
+<p>
+As for CTI-specific data formats,
+<ul>
+<li>WAVE_FORMAT_OKI_ADPCM is implicitly 4 bits per sample, giving 32Kbps at a sampling rate of 8000Hz, or 24Kbps at 6000Hz.
+<li>WAVE_FORMAT_IMA_ADPCM is another format using 4 bits per sample.
+</ul>
+<p>
+Obviously Prosody, being a telephony system, only handles mono signals,
+since telephones have no facility for stereo.
+<p>
+WAV file data format identifiers are not the same as the type parameter
+supplied to Prosody replay/record API calls. It is not, in general,
+possible to replay any arbitrary type of WAV file data using the Prosody
+API. Only certain data format identifiers are directly supported. In
+these cases Prosody can map the WAV data format identifier to one
+of its equivalent data formats and use the speech data in the WAV file
+directly. Otherwise you have to transcode the WAV speech data into a Prosody
+supported data format.
+<p>
+Customers can handle other file types (neither WAV or RAW) of speech
+file format by writing their own code above the low level buffer based
+record/replay API.
+<p>
+Whereas some traditional CTI installations use RAW files, Prosody
+developers are encouraged to use WAV files, because the file header can
+be interrogated by a playback/record application using Prosody API
+calls, which can then choose the appropriate Prosody algorithm for
+playback/recording of the file. If the file is RAW, some external
+knowledge is required, independent of the file itself, and it is
+possible to attempt playback of a particular file using the wrong
+algorithm.
+<p>
+Another advantage of using WAV files for storing recorded data is that
+if the data format is supported by other applications, such as a WAV
+player, it can be rendered on a desktop computer without requiring the
+use of a Prosody card.
+
+<h3>Compatibility</h3>
+<p>
+Since the term WAV (or WAVE) file refers only to the header on the file,
+and since there are many data formats (e.g. WAVE_FORMAT_ALAW,
+WAVE_FORMAT_G721) it is virtually impossible for a single application to
+support all data formats. Most desktop WAVE players will support
+WAVE_FORMAT_ALAW and WAVE_FORMAT_MULAW, and WAVE_FORMAT_PCM (but only at
+certain sampling rates and bit-rates).
+<p>
+On Windows 2000 platforms, it is the Audio Compression Manager (ACM)
+that determines what type of WAV files may be rendered to a sound card
+using media players. The media player interacts with ACM drivers to
+convert data between various data formats.
+
+<h2>Prosody Supported Data Formats</h2>
+<p>
+<table border>
+<tr>
+	<th>Prosody format description<th>Registered WAV type tag<th>bits per sample
+
+<tr>
+	<td>kSMDataFormatALawPCM<td>WAVE_FORMAT_ALAW<td>8
+
+<tr>
+	<td>kSMDataFormatULawPCM<td>WAVE_FORMAT_MULAW<td>8
+
+<tr>
+	<td>kSMDataFormatOKIADPCM<td>WAVE_FORMAT_OKI_ADPCM<td>4
+
+<tr>
+	<td>kSMDataFormatIMAADPCM<td>WAVE_FORMAT_IMA_ADPCM<td>4
+
+<tr>
+	<td>kSMDataFormat8bit<td>WAVE_FORMAT_PCM<td>8
+
+<tr>
+	<td>kSMDataFormat16bit<td>WAVE_FORMAT_PCM<td>16
+
+<tr>
+	<td>kSMDataFormatSigned8bit<td>WAVE_FORMAT_PCM<td>8
+
+<tr>
+	<td>kSMDataFormatSpeex<td>WAVE_FORMAT_SPEEX<td>+
+
+</table>
+<p>
+Note:	+   See <a href="http://www.speex.org">Speex website()</a> for details.
+
+
+<h3>Linear PCM</h3>
+<p>
+Pulse Code Modulation is the method of periodically measuring the
+voltage of a waveform (a speech signal), and storing that voltage as an
+integer, which can have a finite number of values. In linear PCM (16 bit
+or 8 bit), the integers used for sampling are simply fractions of the
+full scale deflection of the signal. The rate at which these values are
+measured is the sampling rate, and the conversion to integer values is
+known as quantisation.
+
+<h3>Mu-law</h3>
+<p>
+Mu-law (sometimes u-law or m-law) is the format used for transport of
+speech data in the American and Japanese telephone networks. It is
+specified by ITU G.711 [2]. This is a non-uniform (logarithmic)
+quantisation of signal samples, using 8 data bits per sample, at a rate
+of 8000 samples per second, hence 64 kilobits per second. The subjective
+sound quality is equivalent to linearly sampled 14 bits at the same
+sampling rate. This is commonly supported by WAVE players.
+ 
+<h3>A-law</h3>
+<p>
+A-law is the format used for transport of speech data on telephone
+networks around the world except America and Japan. It is
+specified by ITU G.711 [2]. This is a non-uniform (logarithmic)
+quantization of signal samples, using 8 data bits per sample, at a rate
+of 8000 samples per second, hence 64 kilobits per second. The subjective
+sound quality is equivalent to linearly sampled 13 bits at the same
+sampling rate. This is commonly supported by WAVE players.
+
+<h3>OKI ADPCM</h3>
+<p>
+OKI ADPCM has become an industry standard for storage of speech signals
+at slightly reduced data rates of 32Kbps and 24Kbps. This coding method
+is differential, and uses four data bits per sample, sampled at 8000 or
+6000 samples per second, respectively. When recording at 24Kbps, the
+network sampling rate of 8000 samples per second is subsampled at 6000
+samples per second by DSP software, prior to applying the ADPCM
+algorithm. The reverse is true for replay. The supported file formats
+are .vox and .vap
+
+<h3>IMA ADPCM</h3>
+<p>
+IMA ADPCM (also known as 'DVI ADPCM' or simply 'ADPCM') developed by
+Intel and IMA, approved by the Interactive Multimedia Association as a
+low complexity cross-platform coding scheme for speech. Unfortunately,
+the data format can differ between implementations, in particular a
+legacy build of Microsoft Windows uses the wrong format. The format
+supported by Prosody is consistent with Microsoft Windows NT 4.0,
+Windows 9x and Windows 2000. This is commonly supported by WAVE players.
+
+<h3>Sampling rate</h3>
+<p>
+While a data format determines how much information is recorded for each
+sample, the total amount of information recorded about a signal also
+depends on the sampling rate. Prosody supports these sampling rates:
+<ul>
+<li>8000
+<li>6000
+<li>11000
+</ul>
+<p>
+Since signals are sent across the telephone network at 8000 samples
+per second, it is normally pointless to record or play files at a
+higher sampling rate as the extra sound quality cannot cross the
+phone network and merely serves to make the files bigger. However,
+since PC sound cards are typically optimised for CD sampling rates
+(16 bit linear at 44100 samples/second), it may be more convenient to
+have files which use a rate of 11000 samples per second. This is
+sufficiently close to a quarter of the CD rate that there is no
+perceptible difference (it's less than 1% off). Some PC sound cards
+do not handle 8000 samples/second very well, so this may also
+influence the choice of which rate to use.
+<p>
+The rate of 6000 samples per second offers a saving of 25% of the
+file sizes at the cost of some sound quality.
+
+<h3>Other types of ADPCM</h3>
+<p>
+There are two other very common types of ADPCM. Neither is
+compatible with OKI ADPCM.
+<ul>
+<li>Microsoft ADPCM is a completely incompatible (and slightly more
+complex) type of ADPCM. This is obviously supported by Microsoft WAVE
+players, and is available as open source for use with GNU / Linux.
+<li>G.721 (also known as CCITT ADPCM) is an ITU specification for a
+rather complicated form of ADPCM, rarely used nowadays.
+</ul>
+
+<h2>Applicability of Supported Data Formats</h2>
+<p>
+The choice of data format for use in an application may depend on some
+or all of the following factors:
+<ul>
+<li>platform system bus (PCI) performance
+<li>platform disk controller performance
+<li>platform disk capacity for storing recorded speech data locally
+<li>system network performance if speech data not stored on local disk
+<li>platform CPU performance and loading
+<li>application scalability requirements
+<li>application audio quality requirements
+<li>manipulation or use of application recorded speech using non-Aculab software (eg. sound card)
+<li>computational complexity of encode/decode algorithm (hence channel count per DSP)
+<li>nature of signal to be recorded/replayed vs. characteristics of encoding technique, for example some encoding algorithms are adequate for speech data but poor when used with recorded music
+<li>combinatorial restrictions on use of algorithm in available Prosody firmware builds
+</ul>
+
+<h3>Summary of Data Format Characteristics</h3>
+<table border>
+<tr>
+	<th>Data Format<th>Data rate<th>Speech quality<th>Encoding cost<th>Decoding cost<th>Portability
+
+<tr>
+	<td>16-bit Linear PCM<td>very high<td>Best<td>Low<td>Low<td>Universal
+
+<tr>
+	<td>A or Mu law<td>High<td>Best<td>Low<td>Low<td>Wide
+
+<tr>
+	<td>OKI ADPCM 32Kbps<td>Moderate<td>Moderate<td>Moderate<td>Moderate<td>within CT
+
+<tr>
+	<td>OKI ADPCM 24Kbps<td>Moderate<td>Low<td>Moderate<td>Moderate<td>within CT
+
+<tr>
+	<td>IMA ADPCM 32Kbps<td>Moderate<td>Moderate<td>Moderate<td>Moderate<td>Wide
+
+</table>
+<p>
+
+<h3>Platform/Network System Performance</h3>
+<p>
+Each active channel of data (recording or replaying) generally requires 2K buffers of data octets to be supplied at regular intervals.  With uncompressed data this is every 250 ms, with 2:1 compressed data this is every 500 ms, etc.
+<p>
+The sustainable channel count depends on how reliably the system can deliver data buffers to active channels, this is a function of the CPU performance, other loading on the CPU, the local disk controller performance, or the network performance if replay data comes over a LAN.
+<p>
+It is evident that the more compressed the speech data is, the less often data has to be supplied to active channels and thus the less demand this makes on system performance.
+
+<h3>Platform disk capacity</h3>
+<p>
+If long duration or large numbers of recordings are going to be stored and disk capacity for these recordings is an issue, then consideration should be given to the compression ratio offered by a particular data format.
+<p>
+See section 3 for the bits per sample characteristic for each data format.  Each PCM sample is 8 bits, so if a data format uses N bits per sample, the compression  ratio is 8/N
+
+<h2>References</h2>
+<ol>
+<li>The structure of a WAV file header is described in MSDN online library section:
+Platform SDK/Graphics and Multimedia Services/Windows Multimedia/Multimedia Reference/Multimedia Structures/WAVEFORMATEX
+<li>ITU G.711 Pulse Code Modulation (PCM) of voice frequencies available from <a href="http://www.itu.int/ITU-T/index.html">http://www.itu.int/ITU-T/index.html</a>
+</ol>
+
+<hr>
+<p>
+<small>Document reference: AN 1386</small>
+
+</body>
+</html>
+

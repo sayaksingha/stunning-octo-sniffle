@@ -1,0 +1,291 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+
+<title>Prosody speech processing: pre-loaded output tones</title>
+</head>
+<body>
+<h1>Prosody speech processing: pre-loaded output tones</h1>
+<h2>Prosody speech processing: pre-loaded component output frequencies</h2>
+<p>
+The following table lists the component output frequencies supported by
+default, along with their corresponding identifiers (that may be used in
+calls to
+<a href="gen/apifn-sm_add_output_tone.html">sm_add_output_tone()</a>.
+<p><table border>
+<tr>
+	<th>Id
+	<th>Frequency
+	<th>Amplitude
+	<th>Description
+
+<tr>
+	<td>0<td>0<td>0<td>Silence
+
+<tr>
+	<td>1<td>697<td>-12<td>DTMF frequency 1
+
+<tr>
+	<td>2<td>770<td>-12<td>DTMF frequency 2
+
+<tr>
+	<td>3<td>852<td>-12<td>DTMF frequency 3
+
+<tr>
+	<td>4<td>941<td>-12<td>DTMF frequency 4
+
+<tr>
+	<td>5<td>1209<td>-10<td>DTMF frequency 5
+
+<tr>
+	<td>6<td>1336<td>-10<td>DTMF frequency 6
+
+<tr>
+	<td>7<td>1477<td>-10<td>DTMF frequency 7
+
+<tr>
+	<td>8<td>1633<td>-10<td>DTMF frequency 8
+
+<tr>
+	<td>9<td>400<td>-10<td>Call progress 1
+
+<tr>
+	<td>10<td>450<td>-10<td>Call progress 2
+
+<tr>
+	<td>11<td>425<td>-4.5<td>Call progress 3
+
+<tr>
+	<td>12<td>950<td>-13<td>Call progress 4
+
+<tr>
+	<td>13<td>1400<td>-13<td>Call progress 5
+
+<tr>
+	<td>14<td>1800<td>-13<td>Call progress 6
+
+<tr>
+	<td>15<td>350<td>-10<td>Call progress 7
+
+<tr>
+	<td>16<td>440<td>-10<td>Call progress 8
+
+<tr>
+	<td>17<td>1100<td>-11.5<td>Fax CNG
+
+<tr>
+	<td>18<td>2100<td>-11<td>FAX CED
+
+</table>
+
+<p>
+<div class="version-TiNG">
+	<span class=header-TiNG>Only on Prosody version 2 (TiNG):</span>
+<p><table border>
+<tr>
+	<td>19<td>350<td>-13<td>Call progress 1
+
+<tr>
+	<td>20<td>440<td>-13<td>Call progress 2
+
+<tr>
+	<td>21<td>440<td>-19<td>Call progress 3
+
+<tr>
+	<td>22<td>480<td>-17<td>Call progress 4
+
+<tr>
+	<td>23<td>480<td>-19<td>Call progress 5
+
+<tr>
+	<td>24<td>480<td>-24<td>Call progress 6
+
+<tr>
+	<td>25<td>620<td>-24<td>Call progress 7
+</table>
+</div>
+
+
+<p>
+<div class="version-v1">
+	<span class=header-v1>Only on Prosody version 1:</span>
+For mu-law builds, entries from ID 9 onwards are replaced with these:
+
+<p><table border>
+<tr>
+	<th>Id
+	<th>Frequency
+	<th>Amplitude
+	<th>Description
+
+<tr>
+	<td>9<td>350<td>-13<td>Call progress 1
+
+<tr>
+	<td>10<td>440<td>-13<td>Call progress 2
+
+<tr>
+	<td>11<td>440<td>-19<td>Call progress 3
+
+<tr>
+	<td>12<td>480<td>-17<td>Call progress 4
+
+<tr>
+	<td>13<td>480<td>-19<td>Call progress 5
+
+<tr>
+	<td>14<td>480<td>-24<td>Call progress 6
+
+<tr>
+	<td>15<td>620<td>-24<td>Call progress 7
+<tr>
+	<td>16<td>1100<td>-11.5<td>Fax CNG
+
+<tr>
+	<td>17<td>2100<td>-11<td>FAX CED
+
+</table>
+</div>
+
+<h2>Prosody speech processing: pre-loaded simple output tones</h2>
+<p>
+The following table lists the simple (single or dual
+component frequency) output tones supported by
+default and the corresponding identifiers (that may be
+used in calls to
+<a href="gen/apifn-sm_play_tone.html">sm_play_tone()</a>).
+Additional output tones may be defined by an application through calls
+to <a href="gen/apifn-sm_add_output_tone.html">sm_add_output_tone()</a>
+<p><table border>
+<tr>
+	<th>Id<th>1st Component<th>2nd
+	Component<th>Description
+
+<tr>
+	<td>0<td>4<td>6<td>DTMF tone 1 ('0')
+
+<tr>
+	<td>1<td>1<td>5<td>DTMF tone 2 ('1')
+
+<tr>
+	<td>2<td>1<td>6<td>DTMF tone 3 ('2')
+
+<tr>
+	<td>3<td>1<td>7<td>DTMF tone 4 ('3')
+
+<tr>
+	<td>4<td>2<td>5<td>DTMF tone 5 ('4')
+
+<tr>
+	<td>5<td>2<td>6<td>DTMF tone 6 ('5')
+
+<tr>
+	<td>6<td>2<td>7<td>DTMF tone 7 ('6')
+
+<tr>
+	<td>7<td>3<td>5<td>DTMF tone 8 ('7')
+
+<tr>
+	<td>8<td>3<td>6<td>DTMF tone 9 ('8')
+
+<tr>
+	<td>9<td>3<td>7<td>DTMF tone 10 ('9')
+
+<tr>
+	<td>10<td>1<td>8<td>DTMF tone 11 ('A')
+
+<tr>
+	<td>11<td>2<td>8<td>DTMF tone 12 ('B')
+
+<tr>
+	<td>12<td>3<td>8<td>DTMF tone 13 ('C')
+
+<tr>
+	<td>13<td>4<td>8<td>DTMF tone 14 ('D')
+
+<tr>
+	<td>14<td>4<td>5<td>DTMF tone 15 ('*')
+
+<tr>
+	<td>15<td>4<td>7<td>DTMF tone 16 ('#')
+
+<tr>
+	<td>16<td>9<td>0<td>400 Hz tone (busy/path)
+
+<tr>
+	<td>17<td>9<td>10<td>400 Hz + 450 Hz (Ring)
+
+<tr>
+	<td>18<td>11<td>0<td>425 Hz tone (E.C. dial/busy/unobtainable)
+
+<tr>
+	<td>19<td>12<td>0<td>950 Hz tone (SIT)
+
+<tr>
+	<td>20<td>13<td>0<td>1400 Hz tone (SIT)
+
+<tr>
+	<td>21<td>14<td>0<td>1800 Hz tone (SIT)
+
+<tr>
+	<td>22<td>15<td>16<td>350 Hz + 440 Hz tone (U.K. dial tone)
+
+<tr>
+	<td>23<td>17<td>0<td>fax CNG
+
+<tr>
+	<td>24<td>18<td>0<td>fax CED
+
+</table>
+<p>
+<div class="version-TiNG">
+	<span class=header-TiNG>Only on Prosody version 2 (TiNG):</span>
+<p><table border>
+<tr>
+	<td>25<td>19<td>20<td>350 Hz + 440 Hz (U.S. Dial)
+
+<tr>
+	<td>26<td>24<td>25<td>480 Hz + 620 Hz (U.S. Line busy/Reorder congestion)
+
+<tr>
+	<td>27<td>21<td>23<td>440 Hz + 480 Hz (U.S. Ring Tone)
+
+<tr>
+	<td>28<td>22<td>0<td>480 Hz tone (Alarm/Intercept signal)
+
+</table>
+</div>
+<p>
+<div class="version-v1">
+	<span class=header-v1>Only on Prosody version 1:</span>
+For mu-law builds, entries from ID 16 onwards are replaced with these:
+<p><table border>
+<tr>
+	<th>Id<th>1st Component<th>2nd
+	Component<th>Description
+
+<tr>
+	<td>16<td>9<td>10<td>350 Hz + 440 Hz (U.S. Dial)
+
+<tr>
+	<td>17<td>14<td>15<td>480 Hz + 620 Hz (U.S. Line busy/Reorder congestion)
+
+<tr>
+	<td>18<td>11<td>13<td>440 Hz + 480 Hz (U.S. Ring Tone)
+
+<tr>
+	<td>19<td>12<td>0<td>480 Hz tone (Alarm/Intercept signal)
+
+<tr>
+	<td>20<td>16<td>0<td>fax CNG
+
+<tr>
+	<td>21<td>17<td>0<td>fax CED
+
+</table>
+</div>
+
+</body>
+</html>

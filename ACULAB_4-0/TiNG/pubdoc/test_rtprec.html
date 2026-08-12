@@ -1,0 +1,310 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: rtprec</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: rtprec</h1>
+<p>
+This is a very simple recording application. It records a RTP stream 
+into a file. It can be stopped by a command, but otherwise records 
+forever. The recorded file has no headers or other formatting of any 
+kind - just the data. See also <a href="test_locrec.html">locrec</a> 
+which performs the equivalent function for TDM timeslots.
+<p>
+Go to directory $(TiNG)/test/rtprec.
+<p>
+You must have downloaded firmware modules as listed below.
+<p>
+Run <code>rtprec</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/rtprec</span> or
+<span class="type-WINNT">gen-WINNT_V6/rtprec</span>
+depending on which operating system you are using).
+<p>
+Command line options are as follows. All options which configure a
+codec start with <code>-C</code>.
+<table>
+<tr>
+	<td><code>-CF</code> frame_len
+		<td>The duration of a coded frame in ticks.
+<tr>
+	<td><code>-CNe</code>
+		<td>Enables comfort noise
+<tr>
+	<td><code>-CNm</code> comfort_noise_payload_mapping
+		<td>The payload type code to use for comfort noise
+		packets. Only relevant when comfort noise has been
+		enabled.
+<tr>
+	<td><code>-CP</code>
+		<td>Enables packet loss concealment.
+<tr>
+	<td><code>-CV</code> variant
+		<td>The codec variant to use (GSMFR only).
+<tr>
+	<td><code>-Ca</code> clerk_addr
+		<td>The address of the
+		<a href="test_rtpclerk.html">clerk daemon.</a>
+<tr>
+	<td><code>-Cb</code> bitrate
+		<td>The bit rate of the RTP coded data in bits per second.
+		Only relevant where the selected codec has more than one
+		possible rate.
+<tr>
+	<td><code>-Cp</code> clerk_port
+		<td>The port of the
+		<a href="test_rtpclerk.html">clerk daemon.</a>
+<tr>
+	<td><code>-E</code> tone_elim_mode
+		<td>use tone elimination, with mode tone_elim_mode.
+<tr>
+	<td><code>-F</code> format
+		<td>format of the file to record. The known formats can
+		be listed by specifying a question mark
+		(<code>?</code>).
+<tr>
+	<td><code>-J</code> max_ms
+		<td>The maximum jitter allowed in milliseconds.
+<tr>
+	<td><code>-L</code> local_ip
+		<td>The IP address on which we are listening, which is
+		passed to the clerk daemon.
+<tr>
+	<td><code>-P</code> per_mod
+		<td>The maximum number of channels to allocate on a
+		single module.
+<tr>
+	<td><code>-S</code> tone_set
+		<td>the toneset to use for tone elimination (if
+		enabled).
+<tr>
+	<td><code>-T</code> threshold
+		<td>set the data transfer threshold
+<tr>
+	<td><code>-U</code>
+		<td>Show message when overruns occur.
+<tr>
+	<td><code>-X</code> maxoctets
+		<td>Limit the length of all recordings to this amount of
+		data.
+<tr>
+	<td><code>-a</code> agc
+		<td>use AGC
+<tr>
+	<td><code>-c</code> codec
+		<td>Selects the RTP codec to use. The known codecs can
+		be listed by specifying a question mark
+		(<code>?</code>).
+<tr>
+	<td><code>-d</code>
+		<td>Report detection of RFC2833 tone packets.
+<tr>
+	<td><code>-e</code> sil_elim
+		<td>use silence elimination, eliminating silences
+		longer than sil_elim milliseconds. (default, 0, means do not
+		eliminate silences)
+<tr>
+	<td><code>-g</code>
+		<td>Generate tones into the audio based on RFC2833 tone packets.
+<tr>
+	<td><code>-j</code> initial_ms
+		<td>The target jitter in milliseconds.
+<tr>
+	<td><code>-l</code> max_elapsed_time
+		<td>Set a maximum elapsed time for the recording to N
+		milliseconds (default, 0, means no maximum).
+<tr>
+	<td><code>-m</code> payloadmapping
+		<td>The payload type for data produced by the codec.
+<tr>
+	<td><code>-n</code> numchan
+		<td>start recording this many channels (default = 1)
+<tr>
+	<td><code>-q</code> max_silence
+		<td>Set a maximum silence in milliseconds. As soon as this
+		much silence occurs, the recording finishes.
+		(default, 0, means no maximum).
+<tr>
+	<td><code>-r</code> rfc2833tones
+		<td>The payload type to use for RFC2833 tones. If this value
+		is zero, no RFC2833 tones are sent.
+<tr>
+	<td><code>-v</code> volume
+		<td>adjust volume of the playback by this (in dB)
+<tr>
+	<td><code>-x</code> identifier
+		<td>Use these Prosody processor modules, specified as
+		described in
+		<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a>
+<tr>
+	<td><code>-y</code> sync
+		<td>syncronised record - prepare channels but don't
+		start them until the 'g' command is given
+<tr>
+	<td>&lt;file&gt;
+		<td>name of file from which data is to be recorded.
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/rtprec -x x:1.2.3.4/mykey -F ALawPCM@8000 -c alaw -m 8 rec1.dat
+</pre>
+<p>
+would record data in A-law encoded speech into
+<code>rec1.dat</code> from the card 1.2.3.4. The RTP stream must be alaw with 
+a payload mapping of 8. The stream must be sent to the port on which the
+VMP is listening. This can be reported by the application printing it out,
+allowing you to use any means to arrange for the RTP stream to be sent
+there, or it can be reported by the application to the
+<a href="test_rtpclerk.html">clerk daemon</a> if one has been specified.
+<p>
+The firmware modules that are required depend on the options you
+specify. Here are the details:
+<p>
+<table border>
+<tr>
+	<th class=bg>Module<th class=bg>When needed
+<tr>
+	<td><a href="gen/softmodindex.html#datafeed">datafeed</a>
+		<td>always
+<tr>
+	<td><a href="gen/softmodindex.html#gainbg">gainbg</a>
+		<td>If you use '<code>-a 1</code>' for AGC
+		or '<code>-v</code>' to adjust the volume
+<tr>
+	<td><a href="gen/softmodindex.html#vmprx">vmprx</a>
+		<td>always
+<tr>
+	<td><a href="gen/softmodindex.html#vmpplc">vmpplc</a>
+		<td>If you use -CP to enable PLC.
+<tr>
+	<td><a href="gen/softmodindex.html#sixkin">sixkin</a>
+		<td>when the file format is ACUBLKPCM@6000,
+		ALawPCM@6000, OKIADPCM@6000, or ULawPCM@6000 
+<tr>
+	<td><a href="gen/softmodindex.html#recA">recA</a>
+		<td>when the file format is
+		ALawPCM@6000 or ALawPCM@8000
+<tr>
+	<td><a href="gen/softmodindex.html#recima">recima</a>
+		<td>when the file format is IMAADPCM
+<tr>
+	<td><a href="gen/softmodindex.html#recmu">recmu</a>
+		<td>when the file format is
+		ULawPCM@6000 or ULawPCM@8000
+<tr>
+	<td><a href="gen/softmodindex.html#recoki">recoki</a>
+		<td>when the file format is
+		OKIADPCM@6000 or OKIADPCM@8000
+<tr>
+	<td><a href="gen/softmodindex.html#amr-nb">amr-nb</a>
+		<td>when the RTP codec is AMR (Adaptive Multi Rate) narrowband.
+<tr>
+	<td><a href="gen/softmodindex.html#evrc">evrc</a>
+	<td>when the RTP codec is EVRC (Enhanced Variable Rate CODEC).
+<tr>
+	<td><a href="gen/softmodindex.html#g7231a">g7231a</a>
+	<td>when the RTP codec is G.723.1.
+<tr>
+	<td><a href="gen/softmodindex.html#g726">g726</a>
+	<td>when the RTP codec is G.726.
+<tr>
+	<td><a href="gen/softmodindex.html#g728">g728</a>
+	<td>when the RTP codec is G.728.
+<tr>
+	<td><a href="gen/softmodindex.html#g729ab">g729ab</a>
+	<td>when the RTP codec is G.729A.
+<tr>
+	<td><a href="gen/softmodindex.html#gsm-efr">gsm-efr</a>
+	<td>when the RTP codec is GSM-EFR (Enhanced Full Rate).
+<tr>
+	<td><a href="gen/softmodindex.html#gsm-fr">gsm-fr</a>
+	<td>when the RTP codec is GSM-FR (Full Rate).
+<tr>
+	<td><a href="gen/softmodindex.html#ilbc">ilbc</a>
+	<td>when the RTP codec is iLBC (Internet Low Bit Rate Codec).
+<tr>
+	<td><a href="gen/softmodindex.html#smv">smv</a>
+	<td>when the RTP codec is SMV (Selectable Mode Vocoder).
+<tr>
+	<td><a href="gen/softmodindex.html#sync">sync</a>
+		<td>when the <code>-y</code> option is used
+</table>
+<p>
+When this program starts, it starts as many channels as specified by
+the <code>-n</code> option, and then prints a prompt and waits for
+commands. While waiting for commands any running channels will be
+serviced, but status changes will not be reported. The commands are:
+<table border>
+<tr>
+	<th class=bg>Character<th class=bg>Meaning
+<tr>
+	<td><td>(i.e. blank line - no command) Print status
+<tr>
+	<td><code>?</code><td>Print summary of possible commands
+<tr>
+	<td><code>+</code><td>Start another channel
+<tr>
+	<td><code>a</code> N<td>Set AGC for future channels
+	to <em>N</em>
+<tr>
+	<td><code>g</code><td>go - allow channels held for
+	synchronisation by <code>-y</code> option to start
+<tr>
+	<td><code>G</code> channo[=gain]<td>gain - set gain of given
+	channel which is already running
+<tr>
+	<td><code>k</code>N<td>Kill channel or VMP <em>N</em>, .
+<tr>
+	<td><code>K</code>N<td>Kill channel <em>N</em>, discarding any
+	uncollected data.
+<tr>
+	<td><code>l</code>N<td> set maximum elapsed time for future
+	channels.
+<tr>
+	<td><code>q</code><td>Quit - exit without waiting for channels
+	to finish.
+<tr>
+	<td><code>T</code>N<td>Set <code>TiNGtrace</code>
+	to <em>N</em>.
+<tr>
+	<td><code>w</code><td>Quit - wait for all channels to finish.
+<tr>
+	<td><code>x</code> N<td>Set maximum octets for future channels
+	to <em>N</em>
+<tr>
+	<td><code>#</code> anything<td>do nothing - used for
+	comments
+</table>
+<p>
+The status is shown in each prompt. The prompt starts with two
+characters for each current channel. The first character indicates the
+status of the play for that channel:
+<table border>
+<tr><th>Character<th>Status
+<tr><td>*<td>Active - data was transferred since printing last prompt
+<tr><td>.<td>Idle - no data was transferred since printing last prompt
+<tr><td>-<td>Done - recording has finished
+<tr><td>&nbsp;<td>Channel is no longer in use
+<tr><td>u<td>Underrun occurred since last printing prompt
+</table>
+<p>
+The second character indicates the status of the VMP[rx] for that
+channel:
+<table border>
+<tr><th>Character<th>Status
+<tr><td>v<td>Idle - VMP is idle (not yet started)
+<tr><td>v<td>Busy - VMP is running
+<tr><td>-<td>Done - VMP has finished
+<tr><td>&nbsp;<td>Channel is no longer in use
+</table>
+<p>
+The source code for this program is provided (rtprec.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

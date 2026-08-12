@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_set_sidetone_channel</title>
+</head>
+<body class=version-deprecated>
+<h1>Prosody speech processing: API: sm_set_sidetone_channel</h1>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_set_sidetone_channel(struct sm_set_sidetone_channel_parms *<a href="#field-sidetp">sidetp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-sidetp">*sidetp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_set_sidetone_channel_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-output">output</a>;					/* in */
+} SM_SET_SIDETONE_CHANNEL_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+When both an input channel and an output channel are switched
+through to an analogue telephone, the hybrid will cause a
+fraction of the output signal to appear as part of the input
+signal received from that telephone. This signal fraction is
+sometimes called <cite>sidetone</cite>. When a signal is fed
+into a conference with
+<a href="apifn-sm_conf_prim_add.html">sm_conf_prim_add()</a>
+the firmware can temporarily suspend this input from the
+conference during times when it appears to contain only an
+echo of the signal being sent to the corresponding output. Note
+that this does not remove the echo - it suppresses the whole
+signal - nor does it suppress recording or detection of the
+signal, which continues normally.
+<p>
+However, see
+<a href="apifn-sm_condition_input.html">sm_condition_input()</a>
+for a more general way to remove this echo, at the expense of
+using more processing resources.
+<p>
+This API call nominates for an input channel
+<a class=pref href="#field-channel">channel</a>,
+the output channel,
+<a class=pref href="#field-output">output</a>,
+whose sidetone will be assumed to form part of the input channel
+signal. It should only be enabled when
+<a class=pref href="#field-output">output</a>
+is a channel whose output signal is from a conferencing job.
+<p>
+If
+<a class=pref href="#field-output">output</a>
+is set to <code>kSMNullChannelId</code>, it will be assumed no
+sidetone is present in the input channel signal.
+
+<div class="version-Ps">
+	<span class=header-Ps>Only on Prosody S:</span>
+Not supported by Prosody S.
+
+</div>
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-deprecated><a name="field-channel">channel</a>	(Deprecated)
+<dd class=version-deprecated>The input channel which is attached to conferencing whose
+sidetone is to be configured.
+
+<dt class=version-deprecated><a name="field-output">output</a>	(Deprecated)
+<dd class=version-deprecated>The output channel which is to be configured as a sidetone.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_WRONG_CHANNEL_STATE - if channel not attached to conferencing</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

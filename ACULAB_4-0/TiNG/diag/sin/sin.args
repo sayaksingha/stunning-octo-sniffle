@@ -1,0 +1,3 @@
+o	outfile		string
+f	freq		float
+l	length		unsigned

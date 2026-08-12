@@ -34,7 +34,7 @@ typedef struct _DialogueComp
    UINT8          numberOfComponent;
    UINT8          totComponent;
    BOOLEAN        lastComponentFlag;
-   TcapComponent  tcapComponent[ACU_TCAP_MAX_COMPONENT];
+   AnsiTcapComponent  tcapComponent[ACU_TCAP_MAX_COMPONENT];
 }DialogueComp;
 
 typedef enum _SsapState
@@ -130,13 +130,15 @@ class TcapAculab
   
      BOOLEAN SetTcapCinfigFilePath(TEXT *lCfgFile);
 
-     BOOLEAN ReadConfig();
+     // Ab Change: Pass lCfgFile down to ReadConfig
+   BOOLEAN ReadConfig(TEXT* lCfgFile);
 
      BOOLEAN ReloadConfig();
 
      BOOLEAN ReadIpcConfig();
 
-     BOOLEAN ReadTcapConfig();
+     // Ab Change: Pass lCfgFile down to ReadTcapConfig
+     BOOLEAN ReadTcapConfig(TEXT* lCfgFile);
 
      BOOLEAN SsapCreate(BOOLEAN reload = false); 
 
@@ -161,45 +163,45 @@ class TcapAculab
       
      EnumTcapComp GetTcapCompType(const acu_tcap_comp_type_t &lComp);
 
-     BOOLEAN FillTcapStruct(acu_tcap_msg_t *lMsg,TcapMsg &lTcapMsg,
+     BOOLEAN FillTcapStruct(acu_tcap_msg_t *lMsg,AnsiTcapMsg &lTcapMsg,
                             const acu_tcap_dialogue_t *lDlg,
-                            TcapComponent *lComp,int &lNoOfComp);
+                            AnsiTcapComponent *lComp,int &lNoOfComp);
 
 
       acu_tcap_msg_type_t HandleEventAcuTcapMsg(acu_tcap_msg_t *lAcuTcapMsgPtr);
       BOOLEAN SendAcuTcapMsg(acu_tcap_msg_t*); 
-     BOOLEAN TrnslateMsgToAculabFormat(TcapMsg lTcapMsg, acu_tcap_msg_t *lMsg);
-     acu_tcap_msg_type_t GetAcuTcapMsgType(TcapMsg &lTcapMsg);
+     BOOLEAN TrnslateMsgToAculabFormat(AnsiTcapMsg lTcapMsg, acu_tcap_msg_t *lMsg);
+     acu_tcap_msg_type_t GetAcuTcapMsgType(AnsiTcapMsg &lTcapMsg);
 
      BOOLEAN CreateAcuTcapTrans(acu_tcap_trans_t **lTrsnPtr,int &lInstanceNo);
 
      BOOLEAN CreateAcuTcapOngoingTrans(acu_tcap_trans_t **lTrsnPtr, int &lInstanceNo, UINT8 origTransIdLen, UINT32 origTransId, UINT8 destTransIdLen, UINT32 destTransId, int ssn, UINT8 opCode, int invokeId, time_t timeOut, int ssapInstance);
 
-     BOOLEAN AcuTcapOperationRestore(TcapMsg lTcapMsg, acu_tcap_msg_t *lMsg);
+     BOOLEAN AcuTcapOperationRestore(AnsiTcapMsg lTcapMsg, acu_tcap_msg_t *lMsg);
 
      BOOLEAN AllocAcuTcapMsg(acu_tcap_msg_t **lMsg,acu_tcap_trans_t *lTrsnPtr);
 
      BOOLEAN InitAcuTcapMsg(acu_tcap_msg_t *lMsg,acu_tcap_msg_type_t lType);
 
-     BOOLEAN AddAcuTcapComponet(TcapMsg lTcapMsg,acu_tcap_msg_t *lMsg);
+     BOOLEAN AddAcuTcapComponet(AnsiTcapMsg lTcapMsg,acu_tcap_msg_t *lMsg);
 
       
-     BOOLEAN  GetTcapComponets(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg,
-           const acu_tcap_dialogue_t *lDlg, TcapComponent *lcomp,int &lNoOfComp);
+     BOOLEAN  GetTcapComponets(acu_tcap_msg_t *lMsg, AnsiTcapMsg &lTcapMsg,
+           const acu_tcap_dialogue_t *lDlg, AnsiTcapComponent *lcomp,int &lNoOfComp);
       
-     BOOLEAN  GetTcapTimeOutComponet(acu_tcap_msg_t *lMsg, TcapMsg &lTcapMsg);
+     BOOLEAN  GetTcapTimeOutComponet(acu_tcap_msg_t *lMsg, AnsiTcapMsg &lTcapMsg);
 
-     BOOLEAN FormTcapAbortMsg(TcapMsg &lTcapMsg,EnumAbortType lType,
+     BOOLEAN FormTcapAbortMsg(AnsiTcapMsg &lTcapMsg,EnumAbortType lType,
                                     acu_tcap_p_abort_cause_t lCause);
 
 
-     BOOLEAN AddAcuTcapDialogue(acu_tcap_msg_t *lMsg,TcapMsg lTcapMsg);
+     BOOLEAN AddAcuTcapDialogue(acu_tcap_msg_t *lMsg,AnsiTcapMsg lTcapMsg);
 
      EnumTcapDlg GetTcapDlgType(acu_tcap_msg *lMsg);
 
-     BOOLEAN GetTcapDialogue(const acu_tcap_dialogue_t *lDlg, TcapMsg &lTcapMsg);
+     BOOLEAN GetTcapDialogue(const acu_tcap_dialogue_t *lDlg, AnsiTcapMsg &lTcapMsg);
 
-     BOOLEAN FillTcapComponent(acu_tcap_component_t*, TcapMsg&);
+     BOOLEAN FillTcapComponent(acu_tcap_component_t*, AnsiTcapMsg&);
 
      BOOLEAN GetTransIds(acu_tcap_msg_t *lMsg,unsigned int *lLocId,
                                               unsigned int *lRemId,
@@ -235,7 +237,7 @@ class TcapAculab
 
     void SetRcvLocalAddress(acu_tcap_msg_t *lMsg);
 
-    BOOLEAN HandlerMultipleComponents(TcapMsg  tcapMsg);
+    BOOLEAN HandlerMultipleComponents(AnsiTcapMsg  tcapMsg);
 
 };
 

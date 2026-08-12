@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<link rel=stylesheet type="text/css" href="evapi.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ACTIVE_JOB structure</title>
+<body>
+<h1>ACTIVE_JOB structure</h1>
+
+<p>
+The ACTIVE_JOB structure is defined in <code>eventset.h</code> as follows:
+
+<pre><span class=ckeyword>typedef struct</span> active_job <span class=cpunctuation>{</span>
+	<span class=ckeyword>struct</span> active_job <span class=cpunctuation>*</span>next<span class=cpunctuation>;
+	</span><span class=ckeyword>struct</span> active_job <span class=cpunctuation>**</span>prevnextp<span class=cpunctuation>;</span>
+	tSMEventId event<span class=cpunctuation>;</span>
+
+		<span class=ccomment>/* in C++ these would be virtual functions */
+		// handle a channel with an active event, must return
+		// non-zero if the channel has been deleted from the
+		// list of active channels</span>
+	<span class=ckeyword>int</span> <span class=cpunctuation>(*</span>handler<span class=cpunctuation>)(</span><span class=ckeyword>struct</span> active_job <span class=cpunctuation>*</span>acp<span class=cpunctuation>);
+</span>
+		<span class=ccomment>// run when the channel is deleted from the list of
+		// active channels. It could delete the channel or
+		// put it into a pool of channels awaiting re-use.</span>
+	<span class=ckeyword>void</span> <span class=cpunctuation>(*</span>cleanup_fn<span class=cpunctuation>)(</span>struct active_job <span class=cpunctuation>*</span>acp<span class=cpunctuation>);</span>
+
+		<span class=ccomment>/* application-specific fields
+		 * in C++ these would be in a class derived from
+		 * this one
+		 */</span>
+	<span class=ckeyword>struct</span> appactive <span class=cpunctuation>*</span>mf<span class=cpunctuation>;</span>
+<span class=cpunctuation>}</span> ACTIVE_JOB<span class=cpunctuation>;</span></pre>
+
+<p>
+Now, there is something very unusual about this structure, to which you
+must pay close attention. The final element, <code>mf</code>, is
+declared as being of type <code>struct appactive *</code>, however
+<code>struct appactive</code> is not defined here - or indeed anywhere
+else! (So don't go looking for it). Instead, you have to define this
+yourself, in your own source code. It can be any kind of structure you
+like.
+
+<p>
+To create an ACTIVE_JOB structure, you must first define
+<code>struct appactive</code>, then you must create an instance of
+<code>struct appactive</code>, and initialize it. Only now are you in a
+position to initialize an ACTIVE_JOB by filling in the <code>mf</code>
+field with a pointer to the <code>struct appactive</code> you've just
+set up.
+
+<p>
+The reason for this is that the value of <code>mf</code> will be passed
+back to the callback functions <code>handler</code> and
+<code>cleanup_fn</code>, and this mechanism provides a typesafe way of
+achieving that aim.
+
+<ul>
+    <li>When the event is triggered, the <code>handler()</code>
+	callback will be called.
+    <li>When the ACTIVE_JOB is about to be deleted, the
+        <code>cleanup_fn()</code> callback will be called.
+</ul>
+
+<h2>Fields</h2>
+
+<p>
+You are responsible for filling in the following fields before passing
+this structure to any of the EVENTSET functions:
+
+<ul>
+    <li>event
+    <li><a href="active_job_handler.html">handler</a>
+    <li><a href="active_job_cleanup_fn.html">cleanup_fn</a>
+    <li>mf
+</ul>
+
+<p>
+You should leave the following fields well alone:
+
+<ul>
+    <li>next
+    <li>prevnextp
+</ul>
+
+<h2>See also</h2>
+
+<p>
+<a href="EVENTSET.html">EVENTSET</a>

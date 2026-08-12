@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody WAV FILE: API: sm_replay_wav_prepare</title>
+</head>
+<body>
+<h1>Prosody WAV FILE: API: sm_replay_wav_prepare</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_replay_wav_prepare(struct sm_replay_wav_prepare_parms *<a href="#field-replay_wav_prep_parms">replay_wav_prep_parms</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-replay_wav_prep_parms">*replay_wav_prep_parms</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_replay_wav_prepare_parms {
+	char *<a href="#field-filename">filename</a>;						/* in */
+	<a href="../apitype.html#type-SM_REPLAY_PARMS">SM_REPLAY_PARMS</a> *<a href="#field-replay_parms">replay_parms</a>;				/* out */
+} SM_REPLAY_WAV_PREPARE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Given an open WAV file, populates the 
+<a class=pref href="#field-replay_parms">replay_parms</a>
+structure with the information required to start a replay. The
+channel field will remain uninitialised until a valid tSMChannelId
+is supplied. Please note that the 
+<a class=pref href="#field-replay_parms">replay_parms</a>
+structure must have already been cleared (usually with memset()) before
+calling this function. After this function returnes you may modify 
+the field in that structure before starting a replay.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-filename">filename</a><dd>The name of a WAV file.
+
+<dt><a name="field-replay_parms">replay_parms</a><dd>A structure as defined for
+<a href="apifn-sm_replay_start.html">sm_replay_start</a>.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem reading file</ul>
+<hr>
+<p>This function is part of the <a href="../highapi_wavfile.html">Prosody WAV FILE API</a>.
+</body>
+</html>

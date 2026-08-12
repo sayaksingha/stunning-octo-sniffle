@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: command line options</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: command line options</h1>
+<p>
+All of the <a href="howto_test.html">test programs</a>
+supplied with Prosody use a single convention for interpreting options.
+The program code to implement this is automatically generated, and you
+can use this in your own programs. See <a href="command_opt_using.html">
+Using the automatic option parser in your own programs</a> for how to do
+this.
+Here are the rules for interpreting options.
+<ul>
+<li>
+All options start with a dash (<code>-</code>). For example,
+options can be "<code>-x</code>", "<code>-ts</code>", or
+"<code>-AnOption</code>".
+<li>
+The option "<code>-?</code>" should never be valid, so if you don't
+know what options a program uses, try:
+<pre>
+	command -?
+</pre>
+and it should print a usage message like this:
+<pre>
+	Usage: command [-a =agc] [-v volume] file
+</pre>
+This shows that the command takes two options, "<code>-a</code>" and
+"<code>-v</code>", and an extra argument. The "<code>-v</code>"
+option is used to specify a value, while the "<code>-a</code>" is
+either present or absent (signified by the "<code>=</code>" symbol at
+the start of its name). So any of these would be valid:
+<pre>
+	command x.tmp
+	command -a x.tmp
+	command -v 10 x.tmp
+	command -v10 x.tmp
+	command -a -v10 x.tmp
+	command -av10 x.tmp
+</pre>
+but these wouldn't:
+<pre>
+	command 
+	command -ax x.tmp
+	command -v x.tmp
+	command -a -v10
+	command -q x.tmp
+</pre>
+Note in particular the middle one, which might look correct until you
+realise that the value for the "<code>-v</code>" option has been
+omitted, so what was presumably intended to be the file name is taken
+to be the value of the option.
+<li>
+All options must come before any other arguments (e.g. file
+names). For example, if the command is
+<pre>
+	command -o 1 -x x:10.0.1.2/mykey one two -q 2
+</pre>
+Then the items "<code>-o 1 -x x:10.0.1.2/mykey</code>" are options and the rest,
+"<code>one two -q 2</code>" are not options (they're just file names or
+other arguments whose interpretation depends on the command).
+<li>
+Some options specify a value, which must immediately follow the option.
+For example:
+<pre>
+	command -x x:10.0.1.2/mykey
+	command -y 23
+	command -caller 1234567
+</pre>
+The space between the option name and the value is optional, but it's
+usually a good idea to use a space after an option name unless the name
+is only a single character because it's easier to read.
+<li>
+If an option specifies a value, a value must always be given with the
+option.
+<li>
+If an option does not specify a value, it can be merged with
+the next option. For example
+<pre>
+	command -a -y 23
+</pre>
+is equivalent to both of these:
+<pre>
+	command -ay 23
+	command -ay23
+</pre>
+It is a good idea to avoid doing this with options longer than one
+letter because something like 
+<pre>
+	command -AnOption -AnotherOption 23
+</pre>
+is clearer
+than
+<pre>
+	command -AnOptionAnotherOption 23
+</pre>
+<li>
+If an option specifies a number, then the default is zero if the option
+is entirely omitted.
+<li>
+Some options specify a timeslot. They are used like this:
+<pre>
+	command -ts 1:2
+	command -ts 1:2:u
+</pre>
+The first number is the stream number, the second is the timeslot
+within that stream, and the optional third part is:
+<table border>
+<tr>
+	<th>Letter
+	<th>Meaning
+
+<tr>
+	<td>a<td>A-law (default)
+
+<tr>
+	<td>u<td>mu-law
+
+<tr>
+	<td>r<td>raw (not companded)
+
+</table>
+If you omit an option which specifies a timeslot, the default is
+stream zero, timeslot zero, A-law (i.e. the same as
+<code>0:0:a</code>).
+<li>
+The special option "<code>--</code>" indicates that there are no more
+options. This is useful when you want to specify the first non-option
+argument as a string starting with a dash. For example,
+<pre>
+	command -a -- -3
+</pre>
+specifies only one option: "<code>-a</code>".
+<li>
+All programs have the special option "<code>-version</code>" which
+makes them print their version number.
+</ul>
+</body>
+</html>

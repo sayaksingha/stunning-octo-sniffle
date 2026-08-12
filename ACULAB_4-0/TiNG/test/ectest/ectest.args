@@ -1,0 +1,11 @@
+-TiNGtrace
+d	delay		signed
+e	echocancel	bool
+E	echofiltfile	string
+g	gain		float
+o	outtimeslot	timeslot
+r	reftimeslot	timeslot
+s	sigtimeslot	timeslot
+m	module		unsigned
+n	numchan		unsigned
+x	serialnumber	string

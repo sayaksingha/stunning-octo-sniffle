@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Encodings: HDLC</title>
+</head>
+<body>
+<h1>Prosody data communications Encodings: HDLC</h1>
+<p>
+HDLC is an encoding which runs in conjunction with an underlying
+protocol. For example, it might decode data received by a modem, or
+it might run over the <a href="protocol_rawtx.html">datatx</a>/<a href="protocol_rawrx.html">datarx</a>
+protocol as part of an implementation of V.120.
+<p>
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic data communications
+documentation.
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_hdlc.h"</code> to get the
+	appropriate declarations.
+<p>
+	The encoding type is <code>kSMDCConfigEncodingHDLC</code>.
+<p>
+	The encoding_config_data pointer must point to one of these structs:
+<pre>
+	typedef struct smdc_hdlc_format_parms {
+		tSM_INT <a name="crcsize">crcsize</a>;
+		tSM_INT <a name="crc">crc</a>;
+		tSM_INT <a name="rx_min_initial_flags">rx_min_initial_flags</a>;
+		tSM_INT <a name="rx_min_ones">rx_min_ones</a>;
+	} SMDC_HDLC_FORMAT_PARMS;
+</pre>
+<p>
+	where <a href="#crcsize">crcsize</a> is the size of the CRC in
+	bits and <a href="#crc">crc</a> is the CRC polynomial. This
+	value has bit n set if the polynomial includes the x^n term. Any
+	CRC can be used from 0 to 32 bits. A zero bit CRC is the same as
+	using no CRC.
+<p>
+	For example, the CRC-CCITT, <code>x^16 + x^12 + x^5 + x^0</code>
+	must have bits 16, 12, 5 and 0 set, so the value to use is
+	<code>0x11021</code>. Note that all 16-bit CRCs use values in
+	the form <code>0x1XXXX</code>, since their highest term must be
+	x^16. A 32-bit CRC would use a value in the form
+	<code>0x1XXXXXXXX</code>. Since this is larger than can be
+	represented in 32 bits, the 2^32 term is implicitly assumed to
+	be present when you specify 32 for the <a href="#crcsize">crcsize</a>.
+	(Actually, the highest term is always implicitly inserted, so
+	you could also use <code>0x1021</code> to specify the CRC-CCITT
+	<a href="#crc">crc</a> value).
+<p>
+	Note that the <code>x^0</code> term is usually written as
+	<code>1</code>, so don't accidentally treat it as
+	<code>x^1</code>. i.e. the CRC-CCITT is often described as
+	<code>x^16 + x^12 + x^5 + 1</code>.
+<p>
+	Where supported by the firmware, 
+	<a href="#rx_min_initial_flags">rx_min_initial_flags</a> is the
+	minimum number of consecutive flags that must be received at the
+	start of a series of frames. Currently, firmware supporting this
+	feature is only available for ProsodyX cards.
+<p>
+	Where supported by the firmware, 
+	<a href="#rx_min_ones">rx_min_ones</a> is the
+	minimum number of consecutive one bits that must be received to 
+	provoke a report of idle. Such a report will always follow a report
+	of receiving junk. If this parameter is set to zero, the reception of
+	the idle pattern is not reported. Currently, firmware supporting this
+	feature is only available for ProsodyX cards.
+<p>
+	The firmware module <a href="gen/softmodindex.html#hdlcrx">hdlcrx</a>
+	must have been downloaded to
+	receive HDLC, and <a href="gen/softmodindex.html#hdlctx">hdlctx</a>
+	is required to transmit.
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+<p>
+	Data in the receive buffer appears in multiples of 32 bits.
+	With one exception, the data appearing is from HDLC frames.
+	This exception is that the 32-bit word <code>0xffffffff</code>
+	is a special marker. Obviously this pattern might appear in
+	the data, so if a marker word appears in two consecutive words,
+	it represents data consisting of just <code>0xffffffff</code>
+	(i.e. four octets of <code>0xff</code>). Other occurrences of
+	the marker word are followed by two status words and report
+	significant points in the received signal. Let us call these
+	status words <code>S1</code> and <code>S2</code>. (Obviously
+	<code>S1</code> can never be <code>0xffffffff</code>). They are
+	interpreted as follows.
+	<p>
+	If the least significant bit (bit 0) of <code>S2</code> is clear, the
+	receiver has seen a flag at the end of a frame. In this case,
+	some frame data may have already been delivered before the
+	marker word (depending in the length of the frame) and the word
+	<code>S1</code> contains any odd bits left over (i.e. up to 31
+	bits).
+	<a href="encoding_hdlc_data.html">Prosody data communications Encodings: HDLC data delivery</a>
+	explains how you can tell the exact length of data received. Bit
+	1 of <code>S2</code> indicates the result of checking the CRC.
+	It is set if the CRC is incorrect.
+	<p>
+	If the least significant bit (bit 0) of <code>S2</code> is set, the
+	receiver is reporting one of three different status changes.
+	Bits 2 and 3 of <code>S2</code> indicate which, as follows:
+	<p>
+	<table border>
+	<tr><th><code>S2</code><th>Meaning
+	<tr><td><code>...0000</code><td>Frame with correct CRC
+	<tr><td><code>...0010</code><td>Frame with bad CRC
+	<tr><td><code>...00x1</code><td>Aborted frame
+	<tr><td><code>...0101</code><td>Receiving flags
+	<tr><td><code>...1001</code><td>Receiving junk
+	<tr><td><code>...1111</code><td>Receiving idle pattern (all ones)
+	</table>
+	<p>
+	When a frame is aborted, <code>S1</code> contains any odd bits
+	not yet delivered (in exactly the same way as for valid frames).
+	In the other cases <code>S1</code> is zero.
+	<p>
+	To avoid redundant status reports, the receiver does not
+	produce two consecutive reports of receiving flags (or of
+	receiving junk). This means that, for example, if it sees some
+	flags, a few valid frames, an abort, and more flags, it will only
+	report seeing flags once at the beginning and once after the
+	abort. Similarly, once it has reported seeing junk, the next
+	report must be that it is seeing flags (unless, of course,
+	the receiver is disabled first).
+	<p>
+	Here is an example of data from a receiver:
+	<p>
+	<table border>
+	<tr><th>smdc_rx_data values<th>Interpretation
+	<tr><td><code>0xffffffff</code><td rowspan=3>Receiving flags
+	<tr><td><code>0x00000000</code>
+	<tr><td><code>0x00000005</code>
+	<tr><td><code>0x12345678</code><td rowspan=7>Valid frame 78 56 34 12 ff ff ff ff 21 43 65 87 aa
+	<tr><td><code>0xffffffff</code>
+	<tr><td><code>0xffffffff</code>
+	<tr><td><code>0x87654321</code>
+	<tr><td><code>0xffffffff</code>
+	<tr><td><code>0x00003eaa</code>
+	<tr><td><code>0x00000000</code>
+	<tr><td><code>0x12345678</code><td rowspan=5>Aborted frame 78 56 34 12 21 43 65 87 aa
+	<tr><td><code>0x87654321</code>
+	<tr><td><code>0xffffffff</code>
+	<tr><td><code>0x00003eaa</code>
+	<tr><td><code>0x00000001</code>
+	<tr><td><code>0xffffffff</code><td rowspan=3>Receiving junk
+	<tr><td><code>0x00000000</code>
+	<tr><td><code>0x00000009</code>
+	</table>
+	<p>
+	In general, you can handle received data word <code>W</code> like this:
+	<pre>
+	if (had_marker) {
+		if (had_S1) {
+			if (W &amp; 3) {
+				// discard data accumulated
+				// handle status change if required
+			} else {
+				// append to remainder of frame from S1 data buffer
+				// handle received frame
+			}
+			had_marker = 0;
+			had_S1 = 0;
+		} else if (W == 0xffffffff) {
+			// append 0xffffffff to data buffer
+			had_marker = 0;
+		} else {
+			S1 = W;		// save until we get S2
+			had_S1 = 1;
+		}
+	} else if (W == 0xffffffff) {
+		had_marker = 1;
+	} else {
+		// append W to data buffer
+	}
+	</pre>
+	<p>
+	Typically an application can ignore any status changes and the
+	only processing done is when a valid frame arrives which
+	passes the CRC check.
+
+<h3><a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a></h3>
+<p>
+	When finishing a transmission with
+	<a href="gen/apifn-smdc_tx_control.html#field-kSMDCTxCtlFinish">kSMDCTxCtlFinish</a>
+	note that the transmitter can only finish while it is sending idle
+	(continuous binary 1), which is arranged as described below.
+	If the transmitter is sending flags, then the transmission will
+	never finish.
+<p>
+	When setting the capacity, it is necessary to specify a value
+	one greater than the value required. i.e. to get notified when
+	space is available for at least 32 bytes, set the capacity to 33
+	or greater.
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+<p>
+	The transmitter is controlled by a stream of 32-bit words.
+	The stream can contain three different kinds of value. The
+	values are distinguished by the first 32-bit word, which is
+	encoded with the least significant byte first, like this:
+	<pre>
+	data[0] = length &amp; 0xff
+	data[1] = (length >> 8) &amp; 0xff
+	data[2] = (length >> 16) &amp; 0xff
+	data[3] = (length >> 24) &amp; 0xff
+	</pre>
+<p>
+	If a length is zero, this indicates that the transmitter
+	should send idle (continuous binary 1) from this point until
+	more data becomes available. This permits a modulator to turn
+	off its carrier at this point if a request to turn off the
+	carrier is pending. When more data is supplied, the transmitter
+	sends a flag, the frame data, and reverts to filling with flags.
+<p>
+	If a length is a negative value, <code>-N</code>, this
+	causes the transmitter to send <code>N</code> flags. Note that
+	these are additional flags, so a data stream of &lt;frameA&gt;,
+	<code>-5</code>, &lt;frameB&gt; will have six flags between
+	frames A and B because this is five in addition to the one which
+	would have been sent anyway.
+<p>
+	If a length is a positive value, <code>N</code>, this
+	causes a frame of <code>N</code> bits to be sent. Subsequent
+	32-bit words contain the data to be sent. The bits in these
+	words are sent least significant bit first. If the number of
+	bits to be transmitted is not a multiple of 32, the remaining
+	bits in the last word are ignored. The appropriate CRC is
+	automatically calculated and appended to the frame. At least one
+	flag is sent between frames. If data is not supplied fast
+	enough, the transmitter aborts the frame, discards the
+	remainder and reports an underrun.
+<p>
+	The transmitter sends flags as necessary between frames if data
+	is not supplied fast enough to start a new frame immediately
+	after the previous one.
+</body>

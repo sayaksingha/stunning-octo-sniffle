@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_reset_input_vocabs</title>
+</head>
+<body class=version-deprecated>
+<h1>Prosody speech processing: API: sm_reset_input_vocabs</h1>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_reset_input_vocabs(struct sm_reset_input_vocabs_parms *<a href="#field-resetp">resetp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-resetp">*resetp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_reset_input_vocabs_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+} SM_RESET_INPUT_VOCABS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Discards current vocabulary of module indicated by
+<a class=pref href="#field-module">module</a>.
+A new vocabulary must be downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-deprecated><a name="field-module">module</a>	(Deprecated)
+<dd class=version-deprecated>The module whose vocabulary is to be discarded.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists<li>ERR_SM_CHANNEL_ALLOCATED - channel still allocated</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

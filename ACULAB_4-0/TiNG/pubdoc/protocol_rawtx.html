@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody data communications Protocols: raw tx</title>
+</head>
+<body>
+<h1>Prosody data communications Protocols: raw tx</h1>
+<p>
+This protocol implements a transmitter of uninterpreted digital data.
+Since it is only a transmitter, it only uses the output half of a channel.
+It is typically used either with HDLC encoding to implement a protocol
+such as V.120 or with SYNC encoding to put an arbitrary data stream
+on a timeslot.
+When used with HDLC the input half can be configured for <a
+href="protocol_rawrx.html">raw rx</a> with HDLC to provide a duplex link.
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic data communications
+documentation.
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_raw.h"</code> to get the
+	appropriate declarations.
+<p>
+	The protocol value is <code>kSMDCProtocolRawTx</code>.
+<p>
+<div class="version-v1">
+	<span class=header-v1>Only on Prosody version 1:</span>
+	There is no configuration for this protocol, so the config_data
+	pointer should be null (0) and the config_length should be zero.
+</div>
+<p>
+<div class="version-TiNG">
+	<span class=header-TiNG>Only on Prosody version 2 (TiNG):</span>
+	The configuration for this protocol is optional, if not required the
+	config_data pointer should be null (0) and the config_length should
+	be zero. In this case the data will be sent unmodified at 64000 bits
+	per second.
+<p>
+	If required, the config_data pointer must point to one of these structs:
+<pre>
+	typedef struct smdc_raw_config_parms {
+		unsigned i460_mask;
+		unsigned xorval;
+	} SMDC_RAW_CONFIG_PARMS;
+</pre>
+<p>
+	'<code>i460_mask</code>' indicates which data bits in the timeslot
+	are to be used. This implements ITU I.460 2.1.2 flexible format
+	multiplexing. For example, if the value is specified as 0x50, then
+	bit 2 and bit 4 (as numbered in I.460) are used from each octet,
+	giving 16000 bits per second. If the value zero is used, this
+	indicates that all bits are to be used (the same as value 0xff).
+<p>
+	'<code>xorval</code>' specifies a value to be exclusive-ored with
+	each octet just before writing it to the timeslot.
+</div>
+<p>
+	This protocol can use these encodings:
+	<a href="encoding_sync.html">SYNC</a>,
+	<a href="encoding_async.html">ASYNC</a>, and
+	<a href="encoding_hdlc.html">HDLC</a>.
+<p>
+	It can also be used with 
+	<a href="encoding_none.html">no encoding</a>. For this protocol, this will 
+	transmit the octets unaltered, most significant bit first.
+<p>
+	The firmware module <a href="gen/softmodindex.html#datatx">datatx</a>
+	must have been downloaded.
+
+<h3><a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a></h3>
+<p>
+[note] not useful - no initial connection procedure and no RTS.
+<p>
+	The <a href="gen/apifn-smdc_line_control.html#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>
+	command is <strong>not</strong> supported by this protocol.
+
+<h3><a href="gen/apifn-smdc_line_status.html">smdc_line_status()</a></h3>
+<p>
+	[note] 'link_status' is not useful since it is always
+	connected.
+
+<h3><a href="gen/apifn-smdc_tx_status.html">smdc_tx_status()</a></h3>
+<p>
+	[note] 'flow' is not useful since there is no flow
+	control mechanism.
+<p>
+	'status' never reports empty.
+
+<h3><a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a></h3>
+<p>
+	The only notification implemented is
+	<a href="gen/apifn-smdc_tx_control.html#field-kSMDCTxCtlNotifyOnCapacity">kSMDCTxCtlNotifyOnCapacity</a>.
+<p>
+	When setting the capacity, it is necessary to specify a
+	value one greater than the value required. i.e. to get notified
+	when space is available for at least 32 bytes, set the capacity
+	to 33 or greater.
+
+<h3><a href="gen/apifn-smdc_rx_status.html">smdc_rx_status()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	input half of a channel.
+
+<h3><a href="gen/apifn-smdc_rx_control.html">smdc_rx_control()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	input half of a channel.
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	input half of a channel.
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+</body>

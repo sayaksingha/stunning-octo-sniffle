@@ -1,0 +1,489 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Protocols and Encodings</title>
+</head>
+<body>
+<h1>Prosody data communications Protocols and Encodings</h1>
+<p>
+When using data communications with Prosody, a channel is configured for
+a protocol and an encoding. The protocol transports data which is
+formatted according to the encoding. A full-duplex connection looks
+like this:
+<p>
+<img src="gen/protenc.png"
+	alt="Diagram of relationship between protocol and encoding">
+<p>
+Half a channel can be used to provide only an input or an output
+connection.
+<p>
+The encodings available are described in
+<a href="prosdc_encoding.html">Prosody data communications
+Encodings</a> while the protocols are described in
+<a href="prosdc_protocol.html">Prosody data communications
+Protocols</a>.
+<p>
+Not every possible combination of protocol and encoding is possible.
+These are the available combinations:
+<p>
+<table border>
+<tr>
+	<th>Protocol
+	<th>Encoding
+	<th>Direction
+	<th>Firmware Modules required
+
+<tr>
+	<td>CPU<td>-<td><b>R</b><td>
+		<a href="gen/softmodindex.html#cpumon">cpumon</a>
+<tr>
+	<td>Heap<td>-<td><b>R</b><td>
+		<a href="gen/softmodindex.html#heapmon">heapmon</a>
+<tr>
+	<td rowspan=6>CW<td rowspan=2>HDLC
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#cwrx">cwrx</a>
+		<a href="gen/softmodindex.html#fskpll">fskpll</a>
+		<a href="gen/softmodindex.html#hdlcrx">hdlcrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#cwtx">cwtx</a>
+		<a href="gen/softmodindex.html#hdlctx">hdlctx</a>
+		
+
+<tr>
+		<td rowspan=2>sync
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#cwrx">cwrx</a>
+		<a href="gen/softmodindex.html#fskpll">fskpll</a>
+		<a href="gen/softmodindex.html#syncrx">syncrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#cwtx">cwtx</a>
+		<a href="gen/softmodindex.html#synctx">synctx</a>
+		
+
+<tr>
+		<td rowspan=2>async
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#cwrx">cwrx</a>
+		<a href="gen/softmodindex.html#fskasyrx">fskasyrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#cwtx">cwtx</a>
+		<a href="gen/softmodindex.html#asytx">asytx</a>
+		
+
+<tr>
+	<td rowspan=6>FSK<td rowspan=2>HDLC
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#fskrx">fskrx</a>
+		<a href="gen/softmodindex.html#fskpll">fskpll</a>
+		<a href="gen/softmodindex.html#hdlcrx">hdlcrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#fsktx">fsktx</a>
+		<a href="gen/softmodindex.html#hdlctx">hdlctx</a>
+		
+
+<tr>
+		<td rowspan=2>sync
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#fskrx">fskrx</a>
+		<a href="gen/softmodindex.html#fskpll">fskpll</a>
+		<a href="gen/softmodindex.html#syncrx">syncrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#fsktx">fsktx</a>
+		<a href="gen/softmodindex.html#synctx">synctx</a>
+		
+
+<tr>
+		<td rowspan=2>async
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#fskrx">fskrx</a>
+		<a href="gen/softmodindex.html#fskasyrx">fskasyrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#fsktx">fsktx</a>
+		<a href="gen/softmodindex.html#asytx">asytx</a>
+		
+
+<tr>
+	<td>TTY<td>-<td><b>R</b><td>
+		<a href="gen/softmodindex.html#ttyasyrx">ttyasyrx</a>
+<tr>
+	<td rowspan=8>raw<td rowspan=2>HDLC
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#datarx">datarx</a>
+		<a href="gen/softmodindex.html#hdlcrx">hdlcrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#datatx">datatx</a>
+		<a href="gen/softmodindex.html#hdlctx">hdlctx</a>
+		
+
+<tr>
+		<td rowspan=2>sync
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#datarx">datarx</a>
+		<a href="gen/softmodindex.html#syncrx">syncrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#datatx">datatx</a>
+		<a href="gen/softmodindex.html#synctx">synctx</a>
+		
+
+<tr>
+		<td rowspan=2>async
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#datarx">datarx</a>
+		<a href="gen/softmodindex.html#asyrx">asyrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#datatx">datatx</a>
+		<a href="gen/softmodindex.html#asytx">asytx</a>
+		
+
+<tr>
+		<td rowspan=2>-
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#datarx">datarx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#datatx">datatx</a>
+		
+
+<tr>
+	<td rowspan=2>T.38<td>-<td><b>R</b><td>
+		<a href="gen/softmodindex.html#ifprx">ifprx</a>
+		<a href="gen/softmodindex.html#fmprx">fmprx</a>
+		
+
+<tr>
+	<td>-<td><b>T</b><td>
+		<a href="gen/softmodindex.html#ifptx">ifptx</a>
+		<a href="gen/softmodindex.html#fmptx">fmptx</a>
+		
+
+<tr>
+	<td>V.110<td>-<td><b>R &amp; T</b><td>
+		<a href="gen/softmodindex.html#v110">v110</a>
+		
+
+<tr>
+	<td rowspan=2>V.110 RLP<td rowspan=2>-
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#v110rlpr">v110rlpr</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#v110rlpt">v110rlpt</a>
+		
+
+<tr>
+	<td rowspan=6>V.17<td rowspan=2>HDLC
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v17rx">v17rx</a>
+		<a href="gen/softmodindex.html#hdlcrx">hdlcrx</a>
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#six2five">six2five</a>
+		<a href="gen/softmodindex.html#v17tx">v17tx</a>
+		<a href="gen/softmodindex.html#hdlctx">hdlctx</a>
+		
+
+<tr>
+		<td rowspan=2>sync
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v17rx">v17rx</a>
+		<a href="gen/softmodindex.html#syncrx">syncrx</a>
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#six2five">six2five</a>
+		<a href="gen/softmodindex.html#v17tx">v17tx</a>
+		<a href="gen/softmodindex.html#synctx">synctx</a>
+		
+
+<tr>
+		<td rowspan=2>async
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v17rx">v17rx</a>
+		<a href="gen/softmodindex.html#asyrx">asyrx</a>
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#six2five">six2five</a>
+		<a href="gen/softmodindex.html#v17tx">v17tx</a>
+		<a href="gen/softmodindex.html#asytx">asytx</a>
+		
+
+<tr>
+	<td rowspan=6>V.27ter<td rowspan=2>HDLC
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v27rx">v27rx</a>
+		<a href="gen/softmodindex.html#hdlcrx">hdlcrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#six2five">six2five</a>
+		<a href="gen/softmodindex.html#v27tx">v27tx</a>
+		<a href="gen/softmodindex.html#hdlctx">hdlctx</a>
+		
+
+<tr>
+		<td rowspan=2>sync
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v27rx">v27rx</a>
+		<a href="gen/softmodindex.html#syncrx">syncrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#six2five">six2five</a>
+		<a href="gen/softmodindex.html#v27tx">v27tx</a>
+		<a href="gen/softmodindex.html#synctx">synctx</a>
+		
+
+<tr>
+		<td rowspan=2>async
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v27rx">v27rx</a>
+		<a href="gen/softmodindex.html#asyrx">asyrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#six2five">six2five</a>
+		<a href="gen/softmodindex.html#v27tx">v27tx</a>
+		<a href="gen/softmodindex.html#asytx">asytx</a>
+		
+
+<tr>
+	<td rowspan=6>V.29<td rowspan=2>HDLC
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v29rx">v29rx</a>
+		<a href="gen/softmodindex.html#hdlcrx">hdlcrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#six2five">six2five</a>
+		<a href="gen/softmodindex.html#v29tx">v29tx</a>
+		<a href="gen/softmodindex.html#hdlctx">hdlctx</a>
+		
+
+<tr>
+		<td rowspan=2>sync
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v29rx">v29rx</a>
+		<a href="gen/softmodindex.html#syncrx">syncrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#six2five">six2five</a>
+		<a href="gen/softmodindex.html#v29tx">v29tx</a>
+		<a href="gen/softmodindex.html#synctx">synctx</a>
+		
+
+<tr>
+		<td rowspan=2>async
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v29rx">v29rx</a>
+		<a href="gen/softmodindex.html#asyrx">asyrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#six2five">six2five</a>
+		<a href="gen/softmodindex.html#v29tx">v29tx</a>
+		<a href="gen/softmodindex.html#asytx">asytx</a>
+		
+<tr>
+	<td rowspan=6>V.32<td rowspan=2>HDLC
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v32">v32</a>
+		<a href="gen/softmodindex.html#hdlcrx">hdlcrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#v32">v32</a>
+		<a href="gen/softmodindex.html#hdlctx">hdlctx</a>
+		
+
+<tr>
+		<td rowspan=2>sync
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v32">v32</a>
+		<a href="gen/softmodindex.html#syncrx">syncrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#v32">v32</a>
+		<a href="gen/softmodindex.html#synctx">synctx</a>
+		
+
+<tr>
+		<td rowspan=2>async
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v32">v32</a>
+		<a href="gen/softmodindex.html#asyrx">asyrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#v32">v32</a>
+		<a href="gen/softmodindex.html#asytx">asytx</a>
+
+
+<tr>
+	<td rowspan=6>V.34 half duplex<td rowspan=2>HDLC
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v34">v34</a>
+		<a href="gen/softmodindex.html#hdlcrx">hdlcrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#v34">v34</a>
+		<a href="gen/softmodindex.html#hdlctx">hdlctx</a>
+		
+
+<tr>
+		<td rowspan=2>sync
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v34">v34</a>
+		<a href="gen/softmodindex.html#syncrx">syncrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#v34">v34</a>
+		<a href="gen/softmodindex.html#synctx">synctx</a>
+		
+
+<tr>
+		<td rowspan=2>async
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v34">v34</a>
+		<a href="gen/softmodindex.html#asyrx">asyrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#v34">v34</a>
+		<a href="gen/softmodindex.html#asytx">asytx</a>
+
+<tr>
+	<td rowspan=6>V.34 full duplex<td rowspan=2>HDLC
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v34fdx">v34fdx</a>
+		<a href="gen/softmodindex.html#hdlcrx">hdlcrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#v34fdx">v34fdx</a>
+		<a href="gen/softmodindex.html#hdlctx">hdlctx</a>
+		
+
+<tr>
+		<td rowspan=2>sync
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v34fdx">v34fdx</a>
+		<a href="gen/softmodindex.html#syncrx">syncrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#v34fdx">v34fdx</a>
+		<a href="gen/softmodindex.html#synctx">synctx</a>
+		
+
+<tr>
+		<td rowspan=2>async
+		<td><b>R</b><td>
+		<a href="gen/softmodindex.html#inchan">inchan</a>
+		<a href="gen/softmodindex.html#v34fdx">v34fdx</a>
+		<a href="gen/softmodindex.html#asyrx">asyrx</a>
+		
+
+<tr>
+		<td><b>T</b><td>
+		<a href="gen/softmodindex.html#outchan">outchan</a>
+		<a href="gen/softmodindex.html#v34fdx">v34fdx</a>
+		<a href="gen/softmodindex.html#asytx">asytx</a>
+		
+</table>

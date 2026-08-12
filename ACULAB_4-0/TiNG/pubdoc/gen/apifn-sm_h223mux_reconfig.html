@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody H.223 Mux: API: sm_h223mux_reconfig</title>
+</head>
+<body class=version-Prel>
+<h1>Prosody H.223 Mux: API: sm_h223mux_reconfig</h1>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_h223mux_reconfig(struct sm_h223mux_reconfig_parms *<a href="#field-reconfigp">reconfigp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-reconfigp">*reconfigp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_reconfig_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a name="enum-kSMH223muxReconfigLevelChangeDirection">enum kSMH223muxReconfigLevelChangeDirection</a> {
+		<a href="#field-kSMH223muxReconfigLevelChangeDirectionTransmit">kSMH223muxReconfigLevelChangeDirectionTransmit</a>,
+		<a href="#field-kSMH223muxReconfigLevelChangeDirectionReceive">kSMH223muxReconfigLevelChangeDirectionReceive</a>,
+	} <a href="#field-direction">direction</a>;						/* in */
+	struct {
+		<a name="enum-kSMH223muxReconfigChoice">enum kSMH223muxReconfigChoice</a> {
+			<a href="#field-kSMH223muxReconfigModeChange">kSMH223muxReconfigModeChange</a>,
+			<a href="#field-kSMH223muxReconfigAnnexADoubleFlag">kSMH223muxReconfigAnnexADoubleFlag</a>,
+		} <a href="#field-multiplex_reconfiguration-choice">choice</a>;
+		union {
+			<a name="enum-kSMH223muxReconfigModeChange">enum kSMH223muxReconfigModeChange</a> {
+				<a href="#field-kSMH223muxReconfigModeChangeToLevel0">kSMH223muxReconfigModeChangeToLevel0</a>,
+				<a href="#field-kSMH223muxReconfigModeChangeToLevel1">kSMH223muxReconfigModeChangeToLevel1</a>,
+				<a href="#field-kSMH223muxReconfigModeChangeToLevel2">kSMH223muxReconfigModeChangeToLevel2</a>,
+				<a href="#field-kSMH223muxReconfigModeChangeToLevel2WithOptionalHeader">kSMH223muxReconfigModeChangeToLevel2WithOptionalHeader</a>,
+			} <a href="#field-multiplex_reconfiguration-u-mode_change">mode_change</a>;
+			<a name="enum-kSMH223muxReconfigAnnexADoubleFlag">enum kSMH223muxReconfigAnnexADoubleFlag</a> {
+				<a href="#field-kSMH223muxReconfigAnnexADoubleFlagStart">kSMH223muxReconfigAnnexADoubleFlagStart</a>,
+				<a href="#field-kSMH223muxReconfigAnnexADoubleFlagStop">kSMH223muxReconfigAnnexADoubleFlagStop</a>,
+			} <a href="#field-multiplex_reconfiguration-u-annex_a_double_flag">annex_a_double_flag</a>;
+		} <a href="#field-multiplex_reconfiguration-u">u</a>;
+	} <a href="#field-multiplex_reconfiguration">multiplex_reconfiguration</a>;
+} SM_H223MUX_RECONFIG_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Reconfigure the H.223 multiplex ie changing to another level, or adopting double flag mode vs.
+basic flag.
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to reconfigure.
+
+<dt class=version-Prel><a name="field-direction">direction</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The direction of dynamic level change request.
+
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxReconfigLevelChangeDirectionTransmit">kSMH223muxReconfigLevelChangeDirectionTransmit</a>
+<dd>Indicates that the transmitter side shall change from current to new level ie. H.245 command
+h223ModeChange was received from the remote end.
+
+<dt><a name="field-kSMH223muxReconfigLevelChangeDirectionReceive">kSMH223muxReconfigLevelChangeDirectionReceive</a>
+<dd>Indicates that the receiver side shall change from current to new level ie. H.245 command
+h223ModeChange was sent to the remote end.
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-multiplex_reconfiguration">multiplex_reconfiguration</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-multiplex_reconfiguration-choice">choice</a><dd>Reconfiguration options.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxReconfigModeChange">kSMH223muxReconfigModeChange</a>
+<dd>Change the level of multiplex mode as described in Annex C/H.324 to level 0, level 1, level 2
+or level 2 with Annex B/H.223 optional header.
+
+<dt><a name="field-kSMH223muxReconfigAnnexADoubleFlag">kSMH223muxReconfigAnnexADoubleFlag</a>
+<dd>Start or stop the use of double-flag mode of Annex A/H.223.
+
+</dl>
+<dt><a name="field-multiplex_reconfiguration-u">u</a><dd>
+<div class=version-Prel>
+
+<dl>
+<dt><a name="field-multiplex_reconfiguration-u-mode_change">mode_change</a><dd>This parameter is only valid if reconfiguration choice is
+<a class=pref href="#field-kSMH223muxReconfigModeChange">kSMH223muxReconfigModeChange</a>.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxReconfigModeChangeToLevel0">kSMH223muxReconfigModeChangeToLevel0</a>
+<dd>
+<dt><a name="field-kSMH223muxReconfigModeChangeToLevel1">kSMH223muxReconfigModeChangeToLevel1</a>
+<dd>
+<dt><a name="field-kSMH223muxReconfigModeChangeToLevel2">kSMH223muxReconfigModeChangeToLevel2</a>
+<dd>
+<dt><a name="field-kSMH223muxReconfigModeChangeToLevel2WithOptionalHeader">kSMH223muxReconfigModeChangeToLevel2WithOptionalHeader</a>
+<dd>
+</dl>
+<dt><a name="field-multiplex_reconfiguration-u-annex_a_double_flag">annex_a_double_flag</a><dd>This parameter is only valid if reconfiguration choice is
+<a class=pref href="#field-kSMH223muxReconfigAnnexADoubleFlag">kSMH223muxReconfigAnnexADoubleFlag</a>
+
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxReconfigAnnexADoubleFlagStart">kSMH223muxReconfigAnnexADoubleFlagStart</a>
+<dd>
+<dt><a name="field-kSMH223muxReconfigAnnexADoubleFlagStop">kSMH223muxReconfigAnnexADoubleFlagStop</a>
+<dd>
+</dl>
+</dl>
+</div>
+</dl>
+</div>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosh223api.html">Prosody H.223 Mux API</a>.
+</body>
+</html>

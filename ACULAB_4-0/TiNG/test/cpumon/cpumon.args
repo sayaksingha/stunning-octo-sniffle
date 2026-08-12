@@ -1,0 +1,4 @@
+-TiNGtrace
+m	module		unsigned
+X	maxrx		unsigned
+x	serialnumber    string

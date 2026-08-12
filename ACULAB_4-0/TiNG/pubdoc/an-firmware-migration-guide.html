@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: Migrating from TiNG v2 to TiNG v3 firmware</title>
+</head>
+<body>
+<h1>Prosody application note: Migrating from TiNG v2 to TiNG v3 firmware</h1>
+
+<h2>Introduction</h2>
+<p>
+In order to add new features such as wideband audio and video, it has been
+necessary to make significant changes to the TiNG firmware. In essence, these
+involved moving away from a fixed 8KHz sampling rate to allow media with
+arbitrary rates. Since these changes are significant, the major version of the
+firmware has incremented from v2 to v3. The code underlying this new firmware
+also forms the basis of Prosody S v3.
+<p>
+The TiNG API and library have undergone various changes in order to expose
+the new functionality. However, as these changes are incremental and, in
+particular, as application code written to use TiNG v2 firmware will work
+without modification on TiNG v3 firmware, it's major version stays at v2.
+<p>
+The remainder of this note describes the issues to consider when migrating from
+TiNG firmware v2 to TiNG v3 firmware.
+
+<h2>New features</h2>
+<p>
+The following new features have been added in TiNG v3 firmware:
+<ul>
+<li>Video: Support for video is documented fully in the Aculab Video package.
+However, the TiNG v3 firmware provides low level video support:
+	<ul>
+	<li>RTP video I/O, using the new VidMP[tx] and VidMP[rx] in the
+<a href="./prosrtpapi.html">Prosody RTP API</a>;
+	<li>3G-324M audio, video and control I/O, using the new
+<a href="./prosh223api.html">Prosody H.223 Multiplex API</a>;
+	<li>Synchronised audio and video replay and record, using the new
+<a href="./prosvid.html">Prosody Audio Video Format API</a>.
+	</ul>
+<li>Wideband audio: See the <a href="./an-wideband.html">Prosody application
+note: using wideband sampling rates</a> for further information. In brief:
+	<ul>
+	<li>Wideband RTP codecs such as G.722 and AMR-WB, using the VMP[tx] and
+VMP[rx];
+	<li>Wideband replay, record and conferencing;
+	<li>Audio resampling allowing, for example, mixed sampling rate conferences.
+	</ul>
+<li>V.32 modem, using the <a href="./prosdc.html">Prosody data communications API</a>.
+<li>I.460 multiplexing, using the <a href="./prosi460muxapi.html">Prosody I.460
+multiplex API</a>.
+<li>TETRA RTP codec, via the <a href="./prosrtpapi.html">Prosody RTP API</a>. 
+<li>Low level support for V.150.1.
+</ul>
+
+<h2>Features no longer supported</h2>
+<p>
+All features supported in TiNG v2 firmware are supported in TiNG v3 firmware
+apart from:
+<ul>
+<li>Conference type individual volume: This functionality is highly
+specialised, has been marked deprecated in the API for some time and is not
+thought to be in use in the field. For reference, it was enabled using
+<a href="./gen/apifn-sm_conf_prim_start.html">sm_conf_prim_start()</a>, with
+the <code>conf_type</code> parameter set to <code>kSMConfTypeIndividualVolume</code>.
+</ul>
+
+<h2>Existing applications</h2>
+<p>
+Applications written to use TiNG v2 firmware should work without modification
+on TiNG v3 firmware. Those built against the TiNG shared library should not need
+to be rebuilt, but a recent version of the TiNG libraries package must be
+installed. Those built against the TiNG static library, a minority, must be
+rebuilt against a recent version of the TiNG libraries package.
+
+<h2>Deployments</h2>
+<p>
+Before upgrading a deployed system from TiNG v2 to TiNG v3 firmware, it is
+strongly recommended that thorough qualification testing be performed. Please
+also refer to the
+<a href="#Firmware_memory_usage">Firmware memory usage section</a>.
+
+<h2>DSP heartbeat LED</h2>
+<p>
+Each TiNG DSP has an associated row of LEDs near the top of the card.
+These are used for debug and, in particular, one of them acts as a flashing
+heartbeat to indicate that the DSP is running. For TiNG v2 firmware, the
+heartbeat LED was red. For TiNG v3 firmware, it is green.
+
+<h2>Firmware files</h2>
+<p>
+TiNG v3 firmware contains every firmware file contained in TiNG v2 plus a few
+new ones to implement, for example, RTP video I/O. Also, all these firmware
+files perform the same tasks. Therefore, if you downloaded a set of TiNG v2
+firmware files to achieve a certain functionality, then you need to download
+the same set of TiNG v3 firmwares. There is one unusual exception: With TiNG v2
+firmwares, if you only ever need to output inband tones (no general audio)
+then, while you needed to load <code>tonegen.sob</code>, you did not need to
+download <code>outchan.sob</code>. With TiNG v3 firmware, you need to download
+both.
+<p>
+Note that TiNG v2 firmware contained a file called <code>sync.sob</code>.
+This was for Aculab test purposes only, but sometimes was erroneously thought
+necessary by users. This file is not contained in TiNG v3 firmware.
+
+<h2><a name="Firmware_memory_usage">Firmware memory usage</a></h2>
+<p>
+In TiNG v2 and TiNG v3 firmware, all downloaded firmware files consume DSP
+memory. Although we try to be careful that the amount of each type of DSP
+memory consumed doesn't increase significantly with new releases, this is not
+possible to guarantee. Thus if a given system runs close to a particular DSP
+memory limit once all firmware files are downloaded and it is running at full
+capacity, it is possible that a new release could cause this limit to be
+exceeded. This could, and occasionally did, occur between TiNG v2 releases and
+Aculab Support worked with affected customers to address it.
+<p>
+Given the more significant code changes between TiNG v2 and TiNG v3 firmware,
+this is more likely to occur. Thus it would be sensible to test that you can
+still download the set of firmware files you require, and that your system does
+not encounter resource issues when running at full capacity.
+<p>
+For more information on this topic, please see the
+<a href="./an-placement.html">Prosody application note: ProsodyX TiNG Algorithm
+Placement</a>.
+
+</body>
+</html>

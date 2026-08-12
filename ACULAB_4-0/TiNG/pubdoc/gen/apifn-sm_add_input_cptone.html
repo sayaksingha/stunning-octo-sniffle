@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_add_input_cptone</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_add_input_cptone</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_add_input_cptone(struct sm_input_cptone_parms *<a href="#field-cptonep">cptonep</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-cptonep">*cptonep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_input_cptone_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-state_count">state_count</a>;					/* in */
+	struct sm_cptone_state {
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-states-freq_id">freq_id</a>;				/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-states-maximum_cadence">maximum_cadence</a>;			/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-states-minimum_cadence">minimum_cadence</a>;			/* in */
+	} <a href="#field-states">states[kSMMaxCPToneStates]</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-id">id</a>;						/* in */
+} SM_INPUT_CPTONE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Adds an additional call-progress tone to the repertoire of such tones
+recognised by the designated
+<a class=pref href="#field-module">module</a>.
+<p>
+The new call-progress tone is defined by a sequence of (up to
+<code>kSMMaxCPToneStates</code>) call-progress tone
+<a class=pref href="#field-states">states</a>.
+In order for a signal to be recognised as the new call-progress
+tone, each of the call-progress tone states must be satisfied in
+turn.
+<p>
+Each state is satisfied when, on the channel being processed, a
+signal is detected which has a duration of between
+<a class=pref href="#field-states-minimum_cadence">minimum_cadence</a>
+and
+<a class=pref href="#field-states-maximum_cadence">maximum_cadence</a>
+milliseconds and a frequency designated by
+<a class=pref href="#field-states-freq_id">freq_id</a>.
+The actual frequency designated by
+<a class=pref href="#field-states-freq_id">freq_id</a>
+is with respect to the tone set selected as the base set of
+frequencies for use by call-progress tone detection. By default
+this is tone set 1 (see
+<a href="../prospapi_intones.html">
+Prosody speech processing: pre-loaded input tones</a>),
+if another base set of frequencies is required then this may be
+specified by a tone set id specified when invoking
+<a href="apifn-sm_reset_input_cptones.html">sm_reset_input_cptones()</a>.
+<p>
+The parameter
+<a class=pref href="#field-id">id</a>
+is a value between 1 and 255 specified by the application, prior
+to calling the function. It is used to identify the recognised
+call-progress tone, and will be returned by
+<a href="apifn-sm_get_recognised.html">sm_get_recognised()</a>
+whenever the defined call-progress tone is being listened for
+and is recognised on an input channel. Distinct call-progress
+tones may be assigned the same
+<a class=pref href="#field-id">id</a>
+so that, for instance, two alternative call-progress tones could
+return the same id.
+<p>
+See
+<a href="../prospapi_cptones.html">
+Prosody speech processing: pre-loaded call-progress tones</a>,
+for list of call-progress tones supported by default and their
+ids.
+<p>
+See
+<a href="../prospapi_cpnote.html">
+Prosody speech processing: Notes on adding call-progress tones</a>
+for further information on adding call-progress tones to
+be recognised.
+<p>
+This call can only be made when no channel is allocated on
+the given module.
+<p>
+The maximum duration of a tone for call-progress tone detection
+is over 50 days. It is not possible to detect tones longer than
+this. To match a continuous tone, specify <code>~0U</code> (i.e.
+the maximum possible unsigned int value) as the maximum
+duration. This special value allows a tone to match before it
+finishes (normally detection must wait until the tone finishes
+so that it can check if the duration exceeded the permitted
+maximum).
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-module">module</a><dd>The module whose call-progress tone set is to be modified.
+
+<dt><a name="field-state_count">state_count</a><dd>The number of entries in the
+<a class=pref href="#field-states">states</a>
+field.
+
+<dt><a name="field-states">states</a><dd>The sequence of component states representing this tone. The
+last to occur must be in <code>states[0]</code>, and the first
+must be in <code>states[state_count-1]</code> - they are in the
+opposite order in this array to the order they occur in the
+incoming signal.
+
+
+<dl>
+<dt><a name="field-states-freq_id">freq_id</a><dd>The id of a component tone.
+
+<dt><a name="field-states-maximum_cadence">maximum_cadence</a><dd>The minimum duration (in mS) of this component.
+
+<dt><a name="field-states-minimum_cadence">minimum_cadence</a><dd>The maximum duration (in mS) of this component.
+
+</dl>
+<dt><a name="field-id">id</a><dd>The identifier of this call-progress tone.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists<li>ERR_SM_NO_RESOURCES - if no resources to store new call-progress tone<li>ERR_SM_BAD_PARAMETER - if bad call-progress tone definition<li>ERR_SM_CHANNEL_ALLOCATED - channel still allocated</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

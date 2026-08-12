@@ -1,0 +1,12 @@
+sm_replay_file_start	iPsOFtUiRPtiUiiicr2048_
+sm_replay_file_progress_istatus	iPFPPti
+sm_replay_file_progress	iPFPPt
+sm_replay_file_complete	iPFPPt
+sm_replay_file_stop	iPFPPti
+sm_record_file_start	iPsOFtRCtiUiicr2048_
+sm_record_file_progress_istatus	iPFCPti
+sm_record_file_progress_ostatus	iPFCPtPRSPt
+sm_record_file_progress	iPFCPt
+sm_record_file_complete	iPFCPt
+sm_record_file_stop	iPFCPti
+sm_record_file_complete_tstatus	iPFCPtPRSPt

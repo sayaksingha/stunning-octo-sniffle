@@ -35,14 +35,16 @@ TransDlgMap::~TransDlgMap()
 // PARAMETER   : none
 // RETURN      : BOOLEAN
 //-------------------------------------------------------------------------------
-BOOLEAN TransDlgMap::Init(int lTransValidationKey, int ssn)
+// Ab Change: Pass lCfgFile so it can be passed down to DlgMgr
+BOOLEAN TransDlgMap::Init(int lTransValidationKey, int ssn, TEXT* lCfgFile)
 {
    mTransValidationKey = lTransValidationKey;
    mSsn = ssn;
    pthread_mutex_init(&mDlgLock, NULL);
    pthread_mutex_init(&mTransLock, NULL);
 
-   return mDlgMgr.Init();
+   // Ab Change: Pass lCfgFile to DlgMgr
+   return mDlgMgr.Init(lCfgFile);
 
 }
 //-------------------------------------------------------------------------------

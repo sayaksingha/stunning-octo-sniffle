@@ -1,0 +1,74 @@
+	Prosody X
+secname	sort
+	Open a card for use with Prosody X.
+apifn	sm_open_prosody_x
+params	sm_open_prosody_x_parms openp
+	The IP address used by the ProsodyX card, or its registered name
+	(i.e. a valid input to the standard function <code>getaddrinfo()</code>).
+	If the card is using a security key, the IP address is followed 
+	by a slash (/) character and the security key.
+	<p>
+	Note that IPv6 addresses in numeric form should be enclosed in square
+	brackets, for example &quot;[2010:836B:4179::836B:4179]/mykey&quot;.
+field	char* px_locator in
+	An arbitrary value representing the open card.
+field	tSMCardId card_id in
+unstruct
+	Opens a Prosody X card for use with the Prosody API. This
+	function must be invoked by applications using the V6 interface
+	to register the <code>tSMCardId</code> value for passing into any
+	other Prosody API function which refers to this card.
+	<p>
+	The security key in the 
+ref	px_locator
+	is only validated when establishing a connection with a module on the 
+	card. Supplying a incorrect key will result in an error return from a 
+	function call some time after
+fnref sm_open_module
+	has reported success, as the connection is made asynchronously.
+	<p>
+	<strong>Note:</strong>
+	Almost all uses of a Prosody X card require the
+modref	datafeed
+	firmware module to be downloaded.
+	<p>
+	An open card can be closed by calling
+fnref sm_close_prosody.
+explain
+	0
+retval
+
+	Open a card for use with Prosody S version 3.
+apifn	sm_open_prosody_s_v3
+params	sm_open_prosody_s_v3_parms openp
+	The IP address of the ProsodyS server, or its registered name
+	(i.e. a valid input to the standard function <code>getaddrinfo()</code>),
+	then a colon followed by the port the server is listening on.
+	If the server is using a security key, the IP address and port is followed 
+	by a slash (/) character and the security key. For example,
+	&quot;10.202.100.254:2030/mykey&quot;.
+	<p>
+	Note that IPv6 addresses in numeric form should be enclosed in square brackets, 
+	for example &quot;[2010:836B:4179::836B:4179]:2030/mykey&quot;.
+field	char* ps_locator in
+	An arbitrary value representing the open card.
+field	tSMCardId card_id in
+unstruct
+	Opens a Prosody S version 3 virtual card for use with the Prosody API. This
+	function must be invoked by applications using the V6 interface
+	to register the <code>tSMCardId</code> value for passing into any
+	other Prosody API function which refers to this card.
+	<p>
+	The security key in the 
+ref	ps_locator
+	is only validated when establishing a connection with the virtual module.
+	Supplying a incorrect key will result in an error return from a function 
+	call some time after
+fnref sm_open_module
+	has reported success, as the connection is made asynchronously.
+	<p>
+	An open card can be closed by calling
+fnref sm_close_prosody.
+explain
+	0
+retval

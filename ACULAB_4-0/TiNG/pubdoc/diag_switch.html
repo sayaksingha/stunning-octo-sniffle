@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: diagnostic programs: switch</title>
+</head>
+<body>
+<h1>Prosody installation guide: diagnostic programs: switch</h1>
+<p>
+This program performs simple switching using the Aculab switch driver
+API. It cannot perform any configuration, but see also the program
+<code>swcmd</code> supplied with the switch driver which is much more
+powerful and is documented in the switch driver's documentation.
+<p>
+Go to directory $(TiNG)/diag/switch.
+<p>
+This is a standalone program that requires no Prosody facilities, so
+you can run it on a system which does not have Prosody installed (but
+it must have the Aculab switch driver installed and running).
+<p>
+Run <code>switch</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/switch</span> or
+<span class="type-WINNT">gen-WINNT_V6/switch</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+
+<table border>
+<tr>
+	<td><code>-c</code> card
+		<td>Specifies the card whose switch driver is to
+		perform the operations.
+</table>
+<p>
+After any options, there must be a command. The command must be one of
+the following:
+<dl>
+<dt><code>sample</code> S<code>:</code>T
+<dd>
+Samples the specified timeslot, printing the contents on hex. Only one
+sample is taken.
+<dt><code>set</code> S<code>:</code>T
+<dd>
+Sets output stream S timeslot T to be unconnected.
+<dt><code>set</code> S<code>:</code>T V
+<dd>
+Sets output stream S timeslot T to be connected to the fixed value V. This
+makes every sample on this timeslot be the specified value..
+<dt><code>set</code> S<code>:</code>T A<code>:</code>B
+<dd>
+Sets output stream S timeslot T to be connected to the input stream A
+timeslot B.
+<dt><code>show</code>
+<dd>
+Show all connections to output streams starting at zero and finishing
+when the switch driver reports an invalid stream.
+<dt><code>show</code> S
+<dd>
+Show connections to all timeslots on output streams S.
+<dt><code>show</code> S<code>:</code>T
+<dd>
+Show the connection, if any, to timeslot T on output streams S.
+</dl>
+<p>
+All numbers are specified in decimal by default, but can be specified
+in hex by prefixing <code>0x</code> or in octal by prefixing
+<code>0</code>.
+For example,
+<pre>
+	$ gen-LINUX_V6/switch set 64:0
+	$ gen-LINUX_V6/switch show 64:0
+	$ gen-LINUX_V6/switch set 64:0 65:4
+	$ gen-LINUX_V6/switch show 64:0
+	64:0 65:4
+	$ gen-LINUX_V6/switch set 64:0 128
+	$ gen-LINUX_V6/switch show 64:0
+	64:0 0x80
+</pre>
+<p>
+connects different sources to output stream 64, timeslot 0, showing
+each as it is performed. First the output is disconnected, then
+connected to input stream 65, timeslot 4, and then set to a fixed
+pattern.
+<p>
+The source code for this program is provided (switch.c).
+<hr>
+<p>
+This is one of the <a href="install_diag.html">Prosody diagnostic
+programs </a>.
+</body>
+</html>

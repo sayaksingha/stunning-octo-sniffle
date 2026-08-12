@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: implementing V.18 compatibility</title>
+</head>
+<body>
+<h1>Prosody application note: implementing V.18 compatibility</h1>
+<p>
+The V.18 standard gives specifications for the implementation of text
+telephones, more commonly called TDDs (Telecommunications Devices for
+the Deaf). The annexes each specify an alternative communications method.
+This is because the standards brings together existing practice from
+different regions, each of which developed different types of
+terminal. Here we consider the implementation of each of these. The
+initial probing sequence which would automatically detect which one
+to use is rather more complex and is not considered.
+<p>
+Allocate a full duplex channel, even if the mode you are using is
+half-duplex. This allows you to configure it once, rather than having to
+re-configure every time you switch between sending and receiving.
+
+<h2>Annex A</h2>
+<p>
+This describes an FSK modem which uses a 5-bit code very similar to
+Baudot. To implement this on Prosody, configure the channel to use FSK
+as its protocol as follows:
+<table border>
+<tr><th>speed<td>50
+<tr><th>mark_frequency<td>1400
+<tr><th>space_frequency<td>1800
+<tr><th>rx_carrier_on_mS<td>1
+<tr><th>rx_carrier_off_mS<td>80
+</table>
+<p>
+But note that in the USA a speed of 45.45 bits per second is typical.
+To specify this, use 45 as the speed.
+<p>
+In principle, the correct value for <code>rx_carrier_on_mS</code> is
+<code>150</code>, but some existing devices send data with no carrier
+before the first data bit, so the receiver must react instantly to a
+signal to avoid missing the first character of each transmission.
+<p>
+Configure it to use Async as its encoding as follows:
+<table border>
+<tr><th>databits<td>5
+</table>
+<p>
+Note that V.18 requires 150mS of carrier to be sent before any data
+every time the carrier is turned on. To achieve this, set a prefix
+'11111111' (eight bits of binary 1). This generates carrier for 160
+mS. Similarly, a suffix of '111111111111111' (fifteen bits of binary
+1) can be used to measure the required 300 mS after transmission in
+which the receiver is to be disabled.
+<p>
+When sending or receiving data, you will normally need to convert
+into and out of the 5-bit code. Some useful functions are provided in
+<code>libutil/v18a.h</code> and <code>libutil/v18a.c</code> which can
+do this for you. They are:
+<dl>
+
+<dt>void v18astate(V18ASTATE *ts);
+<dd>
+Prepare a V18ASTATE structure for use by the other functions.
+
+<dt>void v18astate_dtor(V18ASTATE *ts);
+<dd>
+Destroy a V18ASTATE structure which was previously prepared by
+<code>v18astate()</code>.
+
+<dt>char *v18a_fromT50(char *os, char *oe, V18ASTATE *ts, unsigned char **ibuf, unsigned char *ie);
+<dd>
+Convert into the V.18 Annex A code from T.50 (or ASCII). The
+parameters are:
+<table border>
+<tr><th>os<td>The address of the first character of the output
+buffer.
+<tr><th>oe<td>The address of the first character after the end of
+the output buffer.
+<tr><th>vs<td>A pointer to a V18ASTATE structure that has been
+initialised with <code>v18astate()</code>.
+<tr><th>*ibuf<td>The address of the first character of the output
+buffer. On return, this has been updated to indicate how much data
+has been successfully processed.
+<tr><th>ie<td>The address of the first character after the end of
+the input buffer.
+</table>
+It returns the address of the first unused location in the output
+buffer. If there is an unconvertible character in the input, the
+conversion stops at it, and will not pass it. You can tell that the
+input starts with an unconvertible character because no input has
+been consumed. Note that it would be incorrect to check for output
+being generated, since some characters are specified to generate no
+output. Conversion proceeds character by character until the input
+buffer has no more data, the next character in the input buffer is
+not convertible, or there is insufficient space in the output buffer.
+
+<dt>char *v18a_toT50(char *os, char *oe, V18ASTATE *ts, unsigned char **ibuf, unsigned char *ie);
+<dd>
+Convert from the V.18 Annex A code into T.50. The parameters are the
+same as for <code>v18a_fromT50()</code>.
+
+<dt>void v18a_show(void (*ofn)(void *p, char oc), void *p, V18ASTATE *ts, unsigned char ic);
+<dd>
+Convert data from the code in V.18 Annex A into a form suitable for
+debugging. This is how the test program,
+<a href="test_gdcrx.html">gdcrx</a> prints V.18 data. The function,
+<code>ofn</code> is invoked to output each character, with the
+parameter <code>p</code> being passed in each time, along with the
+character to be printed. The character <code>ic</code> is the next in
+the sequence of V.18 Annex A characters. Since this is used for
+debugging, every invocation generates some output, showing what
+character was processed. In addition, the characters
+<code>LTRS</code> and <code>FIGS</code> modify the state to indicate
+the new mode, so that future characters are interpreted correctly.
+
+</dl>
+<p>
+The V.18 (02/1998) appears to have a few errors which are handled as follows:
+<ul>
+<li>Table A.1 shows FIGS-00101 as an alternative representation for a
+dash or hyphen, though it lists the translation as 0x00. This is
+translated to 0x00, but never generated.
+<li>Table A.2 shows 0x27 (') being translated to FIGS-00101. This is
+instead translated to FIGS-01011, which is the translation listed in
+table A.1.
+<li>Table A.2 shows 0x60 as an apostrophe (') when it is actually a
+backtick (`). It also shows it being translated to FIGS-00101. This is
+instead translated to FIGS-01011, which is the translation listed for
+the apostrophe in table A.1.
+<li>Table A.2 shows 0x2a as being an underscore (_) when it is an
+asterisk (*). However the bit patterns are not affected by this.
+<li>In Table A.2, entries listed as being translated to
+<code>NULL</code> produce no output, except for <code>DEL</code>
+which produces only a <code>LTRS</code> code.
+</ul>
+<p>
+Obviously, since the source code is provided, if you want some
+variation based on the V.18 specification you can use the source code
+provided as a starting point for modifications.
+
+<h2>Annex B</h2>
+<p>
+Since this uses ordinary DTMF tones, you can use the speech API
+functions <a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a>
+and <a href="gen/apifn-sm_play_digits.html">sm_play_digits()</a> to
+receive and transmit the data. You will also need to translate
+characters into and out of the sequences of tones used.
+
+<h2>Annex C</h2>
+<p>
+This uses standard V.21 FSK modulation (half-duplex, using only channel
+1), see the
+<a href="protocol_fskrx.html">FSK rx</a> and
+<a href="protocol_fsktx.html">FSK tx</a>
+documentation for configuration details, but note that the speed used is
+only 110 bits per second, even though V.21 is capable of 300 bits per second.
+<p>
+You will also need to add even parity bits to the data being sent.
+This is trivially done with a small array which maps a character into
+the same character with the correct parity bit. Here is an example:
+<pre>
+static char even_parity[256];
+
+void init_parity(void)
+{
+ unsigned i;
+ even_parity[0] = 0;
+ for (i=0; i<8; i++) {		// for each bit
+	unsigned m = 1 << i;
+	unsigned j;
+	for (j=0; j < m; j++) {
+		even_parity[j + m] = even_parity[j] ^ 0x80 ^ m;
+	}
+ }
+}
+</pre>
+<p>
+After initialisation, <code>even_parity[x]</code> is the character
+<code>x</code> with bit 7 (the parity bit) set to even parity.
+
+<h2>Annex D</h2>
+<p>
+This uses standard Bell 103 FSK modulation, so see the
+<a href="protocol_fskrx.html">FSK rx</a> and
+<a href="protocol_fsktx.html">FSK tx</a>
+documentation for configuration details.
+
+<h2>Annex E</h2>
+<p>
+This uses standard V.23 FSK modulation, so see the
+<a href="protocol_fskrx.html">FSK rx</a> and
+<a href="protocol_fsktx.html">FSK tx</a>
+documentation for configuration details.
+
+<h2>Annex F</h2>
+<p>
+This uses standard V.21 FSK modulation, see the
+<a href="protocol_fskrx.html">FSK rx</a> and
+<a href="protocol_fsktx.html">FSK tx</a>
+documentation for configuration details.
+
+<h2>Annex G</h2>
+<p>
+This is essentially the same as for Annex F.
+
+<hr>
+<p>
+<small>Document reference: AN 1399</small>
+
+</body>
+</html>

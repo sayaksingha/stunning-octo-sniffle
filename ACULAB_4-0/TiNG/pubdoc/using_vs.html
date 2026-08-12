@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody guide: building applications with Visual Studio</title>
+</head>
+<body>
+<h1>Prosody guide: building applications with Visual Studio</h1>
+<p>
+There are two ways to use Prosody TiNG on Microsoft Windows:
+<ol>
+<li> <a href="#static">Statically linking the API libraries</a>
+<li> <a href="#dynamic">Dynamically linking the API libraries</a>
+</ol>
+<p>
+These instructions assume you are using Microsoft Development
+Environment 2002 Version 7 or one of the later versions.
+
+<h2><a name="static">Statically Linking the APIs</a></h2>
+<p>
+
+<ul>
+<li> Enter the <code>Properties...</code> option from the
+<code>Project</code> menu
+<li> Select the <code>C/C++</code> / <code>Code Generation</code> items from the tree on the left
+<li> Set <code>Run-time library</code> to <code>Multithreaded</code>
+(<code>Debug Multithreaded</code> if in debug mode)
+<li> Change to <code>C/C++</code> / <code>General</code>
+<li> In the <code>Additional include directories</code> box add the location
+of the TiNG <code>include</code> directory (which will be
+<code>C:\Program Files\Aculab\TiNG\include</code> unless you selected
+a different location when installing the distribution).
+<li> If you want to use the POSIX thread emulation (it is needed for
+the high level replay and record library and many of the test
+programs), in the
+<code>Additional include directories</code> box add the location of the
+TiNG <code>include/libutil/WINNT</code> directory (which will be
+<code>C:\Program Files\Aculab\TiNG\include\libutil\WINNT</code> unless
+you selected a different location when installing the distribution).
+<li> Change to <code>C/C++</code> / <code>Preprocessor</code>
+<li> In the <code>Preprocessor definitions</code> box, add
+	<code>TiNGTYPE_WINNT</code>
+<li> Add the necessary files to the project depending on what APIs
+your program uses (you can safely add them all if you like - it will
+merely make the program slightly larger than necessary.
+The files you may need to add are:
+<table border>
+<tr>
+	<th>File<th>When required
+
+<tr>
+	<td><code>TiNG/apilib/TiNGcore.c</code>
+		<td> Needed if any Prosody functions are used.
+
+<tr>
+	<td><code>TiNG/apilib/prosody_x.c</code>
+		<td> Needed if any Prosody X card or Prosody S is opened
+
+<tr>
+	<td><code>TiNG/highapi/smclib.c</code>
+		<td>Needed if any 
+		<a href="highapi_conf.html">high level conferencing</a>
+		Prosody functions are used.
+
+<tr>
+	<td><code>TiNG/highapi/smhlib.c</code>
+		<td>Needed if any 
+		<a href="highapi_playrec.html">high level replay and
+		record</a>
+		Prosody functions are used.
+
+<tr>
+	<td><code>TiNG/highapi/smbfhlib.c</code>
+		<td>Needed if any 
+		<a href="highapi_bf_playrec.html">BFILE high level replay and
+		record</a>
+		Prosody functions are used.
+
+<tr>
+	<td><code>TiNG/highapi/smwavlib.c</code>
+		<td>Needed if any 
+		<a href="highapi_wavfile.html">high level WAV file replay and
+		record</a>
+		Prosody functions are used.
+
+<tr>
+	<td><code>TiNG/highapi/smbfwavlib.c</code>
+		<td>Needed if any 
+		<a href="highapi_bf_wavfile.html">high level WAV BFILE replay and
+		record</a>
+		Prosody functions are used.
+
+<tr>
+	<td><code>TiNG/libutil/WINNT/pthread.c</code>
+		<td>Used by <code>smhlib.c</code>. Also needed if you
+		use POSIX pthreads emulation
+		(which allows you to use the same threads API on
+		Windows and Linux).
+
+</table>
+</ul>
+
+<h2><a name="dynamic">Dynamically linking the APIs:</a></h2>
+<p>
+<ul>
+<li> Enter the <code>Properties...</code> option from the
+<code>Project</code> menu
+<li> Select the <code>C/C++</code> / <code>Code Generation</code> items from the tree on the left
+<li> Set <code>Run-time library</code> to <code>Multithreaded DLL</code>
+<li> Change to <code>C/C++</code> / <code>General</code>
+<li> In the <code>Additional include directories</code> box add the location
+of the TiNG <code>include</code> directory (which will be
+<code>C:\Program Files\Aculab\TiNG\include</code> unless you selected
+a different location when installing the distribution).
+<li> If you want to use the POSIX thread emulation (it is needed for
+the high level replay and record library and many of the test
+programs), in the
+<code>Additional include directories</code> box add the location of the
+TiNG <code>include/libutil/WINNT</code> directory (which will be
+<code>C:\Program Files\Aculab\TiNG\include\libutil\WINNT</code> unless
+you selected a different location when installing the distribution).
+<li> Change to <code>C/C++</code> / <code>Preprocessor</code>
+<li> In the <code>Preprocessor definitions</code> box, add
+	<code>TiNGTYPE_WINNT,TiNG_USE_DLL</code>
+<li> Change to <code>Linker</code> / <code>Input</code>
+<li> In the <code>Additional dependencies</code> box add <code>TiNG.lib</code>
+<li> Enter the <code>Options...</code> option from the
+<code>Tools</code> menu
+<li> Select the <code>Projects / VC++Directories</code> tab
+<li> Select <code>Library files</code> from the pull down list
+<li> Add the paths for the <code>TiNG.lib</code> file and the
+	<code>TiNG.dll</code> file. They can be in the same place (which
+	will be <code>C:\Program Files\Aculab\TiNG\lib\gen-WINNT_V6</code> unless you
+	selected a different location when installing the distribution).
+</ul>
+<p>
+Note that if you link with a <code>TiNG.lib</code> file but run the
+application such that Windows finds an incompatible <code>TiNG.dll</code>
+and tries to use it, you may get errors complaining that functions
+were not found. This is because the .DLL and .LIB files use a
+mechanism to protect against incompatible changes. See also
+<a href="using_dll.html">Prosody TiNG: Using the API DLL</a> for
+further information.
+
+<h2>Compiling the Test Programs</h2>
+
+<p>
+You can compile the test programs either statically or dynamically
+as described above.
+<ul>
+<li> Create a new <code>Win32 Console Application</code> project
+<li> Add the <code>.c</code> file, which you would like to compile
+<li> Configure the project for static or dynamic linking as described
+above. If you are statically linking you can see which libraries are
+required by looking in the <code>.c</code> source file for the
+library headers it <code>#include</code>s.
+<li> Add any other necessary source files, these will normally be found
+in the <code>TiNG\libutil</code>, <code>TiNG\libutil\WINNT</code>, or
+<code>TiNG\test\Testlib</code>
+directories.
+</ul>

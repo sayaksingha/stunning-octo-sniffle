@@ -1,0 +1,381 @@
+
+	Prosody DTLS processing
+secname	sort
+
+	Create a DTLS[rx] endpoint
+apifn	sm_dtlsrx_create
+params	sm_dtlsrx_create_parms dtlsrxp
+	The newly created DTLS[rx].
+field	tSMDTLSrxId dtlsrx out
+	A value obtained from
+fnref	sm_open_module
+	which indicates the module where the DTLS[rx] is to be allocated.
+field	tSMModuleId module in
+unstruct
+	Allocates, on a specific module, a new DTLS[rx] to process incoming DTLS packets.
+	If the call completes successfully, the parameter
+ref	dtlsrx
+	will be set to the identifier for that dtlsrx.
+	<p>
+	Requires the module
+modref  dtlsrx
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources exist to create the DTLS[rx]
+
+	Configure a VMP[rx] to pass DTLS packets to a DTLS[rx]
+apifn	sm_vmprx_config_dtls
+params	sm_vmprx_config_dtls_parms configp
+	The VMP[rx] which will received the DTLS packets.
+field	tSMVMPrxId vmprx in
+	The DTLS[rx] to pass the packets to. If this is <code>kSMNullDTLSrxId</code> 
+	then the VMP[rx] will no longer pass on DTLS packets.
+field	tSMDTLSrxId dtlsrx in
+	Which port will receive the DTLS packets. When non-zero, use the RTCP port. Otherwise, the RTP port is used 
+field	tSM_INT use_RTCP_port in
+unstruct
+	Configures a VMP[rx] to pass incoming DTLS packets to a DTLS[rx].
+	<p>
+	Requires the modules
+modref  dtlsrx
+	and
+modref	vmprx
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Destroy a previously allocated DTLS[rx]
+apifn	sm_dtlsrx_destroy
+	A tSMDTLSrxId that has been prevously created by a call to 
+fnref	sm_dtlsrx_create.
+param	tSMDTLSrxId dtlsrx
+	Destroys
+ref	dtlsrx
+	and invalidates the tSMDTLSrxId.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Read a packet from a DTLS[rx]
+apifn	sm_dtlsrx_get_packet
+params	sm_dtlsrx_get_packet_parms readp
+	The dtls[rx] from which to read a packet
+field	tSMDTLSrxId dtlsrx in
+	A pointer to the buffer into which packet should be read.
+field	char* data in rx_packet
+	The amount of space in the buffer.
+field	tSM_INT max_length in
+	The length of the read packet.
+field	tSM_INT packet_length out
+unstruct
+	Attempt to read a packet from a DTLS[rx].
+	<p>
+	Requires the module
+modref  dtlsrx
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Obtain an event for a DTLS[rx]
+apifn	sm_dtlsrx_get_event
+params	sm_dtlsrx_event_parms eventp
+	The DTLS[rx] 
+field	tSMDTLSrxId dtlsrx in
+	The event identifier
+field	tSMEventId event out
+unstruct
+	If the call completes successfully 
+ref	event
+	will hold a pointer to the tSMEventId belonging to 
+ref	dtlsrx.
+	The tSMEventId is valid until the DTLS[rx] is destroyed using 
+fnref	sm_dtlsrx_destroy.
+	This event will be signalled when a status change occurs on the DTLS[rx].
+	When the event is signalled the user must call 
+fnref	sm_dtlsrx_status
+	to discover the nature of the status change.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Determine DTLS[rx] status
+apifn	sm_dtlsrx_status
+params	sm_dtlsrx_status_parms statusp
+	The DTLS[rx] to interrogate
+field	tSMDTLSrxId dtlsrx in
+enumstart kSMDTLSrxStatus
+	Indicates that there is nothing significant to report
+enum	kSMDTLSrxStatusRunning
+	Indicates that the DTLS[rx] has stopped processing DTLS and that
+	it can be safely destroyed
+enum	kSMDTLSrxStatusStopped
+	Indicates that a DTLS packet is available to be read.
+enum	kSMDTLSrxStatusHasPacket
+	Data has been lost because the packet buffer has overflowed.
+enum	kSMDTLSrxStatusOverrun
+enumend status out
+unstruct
+	Returns the current status of the DTLS[rx] or an error to indicate that
+	an error has occurred.
+	<p>
+	When the event, obtained from
+fnref	sm_dtlsrx_get_event,
+	is signalled the user must call this function to determine the nature of
+	the status change. The change in status may indicate that an error occurred
+	whilst processing a user request or it may be notifiying the user of a
+	change to the previous state of the DTLS[rx].
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources existed to create the DTLS[rx]
+
+	Instructs a DTLS[rx] to stop processing DTLS
+apifn	sm_dtlsrx_stop
+params	sm_dtlsrx_stop_parms stopp
+	A tSMDTLSrxId that has been previously created by a call to
+fnref	sm_dtlsrx_create.
+field	tSMDTLSrxId dtlsrx in
+unstruct
+	Requests that a DTLS[rx] stops executing. The user will be notified that
+	a DTLS[rx] has terminated by a final status event. Once the final status
+	notification has been received the DTLS[rx] can be destroyed using
+fnref	sm_dtlsrx_destroy.
+	<p>
+	Once the DTLS[rx] has stopped the event should no longer be used to wait
+	for status notifications as it will be signalled permanently. The event
+	is invalidated when
+fnref	sm_dtlsrx_destroy
+	is called.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Configure the basic options for DTLS[tx] to use IPv4
+apifn	sm_dtlstx_config
+params	sm_dtlstx_config_parms configp
+	The DTLS[tx] to configure
+field	tSMDTLStxId dtlstx in
+	The SOCKADDR_IN structure specifying the destination IP address
+	and port for the DTLS packets. A struct SOCKADDR_IN must be
+	configured with an address family, an IP address and a port.
+	Note that most operating systems define this structure such that
+	fields are in network byte order.
+	The structure must be correctly cast such that an IP V4 
+	address is specified.
+field	SOCKADDR_IN destination in
+	The SOCKADDR_IN structure allows you to specify the source IP
+	address and port for the DTLS data. A struct SOCKADDR_IN must
+	be configured with an address family. The IP address may be
+	specified, or the value INADDR_ANY may be used to indicate
+	that any suitable address may be used. The port number may be
+	specified, or the value zero may be used to indicate that a
+	suitable port number is to be automatically allocated and
+	used.
+	Note that most operating systems define this structure such that
+	fields are in network byte order.
+	The structure must be correctly cast such that an IP V4 
+	address is specified.
+field	SOCKADDR_IN source in
+unstruct
+	Configures a DTLS[tx] to send DTLS packets to a device with the 
+	specified IPv4 address.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Configure the basic options for a DTLS[tx] to use IPv6
+apifn	sm_dtlstx_config_ipv6
+params	sm_dtlstx_config_ipv6_parms configp
+	The DTLS[tx] to configure
+field	tSMDTLStxId dtlstx in
+	The SOCKADDR_IN6 structure specifying the destination IP address
+	and port for the DTLS packets. A struct SOCKADDR_IN6 must be
+	configured with an address family, an IPv6 address and a port.
+	Note that most operating systems define this structure such that
+	fields are in network byte order.
+field	SOCKADDR_IN6 destination in
+	The SOCKADDR_IN6 structure allows you to specify the source IPv6
+	address and port for the DTLS packets. A struct SOCKADDR_IN6 must
+	be configured with an address family. The IPv6 address may be
+	specified, or the value INADDR_ANY may be used to indicate
+	that any suitable address may be used. The port number may be
+	specified, or the value zero may be used to indicate that a
+	suitable port number is to be automatically allocated and
+	used.
+	Note that most operating systems define this structure such that
+	fields are in network byte order.
+field	SOCKADDR_IN6 source in
+unstruct
+	Configures a DTLS[tx] to send DTLS packets to a device with the 
+	specified IPv6 address.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Create a DTLS[tx] endpoint
+apifn	sm_dtlstx_create
+params	sm_dtlstx_create_parms dtlstxp
+	The newly created DTLS[tx].
+field	tSMDTLStxId dtlstx out
+	A value obtained from
+fnref	sm_open_module
+	which indicates the module where the DTLS[tx] is to be allocated.
+field	tSMModuleId module in
+unstruct
+	Allocates, on a specific module, a new DTLS[tx] to transmit DTLS packets to a 
+	remote device.
+	<p>
+	If the call completes successfully, the parameter
+ref	dtlstx
+	will be set to the identifier for that DTLS[tx].
+	<p>
+	Requires the module
+modref  dtlstx
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources exist to create the DTLS[tx]
+
+	Configure the packet cpapcity notifications for a  DTLS[tx]
+apifn	sm_dtlstx_config_notify
+params	sm_dtlstx_config_notify_parms configp
+	The DTLS[tx] to configure.
+field	tSMDTLStxId dtlstx in
+	The amount of capacity that must be available before
+fnref	sm_dtlstx_status
+	reports <code>kSMDTLStxStatusHasCapacity</code>.
+field	tSM_UT32 packet_length in
+	An indicator of whether the DTLS[tx] event should be set when 
+	there is space for another packet to be queued.
+field	tSM_INT	no_capacity_event in
+unstruct
+	Configures when a DTLS[tx] reports capacity for another packet 
+	to be queued. It also configures whether the event should be set 
+	when there is capacity for another packet.
+	<p>
+	When
+ref	no_capacity_event
+	is zero, the event is set when 
+fnref	sm_dtlstx_status
+	will report <code>kSMDTLStxStatusHasCapacity</code>. If it
+	is non-zero, the event will not be set unless a different status 
+	will be reported.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Pass a packet to a DTLS[tx] for sending
+apifn	sm_dtlstx_send_packet
+params	sm_dtlstx_send_packet_parms packetp
+	The DTLS[tx] that will send the packet
+field	tSMDTLStxId dtlstx in
+	A pointer to the packet to be sent.
+field	char* data in tx_packet
+	The length of the packet to be sent.
+field	tSM_INT packet_length in
+unstruct
+	Sends a packet using a DTLS[tx].
+	<p>
+	Requires the module
+modref  dtlstx
+	to have been downloaded.
+explain
+	0
+retval
+
+	Destroy a previously allocated DTLS[tx]
+apifn	sm_dtlstx_destroy
+	A tSMDTLStxId that has been prevously created by a call to 
+fnref	sm_dtlstx_create.
+param	tSMDTLStxId dtlstx
+	Destroys
+ref	dtlstx
+	and invalidates the tSMDTLStxId.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Obtain an event for a DTLS[tx]
+apifn	sm_dtlstx_get_event
+params	sm_dtlstx_event_parms eventp
+	The DTLS[tx] 
+field	tSMDTLStxId dtlstx in
+	The event identifier
+field	tSMEventId event out
+unstruct
+	If the call completes successfully 
+ref	event
+	will hold a pointer to the tSMEventId belonging to 
+ref	dtlstx.
+	The tSMEventId is valid until the DTLS[tx] is destroyed using 
+fnref	sm_dtlstx_destroy.
+	This event will be signalled when a status change occurs on the DTLS[tx].
+	When the event is signalled the user must call 
+fnref	sm_dtlstx_status
+	to discover the nature of the status change.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Determine DTLS[tx] status
+apifn	sm_dtlstx_status
+params	sm_dtlstx_status_parms statusp
+	The DTLS[tx] to interrogate
+field	tSMDTLStxId dtlstx in
+enumstart kSMDTLStxStatus
+	Indicates that there is nothing significant to report
+enum	kSMDTLStxStatusRunning
+	Indicates that the DTLS[tx] has stopped transmitting DTLS and that it is
+	safe to destroy
+enum	kSMDTLStxStatusStopped
+	The DTLS[tx] has capacity to buffer another packet.
+enum	kSMDTLStxStatusHasCapacity
+enumend status out
+unstruct
+	Returns the current status of the DTLS[tx] or an error to indicate that
+	a problem occurred during start-up.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources existed to create the DTLS[tx]
+
+	Instructs a DTLS[tx] to stop sending DTLS
+apifn	sm_dtlstx_stop
+params	sm_dtlstx_stop_parms stopp
+	A tSMDTLStxId that has been previously created by a call to
+fnref	sm_dtlstx_create.
+field	tSMDTLStxId dtlstx in
+unstruct
+	Requests that a DTLS[tx] stops executing. The user will be notified that
+	a DTLS[tx] has terminated by a final status event. Once the final status
+	notification has been received the DTLS[tx] can be destroyed using
+fnref	sm_dtlstx_destroy.
+	<p>
+	Once the DTLS[tx] has stopped the event should no longer be used to wait
+	for status notifications as it will be signalled permanently. The event
+	is invalidated when
+fnref	sm_dtlstx_destroy
+	is called.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error

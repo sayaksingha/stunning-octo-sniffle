@@ -1,0 +1,16 @@
+sm_dtlsrx_create	iPsDTLSrMt_
+sm_dtlsrx_destroy	iDTLSr
+sm_dtlsrx_get_event	iPsDTLSrEt_
+sm_dtlsrx_get_packet	iPsDTLSrPcii_
+sm_dtlsrx_status	iPsDTLSre1_4__
+sm_dtlsrx_stop	iPsDTLSr_
+sm_dtlstx_config	iPsDTLStSAdSAd_
+sm_dtlstx_config_ipv6	iPsDTLStSA6dSA6d_
+sm_dtlstx_config_notify	iPsDTLStUii_
+sm_dtlstx_create	iPsDTLStMt_
+sm_dtlstx_destroy	iDTLSt
+sm_dtlstx_get_event	iPsDTLStEt_
+sm_dtlstx_send_packet	iPsDTLStPci_
+sm_dtlstx_status	iPsDTLSte1_3__
+sm_dtlstx_stop	iPsDTLSt_
+sm_vmprx_config_dtls	iPsVrDTLSri_

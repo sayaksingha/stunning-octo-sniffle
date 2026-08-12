@@ -1,0 +1,7 @@
+sm_replay_wav_start	iPcPFPPt
+sm_replay_wav_close	iPFPPt
+sm_record_wav_start	iPcPFCPt
+sm_record_wav_close	iPFCPt
+sm_record_wav_trim_close	iPFCPtUi
+sm_replay_wav_get_type	iPcPi
+sm_replay_wav_prepare	iPsPcPRPt_

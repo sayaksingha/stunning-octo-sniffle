@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: Visual Studio Project files</title>
+</head>
+<body>
+<h1>Prosody installation guide: Visual Studio Project files</h1>
+<p>
+For your convenience, Visual Studio project files are provided which
+build all the libraries and test programs. Two sets of files are
+provided, one for 32 bit applications in <code>$(TiNG)/VisualStudio/gen-WINNT_V6</code> 
+and one for 64 bit applications in <code>$(TiNG)/VisualStudio/gen-WINNT_V6_AMD64</code>.
+They are organised in a single workspace.  For 32 bit applications this is named <code>Prosody_TiNG.sln</code>.
+For 64 bit applications this is also named <code>Prosody_TiNG.sln</code>.
+
+The work space contains a dummy project (called
+<code>_DUMMY_ALL_PROJECTS</code>) which contains no code but depends
+on all the test and diag projects. This allows you to select it as the active
+project and use it to build all the test and diag programs.
+<p>
+Note the 32 bit project files are compatible with Visual Studio 2022
+and several earlier versions (from VS2017).
+<p>
+Likewise the 64 bit project files are compatible with Visual Studio 2022
+and several earlier versions (from VS2017).
+<p>
+These projects can build all the components mentioned in
+<a href="install_buildrest.html">Prosody installation guide: building software components</a>.

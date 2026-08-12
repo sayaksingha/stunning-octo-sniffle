@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Protocols: TTY rx</title>
+</head>
+<body>
+<h1>Prosody data communications Protocols: TTY rx</h1>
+<p>
+TTY is a teletypewriter, or teleprinter. In this case specifically a 
+telecommunications device for the deaf (also known as a TDD) which uses 
+ITU V.18 Annex A coding at either 45.45 or 50 baud. This is often referred 
+to as &quot;Baudot&quot; code. It has no configuration options.
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic data communications
+documentation.
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_ttyrx.h"</code> to get the
+	appropriate declarations.
+<p>
+	The protocol value is <code>kSMDCProtocolTTYrx</code>.
+<p>
+	There is no configuration for this protocol, so the config_data
+	pointer should be null (0) and the config_length should be zero.
+<p>
+	This protocol does not use encodings, so the 'encoding' field
+	must be set to the value kSMDCConfigEncodingNone.
+<p>
+	The firmware module <a href="gen/softmodindex.html#ttyasyrx">ttyasyrx</a>
+	must have been downloaded.
+<p>
+
+<h3><a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a></h3>
+<p>
+	[note] not useful - receiver is always connected.
+
+<h3><a href="gen/apifn-smdc_line_status.html">smdc_line_status()</a></h3>
+
+<h3><a href="gen/apifn-smdc_tx_status.html">smdc_tx_status()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	output half of a channel.
+
+<h3><a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	output half of a channel.
+
+<h3><a href="gen/apifn-smdc_rx_status.html">smdc_rx_status()</a></h3>
+<p>
+	When the returned status is <a href="gen/apifn-smdc_rx_status.html#field-kSMDCRxStatusCarrier">kSMDCRxStatusCarrier</a>
+	the carrier value is an estimate of the duration of the bits being 
+	received in milliseconds. 
+	<br>Note there is no tracking of carrier on/off.
+
+<h3><a href="gen/apifn-smdc_rx_control.html">smdc_rx_control()</a></h3>
+<p>
+	The <a href="gen/apifn-smdc_rx_control.html#field-kSMDCRxCtlResume">kSMDCRxCtlResume</a>
+	command changes the symbol decoder mode. If 
+	<a href="gen/apifn-smdc_rx_control.html#field-blocking">blocking</a>
+	is zero it puts the symbol decoder into Letters (LTRS) mode until 
+	the next Figures (FIGS) mode symbol is received, otherwise it puts the 
+	symbol decoder into Figures (FIGS) mode until the next Letters (LTRS) 
+	mode symbol is received.
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+<p>
+	The data consists of bytes containing ASCII characters decoded from 
+	the received 5 bit symbols, and indicators showing when the decode mode
+	has changed. These are 0xff for the change to LTRS and 0xfe for the change
+	to FIGS.
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+<p>
+	This function is not applicable since it only applies to the
+	output half of a channel.
+</body>

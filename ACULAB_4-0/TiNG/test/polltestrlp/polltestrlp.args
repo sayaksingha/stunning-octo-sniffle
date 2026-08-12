@@ -1,0 +1,10 @@
+-TiNGtrace
+c	check		unsigned
+f	fileprefix	string
+i	intimeslot	timeslot
+m	module		unsigned
+n	numchan		unsigned
+o	outtimeslot	timeslot
+s	speed		unsigned
+X	maxrx		unsigned
+x	serialnumber	string

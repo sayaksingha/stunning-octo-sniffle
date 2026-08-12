@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody signal path processing: API: sm_path_status</title>
+</head>
+<body>
+<h1>Prosody signal path processing: API: sm_path_status</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_path_status(struct sm_path_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_status_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a name="enum-kSMPathStatus">enum kSMPathStatus</a> {
+		<a href="#field-kSMPathStatusRunning">kSMPathStatusRunning</a>,
+		<a href="#field-kSMPathStatusOngoingTone">kSMPathStatusOngoingTone</a>,
+		<a href="#field-kSMPathStatusEndTone">kSMPathStatusEndTone</a>,
+		<a href="#field-kSMPathStatusStopped">kSMPathStatusStopped</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-u-tone-id">id</a>;				/* out */
+			unsigned <a href="#field-u-tone-duration">duration</a>;			/* out */
+		} <a href="#field-u-tone">tone</a>;						/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SM_PATH_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Returns the current status of the path or an error to indicate that
+a problem occurred.
+<p>
+When the event, obtained from
+<a href="apifn-sm_path_get_event.html">sm_path_get_event()</a>,
+is signalled the user must call this function to determine the nature
+of the status change. The change in status may indicate that an error 
+occurred whilst processing a user request or it may be notifiying the 
+user of a change to the previous state of the path.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The path to interrogate
+
+<dt><a name="field-status">status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMPathStatusRunning">kSMPathStatusRunning</a>
+<dd>Indicates that there is nothing significant to report.
+
+<dt><a name="field-kSMPathStatusOngoingTone">kSMPathStatusOngoingTone</a>
+<dd>Tone detector reports ongoing tone or silence.
+
+<dt><a name="field-kSMPathStatusEndTone">kSMPathStatusEndTone</a>
+<dd>Tone detector reports previously ongoing tone or silence has completed.
+
+<dt><a name="field-kSMPathStatusStopped">kSMPathStatusStopped</a>
+<dd>Indicates that the path has stopped and can be destroyed.
+
+</dl>
+<dt><a name="field-u">u</a><dd>Additional information relating to the current status of the path 
+
+
+<dl>
+<dt><a name="field-u-tone">tone</a><dd>This field is only valid if the status is either
+<a class=pref href="#field-kSMPathStatusOngoingTone">kSMPathStatusOngoingTone</a>
+or
+<a class=pref href="#field-kSMPathStatusEndTone">kSMPathStatusEndTone</a>.
+
+
+<dl>
+<dt><a name="field-u-tone-id">id</a><dd>The id for the recognised tone (or zero if silence).
+
+<dt><a name="field-u-tone-duration">duration</a><dd>The ongoing or final duration of the tone or silence.
+
+</dl>
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources existed to create the path</ul>
+<hr>
+<p>This function is part of the <a href="../prospath.html">Prosody signal path processing API</a>.
+</body>
+</html>

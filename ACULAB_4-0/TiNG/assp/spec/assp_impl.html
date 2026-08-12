@@ -1,0 +1,666 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>An ASSP implementation</title>
+</head>
+<body>
+<h1>An ASSP implementation</h1>
+<p>
+This documents an implementation of the protocol described in
+<a href="assp_main.html">A Protocol for Asymmetric High Load</a>.
+<p>
+The general architecture used is that there are 'connections' handled
+by the protocol. When creating a connection, you specify how the
+protocol uses external facilities such as its network connection and
+timers. In C++ this would use abstract base classes, but in C it's a
+bit more complicated, and will be explained later. You start off the
+protocol by arranging for there to be a path to remote ASSP
+implementations which can carry ASSP packets. To act as a client, you
+then create a <code>TCB</code> and initiate an ASSP connection by
+calling
+<code><a href="assp_apiref.html#assp_connect">assp_connect()</a></code>.
+To act as a server, you wait for incoming packets, and pass them to
+the packet handler.
+When you use
+<code><a href="assp_apiref.html#assp_connect">assp_connect()</a></code>, you
+specify the <code>CID</code>
+value to identify the connection. These values are intended to have
+predefined meanings, so the value chosen may select which particular
+connection at the server will receive the new incoming connection.
+<p>
+When a connection has been established, your <code>nexttx()</code>
+method is called, which may return a packet to send. To get an empty
+packet, call
+<code><a href="assp_apiref.html#assp_txpacket">assp_txpacket()</a></code>
+specifying the TCB and maximum data size you need. Then fill in the
+data. The packet allocated by
+<code><a href="assp_apiref.html#assp_txpacket">assp_txpacket()</a></code> is a
+structure with two fields you must use: <code>datastart</code> is a
+pointer to the start of the data. You must copy your data into the
+packet starting at this location. You must then set the
+<code>dataend</code> field to point to the location after the data.
+There is another field which you may use: <code>rawend</code>. This
+is the maximum permitted value for <code>dataend</code>. This may be
+more than you asked for.
+Packets that you return from your <code>nexttx()</code> method must
+not be empty except for the last one which uses the
+<code>ASSP_F_EOF</code> flag. A packet passed into
+<code><a href="assp_apiref.html#assp_abort">assp_abort()</a></code>,
+however, may be empty.
+<p>
+Whenever you
+have data to send, you call
+<code><a href="assp_apiref.html#assp_txready">assp_txready()</a></code>
+to indicate that there is data ready. The protocol implementation will
+then call your <code>nexttx()</code> callback when appropriate to
+collect the data.
+
+Finally, if you need to discard
+the TCB completely, you call <code>assp_tcb_dtor</code>.
+<p>
+A general overview of the order of API calls is shown here:
+<p>
+<img src="gen/api.png" alt="Diagram of API call sequence">.
+<p>
+As shown in this diagram by dotted lines, instead of calling
+<code><a href="assp_apiref.html#assp_tcb_dtor">assp_tcb_dtor()</a></code>)
+you can re-use a TCB by invoking
+<code><a href="assp_apiref.html#assp_connect">assp_connect()</a></code>.
+
+<h2>Abstract base classes in C</h2>
+<p>
+The essential feature of an abstract base class is that it defines an
+interface to an arbitrary variety of objects. While C cannot express
+this directly, it can be expressed in a reasonably straightforward
+manner. First, we define a struct which contains only pointers to the
+methods required. This is essentially the <code>vtbl</code> which C++
+maintains behind the scenes. Then we define a struct containing just
+two items: a pointer to this vtbl, and a pointer to the object data.
+Since we're defining an abstract class, we have no idea what that
+object data will contain, so we define it as a named struct but don't
+provide any definition of the struct. In C this allows us to use
+pointers to the struct, and have them type-checked, but prevents
+accidentally trying to dereference them.
+<h3>TIMEQUEUE</h3>
+<p>
+Here's an example of an abstract <code>TIMEQUEUE</code> class taken
+from the protocol implementation:
+<pre>
+#include "timefn.h"
+
+typedef struct timequeue_impl TIMEQUEUE_IMPL;
+
+struct timequeue_vtbl {
+	void (*start)(TIMEQUEUE_IMPL *tq, void (*fn)(void *p), void *p, ABSTIME when);
+	long (*next_timer_mS)(TIMEQUEUE_IMPL *tq);
+	void (*dtor)(TIMEQUEUE_IMPL *tq);
+};
+
+typedef struct {
+	struct timequeue_vtbl *vtbl;
+	TIMEQUEUE_IMPL *tqi;
+} TIMEQUEUE;
+</pre>
+<p>
+This is quite a simple class, as it has only three methods. The last,
+<code>dtor()</code>, is the destructor; the first,
+<code>start()</code>, inserts a timer into the queue; and the second,
+<code>next_timer_mS()</code> runs any timers which have already
+expired and then returns the number of milliseconds until the next
+timer is due. Given an object <code>tq</code> in a class derived from
+<code>TIMEQUEUE</code>, you invoke the methods like this:
+<pre>
+	tq.vtbl.start(tq.tqi, fn, p, tomorrow);
+	lm = tq.vtbl-&gt;next_timer_mS(tq.tqi);
+</pre>
+<p>
+where <code>fn</code> is a function to be run, <code>p</code> is the
+parameter to pass to it, <code>tomorrow</code> is when to run it. 
+<p>
+Of course, since this is an abstract class, we need a derived class to
+provide an implementation. Here is an example (as used in the protocol
+implementation). First its header:
+<pre>
+typedef struct timer {
+	struct timer *next;
+	ABSTIME when;
+	void (*fn)(void *arg);
+	void *arg;
+} TIMER;
+
+struct timequeue_impl {
+	TIMER *first;
+};
+
+void timequeue_lin_init(TIMEQUEUE *tq, TIMEQUEUE_IMPL *tqi);
+</pre>
+<p>
+This uses a simple linear linked list to record the timers, so it only
+needs a pointer to the first one, while each pending timer needs to
+record the parameters passed to <code>start()</code> as well as a
+pointer to the next. When we want to create an object of this derived
+class, we do this:
+<pre>
+	#include "timequeue_lin.h"
+
+	...
+
+	TIMEQUEUE tq;
+	TIMEQUEUE_IMPL tqi;
+	timequeue_int_init(&amp;tq, &amp;tqi);
+	...
+</pre>
+<p>
+The header we included gives the contents of <code>TIMEQUEUE_IMPL</code>
+so that the compiler can allocate the space for it. Of course this
+also means you could access the fields directly, since C doesn't have
+private fields in structs, but you simply avoid doing that! If you use
+only the <code>TIMEQUEUE</code> type in a section of code, then that code
+does not depend on the particular timequeue class being used - just like
+when you refer to methods in an abstract class in C++. For example:
+<pre>
+	#include "timequeue.h"
+	...
+
+	int do_something(TIMEQUEUE *tq)
+	{
+	 ...
+	 if (timeout_required()) {
+	 	tq-&gt;tqi-&gt;start(tq-&gt;tqi, timefn, obj, tmo);
+	 }
+	 ...
+	}
+</pre>
+<p>
+Note that, unlike in C++, a single source file cannot create objects in
+two different classes which have been derived from the abstract class
+since including <code>timequeue_thing.h</code> and
+<code>timequeue_otherthing.h</code> in the same file would produce two
+conflicting definitions of the <code>struct timequeue_impl</code>.
+<p>
+The implementation of the linear-list <code>TIMEQUEUE</code> is like
+this:
+<pre>
+#include "timequeue_lin.h"
+
+typedef struct timequeue_impl TQI;
+
+static void starttimer(TQI *tqi, void (*fn)(void *arg), void *arg, ABSTIME when)
+{
+ TIMER *tim = malloc(sizeof(*tim));
+ ...
+}
+
+static long next_timer_mS(TQI *tqi)
+{
+ for (;;) {
+	TIMER *t = tqi-&gt;first;
+	long nx;
+	if (!t) return -1;
+	nx = time_rel2longmS(time_until(t-&gt;when));
+	if (nx > 0) return nx;
+	tqi-&gt;first = t-&gt;next;
+	t-&gt;fn(t-&gt;arg);
+	free(t);
+ }
+}
+
+static void dtor(TQI *tqi)
+{
+ if (tqi-&gt;first) abort();	// bug: queue not empty
+}
+
+static struct timequeue_vtbl timequeue_lin_vtbl = {
+	starttimer,
+	next_timer_mS,
+	dtor,
+};
+
+void timequeue_lin_init(TIMEQUEUE *tq, TIMEQUEUE_IMPL *tqi)
+{
+ tq-&gt;vtbl = &amp;timequeue_lin_vtbl;
+ tq-&gt;tqi = tqi;
+ tqi-&gt;first = 0;
+}
+</pre>
+<p>
+It starts by defining a synonym for <code>TIMEQUEUE_IMPL</code> to
+make the name shorter in this file. Then we have the implementation of
+the methods, followed by the vtbl, and the 'constructor'. The
+constructor must have a name which specifies what sort of derived
+class it produces. This is so that a program which uses more than one
+derived class doesn't have more than one function with the same name.
+Since this is the only identifier visible outside this file, the
+methods can only be invoked on objects prepared by the constructor, so
+the <code>struct timequeue_impl</code> parameter they get will always
+be of the type they expect.
+
+<h3>TCBPATH</h3>
+<p>
+The <code>TCBPATH</code> abstract base class specifies how the
+protocol implementation interfaces to the network which carries its
+datagrams to the remote protocol implementation. It contains these
+methods:
+<pre>
+	int (*validate_cookie)(TCBPATH_IMPL *path, TCB *tcb, MD5_STREAM *msp, U8 *cp, U8 *endp);
+	void (*generate_cookie)(TCBPATH_IMPL *path, TCB *tcb, MD5_STREAM *msp, U8 *cp);
+	void (*make_keycode)(TCBPATH_IMPL *path, TCB *tcb, U8 *sp, U8 *ep, U8 *op );
+	PACKET *rxalloc(TCBPATH_IMPL *path, unsigned maxrx);
+	void (*rxfree)(TCBPATH_IMPL *path, PACKET *pkt);
+	void (*netsendpkt)(TCBPATH_IMPL *path, char *data, char *end);
+	void (*netgotpkt)(TCBPATH_IMPL *path, char *data, char *end);
+	void (*path_dtor)(TCBPATH_IMPL *path);
+</pre>
+<p>
+The cookie handling needs to be handled differently for each type of
+transport because it needs to use the endpoint addresses as part of
+its calculation to protect against cookies being obtained from one
+address and used from another.
+<p>
+An interface may use a special pool of receive buffers. This is
+particularly likely at the lowest levels of a protocol stack, where
+the interface hardware may have a chain of waiting receive buffers and
+automatically fill them via DMA as packets are received. When such
+buffers become available again (i.e. when the data they carry is
+delivered) they may be put directly back on the buffer chain to save
+having an overhead of allocating and freeing receive buffers. There may
+also be separate pools for each interface, to prevent a flood of
+packets on one interface starving all the others. Consequently, when
+a receive buffer is no longer needed, the <code>rxfree</code> method is
+called to free it. This may be done by ASSP itself (e.g. when a packet is
+just an ACK and carries no data), or may be done by the application (e.g.
+when a packet containing data has been received, delivered, and is no longer
+needed).
+<p>
+The details of these methods are:
+<dl>
+<dt><code>int (*validate_cookie)(TCBPATH_IMPL *path, TCB *tcb, MD5_STREAM *msp, U8 *cp, U8 *endp);</code>
+<dd>
+Check a received cookie. <code>tcb</code> is the connection's TCB, <code>msp</code> is an MD5 stream initialised with internal ASSP data,
+<code>cp</code> points to the first octet of the cookie received, and
+<code>endp</code> points to the first octet after the cookie. The return
+value is non-zero to indicate that the cookie is valid, zero if it is
+invalid.
+<dt><code>void (*generate_cookie)(TCBPATH_IMPL *path, TCB *tcb, MD5_STREAM *msp, U8 *sp);</code>
+<dd>
+Generate a cookie in response to a cookie request.
+<code>tcb</code> is the connection's TCB, <code>msp</code> is an MD5
+stream initialised with internal ASSP data, and <code>cp</code>
+points to the first octet of the space to put the generated cookie,
+<dt><code>U8 *(*make_keycode)(TCBPATH_IMPL *path, TCB *tcb, U8 *sp, U8 *ep, U8 *op);</code>
+<dd>
+Make a keycode. <code>sp</code> points to the first octet of the cookie,
+<code>ep</code> points to the first octet after the cookie, and <code>op</code>
+points to the first octet of the space to put the keycode. Returns a pointer
+to the first octet after the keycode.
+<dt><code>PACKET *rxalloc(TCBPATH_IMPL *path, unsigned maxrx);</code>
+<dd>
+Allocate a PACKET for reception. <code>maxrx</code> is the maximum
+number of octets that the buffer must be capable of holding. On return,
+the <code>rawstart</code> field points to the place in the buffer where
+incoming data should be put, and the <code>dataend</code> field points to
+the byte after the last byte allocated for incoming data in the buffer. When
+data is put into the buffer, these fields must be adjusted to indicate
+the amount of data actually present. <code>rawstart</code> must be advanced
+over any header (e.g. Ethernet IP, and UDP headers) and <code>dataend</code>
+must be reduced to point to the first byte after the user data received.
+<dt><code>void (*rxfree)(TCBPATH_IMPL *path, PACKET *pkt);</code>
+<dd>
+Free a receive buffer that was allocated with <code>rxalloc()</code>.
+<dt><code>void (*netsendpkt)(TCBPATH_IMPL *path, char *data, char *end);</code>
+<dd>
+Send a packet. <code>data</code> points to the first octet of data to
+be sent, and <code>end</code> points to the first octet after the data
+to be sent.
+<dt><code>void (*netgotpkt)(TCBPATH_IMPL *path, char *data, char *end);</code>
+<dd>
+Indicate a packet has been received (for collecting statistics).
+<code>data</code> points to the first octet of data received,
+and <code>end</code> points to the first octet after the data
+received.
+<dt><code>void (*path_dtor)(TCBPATH_IMPL *path);</code>
+<dd>
+Destroy the path.
+</dl>
+<h4>TCBPATH - for simulation</h4>
+<p>
+The pathsim implementation of TCBPATH is used in simulation. It
+provides a model of the path between two endpoints.
+<h4>TCBPATH - pathnet</h4>
+<p>
+The pathnet implementation of TCBPATH uses UDP/IP to carry ASSP
+datagrams. Its constructor is:
+<pre>
+void pathnet_init(TCBPATH *tcbpath, TCBPATH_IMPL *pathnet, int sock);
+</pre>
+<p>
+where <code>sock</code> is the UDP socket to use.
+
+
+<h2>Connection types</h2>
+<p>
+This implementation supports multiple types of connection, where a
+connection type is defined by the actions relating to transmission.
+It is defined using a virtual function table:
+
+<pre>
+typedef struct assp_conn ASSP_CONN;
+
+struct assp_tcb_vtbl {
+	int (*sof)(ASSP_CONN *cnx);
+	void (*rx_peek)(ASSP_CONN *cnx, unsigned ofs, PACKET *pkt);
+	void (*deliver)(ASSP_CONN *cnx, PACKET *pkt);
+	void (*eof)(ASSP_CONN *cnx);
+	void (*stopped)(ASSP_CONN *cnx);
+	void (*closed)(ASSP_CONN *cnx);
+	TXPACKET *(*nexttx)(ASSP_CONN *cnx, int *flags);
+	void (*txack)(ASSP_CONN *cnx, PACKET *txp, int acked);
+};
+</pre>
+<p>
+The ASSP user defines one or more of these tables, and the
+<code>ASSP_CONN</code> type can be different for each. This permits,
+for example, unrelated ASSP protocols to be run on different network
+interfaces, or even over different types of network (e.g. IP and IPX).
+<p>
+These functions are called as described here:
+<dl>
+<dt><code>int (*sof)(ASSP_CONN *cnx);</code>
+<dd>
+Invoked at start-of-file. For connections that you initiated (by
+calling
+<code><a href="assp_apiref.html#assp_connect">assp_connect()</a></code>),
+this is called when the connection receives a cookie. In this case
+the return value is ignored. For incoming connections, it is called
+when a valid SYN is received. The return value indicates whether or
+not to accept the connection. Return zero to refuse the connection,
+non-zero to accept it. The <code>cnx</code> parameter is the
+value that you passed to
+<code><a href="assp_apiref.html#assp_tcb_init">assp_tcb_init()</a></code>.
+After this is invoked, data can be delivered (through <code>rx_peek()</code>
+and <code>deliver()</code>), though it does not affect transmission.
+<dt><code>void (*rx_peek)(ASSP_CONN *cnx, unsigned ofs, PACKET *pkt);</code>
+<dd>
+Invoked for each received data packet when it first arrives, regardless
+of whether or not it is the next expected packet. The <code>cnx</code>
+parameter is the value that was passed to
+<code><a href="assp_apiref.html#assp_tcb_init">assp_tcb_init()</a></code>.
+<code>ofs</code> is the number of packets between this one and the one
+due to be reported by <code>deliver()</code>, so it is non-zero when a
+packet arrives out of sequence. <code>pkt</code> points to the packet.
+This method gives an application an opportunity to peek at received data
+before it is delivered. If an application wants to handle all received
+data out of sequence, it can use this method and use invocations of
+<code>deliver()</code> only to free the packets; if it wants to handle
+some data in sequence and some out of sequence, it must maintain its own
+record of which packets have already been handled. On entry to this method,
+the <code>datastart</code> field of the packet points to the first octet of
+user data and the <code>dataend</code> field points to the first octet after
+the user data, and the values of these fields are not used or modified by
+ASSP from this point onwords, so the application can freely modify them
+itself.
+<dt><code>void (*deliver)(ASSP_CONN *cnx, PACKET *pkt);</code>
+<dd>
+Invoked to deliver data in sequence. The <code>cnx</code> parameter is the
+value that was passed to
+<code><a href="assp_apiref.html#assp_tcb_init">assp_tcb_init()</a></code>.
+<code>pkt</code> points to the packet, which is one already reported by
+calling the <code>rx_peek()</code> method. <code>deliver()</code> is
+invoked exactly once for each received packet and is invoked on the
+packets in order of their sequence numbers. When it is invoked,
+ownership of the PACKET passes from ASSP to the application, which must
+call the path <code>rxfree()</code> method when the packet is no longer
+needed.
+<dt><code>void (*eof)(ASSP_CONN *cnx);</code>
+<dd>
+Invoked when end-of-file is reached. The <code>cnx</code> parameter is the
+value that was passed to <code><a href="assp_apiref.html#assp_tcb_init">assp_tcb_init()</a></code>. After this is
+invoked, no further data can be delivered, though it does not affect
+transmission.
+<dt><code>void (*stopped)(ASSP_CONN *cnx);</code>
+<dd>
+Invoked when the connection is no longer capable of transporting data.
+The <code>cnx</code> parameter is the
+value that was passed to
+<code><a href="assp_apiref.html#assp_tcb_init">assp_tcb_init()</a></code>.
+After this is invoked, no further transmission or reception of any type
+can be performed. However the protocol implementation continues to use
+the TCB for its own purposes.
+<dt><code>void (*closed)(ASSP_CONN *cnx);</code>
+<dd>
+Invoked when the implementation has completely finished using the TCB.
+The <code>cnx</code> parameter is the value that was passed to
+<code><a href="assp_apiref.html#assp_tcb_init">assp_tcb_init()</a></code>. When this is invoked, the TCB can be deleted
+or re-used as desired by the application.
+<dt><code>PACKET *(*nexttx)(ASSP_CONN *cnx, int *flags);</code>
+<dd>
+Invoked when the protocol is capable of sending more data. The
+<code>cnx</code> parameter is the value that was passed to
+<code><a href="assp_apiref.html#assp_tcb_init">assp_tcb_init()</a></code>.
+You may either return 0 (the null pointer) to indicate that you do not
+have any data for transmission, or a <code>PACKET</code> which
+contains the next packet of data to be sent. The <code>flags</code>
+parameter is a bitmask of flags associated with the packet. It is
+initialised by ASSP to <code>0</code> or <code>ASSP_F_MUSTACK</code> and
+should be modified as necessary by the <code>nexttx()</code> handler.
+The possible flags are:
+	<dl>
+	<dt><code>ASSP_F_ACKLESS</code>
+	<dd>
+	This data is a response to a higher-level request and the
+	implementation may assume the it can leave the remote host to
+	trigger re-transmissions.
+	<dt><code>ASSP_F_FASTACK</code>
+	<dd>
+	This data is time-critical. An instant acknowledgement is
+	required so that the shortest possible timeout can be used.
+	<dt><code>ASSP_F_EOF</code>
+	<dd>
+	There is no more data to follow after this packet.
+	<dt><code>ASSP_F_MUSTSEND</code>
+	<dd>
+	This flag is provided by ASSP and means that it believes that it
+	must send a packet anyway (e.g. because an acknowledgement must
+	be sent). This can be used to optimise data transfer.
+	</dl>
+<p>
+Note that it is incorrect to specify both <code>ASSP_F_ACKLESS</code>
+and <code>ASSP_F_FASTACK</code>.
+<dt><code>void (*txack)(ASSP_CONN *cnx, PACKET *txp, int acked);</code>
+<dd>
+Invoked when the fate of <code>txp</code> is known. If the packet has been
+acknowledged, then <code>acked</code> is non-zero: otherwise the packet
+may have been lost (e.g. the connection has been reset).
+The <code>cnx</code> parameter is the value that was passed to
+<code><a href="assp_apiref.html#assp_tcb_init">assp_tcb_init()</a></code>.
+</dl>
+
+<h2>Preparing a connection</h2>
+<p>
+The first step in preparing a connection is invoking
+<code><a href="assp_apiref.html#assp_tcb_init">assp_tcb_init()</a></code>. It's prototype is:
+<pre>
+void assp_tcb_init(TCB *tcb, ASSP_CONN *cnx, TIMEQUEUE *tq, TCBPATH *tcbpath, struct assp_tcb_vtbl *vtbl);
+</pre>
+<p>
+where the parameters are:
+<dl>
+<dt><code>TCB *tcb</code>
+<dd>
+The TCB to be prepared
+<dt>
+<dt><code>ASSP_CONN *cnx</code>
+<dd>
+An arbitrary pointer which will be passed to the methods in the
+<code>vtbl</code>.
+<dt><code>TIMEQUEUE *tq</code>
+<dd>
+A timer queue. This is derived from the <code>TIMEQUEUE</code> abstract
+base class.
+<dt><code>TCBPATH *tcbpath</code>
+<dd>
+A path though which ASSP communicates. This is derived from the
+<code>TCBPATH</code> abstract base class.
+<dt><code>struct assp_tcb_vtbl *vtbl</code>
+<dd>
+The vtbl defining the methods which ASSP must invoke for this connection.
+</dl>
+
+<h2>Getting connected as a server</h2>
+<p>
+There are two general strategies for handling multiple
+connections. The first is to predefine a number of TCBs each with a
+particular CID. This has the advantage that incoming connection requests
+are handled just like any other packet: you find the TCB with the
+matching CID value and invoke <code><a href="assp_apiref.html#assp_handle_rx">assp_handle_rx()</a></code> on it.
+Alternatively, you can have just a single TCB devoted to listening. In
+this case, when you cannot find the TCB which corresponds to an incoming
+packet, you make the CID of the listening TCB equal to that of the
+received packet and invoke
+<code><a href="assp_apiref.html#assp_handle_rx">assp_handle_rx()</a></code>.
+When your <code>sof()</code> method is called and you are about to
+return non-zero, this TCB has started handling a connection, so if it is
+you special listening TCB, you need to create a new one for listening.
+This approach allows an arbitrary number of connections to be handled at
+the cost of a bit more processing. You also need to remove or re-use
+TCBs which the protocol has finished using and are reported through your
+<code>closed()</code> method.
+
+<h2>Getting connected as a client</h2>
+<p>
+A client calls <code><a href="assp_apiref.html#assp_connect">assp_connect()</a></code> to initiate a connection to
+a server. When the protocol is ready to make the connection (i.e. when
+it has obtained a cookie from the server), it will call your
+<code>txready()</code> method. If you supply a packet, this will be
+the packet which carries the SYN. Otherwise the implementation will
+allocate its own packet to carry the SYN.
+Obviously this
+will cause your <code>sof()</code> and <code>allsent()</code> methods to
+be invoked when the connection has opened. The <code>txready()</code>
+method will normally be invoked also. This won't happen until the server
+gives us permission to send data which is not guaranteed to happen when
+the connection opens, but it would be very unusual for a server to
+accept a connection if it was not ready to receive data on it.
+<p>
+If the connection cannot be opened, your <code>stopped()</code>
+method will be invoked.
+
+<h2>Operating connections</h2>
+<p>
+Every open connection is waiting for one of three possible events:
+<ul>
+	<li>a timeout
+	<li>reception of a relevant incoming packet
+	<li>data becoming available to send
+</ul>
+<p>
+This means you typically have a loop waiting for these three events.
+You know when the next timeout is due by calling the
+<code>next_timer_mS()</code> method on the TIMEQUEUE being used by the
+open TCBs (you can share a single TIMEQUEUE between any number of
+TCBs). If you have separate threads potentially generating these
+events, then you need to ensure that mutexes are used appropriately to
+protect the shared data (TCB and TIMEQUEUE). You need to hold the same
+mutex whenever you call any API function on the same TCB, or on any
+other TCB which shares the same TIMEQUEUE.
+<p>
+When a received packet arrives, you need to find the appropriate TCB and
+call
+<code><a href="assp_apiref.html#assp_handle_rx">assp_handle_rx()</a></code>
+on that TCB pasing in the received packet. Note that when you do this,
+ownership of the packet is transferred to ASSP, which becomes
+responsible for arranging for it to be freed when no longer needed.
+You can find the CID value in an incoming packet by calling
+<code><a href="assp_apiref.html#assp_rx_cid">assp_rx_cid()</a></code>
+on that packet.
+Note that the protocol may not free the buffer for an arbitrarily long
+time since it may hold sequenced data which must wait for a packet with
+a lower sequence number. Equally, when a received packet is handled,
+this may fill a gap in the sequence numbers triggering the freeing of
+many old packets.
+<p>
+When you have more data to send, you should call
+<code><a href="assp_apiref.html#assp_txready">assp_txready()</a></code> to
+indicate that data is ready. ASSP guarantees that it will call your
+<code>nexttx()</code> method:
+<ul>
+<li>once when the connection is established, either after you call
+<code>assp_connect()</code> or after <code>sof()</code> accepts an
+incoming connection
+<li>once more every time your <code>nexttx</code> method returns a
+packet to be sent
+<li>once after you call <code>assp_txready()</code>
+</ul>
+<p>
+This means that if you have all the data available before the connection (for
+example, the connection has been set up to send a file), you need not call
+<code>assp_txready()</code> at all, as <code>nexttx()</code> will keep
+being called. Otherwise, each time you return 0 from <code>nexttx()</code>
+you must use <code>assp_txready()</code> to resume sending when more data
+becomes available. However, when testing and debugging, note that ASSP
+<strong>may</strong> call <code>nexttx()</code> even if
+<code>assp_txready()</code> has not been used since <code>nexttx()</code>
+last returned a packet.
+
+<h2>Closing connections</h2>
+<h3>Orderly closure</h3>
+<p>
+The orderly closure of a connection starts when you return a packet
+from your <code>nexttx()</code> method with the
+<code>ASSP_F_EOF</code> flag. This packet will carry
+the FIN option, and can carry data just like a normal transmit
+packet.
+
+<p>
+When the remote end sends EOF, this eventually causes your
+<code>eof()</code> method to be invoked. No further data can be received after
+this, but this has no effect on your transmission of data. You can
+keep the connection open arbitrarily long after having seen eof.
+<p>
+When both ends have sent EOF, the connection
+closes. At this time your <code>stopped()</code> method is invoked.
+There is a timer protecting the connection resources for a
+period after this, to prevent any packets from this connection
+interfering with future connections. This means that the TCB remains
+in use by the protocol for a while. When the protocol has finished
+using the tcb, your <code>closed()</code> method is invoked, which
+may invoke
+<code><a href="assp_apiref.html#assp_tcb_dtor">assp_tcb_dtor()</a></code>,
+or initiate re-use of the TCB. If necessary,
+<code><a href="assp_apiref.html#assp_tcb_dtor">assp_tcb_dtor()</a></code>
+will block for a period of time to guarantee that this protection
+timeout is preserved.
+
+<h3>Abrupt closure</h3>
+<p>
+A connection may be abruptly closed. This can occur for several reasons:
+invocation of
+<code><a href="assp_apiref.html#assp_abort">assp_abort()</a></code>,
+persistent failure of the link to the remote
+party, violation of the protocol by the remote party, unrecoverable
+network errors, or notification that the remote party has ceased to
+function. When the closure is locally initiated, a RST packet may be
+sent. In other circumstances (for example, upon detection of the total
+failure of the underlying communications link), no packet is sent.
+In all cases, all data in transit is lost and the connection
+proceeds as if orderly shutdown had occurred, starting with the
+<code>stopped()</code> method being called. Note that abrupt closure may
+result in some packets which were reported by <code>rx_peek</code>
+never being delivered.
+
+<h3>Checking connections (keepalive)</h3>
+<p>
+The ASSP connection relies on an underlying network connection provided
+by a TCBPATH. In addition to failures which cause abrupt connection
+failure, there may be circumstances in which there is a suspicion that
+the connection may have a problem and needs to be tested. The function
+<a href="assp_apiref.html#assp_validate">assp_validate()</a> can be called
+at any time to cause ASSP to ensure that the remote ASSP is provoked
+into sending a response.
+
+<h2>API reference</h2>
+<p>
+A reference manual for the ASSP implementation is provided in
+<a href="assp_apiref.html">API reference for an ASSP implementation</a>
+</body>
+</html>

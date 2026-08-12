@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>pathtest</title>
+</head>
+<body>
+<h1>pathtest</h1>
+<p>
+The <code>pathtest</code> program allows testing of nearly all possible
+combinations of Prosody speech processing which use datafeeds. It allows
+for the interactive construction and control of arbitrary numbers of
+different multi-stage Prosody functions. The Prosody functions which can
+be used are:
+<ul>
+<li>"<code>play</code>" -  Replay
+<li>"<code>rec</code>" -  Record
+<li>"<code>path</code>" -  signal path processing
+<li>"<code>rtcp</code>" -  an RTCP handler
+<li>"<code>rtprx</code>" -  receive from RTP stream
+<li>"<code>rtptx</code>" -  transmit to RTP stream
+<li>"<code>tdmrx</code>" -  receive from TDM timeslot
+<li>"<code>tdmtx</code>" -  transmit to TDM timeslot
+</ul>
+<p>
+Combinations of these are built by commands read from standard input,
+and operations are managed in the background while further commands
+are being read and processed. For each type of operation (for
+example, "<code>play</code>"), there can be an arbitrary number of
+instances running. These are referred to individually, as
+"<code>play[0]</code>", "<code>play[1]</code>", "<code>play[2]</code>"
+etc or by a range of them: "<code>play[2:5]</code>" which refers to
+"<code>play[2]</code>", "<code>play[3]</code>", "<code>play[4]</code>",
+and "<code>play[5]</code>".
+
+<h2>Invocation</h2>
+<p>
+<pre>
+	pathtest [ -i inifile]
+</pre>
+<p>
+If an initialisation file is specified, it is opened and read as if
+its contents has been entered as commands. At the end of it,
+<code>pathtest</code> reads further commands from standard input.
+
+<h2>Commands</h2>
+
+<h3>Status</h3>
+<p>
+Each line of input is interpreted as a command. A blank line causes a
+status summary to be printed. The summary shows the status of each
+instance of the operations in progress. The operations are shown with
+short tags introducing each type of operation:
+<pre>
+P:...play...R:...rec...H:...path...C:...rtcp...Rr:...rtprx...Rt:...rtptx...Tr:...tdmrx...Tt:...tdmtx...
+</pre>
+<p>
+Within each type of operation, the individual instances are shown in
+order (0, 1, 2, ... etc) with one character used for each. A blank
+character indicates that the operation has completed, and trailing
+blanks are only shown once, after which the underlying item is
+destroyed. The significance of other characters depends on the
+operation being performed.
+
+<h3>Help</h3>
+<p>
+The command "<code>?</code>" prints a summary of the commands
+available. When followed by the name of a type of operation, it shows
+the current values for that type of operation.
+
+<h3>Settings</h3>
+<p>
+A command which starts with the name of a type of operation specifies
+the current settings to be used when creating new items of that type or
+adjusting an existing item. For example:
+<pre>
+	play agc 1 speed 150
+</pre>
+<p>
+makes new plays start with agc enabled and a speed of 150%.
+Settings not mentioned are left unchanged. The settings available for
+each type of operation are described separately:
+<ul>
+<li><a href="play.html">pathtest play</a>
+<li><a href="rec.html">pathtest rec</a>
+<li><a href="path.html">pathtest path</a>
+<li><a href="rtcp.html">pathtest rtcp</a>
+<li><a href="rtprx.html">pathtest rtprx</a>
+<li><a href="rtptx.html">pathtest rtptx</a>
+<li><a href="tdmrx.html">pathtest tdmrx</a>
+<li><a href="tdmtx.html">pathtest tdmtx</a>
+</ul>
+
+<h3>Start</h3>
+<p>
+The command "<code>+</code>" followed by a pipeline starts the
+operations in the specified pipeline, connected to one another in
+order. For example,
+<pre>
+	+play | tdmtx ts 64:0
+</pre>
+<p>
+starts a new play, changes the tdmtx settings to use stream 64, timeslot 0,
+starts a tdmtx, and connects the new play to the new tdmtx.
+<p>
+Each part of the pipeline consists of the name of a type of
+operation, and any values of the current settings to change. Settings
+which are not specified use their current values.
+<p>
+The whole pipeline is run on the module currently selected with the
+<a href="mod.html">mod</a> command.
+
+<h3>Stop</h3>
+<p>
+The command "<code>-</code>", followed by a range of running
+operations, stops them. For example,
+<pre>
+	-play[4]
+</pre>
+<p>
+stops the fifth play operation currently running.
+
+<h3>Adjust</h3>
+<p>
+The command "<code>=</code>" followed by the name of an operation
+type, a range, and optional settings makes the specified range of
+currently running operations use the current settings. For example,
+<pre>
+	=play[4] agc 1
+</pre>
+<p>
+changes the current settings to enable agc, and then makes the fifth
+play currently running use the current value of the all play settings,
+including the newly changed agc setting.
+<hr>
+<p>
+This is one of the <a href="../howto_test.html">Prosody test
+programs </a>.

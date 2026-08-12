@@ -1,0 +1,8 @@
+WARNING: AUTOMATICALLY GENERATED FILE - DO NOT EDIT
+
+VERSION: 1
+DESCRIPTION: VoIP gateway supporting G.711 G.726 G.728 GSM FR
+
+Modules: datafeed g726 g728 gsm-fr inchan passthru rtcp vmpplc vmprx vmptx 
+
+Resources: acu+g711+g726+g728+gsmfr 60 tdm_in tdm_out

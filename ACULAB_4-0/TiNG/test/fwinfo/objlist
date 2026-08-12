@@ -1,0 +1,6 @@
+.	fwinfo.o
+Testlib	cardopen.o
+Testlib	errcode_sm.o
+Testlib	error.o
+Testlib	modopen.o
+apilib

@@ -1,0 +1,8 @@
+-TiNGtrace
+a	agc		unsigned
+F	format		string
+m	module		unsigned
+s	speed		signed
+t	timeslot	timeslot
+v	volume		signed
+x	serialnumber	string

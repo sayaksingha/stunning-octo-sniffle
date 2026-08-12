@@ -68,8 +68,13 @@ enum EnumSccpAcuEvents
 {
    PEG_UDT_RCVD_FROM_STACK = 91,
    PEG_UDT_RCVD_FROM_APPL  = 92,
-   PEG_UDT_SENT_TO_STACK = 93,
-   PEG_UDT_SENT_TO_APPL  = 94
+   PEG_UDT_SENT_TO_STACK   = 93,
+   PEG_UDT_SENT_TO_APPL    = 94,
+   /* Ab Comment
+    * Counts every SCCP NOTICE (UDTS) bounce-back received from the network.
+    * A non-zero value here indicates routing failures (dead PC, GTT miss,
+    * subsystem congestion) that were previously invisible. */
+   PEG_NOTICE_RCVD          = 95
 };
 
 #endif

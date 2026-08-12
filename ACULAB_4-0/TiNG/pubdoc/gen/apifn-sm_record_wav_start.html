@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody WAV FILE: API: sm_record_wav_start</title>
+</head>
+<body>
+<h1>Prosody WAV FILE: API: sm_record_wav_start</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_record_wav_start(char *<a href="#field-filename">filename</a>, <a href="../apitype.html#type-SM_FILE_RECORD_PARMS">SM_FILE_RECORD_PARMS</a> *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-filename">filename</a>
+<dd>
+The name of the file in which to put the recorded data.
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure as for
+<a href="apifn-sm_record_file_start.html">sm_record_file_start()</a>.
+</dl>
+<h2>Description</h2>
+<p>
+Creates a file with the given name, allocates space in the file by writing
+blank WAV file header, sets up
+<a href="apifn-sm_record_file_start.html#field-fd">fd</a>
+in structure pointed at by
+<a class=pref href="#field-file_parms">file_parms</a>
+and then invokes
+<a href="apifn-sm_record_file_start.html">sm_record_file_start()</a>.
+<p>
+The other elements of the
+<a href="apifn-sm_record_file_start.html#field-record_parms">record_parms</a>.
+structure must be set up
+as for
+<a href="apifn-sm_record_file_start.html">sm_record_file_start()</a>.
+The setting of the
+<a href="apifn-sm_record_start.html#field-type">record_parms.type</a>,
+parameter will determine type of WAV file created.
+<p>
+Note it is the responsibility of the application to close the
+file following record completion or abort using
+<a href="apifn-sm_record_wav_close.html">sm_record_wav_close()</a>.
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem writing to file</ul>
+<hr>
+<p>This function is part of the <a href="../highapi_wavfile.html">Prosody WAV FILE API</a>.
+</body>
+</html>

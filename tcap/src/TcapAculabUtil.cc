@@ -249,17 +249,19 @@ void  AculabUtil::ShowAddressIndicator( UINT8 & lAddrInd)
 
    }
 
-   T(gTrace,printf("*---------------------------------------------------------------*\n"););
-   T(gTrace,printf("|   Bit-7|           Bit-6| Bit-5-4-3-2|       Bit-1|      Bit-0|\n"););
-   T(gTrace,printf("|Reserved|RoutingIndicator|GtInidicator|SsnIndicator|PcIndicator|\n"););
-   T(gTrace,printf("|%8d|%16d|%9d%d%d%d|%12d|%11d|\n",
-            lReserve,lRtInd,lGtInd4,lGtInd3,lGtInd2,lGtInd1,lSsnInd,lPcInd);); 
-   if(lRtInd == 0)
-   {   
-      T(gTrace,printf("|---------------------------------------------------------------|\n"););
-      T(gTrace,printf("|%-63s|\n",lText););
-   }
-   T(gTrace,printf("*---------------------------------------------------------------*\n"););
+   T(gTrace, {
+      printf("*---------------------------------------------------------------*\n");
+      printf("|   Bit-7|           Bit-6| Bit-5-4-3-2|       Bit-1|      Bit-0|\n");
+      printf("|Reserved|RoutingIndicator|GtInidicator|SsnIndicator|PcIndicator|\n");
+      printf("|%8d|%16d|%9d%d%d%d|%12d|%11d|\n",
+               lReserve,lRtInd,lGtInd4,lGtInd3,lGtInd2,lGtInd1,lSsnInd,lPcInd);
+      if(lRtInd == 0)
+      {   
+         printf("|---------------------------------------------------------------|\n");
+         printf("|%-63s|\n",lText);
+      }
+      printf("*---------------------------------------------------------------*\n");
+   });
 
 
 }
@@ -273,8 +275,10 @@ void  AculabUtil::ShowAddressIndicator( UINT8 & lAddrInd)
 //-------------------------------------------------------------------------------
 BOOLEAN  AculabUtil::ErrReportSccp(acu_tcap_msg_t  *msg)
 {
-   gTrace.PrintTraceTimeStamp("Y");
-   printf("%s:%s ACU_TCAP_MSG_NOTICE ret_opt:%d %s\n",gProcessName,RED,msg->tm_ret_opt,UNDO);
+   T(gTrace, {
+      gTrace.PrintTraceTimeStamp("Y");
+      printf("%s:%s ACU_TCAP_MSG_NOTICE ret_opt:%d %s\n",gProcessName,RED,msg->tm_ret_opt,UNDO);
+   });
    return true;
 }
 //-------------------------------------------------------------------------------
@@ -294,65 +298,67 @@ BOOLEAN AculabUtil::PrintSccpStatus(acu_tcap_msg_t *msg)
    }
 
 
-   gTrace.PrintTraceTimeStamp("Y");
-   printf("%s:%s %s host %c:PC:%d",
-         gProcessName,BLUE,msg->tm_msg_type == ACU_TCAP_MSG_USER_STATUS ? "USER" : "SP",
-         sccp_status->tsp_host, sccp_status->tsp_pc);
+   T(gTrace, {
+      gTrace.PrintTraceTimeStamp("Y");
+      printf("%s:%s %s host %c:PC:%d",
+            gProcessName,BLUE,msg->tm_msg_type == ACU_TCAP_MSG_USER_STATUS ? "USER" : "SP",
+            sccp_status->tsp_host, sccp_status->tsp_pc);
 
 
-   if (msg->tm_msg_type == ACU_TCAP_MSG_USER_STATUS) 
-   {
-      printf(" SSN:%d", sccp_status->tsp_ssn);
-      switch (sccp_status->tsp_user_status) {
-         case ACU_SCCP_UOS:
-            printf(", User out of service");
+      if (msg->tm_msg_type == ACU_TCAP_MSG_USER_STATUS) 
+      {
+         printf(" SSN:%d", sccp_status->tsp_ssn);
+         switch (sccp_status->tsp_user_status) {
+            case ACU_SCCP_UOS:
+               printf(", User out of service");
+               break;
+            case ACU_SCCP_UIS:
+               printf(", User in service");
+               break;
+            default:
+               printf(", User state %d", sccp_status->tsp_user_status);
+               break;
+         }
+      }
+
+      switch (sccp_status->tsp_sp_status) 
+      {
+         case ACU_SCCP_SP_PROHIBIT:
+            printf(RED ", Signalling point prohibited" UNDO);
             break;
-         case ACU_SCCP_UIS:
-            printf(", User in service");
+         case ACU_SCCP_SP_ACCESS:
+            printf(", Signalling point accessible");
             break;
          default:
-            printf(", User state %d", sccp_status->tsp_user_status);
+            printf(", Signalling point state %d", sccp_status->tsp_sp_status);
             break;
       }
-   }
 
-   switch (sccp_status->tsp_sp_status) 
-   {
-      case ACU_SCCP_SP_PROHIBIT:
-         printf(RED ", Signalling point prohibited" UNDO);
-         break;
-      case ACU_SCCP_SP_ACCESS:
-         printf(", Signalling point accessible");
-         break;
-      default:
-         printf(", Signalling point state %d", sccp_status->tsp_sp_status);
-         break;
-   }
-
-   switch (sccp_status->tsp_sccp_status) {
-      case ACU_SCCP_REM_SCCP_PROHIBIT:
-         printf(RED ", Remote SCCP prohibited" UNDO);
-         break;
-      case ACU_SCCP_REM_SCCP_UNAVAIL:
-         printf(RED ", Remote SCCP unavailable" UNDO);
-         break;
-      case ACU_SCCP_REM_SCCP_UNEQUIP:
-         printf(RED ", Remote SCCP unequipped" UNDO);
-         break;
-      case ACU_SCCP_REM_SCCP_INACCESS:
-         printf(RED ", Remote SCCP inaccessible" UNDO);
-         break;
-      case ACU_SCCP_REM_SCCP_CONGEST:
-         printf(RED ", Remote SCCP congested" UNDO);
-         break;
-      case ACU_SCCP_REM_SCCP_AVAIL:
-         printf(", Remote SCCP available");
-         break;
-      default:
-         printf(", Remote SCCP state %d", sccp_status->tsp_sccp_status);
-         break;
-   }
-   printf("%s\n",UNDO);
+      switch (sccp_status->tsp_sccp_status) {
+         case ACU_SCCP_REM_SCCP_PROHIBIT:
+            printf(RED ", Remote SCCP prohibited" UNDO);
+            break;
+         case ACU_SCCP_REM_SCCP_UNAVAIL:
+            printf(RED ", Remote SCCP unavailable" UNDO);
+            break;
+         case ACU_SCCP_REM_SCCP_UNEQUIP:
+            printf(RED ", Remote SCCP unequipped" UNDO);
+            break;
+         case ACU_SCCP_REM_SCCP_INACCESS:
+            printf(RED ", Remote SCCP inaccessible" UNDO);
+            break;
+         case ACU_SCCP_REM_SCCP_CONGEST:
+            printf(RED ", Remote SCCP congested" UNDO);
+            break;
+         case ACU_SCCP_REM_SCCP_AVAIL:
+            printf(", Remote SCCP available");
+            break;
+         default:
+            printf(", Remote SCCP state %d", sccp_status->tsp_sccp_status);
+            break;
+      }
+      printf("%s\n",UNDO);
+   });
 
    return true;
 }
@@ -365,11 +371,13 @@ BOOLEAN AculabUtil::PrintSccpStatus(acu_tcap_msg_t *msg)
 //-------------------------------------------------------------------------------
 BOOLEAN AculabUtil::DispOctetString(char *string)
 {
-   int i = 0;
-   int len = strlen(string);
-   for (; i < len; i++)
-      printf(" %2.2x", string[i]);
-   putchar('\n');
+   T(gTrace, {
+      int i = 0;
+      int len = strlen(string);
+      for (; i < len; i++)
+         printf(" %2.2x", string[i]);
+      putchar('\n');
+   });
 
    return true;
 }
@@ -397,24 +405,26 @@ void AculabUtil::ReturnAculabErrStr(int lErrCode,TEXT *lErrText)
 //-------------------------------------------------------------------------------
 void AculabUtil::DisplayAddress (const TCAPAddress * address,TEXT *lText)
 {
-   if (NULL == address)
+   if (NULL == address || address->addressIndicator == 0)
    {
-      printf("%s:%sAddress: Absent\n",gProcessName,lText);
+      T(gTrace, printf("%s:%sAddress: Absent\n",gProcessName,lText););
       return;
    }
 
-   printf("%s: %sAddress: SSN:%d PC:%d NOA:%d TT:%d NP:%d ES:%d\n",
-         gProcessName,lText,
-         address->subsystemNumber,address->pointCode,
-         address->natureOfAddress,address->translationType,
-         address->numberingPlan,address->encodingScheme);
-   if(address->numberOfDigits != 0)
-   {   
-      printf("%s: %sAddress Digits:",gProcessName,lText);
-      for (int i = 0; i <  address->numberOfDigits; i++)
-         printf("%X", address->digits[i]);
-      printf("\n");
-   }    
+   T(gTrace, {
+      printf("%s: %sAddress: SSN:%d PC:%d NOA:%d TT:%d NP:%d ES:%d\n",
+            gProcessName,lText,
+            address->subsystemNumber,address->pointCode,
+            address->natureOfAddress,address->translationType,
+            address->numberingPlan,address->encodingScheme);
+      if(address->numberOfDigits != 0)
+      {   
+         printf("%s: %sAddress Digits:",gProcessName,lText);
+         for (int i = 0; i <  address->numberOfDigits; i++)
+            printf("%X", address->digits[i]);
+         printf("\n");
+      }    
+   });
 }
 
 //-------------------------------------------------------------------------------
@@ -427,11 +437,11 @@ void  AculabUtil::DisplayUserInformation (const TcapUserInfoPdu * param)
 {
    if (NULL == param)
    {
-      printf("%s: UserInformation:<Absent>\n",gProcessName);
+      T(gTrace, printf("%s: UserInformation:<Absent>\n",gProcessName););
       return;
    }
 
-   printf("%s: UserInformation:",gProcessName);
+   T(gTrace, printf("%s: UserInformation:",gProcessName););
    PrintHex (param->numberOfBytes, param->array,
          SS7_MAX_USER_INFO_PDU_LEN);
 }
@@ -445,15 +455,17 @@ void  AculabUtil::DisplayUserInformation (const TcapUserInfoPdu * param)
 void AculabUtil::PrintHex (int numberOfBytes, const UINT8 * data,
       int arrayLen)
 {
-   printf("%s: Number Of Bytes = %d\n", gProcessName, numberOfBytes);
+   T(gTrace, {
+      printf("%s: Number Of Bytes = %d\n", gProcessName, numberOfBytes);
 
-   for (int i = 0; i < numberOfBytes && i < arrayLen;)
-   {
-      printf("      ");
-      for (int j = 0; j < 16 && i < numberOfBytes && i < MAX_TDARRAY_BYTES; j++, i++)
-         printf("%02X ", data[i]);
-      printf("\n");
-   }
+      for (int i = 0; i < numberOfBytes && i < arrayLen;)
+      {
+         printf("      ");
+         for (int j = 0; j < 16 && i < numberOfBytes && i < MAX_TDARRAY_BYTES; j++, i++)
+            printf("%02X ", data[i]);
+         printf("\n");
+      }
+   });
 }
 
 //-------------------------------------------------------------------------------
@@ -466,11 +478,11 @@ void AculabUtil::DisplayApplicationContext (const TDArray * param)
 {
    if (NULL == param)
    {
-      printf("%s: ApplicationContext:<Absent>\n",gProcessName);
+      T(gTrace, printf("%s: ApplicationContext:<Absent>\n",gProcessName););
       return;
    }
 
-   printf("%s: ApplicationContext: ",gProcessName);
+   T(gTrace, printf("%s: ApplicationContext: ",gProcessName););
    PrintHex (param->numberOfBytes, param->array);
 }
 
@@ -611,9 +623,9 @@ void AculabUtil::HandleSignal (int sig)
             break;
          }
 
-      case 30:
+         case 30:
          {
-            printf("Received signal to thread :%lu\n", pthread_self());
+            T(gTrace, printf("Received signal to thread :%lu\n", pthread_self()););
             pthread_exit(NULL);
          }
          break;
@@ -625,7 +637,7 @@ void AculabUtil::HandleSignal (int sig)
                   mSignal);
          }
    }
-   printf ("%s:\33[31m %s\33[0m\n", gProcessName, lLogText);
+   TERR(gTrace, printf ("%s:\33[31m %s\33[0m\n", gProcessName, lLogText););
    gLog.GenerateLog (GSYS13, lLogText, 99);
    signal (sig, HandleSignal);
 
@@ -672,6 +684,23 @@ TEXT * AculabUtil::ConvertTcapDlgTypeToStr (EnumTcapDlg & dlgType)
 
       case TCAP_BEGIN_CONTINUE:
          return "BEGIN_CONTINUE";
+      
+      // ANSI dialogue types
+      case TCAP_ANSI_QUERY_WITH_PERMISSION:
+         return "QUERY_WITH_PERMISSION";
+      case TCAP_ANSI_QUERY_WITHOUT_PERMISSION:
+         return "QUERY_WITHOUT_PERMISSION";
+      case TCAP_ANSI_RESPONSE:
+         return "ANSI_RESPONSE";
+      case TCAP_ANSI_CONVERSATION_WITH_PERMISSION:
+         return "CONVERSATION_WITH_PERMISSION";
+      case TCAP_ANSI_CONVERSATION_WITHOUT_PERMISSION:
+         return "CONVERSATION_WITHOUT_PERMISSION";
+      case TCAP_ANSI_ABORT:
+         return "ANSI_ABORT";
+      case TCAP_ANSI_UNI:
+         return "ANSI_UNI";
+
 
       default:
          return "UNKNOWN";

@@ -1,0 +1,15 @@
+#!/bin/sh
+process=$1
+shift
+while :;
+do
+	x=`ps -eo pid,comm | awk "/$process/"' { print $1}'`
+	if test x$x != x
+	then
+		echo "Watching $x:"
+		../diag/microacct/gen-SOL_32/microacct /proc/$x/ctl
+		../diag/showtime/gen-SOL_32/showtime $* </proc/$x/usage
+	else
+		sleep 1
+	fi
+done

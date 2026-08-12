@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody high level conferencing: API: sm_conference_delete</title>
+</head>
+<body>
+<h1>Prosody high level conferencing: API: sm_conference_delete</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+void sm_conference_delete(<a href="../apitype.html#type-tSMConference">tSMConference</a> <a href="#field-conf">conf</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-conf">conf</a>
+<dd>
+A conference created with
+<a href="apifn-sm_conference_create.html">sm_conference_create()</a>.
+</dl>
+<h2>Description</h2>
+<p>
+Removes all remaining participants from a conference and releases all
+resources which were being used by the conference. As soon as this
+function has been invoked, the conference becomes invalid and any
+further attempt to refer to it is an error.
+<hr>
+<p>This function is part of the <a href="../highapi_conf.html">Prosody high level conferencing API</a>.
+</body>
+</html>

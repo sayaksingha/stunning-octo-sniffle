@@ -1,0 +1,12 @@
+-TiNGtrace
+A	anonymous	bool
+a	sastype		unsigned
+D	digits		string
+h	onhook		bool
+m	module		unsigned
+N	name		string
+O	out_of_area	bool
+s	sdmf		bool
+t	timeslot	timeslot
+T	time		string
+x	serialnumber	string

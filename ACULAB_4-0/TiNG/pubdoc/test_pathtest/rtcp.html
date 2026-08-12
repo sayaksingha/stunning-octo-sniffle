@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>pathtest rtcp</title>
+</head>
+<body>
+<h1>pathtest rtcp</h1>
+
+<h2>Status codes</h2>
+<p>
+The status codes printed by rtcp operations are:
+<table>
+<tr><th><code>.</code><td>Idle
+<tr><th><code>*</code><td>Got data
+<tr><th><code>-</code><td>Completed
+</table>
+
+<h2>Settings</h2>
+<p>
+These are the settings used by <code>rtcp</code>:
+
+<h3><code>bw</code> V</h3>
+<p>
+Specifies the <code>rtcp_bw</code> value to use (from RFC 3550).
+
+<h3><code>file</code> NAME</h3>
+<p>
+Specifies a file into which the data read from the rtcp operation will be
+saved. Each rtcp writes to its file independently, so if more than one
+used the same file, they will overwrite each other's data. The name may
+be specified as the value zero, to indicate that no file is to be used,
+or as a string in double-quotes ("). A quoted string is interpreted as
+in C.
+
+<h3><code>reports</code> V</h3>
+<p>
+Specifies which reports to enable.
+
+<h3><code>rxbw</code> V</h3>
+<p>
+Specifies the <code>b=RR;</code> value to use (from RFC 3556).
+
+<h3><code>sdes</code> [N=]"...",[N=]"...",...</h3>
+<p>
+Specifies SDES items. The value <code>N</code> gives the item number, and
+the string contains the item value. The string is interpreted as in C. The
+value <code>N</code> defaults to zero at the start of the <code>sdes</code>
+option, and thereafter defaults to one more than the previous. For example,
+<code>sdes 3="hello","world"</code> sets SDES item 3 to the five characters
+<code>hello</code> and SDES item 4 to the five characters <code>world</code>.
+
+<h3><code>txbw</code> V</h3>
+<p>
+Specifies the <code>b=RT;</code> value to use (from RFC 3556).
+<hr>
+<p>
+This is a command understood by the <a href="pathtest.html">pathtest</a>
+test program.

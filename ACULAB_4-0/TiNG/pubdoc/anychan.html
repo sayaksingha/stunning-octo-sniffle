@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody TiNG: any channel operation</title>
+</head>
+<body>
+<h1>Prosody TiNG: any channel operation</h1>
+<p>
+There are two models for the way an application can handle many
+channels. For a particular type of event (i.e. read, write, or
+recognition), you can allocate one event per channel, wait on a set of
+events, and when one of these events is signalled this tells you which
+channel needs attention. This is 'per channel' event handling.
+Alternatively, you can allocate a single event of that type for all
+channels, and when this event is signalled, find out which channel needs
+attention. This is 'any channel' event handling. This document explains
+how to use 'any channel' event handling.
+<p>
+Note, however, that per channel event handling has better performance. 
+The per channel method can avoid some overhead because when it wakes 
+up after waiting on a set of events, the wait operation indicates which
+event needs attention. While the wait operation used on an 'any
+channel' event obviously cannot provide this indication.
+<p>
+Additionally, the 'any channel' model is only supported for a limited range 
+of operations - replay, recording, and tone detection. For example, none of
+the facilities provided by the data communications API support 'any
+channel' operation. Consequently, it should not be used in the design of 
+new applications.
+<p>
+Since there are three completely separate types of event: read,
+write, and recognition events; you can freely use 'any channel'
+operation for one of these while using per-channel operation with
+another - even on the same channel. For example, you might use 'any
+channel' operation for read and write events, but per-channel operation
+for recognition.
+
+<h2>Initialisation</h2>
+<p>
+You create an 'any channel' event using
+<a href="gen/apifn-smd_ev_create.html">smd_ev_create()</a> like this:
+<pre>
+tSMEventId anychanev;
+int err = smd_ev_create(&amp;anychanev, kSMNullChannelId, typ, kSMAnyChannelEvent);
+</pre>
+<p>
+where <code>typ</code> is the type of event (read, write, or
+recognition), and <code>anychanev</code> holds the newly created
+any-channel event.
+<p>
+Then you must invoke
+<a href="gen/apifn-sm_channel_set_event.html">sm_channel_set_event()</a>
+with the new event like
+this:
+<pre>
+SM_CHANNEL_SET_EVENT_PARMS ep;
+int err;
+memset(&amp;ep, 0, sizeof(ep));
+ep.channel = kSMNullChannelId;
+ep.event_type = typ;
+ep.issue_events = kSMAnyChannelEvent;
+ep.event = anychanev;
+err = sm_channel_set_event(&amp;ep);
+</pre>
+<p>
+Now you must associate the event with each channel that you want to
+trigger it. This is usually done when you allocate the channel:
+<pre>
+SM_CHANNEL_SET_EVENT_PARMS ep;
+int err;
+SM_CHANNEL_ALLOC_PLACED_PARMS ap;
+memset(&amp;ap, 0, sizeof(ap));
+	// set up type/module/caps_mask
+err = sm_channel_alloc_placed(&amp;ap);
+if (err) ...
+memset(&amp;ep, 0, sizeof(ep));
+ep.channel = ap.channel;
+ep.event_type = typ;
+ep.issue_events = kSMAnyChannelEvent;
+ep.event = anychanev;
+err = sm_channel_set_event(&amp;ep);
+</pre>
+
+<h2>Ongoing usage</h2>
+<p>
+After setting up channels, the ongoing use of them may look like
+this:
+<pre>
+for (;;) {
+	int err = smd_ev_wait(anychanev);
+	if (err) ...
+	for (;;) {	// keep getting channels until none remain ready
+		SM_REPLAY_STATUS_PARMS rp;
+		memset(&amp;rp, 0, sizeof(rp));
+		rp.channel = kSMNullChannelId;
+		err = sm_replay_status(&amp;rp);
+		if (err == ERR_SM_NO_SUCH_CHANNEL) break;
+		if (err) ...
+		handle_replay(rp.channel, rp.status);
+	}
+}
+</pre>
+<p>
+This example is for a write (replay) event, and it doesn't show how
+new channels might be allocated or existing ones might be released. In a
+real application channel allocation and release would probably be
+triggered by other events, so you would be waiting on one of several
+events and only performing the Prosody functions when its event is
+signalled.
+<p>
+When an error is returned, the reported channel is the channel that 
+returned the error. Under some circumstances no channel is reported. This 
+means that the 'any channel' framework is reporting an error condition, 
+such as a failure to allocate memory.
+
+<h2>Finishing off</h2>
+<p>
+When you want to stop a channel triggering the 'any channel' event,
+you can do it like this:
+<pre>
+SM_CHANNEL_SET_EVENT_PARMS ep;
+int err;
+memset(&amp;ep, 0, sizeof(ep));
+ep.channel = ap.channel;
+ep.event_type = typ;
+ep.issue_events = kSMChannelNoEvent;
+err = sm_channel_set_event(&amp;ep);
+if (err) ...
+</pre>
+<p>
+When you have finished using the 'any channel' event, you free it
+like this:
+<pre>
+SM_CHANNEL_SET_EVENT_PARMS ep;
+int err;
+memset(&amp;ep, 0, sizeof(ep));
+ep.channel = kSMNullChannelId;
+ep.event_type = typ;
+ep.issue_events = kSMChannelNoEvent;
+ep.event = anychanev;
+err = sm_channel_set_event(&amp;ep);
+if (err) ...
+err = smd_ev_free(anychanev);
+if (err) ...
+</pre>
+
+
+
+</body>
+</html>

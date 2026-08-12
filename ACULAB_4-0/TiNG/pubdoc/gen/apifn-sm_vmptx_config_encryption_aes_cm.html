@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_encryption_aes_cm</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_encryption_aes_cm</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_encryption_aes_cm(struct sm_vmptx_config_encryption_aes_cm_parms *<a href="#field-pp">pp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-pp">*pp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_config_encryption_aes_cm_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-keylen">keylen</a>;						/* in */
+	char *<a href="#field-key">key</a>;						/* in */
+} SM_VMPTX_CONFIG_ENCRYPTION_AES_CM_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a VMP[tx] to use AES-CM encryption, as defined in
+<a href="http://www.ietf.org/rfc/rfc3711.txt">IETF RFC 3711</a>.
+<p>
+This requires the module
+<a href="softmodindex.html#securertp">securertp</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to configure
+
+<dt><a name="field-keylen">keylen</a><dd>The length of the encryption key in octets.
+
+<dt><a name="field-key">key</a><dd>The encryption key.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody Guide - how to use datafeeds</title>
+</head>
+<body>
+<h1>Prosody Guide - how to use datafeeds</h1>
+<p>
+There is a need to transfer data between various end-points within a single Prosody
+media processor. A datafeed is an object which represents the flow of data
+between two such end-points. There are two broad classifications for end-points
+in the Prosody API, data sources and data sinks. A datafeed is obtained from a
+data source end-point using the "get" API call, and the data source writes data
+into the datafeed. Zero or more data sink end-points may be connected to a 
+datafeed and, once connected, are able to read data that was placed there by
+the data source. To connect a data sink end-point to a datafeed there is a
+"connect" API call. Datafeed connections can only be made between objects 
+allocated on the same tSMModuleId.
+<p>
+<h2>Data Sources</h2>
+<p>
+<dl>
+	<dt>TDM[rx] 
+	<dd>An object that receives data from a TDM timeslot and writes it to a
+	datafeed
+	<dt>Voice Media Processor[rx] (VMP[rx])
+	<dd>An object that receives data from an RTP stream and writes it to
+       	a datafeed
+	<dt>Output Channel (includes half duplex and full duplex channels)
+	<dd>An object that can write output data to a datafeed from operations
+	such as replaying and tone generation. 
+	<dt>T.38 Fax Media Processor[rx] (FMP[rx])
+	<dd>An object that receives T.38 data from a packet stream and writes it to
+       	a datafeed
+	<dt>A signal processing path
+	<dd>An object that writes to a datafeed the result of processing the data it
+		has read from a datafeed (hence, it is also a data sink).
+</dl>
+<p>
+<h2>Data Sinks</h2>
+<p>
+<dl>
+	<dt>TDM[tx]
+	<dd>An object that reads data from a datafeed and writes it to a TDM
+	timeslot
+	<dt>VMP[tx]
+	<dd>An object that reads data from a datafeed and writes it to an RTP
+       	stream
+	<dt>Input Channel (includes half duplex and full duplex channels)
+	<dd>An object that can read incoming data from a datafeed, through 
+		operations such as recording and signal categorisation
+	<dt>T.38 Fax Media Processor[tx] (FMP[tx])
+	<dd>An object that reads T.38 data from a datafeed and writes it a packet 
+		stream.
+	<dt>A signal processing path
+	<dd>An object that reads data from a datafeed for processing and writes the 
+		result to a datafeed (hence, is also a data source).
+</dl>
+<p>
+<h2>General Rules for datafeeds</h2>
+<p>
+<ul>
+	<li>Each data source can write only to its own datafeed
+	<li>A datafeed is only valid for the lifetime of the data source from
+	which it was obtained.
+	<li>A datafeed can be read by multiple data sinks
+	<li>Data only flows in one direction - from data source to datafeed to
+	data sinks.
+	<li>A datafeed can be disconnected from a data sink by connecting 
+	kSMNullDatafeedId to the data sink.
+</ul>
+<p>
+NOTE: The current implementation does not support the connection of a datafeed
+from a TDM[rx] to a TDM[tx]. In order to connect two TDM timeslots, it is 
+necessary to use the switch driver API. Additionally, if a datafeed is connected 
+to more than one TDM[tx] simultaneously the data is only output to the last TDM[tx]
+to be connected.
+
+<h2>Connecting to TDM</h2>
+<p>
+TDM data is passed between a Prosody processor and the outside world
+through switch connections. Switch connections are controlled by the
+Aculab switch driver. The switch driver controls a switch matrix, to
+which various devices are connected:
+<p>
+<img src="gen/switch.png" alt="diagram of switch matrix connections">
+<p>
+This shows a portion of the switching on a Prosody X PCI card. The
+switch matrix is connected to the external H.100 bus and to Aculab
+devices on the card. Here is a more detailed view of the way that
+Prosody connects to the switch matrix:
+<p>
+<img src="gen/proswitchdf.png" alt="diagram of connection between Prosody and switch matrix">
+<p>
+This shows an example of a TDM[tx] which has its output going to a
+timeslot on the switch matrix labelled <code>64:1</code> and a TDM[rx]
+which has its input coming from a timeslot on the switch matrix labelled
+<code>65:30</code>. However you can see that there
+are two timeslots labelled <code>64:1</code> and two labelled
+<code>65:30</code>. It is important not to confuse them as they are
+different and, as far as Prosody is concerned, totally unrelated. When
+you use
+<a href="gen/apifn-sm_tdmtx_create.html">sm_tdmtx_create()</a>
+you specify a timeslot <strong>from</strong> a TDM[tx]
+<strong>to</strong> the switch matrix. To connect this through
+the switch matrix using the switch API function
+<code>sw_set_output()</code> you need to specify the parameters:
+<pre>
+	p.ist = 64;
+	p.its = 1;
+	p.mode = CONNECT_MODE;
+	p.ost = destination_stream;
+	p.ots = destination_timeslot;
+</pre>
+<p>
+Similarly, the stream and timeslot you specify when creating a TDM[rx]
+with
+<a href="gen/apifn-sm_tdmrx_create.html">sm_tdmrx_create()</a>
+should be put in the <code>ost</code> and <code>ots</code> field of
+the parameter structure passed to <code>sw_set_output()</code>.
+<p>
+For example, if you want to connect the above TDM[rx] so that
+it can receives the output from the above TDM[tx], you would use:
+<pre>
+	OUTPUT_PARMS p;
+	INIT_ACU_STRUCT(&amp;p);
+	p.ist = 64;
+	p.its = 1;
+	p.mode = CONNECT_MODE;
+	p.ost = 65;
+	p.ots = 30;
+	err = sw_set_output(swdrvr, &amp;p);
+	if (err) ...	// handle error
+</pre>
+<p>
+Note that unlike the pair of input stream and output stream timeslots associated
+with a timeslot designation <code>64:2</code>, a timeslot on an H.100 bus stream
+refers to the same physical timeslot irrespective of whether it is referenced as
+an input or an output to a connection.  Care must be taken so that no more than 
+one card outputs to a particular H.100 timeslot at once otherwise data corruption
+and garbled signals will occur. 
+<p>
+See the documentation for the switch driver for more details about
+switching, including the streams available on each Aculab card.
+
+<h2>Selecting timeslots to use</h2>
+<p>
+There are many ways to arrange timeslot usage. Generally it is a very
+good idea to use as simple an arrangement as the application
+architecture allows. For example, if you expect to use Prosody X PCI
+cards with four trunks per card and two Prosody processors, then a
+very common arrangement is:
+<table border>
+<tr><th colspan=2>Prosody<th colspan=2>Line interface
+<tr><th>Processor<th>stream<th>Port Number<th>stream
+<tr><td rowspan=2>0<td>64<td>0<td>32
+<tr><td>65<td>1<td>33
+<tr><td rowspan=2>1<td>66<td>2<td>34
+<tr><td>67<td>3<td>35
+</table>
+<p>
+This type of fixed arrangement is very useful when debugging because
+it is not necessary to study detailed log files to determine how the
+data is routed through a system. It also avoids confusion when using
+the features, such as echo cancellation and conferencing, which use
+more than one input and output timeslot.
+<p>
+With one minor exception, Prosody imposes no restrictions on which
+timeslots can be used for which operations. The exception is that you
+cannot have both A-law and mu-law timeslots on a single stream. This
+does not mean that you cannot play A-law and mu-law encoded files
+simultaneously - it means that the encoding on the timeslots (i.e. as
+passed through the switch matrix to the outside world) must not be
+different. This situation is very unusual since only international
+gateways normally have to deal with both A-law and mu-law trunks.
+
+<h2>Play a prompt to a VoIP call</h2>
+<p>
+In order to play a prompt you need to configure an output channel and start a
+replay job, see <a href="howto_play.html">Prosody Guide - how to play data
+</a> for examples of how to do this. The data from the replay will be written to
+the datafeed that belongs to the output channel. To gain access to the replay 
+data you must call <a href="gen/apifn-sm_channel_get_datafeed.html">sm_channel_get_datafeed()</a>.
+A VoIP call streams RTP data over an IP network and, in the Prosody API, this 
+task is managed by a VMP[tx].  You can connect the VMP[tx] to the output
+channel's datafeed by calling
+<a href="gen/apifn-sm_vmptx_datafeed_connect.html">sm_vmptx_datafeed_connect()</a>.
+In this configuration, data from the replay will be read from the datafeed by
+the VMP[tx] and sent as RTP packets over the IP network.
+
+<h2>Record a signal from a TDM timeslot</h2>
+<p>
+An incoming signal can be read from the TDM using a TDM[rx] object, see 
+<a href="gen/apifn-sm_tdmrx_create.html">sm_tdmrx_create()</a>. To obtain 
+the datafeed belonging to a TDM[rx] you must call
+<a href="gen/apifn-sm_tdmrx_get_datafeed.html">sm_tdmrx_get_datafeed()</a>. You
+require an appropriately configured input channel to record the data from the 
+TDM[rx]'s datafeed, see
+<a href="howto_record.html">Prosody guide - How to record data</a> for how to
+set up a record job. Once the input channel is connected to the datafeed using
+<a href="gen/apifn-sm_channel_datafeed_connect.html">sm_channel_datafeed_connect()</a>
+all data arriving on the TDM timeslot will be recorded by the input channel.
+
+<h2>A simple VoIP -&gt; TDM gateway</h2>
+<p>
+In a VoIP -&gt; TDM gateway, audio data from a VMP[rx] needs to reach a TDM
+timeslot so that it can be switched to a call, see the switch and call API 
+guides. In order to provide two-way audio, the incoming audio from a call must
+be switched to a TDM timeslot so that it can be passed to a VMP[tx].
+<p>
+A very simple gateway, one that requires no additional signal processing, could
+be set up as follows:
+<p>
+<img src="gen/howtodf_gw.png" alt="VMP[rx] -&gt; TDM[tx]">
+<p>
+<img src="gen/howtodf_gw1.png" alt="TDM[rx] -&gt; VMP[tx]">
+
+<h2>Backward Compatibility for TDM switching</h2>
+<p>
+In systems that only use the TDM as a source and destination for audio data,
+the legacy switching API calls
+(<a href="gen/apifn-sm_switch_channel_input.html">sm_switch_channel_input()</a>
+and
+<a href="gen/apifn-sm_switch_channel_output.html">sm_switch_channel_output()</a>)
+may be used. Please note that in a mixed TDM / RTP system it is strongly recommended that
+the legacy switching API calls are not used.
+</body>
+</html>

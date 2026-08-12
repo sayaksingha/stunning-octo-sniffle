@@ -1,0 +1,9 @@
+Testlib	error.o
+Testlib	cardlist.o
+Testlib	modlist.o
+Testlib	eventset.o
+.	tonerec.o
+Testlib	fmtcode.o
+Testlib	errcode_sm.o
+Testlib	taistamp.o
+apilib

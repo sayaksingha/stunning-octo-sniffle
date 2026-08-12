@@ -1,0 +1,232 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: locplay</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: locplay</h1>
+<p>
+This is a very simple play application. It plays a file to a local
+timeslot. It normally keeps repeating the file until told to stop. The
+file is assumed to have no headers or other formatting of any kind -
+just the data. The test program <a href="test_ansrec.html">ansrec</a>
+generates these files directly, but for many formats the header is
+harmless (sounds like a short burst of noise).
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have downloaded firmware modules as listed below.
+<p>
+Run <code>locplay</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/locplay</span> or
+<span class="type-WINNT"> gen-WINNT_V6/locplay</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table>
+<tr>
+	<td><code>-a 1</code>
+		<td>use AGC
+<tr>
+	<td><code>-b</code> &lt;timeslot&gt;
+		<td>background timeslot to add into each output. (See
+		<a href="test_timeslots.html">Test program
+		timeslots</a>). Note that this assumes that you have
+		already arranged for the desired background signal to
+		appear on this timeslot (for example with a copy
+		of <code>locplay</code> already running).
+<tr>
+	<td><code>-F</code> &lt;format&gt;
+		<td>format of the file to play. The known formats can
+		be listed by specifying a question mark
+		(<code>?</code>).
+<tr>
+	<td><code>-n</code> &lt;numchan&gt;
+		<td>start playing this many channels (default = 1)
+<tr>
+	<td><code>-O</code>
+		<td>play file once only and then exit (default is to
+		keep repeating the file)
+<tr>
+	<td><code>-r</code>
+		<td>Restart replay when it completes.
+<tr>
+	<td><code>-R</code> &lt;delay&gt;
+		<td>Wait for a period before starting each
+		channel. The delay will be randomly selected each time a
+		channel is started and will be in the range
+		<code>0..delay</code> milliseconds.
+		This allows a test to be run which avoids the channels
+		all operating in step with one another.
+<tr>
+	<td><code>-s</code> &lt;speed&gt;
+		<td>play faster or slower (as a percentage)
+<tr>
+	<td><code>-t</code> &lt;timeslot&gt;
+		<td>timeslot to use (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>). If you specify more than one channel,
+		they use consecutive timeslots starting at this one.
+		For example, the options "<code>-n 3 -t48:20</code>"
+		play to timeslots <code>48:20</code>, <code>48:21</code>,
+		and <code>48:22</code>.
+<tr>
+	<td><code>-T</code> &lt;bits&gt;
+		<td>set the data transfer threshold
+<tr>
+	<td><code>-v</code> &lt;volume&gt;
+		<td>adjust volume of the playback by this (in dB)
+<tr>
+	<td><code>-X</code> &lt;maxoctets&gt;
+		<td>Limit the length of all replays to this amount of
+		data.
+<tr>
+	<td><code>-x</code> &lt;cardspec&gt;
+		<td>Use these Prosody processor modules, specified as
+		described in
+		<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a>
+<tr>
+	<td><code>-y</code>
+		<td>synchronised play - prepare channels but don't
+		start them until the 'g' command is given
+<tr>
+	<td>&lt;file&gt;
+		<td>name of file from which data is to be played.
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/locplay -x x:1.2.3.4/mykey -F ALawPCM@8000 -t 64:0 rec1.dat
+</pre>
+<p>
+would play data assumed to be A-law encoded speech from
+<code>rec1.dat</code> to timeslot <code>64:0</code> on the card with
+address 1.2.3.4 and key mykey.
+<p>
+The firmware modules that are required depend on the options you
+specify. Here are the details:
+<p>
+<table border>
+<tr>
+	<th class=bg>Module<th class=bg>When needed
+<tr>
+	<td><a href="gen/softmodindex.html#datafeed">datafeed</a>
+		<td>always on Prosody X
+<tr>
+	<td><a href="gen/softmodindex.html#gainbg">gainbg</a>
+		<td>If you use '<code>-a 1</code>' for AGC
+		or '<code>-v</code>' to adjust the volume
+<tr>
+	<td><a href="gen/softmodindex.html#fast">fast</a>
+		<td>If you use '<code>-s</code>' to play the file
+		faster than normal
+<tr>
+	<td><a href="gen/softmodindex.html#slow">slow</a>
+		<td>If you use '<code>-s</code>' to play the file
+		slower than normal
+<tr>
+	<td><a href="gen/softmodindex.html#outchan">outchan</a>
+		<td>always
+<tr>
+	<td><a href="gen/softmodindex.html#sixkin">sixkout</a>
+		<td>when the file format is ACUBLKPCM@6000,
+		ALawPCM@6000, OKIADPCM@6000, or ULawPCM@6000 
+<tr>
+	<td><a href="gen/softmodindex.html#playA">playA</a>
+		<td>when the file format is
+		ALawPCM@6000 or ALawPCM@8000
+<tr>
+	<td><a href="gen/softmodindex.html#playima">playima</a>
+		<td>when the file format is IMAADPCM
+<tr>
+	<td><a href="gen/softmodindex.html#playmu">playmu</a>
+		<td>when the file format is
+		ULawPCM@6000 or ULawPCM@8000
+<tr>
+	<td><a href="gen/softmodindex.html#playoki">playoki</a>
+		<td>when the file format is
+		OKIADPCM@6000 or OKIADPCM@8000
+<tr>
+	<td><a href="gen/softmodindex.html#sync">sync</a>
+		<td>when the <code>-y</code> option is used
+</table>
+<p>
+When this program starts, it starts as many channels as specified by
+the <code>-n</code> option, and then prints a prompt and waits for
+commands. While waiting for commands any running channels will be
+serviced, but status changes will not be reported. The commands are:
+<table border>
+<tr>
+	<th class=bg>Character<th class=bg>Meaning
+<tr>
+	<td><td>(i.e. blank line - no command) Print status
+<tr>
+	<td><code>?</code><td>Print summary of possible commands
+<tr>
+	<td><code>+</code><td>Start another channel
+<tr>
+	<td><code>a</code>N<td>Set AGC for future channels
+	to <em>N</em>
+<tr>
+	<td><code>g</code><td>go - allow channels held for
+	synchronisation by <code>-y</code> option to start
+<tr>
+	<td><code>k</code>N<td>Kill channel <em>N</em>, .
+<tr>
+	<td><code>K</code>N<td>Kill channel <em>N</em>, without waiting.
+<tr>
+	<td><code>o</code>N<td>Set 'once' option for future channels
+	to <em>N</em>.
+<tr>
+	<td><code>Q</code><td>abort all channels.
+<tr>
+	<td><code>q</code><td>Quit - exit without waiting for channels
+	to finish.
+<tr>
+	<td><code>s</code>N<td>Set speed for future channels
+	to <em>N</em>
+<tr>
+	<td><code>S</code><td>Shutdown - free all resources and quit.
+<tr>
+	<td><code>t</code> timeslot<td>Set timeslot for future channels
+	to <em>timeslot</em>
+<tr>
+	<td><code>T</code>N<td>Set <code>TiNGtrace</code>
+	to <em>N</em>.
+<tr>
+	<td><code>u</code><td>Update all running channels to use
+	current agc, volume, and speed settings.
+<tr>
+	<td><code>v</code> N<td>Set volume for future channels
+	to <em>N</em>
+<tr>
+	<td><code>w</code><td>Quit - wait for all channels to finish before
+	reading next command.
+<tr>
+	<td><code>x</code> N<td>Set maximum octets for future channels
+	to <em>N</em>
+<tr>
+	<td><code>#</code> anything<td>do nothing - used for
+	comments
+</table>
+<p>
+The status is shown in each prompt. The prompt starts with a character for
+each current channel. The character indicates the status of that channel.
+<table border>
+<tr><th>Character<th>Status
+<tr><td>*<td>Active - data was transferred since printing last prompt
+<tr><td>.<td>Idle - no data was transferred since printing last prompt
+<tr><td>-<td>Done - channel has finished
+<tr><td>&nbsp;<td>Channel is no longer in use
+<tr><td>u<td>Underrun occurred since last printing prompt
+</table>
+<p>
+The source code for this program is provided (locplay.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

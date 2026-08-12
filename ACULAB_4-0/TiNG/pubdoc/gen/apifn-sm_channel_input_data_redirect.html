@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_channel_input_data_redirect</title>
+</head>
+<body>
+<h1>Prosody generic: API: sm_channel_input_data_redirect</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_channel_input_data_redirect(struct sm_channel_input_data_redirect_parms *<a href="#field-redp">redp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-redp">*redp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_channel_input_data_redirect_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-enable">enable</a>;						/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* out */
+} SM_CHANNEL_INPUT_DATA_REDIRECT_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+When
+<a class=pref href="#field-enable">enable</a>
+is non-zero, request a datafeed identifier from an input channel that 
+will carry the data usually retrieved through the api (e.g. 
+<a href="apifn-sm_get_recorded_data.html">sm_get_recorded_data()</a>
+). This identifer can subsequently be used in a call to any of the
+<code>*_datafeed_connect()</code> functions to connect the input data 
+from the channel to a destination. Note though that the data will be
+raw octets and not audio data, so the destination must be expecting 
+raw octets.	The identifier is valid until the channel is released or 
+this function is called	with
+<a class=pref href="#field-enable">enable</a>
+set to zero.
+<p>
+There must be no operation in progress (e.g. record) on the input
+half of the channel when this function is called.
+<p>
+Datafeed connections can only be made between objects allocated
+on the same <code>tSMModuleId</code>.
+<p>
+Requires the modules
+<a href="softmodindex.html#datafeed">datafeed</a>
+and
+<a href="softmodindex.html#redirect">redirect</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to redirect the received data on
+
+<dt><a name="field-enable">enable</a><dd>Enables (non-zero) or disables (zero) the redirection of data
+
+<dt><a name="field-datafeed">datafeed</a><dd>The datafeed which the received data is passed to when redirected
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

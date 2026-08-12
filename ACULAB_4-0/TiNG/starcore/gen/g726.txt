@@ -1,0 +1,7 @@
+ITU_T General Public Licence information (ITU-T Rec. G.191 09/2005).
+====================================================================
+
+The software module "g726.sob" is derived from Aculab modifications
+to ITU-T G.726 source code ("g726.c" forming part of ITU-T G.191).
+Aculab modifications were applied to v2.0 24.Jan.2000 of this source code.
+The Aculab modified version of this G.726 source code is available on request.

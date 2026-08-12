@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_generate_tones</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_generate_tones</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_generate_tones(struct sm_vmptx_generate_tones_parms *<a href="#field-tonep">tonep</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-tonep">*tonep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_generate_tones_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> *<a href="#field-tones">tones</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-num">num</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-duration">duration</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-interval">interval</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-volume">volume</a>;						/* in */
+} SM_VMPTX_GENERATE_TONES_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Causes a VMP[tx] to generate rfc2833 tone packets for a sequence of
+tones, containing
+<a class=pref href="#field-num">num</a>
+tones. Each tone will have duration
+<a class=pref href="#field-duration">duration</a>
+And the interval between the tones will be
+<a class=pref href="#field-interval">interval</a>.
+<a class=pref href="#field-tones">tones</a>
+contains a list of tone identifiers for the tones to be generated, as 
+defined in <a href="http://www.ietf.org/rfc/rfc2833.txt">IETF RFC 2833</a>).
+Both
+<a class=pref href="#field-duration">duration</a>
+and 
+<a class=pref href="#field-interval">interval</a>
+must be given as a multiple of 10ms. The 
+<a class=pref href="#field-volume">volume</a>
+must be between 0 and -15 inclusive.
+<p>
+Note that this function by itself is not sufficient to cause the
+VMP[tx] to transmit RTP packets. The VMP[tx] must also have a
+valid datafeed which has been connected using
+<a href="apifn-sm_vmptx_datafeed_connect.html">sm_vmptx_datafeed_connect()</a>.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] that you wish to generates tones with
+
+<dt><a name="field-tones">tones</a><dd>The tones to generate
+
+<dt><a name="field-num">num</a><dd>The number of tones in the list
+
+<dt><a name="field-duration">duration</a><dd>The duration of the tones.
+
+<dt><a name="field-interval">interval</a><dd>The interval between the tones
+
+<dt><a name="field-volume">volume</a><dd>The volume of the tone in dBm0
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

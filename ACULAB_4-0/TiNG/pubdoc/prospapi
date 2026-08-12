@@ -1,0 +1,4602 @@
+	Prosody speech processing
+secname sort
+
+	Initiate process of replaying data to channel
+apifn	sm_replay_start
+params	sm_replay_parms replayp
+	The channel to perform the replay.
+field	tSMChannelId channel in
+	A channel which is producing a signal to be added to the replay signal.
+	Requires the module
+modref	gainbg.
+field	tSMChannelId background in
+	The volume adjustment (dB).
+	Requires the module
+modref	gainbg.
+field	tSM_INT volume in
+	Indicator of whether automatic gain control is to be enabled.
+	(non-zero) or not (zero).
+	Requires the module
+modref	gainbg.
+field	tSM_INT agc in
+	The percentage of full speed at which the replay should work.
+	The value zero also represents full speed.
+	Speeds faster than 100% require the module
+modref	fast
+	to have been downloaded, while speeds slower than 100% require
+	the module
+modref	slow.
+field	tSM_INT speed in
+	The type of data to replay. (See the main text above for
+	<a href="#compatcode">compatibility codes</a> that can also be
+	used in this field.)
+enumstart	kSMDataFormat
+	Special value for test purposes only. This indicates that the
+	channel should prepare as if it was about to play or record
+	data, but not actually transfer any data.
+enum	kSMDataFormatNone 0
+	G.711 A-law. This uses 8 bits per sample.
+enum	kSMDataFormatALawPCM 30
+	G.711 mu-law. This uses 8 bits per sample.
+enum	kSMDataFormatULawPCM 31
+	A 4-bit coding scheme.
+enum	kSMDataFormatOKIADPCM 32
+	This format is obsolete, as cards fitted with SHARC DSPs are no longer supported.
+	It has never been implemented for Prosody X cards.
+enum	kSMDataFormatACUBLKPCM 33
+	16-bit linear coding, where each sample is a signed value
+	(-32768 to 32767). The first octet of each sample is the less
+	significant one.
+enum	kSMDataFormat16bit 34
+	8-bit unsigned linear coding, where each sample is an unsigned value
+	(0 to 255). This is Microsoft's 8-bit format.
+enum	kSMDataFormat8bit 35
+	8-bit linear coding, where each sample is a signed value (-128 to 127).
+enum	kSMDataFormatSigned8bit 36
+	A 4-bit coding scheme standardised by the Interactive Multimedia
+	Association (IMA).
+enum	kSMDataFormatIMAADPCM 17
+	A patent and royalty-free speech compression codec. Use of the functions
+fnref sm_replay_start
+	and
+fnref sm_record_start
+	only allows playback and recording using the default "narrowband" Speex
+	configuration. Other operating modes and parameters will be made available
+	via new API calls.
+enum	kSMDataFormatSpeex 37
+enumend	type in
+	The length of the replay (in octets) or zero for indefinite
+	length replay.
+field	tSM_UT32 data_length in
+	The sampling rate of the data to be played. Currently supported
+	values are:
+	<ul>
+	<li>8000 - the typical rate for telephony, since it is the rate at
+		which telephone networks themselves operate.
+	<li>6000 - a rate which reduces file sizes at the cost of lower
+		quality, will be upsampled to 8000 Hz.
+	<li>11000 - a rate convenient for use with typical PC soundcards.
+		This is sufficiently close to a quarter of the rate used
+		by CDs (44100 Hz) that the difference is not significant,
+		allowing almost universal compatibility with cheap PC
+		soundcards which can handle 11025 Hz sampling, will be downsampled
+		to 8000 Hz.
+	<li>16000 - the typical rate for use with wideband RTP codecs.
+	<li>12000 - will be upsampled to 16000 Hz (unlikely to be useful).
+	<li>22000 - approx half rate of 44100Hz, will be downsampled to 16000 Hz
+		allowing use with wideband RTP codecs.
+	</ul>
+field	tSM_UT32 sampling_rate in
+unstruct
+	Prepares output channel
+ref	channel
+	for replay of data (a replay job).
+	<p>
+	Normally the
+ref	background
+	parameter would be set to <code>kSMNullChannelId</code>. If
+	however, this parameter has assigned to it the channel id of
+	another output channel, then the signal generated on the output
+	channel
+ref	channel
+	will be combined with the data currently
+	being output on
+ref	background.
+	Note that a channel must not be reconfigured while it is in
+	use as a background channel for other channels.
+	<p>
+	To keep a continuous background signal while playing a
+	mixture of different recorded signals and silence, start the
+	replay only once and use
+fnref	sm_put_replay_data
+	as necessary to feed it data for each signal. To produce
+	silence, simply stop sending data for a suitable period (the
+	channel will report an underrun when it starts sending
+	silence).
+	<p>
+	The
+ref	volume
+	parameter determines the gain applied to the replayed data and
+	has a range of at least -24 to +8 in dB.
+	<p>
+	The
+ref	agc
+	parameter controls whether automatic gain control is applied to
+	the replayed data. If
+ref	agc
+	is non-zero then automatic gain control is applied. Even if this
+	is the case, the output level is still governed by volume.
+	<p>
+	The
+ref	speed
+	parameter determines rate of replay and is a percentage value
+	expressing the rate of replay compared with the normal replay
+	rate. Only certain speeds are supported, so the speed specified
+	is rounded to the nearest supported value. The following speeds
+	are currently supported:
+	<p><table border cellpadding=5>
+	<tr> <th>Ratio</th> <th>Percentage</th> </tr>
+	<tr> <td>2:1</td> <td>200</td> </tr>
+	<tr> <td>3:2</td> <td>150</td> </tr>
+	<tr> <td>4:3</td> <td>133</td> </tr>
+	<tr> <td>1:1</td> <td>100</td> </tr>
+	<tr> <td>3:4</td> <td>75</td> </tr>
+	<tr> <td>2:3</td> <td>67</td> </tr>
+	<tr> <td>1:2</td> <td>50</td> </tr>
+	</table>
+	<p>
+	An application should not rely on a speed being rounded to a
+	specific value. Other speeds may also be supported, so a
+	requested speed may round to a value nearer than expected.
+	<p>
+	If
+ref	speed
+	is set to zero, the data is replayed at an unadjusted rate.
+	<p>
+	The
+ref	type
+	parameter determines the format of data that will played back
+	over the timeslot.
+	<p>
+	<a name="compatcode">Note that, for compatibility</a> with
+	earlier releases of Prosody, many other values are permitted for
+	the
+ref	type
+	field. These compatibility values specify a combination of
+	data type and sampling rate. When one of these is used in
+	the
+ref	type
+	field, the
+ref	sampling_rate
+	field must be zero, and the actual rate used will be as
+	listed here. They are:
+	<p>
+	<table border>
+	<tr>
+		<th rowspan=2>compatibility code</th>
+		<th colspan=2>new code</th>
+	</tr>
+	<tr>
+		<th>type</th>
+		<th>sampling rate</th>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHzALawPCM</td>
+		<td>kSMDataFormatALawPCM</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHzULawPCM</td>
+		<td>kSMDataFormatULawPCM</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHzOKIADPCM</td>
+		<td>kSMDataFormatOKIADPCM</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHzACUBLKPCM</td>
+		<td>kSMDataFormatACUBLKPCM</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat6KHzALawPCM</td>
+		<td>kSMDataFormatALawPCM</td>
+		<td>6000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat6KHzULawPCM</td>
+		<td>kSMDataFormatULawPCM</td>
+		<td>6000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat6KHzOKIADPCM</td>
+		<td>kSMDataFormatOKIADPCM</td>
+		<td>6000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat6KHzACUBLKPCM</td>
+		<td>kSMDataFormatACUBLKPCM</td>
+		<td>6000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHz16bitMono</td>
+		<td>kSMDataFormat16bit</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHz8bitMono</td>
+		<td>kSMDataFormat8bit</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHzSigned8bitMono</td>
+		<td>kSMDataFormatSigned8bit</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormatIMAADPCM</td>
+		<td>kSMDataFormatIMAADPCM</td>
+		<td>8000</td>
+	</tr>
+	</table>
+	<p>
+	Any form of replay requires the module
+modref	outchan
+	to have been downloaded in addition to the module
+	that is required for the specific type of replay, and any
+	module required for the sampling rate:
+	<p>
+	<table border>
+	<tr>
+		<th>replay type</th>
+		<th>extra firmware required</th>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatALawPCM
+		</td>
+		<td>
+modref	playA
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatULawPCM
+		</td>
+		<td>
+modref	playmu
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatOKIADPCM
+		</td>
+		<td>
+modref	playoki
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatACUBLKPCM
+		</td>
+		<td>
+modref	playablk
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatSigned8bit
+		</td>
+		<td>
+modref	play8b
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormat8bit
+		</td>
+		<td>
+modref	playms8b
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormat16bit
+		</td>
+		<td>
+modref	play16b
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatIMAADPCM
+		</td>
+		<td>
+modref	playima
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatSpeex
+		</td>
+		<td>
+modref	speexrp
+		</td>
+	</tr>
+	</table>
+	<p>
+	The sampling rate firmware:
+	<table border>
+	<tr>
+		<th>sampling rate</th>
+		<th>extra firmware required</th>
+	</tr>
+	<tr> <td> 8000 </td> <td> - </td> </tr>
+	<tr> <td> 6000 </td> <td>
+modref	sixkout
+	</td> </tr>
+	<tr> <td> 11000 </td> <td>
+modref	11_to_8
+	</td> </tr>
+	<tr> <td> 12000 </td> <td>
+modref	sixkout
+	</td> </tr>
+	<tr> <td> 16000 </td> <td> - </td> </tr>
+	<tr> <td> 22000 </td> <td>
+modref	11_to_8
+	</td> </tr>
+	</table>
+	<p>
+	See document
+	<a href="../an-speechdataformats.html">Prosody application note: speech processing replay and record data formats</a>
+	for more details on data formats supported by
+	Prosody and their appropriate use.
+	<p>
+	The
+ref	data_length
+	parameter indicates the total number of octets of speech data
+	that the application intends to  supply to the driver for replay on the
+	given timeslot. If
+ref	data_length
+	is set to zero, the replay will be of indefinite length (in this
+	case the replay job can be completed with
+fnref	sm_put_last_replay_data).
+	<p>
+	If an event has been previously associated with channel (see
+	<a href="apifn-sm_channel_set_event.html">sm_channel_set_event</a>),
+	then the driver will notify the application with that event
+	whenever:
+	<ul>
+	<li>capacity becomes available on the given channel to buffer up
+	replay data</li>
+	<li>replay completes after all data_length octets were output
+	(or last buffer of indefinite replay was output)</li>
+	<li>replay completes following abort</li>
+	</ul>
+	<p>
+	The channel is reserved for replaying until
+fnref	sm_replay_status
+	returns the status
+	<a href="apifn-sm_replay_status.html#field-kSMReplayStatusComplete">
+	kSMReplayStatusComplete</a>. No other output activity can
+	take place on the channel during this time.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - out of range volume, speed or unknown type
+error	ERR_SM_WRONG_CHANNEL_TYPE - attempt to replay on input channel
+error	ERR_SM_WRONG_CHANNEL_STATE - replay or other non-interruptible job still in progress
+
+	Provide another buffer of data to replay
+apifn	sm_put_replay_data
+params	sm_ts_data_parms datap
+	The channel which is replaying.
+field	tSMChannelId channel in
+	The data being provided.
+field	char* data in playrec_data
+	The length of the data being provided.
+field	tSM_INT length in
+unstruct
+	Following a call to
+fnref	sm_replay_start,
+	as
+fnref	sm_replay_status
+	indicates that the channel is ready for successive amounts of data,
+	the actual data to be replayed is supplied to the module via
+	successive invocations of this function. The
+ref	data
+	parameter is a pointer to a buffer of data to replay in the
+	appropriate format, and the
+ref	length
+	parameter gives the number of octets of valid data in the
+	buffer.
+	<p>
+	The data should be presented in lengths which are multiples of
+	four bytes because this is more efficiently handled than
+	other lengths.
+	<p>
+	If the module has insufficient capacity to buffer all the given
+	data, then some data may be transferred and the call may return the
+	status ERR_SM_NO_CAPACITY or it may block until space is
+	available.
+	<p>
+	The application may be stimulated by a driver
+	sent event when capacity on a channel becomes available
+	(see <a href="apifn-sm_channel_set_event.html">sm_channel_set_event</a>).
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_CAPACITY - module does not currently have capacity to buffer this data
+error	ERR_SM_NO_REPLAY_IN_PROGRESS - current replay complete or aborted
+error	ERR_SM_BAD_DATA_LENGTH - invalid length parameter
+
+	Provide last buffer to indefinite replay
+apifn	sm_put_last_replay_data
+params	sm_ts_data_parms datap
+	The channel which is replaying.
+field	tSMChannelId channel in
+	The data being provided.
+field	char* data in playrec_data
+	The length of the data being provided.
+field	tSM_INT length in
+unstruct
+	Supplies the last data to a replay started with
+fnref	sm_replay_start.
+	See
+fnref	sm_put_replay_data
+	for further details.
+	<p>
+	The
+ref	length
+	field can be zero if there is no remaining data.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_REPLAY_IN_PROGRESS - current replay complete or aborted
+
+	Determine replay status
+apifn	sm_replay_status
+params	sm_replay_status_parms statusp
+	The channel which is replaying.
+field	tSMChannelId channel inout
+	The channel's status.
+enumstart	kSMReplayStatus
+	the replay job has completed, all module buffered
+	data has been transmitted on the channel
+enum	kSMReplayStatusComplete
+	the replay job is still ongoing, all required data
+	for replay has been supplied, the replay job will
+	complete once all module buffered data has been
+	transmitted
+enum	kSMReplayStatusCompleteData
+	data has not been supplied sufficiently frequently
+	to replay job and the output has been padded out with
+	silence
+enum	kSMReplayStatusUnderrun
+	the replay job is still ongoing and the module has
+	capacity to buffer further data for the job
+enum	kSMReplayStatusHasCapacity
+	the replay job is still ongoing and either all the
+	replay data has now been received by the module or the
+	module temporarily does not have capacity to buffer
+	further data for the job
+enum	kSMReplayStatusNoCapacity
+enumend	status out
+	The number of octets which had been played when the replay
+	completed.
+field	tSM_UT32 offset out
+unstruct
+	This call, typically invoked in response to a write event
+	being signalled, allows an application to determine the status
+	of replay jobs.
+	<p>
+	In order to determine the status of a specific replay job on a
+	particular output channel, the application should set
+ref	channel
+	to specify the job concerned. On successful completion, the
+ref	status
+	field indicates the current status of the channel.
+	<p>
+	This function can also be used for 'any channel' operation. This 
+	mode of operation is a legacy feature and is not recommended for 
+	new applications. See 
+	<a href="../anychan.html">Prosody TiNG: any channel operation</a>
+	for more details.
+	<p>
+	A channel ceases to be replaying when this function returns a
+	status of
+ref	kSMReplayStatusComplete.
+	Until this happens, the channel output is reserved for the
+	replay and cannot be used for anything else. After this
+	happens, the channel output returns to being idle and
+	consequently if this function is used again it will return
+	the error <code>ERR_SM_NO_REPLAY_IN_PROGRESS</code>.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Prematurely terminate replay
+apifn	sm_replay_abort
+params	sm_replay_abort_parms abortp
+	The channel which is replaying.
+field	tSMChannelId channel in
+	The number of octets which had been played when the abort
+	completed.
+	Not valid if
+ref	nowait
+	is non-zero.
+field	tSM_UT32 offset out
+	Indicates that the function should return instantly without
+	waiting to determine the
+ref	offset
+	where the play stops. The place where the play stops can always be
+	determined from the offset reported by
+fnref	sm_replay_status
+	when it reports that the replay has completed.
+field	tSM_UT32 nowait in
+unstruct
+	This call allows an application to abort prematurely a replay
+	job on the output channel specified. After a replay has been
+	aborted, a final replay event will be notified to the
+	application and silence will be output on the channel.
+	<p>
+	If the call completes successfully, the parameter
+ref	offset
+	will be set to a value between 0 and the number of octets of
+	data actually played indicating the point at which replay was aborted.
+	This be a value up to the total number of octets already supplied via
+fnref	sm_put_replay_data
+	and
+fnref	sm_put_last_replay_data.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Adjust volume/speed parameters for replay
+apifn	sm_replay_adjust
+params	sm_replay_adjust_parms adjustp
+	The channel which is replaying.
+field	tSMChannelId channel in
+	A channel which is producing a signal to be added to the replay signal
+	or kSMNullChannelId.
+field	tSMChannelId background in
+	The volume adjustment (dB).
+field	tSM_INT volume in
+	Indicator of whether automatic gain control is to be enabled.
+	(non-zero) or not (zero).
+field	tSM_INT agc in
+	The percentage of full speed at which the replay should work.
+	The value zero also represents full speed.
+field	tSM_INT speed in
+unstruct
+	This call allows an application to alter the replay parameters
+	of the current replay job on the specified output channel. The
+ref	background,
+ref	volume,
+ref	agc,
+	and
+ref	speed
+	parameters are as for the
+fnref	sm_replay_start
+	call.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_REPLAY_IN_PROGRESS - current replay complete or aborted
+error	ERR_SM_BAD_PARAMETER - out of range volume, speed etc
+
+	Put small buffer of audio data to channel set up for low latency replay
+apifn	sm_put_audio_data
+params	sm_audio_data_parms datap
+	The channel which is replaying.
+field	tSMChannelId channel in
+	The data being provided.
+field	char* data in audio_data
+	The length of the data being provided.
+field	tSM_INT max_length in
+	The amount of data actually written.
+field	tSM_INT done_length out
+unstruct
+	Following a call to
+fnref	sm_channel_set_output_threshold
+	set up with negative minimum_bits threshold, and a call to
+fnref	sm_replay_start,
+	each time
+fnref	sm_replay_status
+	indicates that the channel is ready for successive amounts of data,
+	the actual data to be replayed is supplied to the module via
+	successive invocations of this function. The
+ref	data
+	parameter is a pointer to a buffer of data to replay in the
+	appropriate format, and the
+ref	max_length
+	parameter gives the number of octets of valid data in the
+	buffer.
+	<p>
+	The data should be presented in lengths which are multiples of
+	four bytes because this is more efficiently handled than
+	other lengths.
+	<p>
+	If the module is not yet ready to buffer data, then no data is transferred and the call will return with
+ref	done_length
+	set to zero.
+	<p>
+	The application may be stimulated by a driver
+	sent event when capacity on a channel becomes available
+	(see <a href="apifn-sm_channel_set_event.html">sm_channel_set_event</a>).
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_REPLAY_IN_PROGRESS - current replay complete or aborted
+error	ERR_SM_BAD_DATA_LENGTH - invalid length parameter
+
+	Initiate recording on channel
+apifn	sm_record_start
+params	sm_record_parms recordp
+	The channel to perform the record.
+field	tSMChannelId channel in
+	<code>kSMNullChannelId</code>, or another
+	channel whose input or output is to be recorded. If this
+	specifies a channel, that channel must not be reconfigured
+	while recording is taking place.
+field	tSMChannelId alt_data_source in
+	The format in which to record. (See the main text above for
+	<a href="#reccompat">compatibility codes</a> that can also be
+	used in this field.)
+enumref	kSMDataFormat type in
+	The maximum duration (in mS) of silence to record. Silences longer
+	than this are truncated to this length. The value zero disables
+	silence elimination.
+	Requires the module
+modref	grunt.
+field	tSM_UT32 silence_elimination in
+	What types of tones to eliminate from the recording. This
+	allows the same tone detection as
+fnref	sm_listen_for.
+	Requires the module
+modref	td
+	unless the value is
+	<a href="apifn-sm_listen_for.html#field-kSMToneDetectionNone">
+	kSMToneDetectionNone</a>.
+enumref	kSMToneDetection tone_elimination_mode in
+	The tone set to use (only relevant if
+ref	tone_elimination_mode 
+	is not
+	<a href="apifn-sm_listen_for.html#field-kSMToneDetectionNone">
+	kSMToneDetectionNone</a>). See
+fnref	sm_listen_for
+	for details of how to select an input tone set.
+field	tSM_UT32 tone_elimination_set_id in
+	The maximum amount of data to record. The value zero indicates
+	no maximum.
+field	tSM_UT32 max_octets in
+	The maximum duration of the recording in mS. The value zero
+	indicates no maximum.
+	Requires the module
+modref	timerx.
+field	tSM_UT32 max_elapsed_time in
+	The maximum silence permitted (in mS). The value zero indicates
+	no maximum. Silences longer than this cause the recording to
+	terminate.
+	Requires the module
+modref	grunt.
+field	tSM_UT32 max_silence in
+	Indicator of whether automatic gain control is to be enabled.
+	(non-zero) or not (zero).
+	Requires the module
+modref	gainbg.
+field	tSM_INT agc in
+	The desired adjustment to the volume (dB). The range of gain
+	supported is at least +8 to -22 dB,
+	Requires the module
+modref	gainbg.
+field	tSM_INT volume in
+	If an
+ref	alt_data_source
+	channel is specified, which kind of data associated with that
+	channel should be recorded.
+enumstart	kSMRecordAltSource
+	If
+ref	alt_data_source
+	is an input only channel, then data switched to this channel
+	input will be recorded, otherwise the data being generated on this channel output
+	will be recorded (this feature is normally used to record
+	conferenced outputs).
+	This value is deprecated since it is equivalent to either
+ref	kSMRecordAltSourceInput
+	or
+ref	kSMRecordAltSourceOutput
+	which could be used instead.
+enum	kSMRecordAltSourceDefault
+	Data switched to
+ref	alt_data_source
+	input will be recorded.
+	This value is deprecated since several channels can take input
+	from the same timeslot and that is a more straightforward way of
+	achieving the same result.
+enum	kSMRecordAltSourceInput
+	Data generated on
+ref	alt_data_source
+	output will be recorded.
+enum	kSMRecordAltSourceOutput
+enumend	alt_data_source_type in
+	The sampling rate at which to record the data. Currently supported
+	values are:
+	<ul>
+	<li>0 - record at the rate reported via
+fnref	sm_record_status.
+	<li>8000 - the typical rate for telephony, since it is the rate at
+		which telephone networks themselves operate.
+	<li>6000 - a rate which reduces file sizes at the cost of lower
+		quality.
+	<li>11000 - a rate convenient for use with typical PC soundcards.
+		This is sufficiently close to a quarter of the rate used
+		by CDs (44100 Hz) that the difference is not significant,
+		allowing almost universal compatibility with cheap PC
+		soundcards which can handle 11025 Hz sampling.
+	</ul>
+	Note that when you specify a non-zero value here, this function
+	assumes that the source of the data to be recorded is providing
+	data at 8000 samples per second. The use of data at other rates is
+	not supported and will cause the data to be recorded at an incorrect
+	sampling rate. Consequently, the use of a non-zero value in this
+	field is deprecated.
+field	tSM_UT32 sampling_rate in
+	The minimum level, in dBm0, that the noise estimate of the grunt detector may
+	reach. The default is -55 dBm0. Only used if
+ref silence_elimination
+	or
+ref max_silence
+	are non zero.
+	Requires the module
+modref	grunt.
+field	double min_noise_level in
+	The threshold, in dB, above the noise estimate of the grunt detector at
+	which a signal is considered present. The default is 15 dB. Only used if
+ref min_noise_level
+	is non zero.
+	Requires the module
+modref	grunt.
+field	double grunt_threshold in
+	The period, in ms, following start of speech, to disable updating the estimate of the background noise energy
+	(a non-zero period, typically 1000ms, can be required when long periods of uninterrupted speech are expected).
+	Requires the module
+modref	grunt.
+field	tSM_UT32 grunt_holdoff in
+	If both 
+ref max_silence
+	and this parameter are non-zero, then this parameter specifies the maximum period of silence allowed, in ms, prior 
+	to start of speech, whereas the max_silence timeout will now specify maximum period of silence allowed subsequent to the start of speech.
+	Requires the module
+modref	grunt.
+field	tSM_UT32 max_initial_silence in
+unstruct
+	This call starts a new recording job using the specified
+ref	channel.
+	<p>
+	Normally
+ref	alt_data_source
+	is set to <code>kSMNullChannelId</code> and the data that will
+	be recorded will be that switched to this input channel. If
+	however
+ref	alt_data_source
+	is set to the channel id of another existing channel, then the
+	data source for the recording will be determined by the value of
+ref	alt_data_source_type.
+	Note that the channel specified in
+ref	alt_data_source
+	must not be reconfigured while this recording is in progress. When
+ref	alt_data_source_type
+	selects the output of a channel, the output datafeed from that channel
+	must be referenced by calling
+fnref	sm_channel_get_datafeed
+	(or the legacy
+fnref	sm_switch_channel_output
+	), before starting the recording.
+	<p>
+	The PCM data received will be encoded into buffers in the format
+	specified by the
+ref	type
+	parameter which is a value from same range of values
+	permitted in the
+	<a href="apifn-sm_replay_start.html#field-type">type</a>
+	parameter of
+fnref	sm_replay_start.
+	<p>
+	<a name="reccompat">Note that, for compatibility</a> with earlier
+	releases of Prosody, many other values are permitted for the
+ref	type
+	field. These compatibility values specify a combination of
+	data type and sampling rate. When one of these is used in
+	the
+ref	type
+	field, the
+ref	sampling_rate
+	field must be zero, and the actual rate used will be as
+	listed here. They are:
+	<p>
+	<table border>
+	<tr>
+		<th rowspan=2>compatibility code</th>
+		<th colspan=2>new code</th>
+	</tr>
+	<tr>
+		<th>type</th>
+		<th>sampling rate</th>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHzALawPCM</td>
+		<td>kSMDataFormatALawPCM</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHzULawPCM</td>
+		<td>kSMDataFormatULawPCM</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHzOKIADPCM</td>
+		<td>kSMDataFormatOKIADPCM</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHzACUBLKPCM</td>
+		<td>kSMDataFormatACUBLKPCM</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat6KHzALawPCM</td>
+		<td>kSMDataFormatALawPCM</td>
+		<td>6000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat6KHzULawPCM</td>
+		<td>kSMDataFormatULawPCM</td>
+		<td>6000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat6KHzOKIADPCM</td>
+		<td>kSMDataFormatOKIADPCM</td>
+		<td>6000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat6KHzACUBLKPCM</td>
+		<td>kSMDataFormatACUBLKPCM</td>
+		<td>6000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHz16bitMono</td>
+		<td>kSMDataFormat16bit</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHz8bitMono</td>
+		<td>kSMDataFormat8bit</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormat8KHzSigned8bitMono</td>
+		<td>kSMDataFormatSigned8bit</td>
+		<td>8000</td>
+	</tr>
+	<tr>
+		<td>kSMDataFormatIMAADPCM</td>
+		<td>kSMDataFormatIMAADPCM</td>
+		<td>8000</td>
+	</tr>
+	</table>
+	<p>
+	<p>
+	Any form of record requires the module
+modref	inchan
+	to have been downloaded in addition to the module 
+	that is required for the specific type of record, and any
+	module required for the sampling rate:
+	<p>
+	<table border>
+	<tr>
+		<th>record type</th>
+		<th>extra firmware required</th>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatALawPCM
+		</td>
+		<td>
+modref	recA
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatULawPCM
+		</td>
+		<td>
+modref	recmu
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatOKIADPCM
+		</td>
+		<td>
+modref	recoki
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatACUBLKPCM
+		</td>
+		<td>
+modref	recablk
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatSigned8bit
+		</td>
+		<td>
+modref	rec8b
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormat8bit
+		</td>
+		<td>
+modref	recms8b
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormat16bit
+		</td>
+		<td>
+modref	rec16b
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatIMAADPCM
+		</td>
+		<td>
+modref	recima
+		</td>
+	</tr>
+	<tr>
+		<td>
+ref	kSMDataFormatSpeex
+		</td>
+		<td>
+modref	speexrp
+		</td>
+	</tr>
+	</table>
+	<p>
+	The sampling rate firmware:
+	<table border>
+	<tr>
+		<th>sampling rate</th>
+		<th>extra firmware required</th>
+	</tr>
+	<tr> <td> 8000 </td> <td> - </td> </tr>
+	<tr> <td> 6000 </td> <td>
+modref	sixkin
+	</td> </tr>
+	<tr> <td> 11000 </td> <td>
+modref	8_to_11
+	</td> </tr>
+	</table>
+	<p>
+	See
+	<a href="../an-speechdataformats.html">Prosody application note: speech processing replay and record data formats</a>
+	for more details on data formats supported by
+	Prosody and their appropriate use.
+	<p>
+	The
+ref	volume
+	parameter is the change in volume compared to the level of
+	the data (i.e. set this to <code>-6</code> to attenuate by
+	6dB). If AGC and volume are both applied, the change in volume
+	requested is applied after AGC.
+	<p>
+	The
+ref	agc
+	parameter controls whether automatic gain control is applied to
+	the recorded data. If
+ref	agc
+	is non-zero then automatic gain control is applied. Even if this
+	is the case, the recording level is still governed by volume.
+	The behaviour of the AGC algorithm may be controlled by changing
+	its parameters, see
+fnref	sm_record_agc_adjust_settings
+	for more details.
+	<p>
+	The recorded data may be retrieved by the application through
+	periodic calls to
+fnref	sm_get_recorded_data.
+	The amount of data recorded is determined by the termination
+	criteria specified in the parameters:
+	<p><table>
+	<tr><td>
+ref	max_octets
+	</td>
+	<td>max octets of data to record, 0 if no limit</td></tr>
+	<tr><td>
+ref	max_elapsed_time
+	</td>
+	<td>max recording period in mS, 0 if no limit</td></tr>
+	<tr><td>
+ref	max_silence
+	</td>
+	<td>max period of silence in mS before recording terminated, 0
+	if no limit (see also
+ref max_initial_silence
+	)</td></tr>
+	</table>
+	<p>
+	and also by the function
+fnref	sm_record_abort
+	which will terminate a recording directly.
+	<p>
+	If an event has been previously associated with a channel (see
+fnref	sm_channel_set_event),
+	then the driver will notify the application with that event
+	whenever (for that channel):
+	<ul>
+	<li>recorded data becomes newly available for collection by
+fnref	sm_get_recorded_data
+	<li>
+	recorded data remains available for collection by
+fnref	sm_get_recorded_data
+	<li>recording terminates due to one of the termination
+	criteria being met</li>
+	</ul>
+	<p>
+	The channel is reserved for recording until
+fnref	sm_record_status
+	returns the status
+	<a href="apifn-sm_record_status.html#field-kSMRecordStatusComplete">
+	kSMRecordStatusComplete</a>. No other recording activity can
+	take place on the channel during this time.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - if already recording
+error	ERR_SM_WRONG_CHANNEL_TYPE - if attempt to record using output channel
+error	ERR_SM_NOT_SAME_MODULE - alt_data_source channel not located on same module
+
+	Collect another buffer of recorded data from a channel
+apifn	sm_get_recorded_data
+params	sm_ts_data_parms datap
+	The channel which is recording.
+field	tSMChannelId channel in
+	The recorded data.
+field	char* data in playrec_data
+	The amount of recorded data in
+ref	data.
+field	tSM_INT length out
+unstruct
+	This call retrieves a buffer of data recorded by a channel.
+	<p>
+	Before making a call to this function, the application should set the
+ref	data
+	parameter to point to a buffer of capacity
+	<code>kSMMaxRecordDataBufferSize</code> octets. The channel from
+	which data is to be fetched
+	must be
+	specified by the
+ref	channel
+	field.
+	<p>
+	On return from a successful invocation of this call, if any data
+	was available for collection,
+ref	channel
+	will indicate the input channel concerned, and
+ref	length
+	will be set to the number of octets of valid data written by the
+	device driver into the buffer
+ref	data.
+	The error <code>ERR_SM_NO_DATA_AVAILABLE</code> is never
+	generated. Either the length returned is zero or the function
+	blocks until some data is available.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_DATA_AVAILABLE - not enough data recorded yet to give to application
+error	ERR_SM_NO_RECORD_IN_PROGRESS - no recording current on timeslot.
+
+	Determine recording status of channel
+apifn	sm_record_status
+params	sm_record_status_parms statusp
+	The channel which is recording.
+field	tSMChannelId channel inout
+	The channel's status.
+enumstart	kSMRecordStatus
+	The recording job has completed and all the recorded data has
+	been passed to the application.
+enum	kSMRecordStatusComplete
+	The recording job has completed but there still remains recorded
+	data for the application to collect.
+enum	kSMRecordStatusCompleteData
+	Data has not been retrieved sufficiently frequently by the
+	application and now some has been lost due to module buffer
+	overrun.
+enum	kSMRecordStatusOverrun
+	The record job is still ongoing and data is available for
+	collection by the application.
+enum	kSMRecordStatusData
+	The record job is still ongoing however not enough data is
+	buffered in the module to justify collection by the application.
+enum	kSMRecordStatusNoData
+	A recognition event has occurred in the recording. The
+ref	recog_type,
+ref	param0
+	and
+ref	param1
+	fields contain a report of what was detected. This status
+	can occur when
+fnref	sm_record_start
+	specified an option such as tone elimination.
+enum	kSMRecordStatusRecognition
+enumend	status out
+	The recognition event which has occurred.
+	This field, with the
+ref	param0
+	and
+ref	param1
+	fields, has the same meaning as the <code>type</code> field
+	returned by
+fnref	sm_get_recognised
+	with its corresponding <code>param0</code> and
+	<code>param1</code> fields. This field is only valid when the
+ref	status
+	field is
+ref	kSMRecordStatusRecognition.
+enumref	kSMRecognition recog_type out
+	A parameter giving details of what was detected. The
+	interpretation of this depends on the
+ref	recog_type
+	field.
+	This field is only valid when the
+ref	status
+	field is
+ref	kSMRecordStatusRecognition.
+field	tSM_INT param0 out
+	Another parameter giving details of what was detected. The
+	interpretation of this also depends on the
+ref	recog_type
+	field.
+	This field is only valid when the
+ref	status
+	field is
+ref	kSMRecordStatusRecognition.
+field	tSM_INT param1 out
+	The reason why a recording has terminated.
+enumstart	kSMRecordHowTerminated
+	Recording not yet completed.
+enum	kSMRecordHowTerminatedNotYet
+	The <a href="apifn-sm_record_start.html#field-max_octets">
+	max_octets</a> criterion specified to
+fnref	sm_record_start
+	was satisfied.
+enum	kSMRecordHowTerminatedLength
+	The <a href="apifn-sm_record_start.html#field-max_elapsed_time">
+	max_elapsed_time</a> criterion specified to
+fnref	sm_record_start
+	was satisfied.
+enum	kSMRecordHowTerminatedMaxTime
+	The <a href="apifn-sm_record_start.html#field-max_silence">
+	max_silence</a> criterion specified to
+fnref	sm_record_start
+	was satisfied.
+	The
+ref	termination_octets
+	field will indicate approximately how many octets of recorded
+	silence were present at the end of the recording.
+enum	kSMRecordHowTerminatedSilence
+fnref	sm_record_abort
+	was invoked.
+enum	kSMRecordHowTerminatedAborted
+	An error occurred.
+enum	kSMRecordHowTerminatedError
+enumend	termination_reason out
+	The amount of data representing silence at the end of the
+	recording (only valid if the recording has completed and
+ref	termination_reason
+	was
+ref	kSMRecordHowTerminatedSilence).
+field	tSM_UT32 termination_octets out
+	The sample rate of data. This is the rate for data not yet
+	collected.
+field	tSM_UT32 sample_rate out
+unstruct
+	This call, typically invoked in response to a read event
+	being signalled, allows an application to determine the status of a
+	specific on-going record job.
+	<p>
+	In order to determine the status of a specific record job, the
+	application should set
+ref	channel
+	to specify the job concerned.
+	<p>
+	This function can also be used for 'any channel' operation. This 
+	mode of operation is a legacy feature and is not recommended for 
+	new applications. See 
+	<a href="../anychan.html">Prosody TiNG: any channel operation</a>
+	for more details.
+	<p>
+	A channel ceases to be recording when this function returns a
+	status of
+ref	kSMRecordStatusComplete.
+	Until this happens, the channel input is reserved for the
+	record and no other recording activity can
+	take place on the channel during this time. After this
+	happens, the channel input returns to being idle and
+	consequently if this function is used again it will return
+	the error <code>ERR_SM_NO_RECORD_IN_PROGRESS</code>.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RECORD_IN_PROGRESS - no recording in progress (perhaps following abort with discard specified)
+
+	Prematurely terminate recording of data from channel
+apifn	sm_record_abort
+params	sm_record_abort_parms abortp
+	The channel which is recording.
+field	tSMChannelId channel in
+	An indicator of whether data not yet collected from the
+	channel should be discarded (non-zero) or delivered as
+	normal (0).
+field	tSM_INT discard in
+unstruct
+	This call allows an application to terminate a record job on a
+	given input channel prematurely with the option to discard or
+	retain data uncollected by the application.
+	<p>
+	If
+ref	discard
+	is set to 1, any uncollected data is discarded, if this
+	parameter is set to zero, the uncollected data is retained for
+	collection by calls to
+fnref	sm_get_recorded_data.
+	<p>
+	Invoking this call will cause a final record event to be
+	notified to the application.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Adjust AGC during recording.
+apifn	sm_record_agc_adjust
+params	sm_record_agc_adjust_parms recadjp
+	The channel which is recording.
+field	tSMChannelId channel in
+	The gain value to set AGC to (in dB).
+field	tSM_INT gain in
+unstruct
+	Sets the gain of a recording which is using automatic gain
+	control (AGC) to a specified value. This value will then be modified
+	by the AGC algorithm to adapt to the strength of the signal
+	being received.
+	<p>
+	It may be useful to set the gain when you know that the signal
+	strength has suddenly changed and the standard AGC adaptation is
+	not fast enough. However, if the gain is set too large, the
+	signal will be distorted by clipping, whereas if the gain is
+	too small, the signal will be attenuated to the point where
+	it disappears. Therefore the gain should only be adjusted
+	when there is good reason to believe the AGC algorithm will
+	be inadequate.
+	<p>
+	When the AGC algorithm starts, it passes the signal through
+	unchanged (i.e. a gain value of 0dB). As it monitors
+	the signal, it adjusts this gain as necessary to make the
+	signal approach a target of approximately -12dBm0.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RECORD_IN_PROGRESS - no recording in progress
+
+	Adjust AGC settings during recording.
+apifn	sm_record_agc_adjust_settings
+params	sm_record_agc_adjust_settings_parms recadjp
+	The channel which is recording.
+field	tSMChannelId channel in
+	The rate at which the AGC decays the estimate of the loudest signal, 
+	as a fraction.
+field	float max_level_decay in
+	The target output level in dBm0.
+field	float target_level in
+unstruct
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RECORD_IN_PROGRESS - no recording in progress
+
+	Generate simple tone on a channel
+apifn	sm_play_tone
+params	sm_play_tone_parms tonep
+	The channel on which the tone is to be generated.
+field	tSMChannelId channel in
+	The duration of the tone, or the value zero to indicate a tone
+	that will continue until explicitly aborted with
+fnref	sm_play_tone_abort.
+field	tSM_UT32 duration in
+	An indicator of whether this function would return as soon
+	as it has set up the generation of the tone (0), or wait
+	until the end of the tone (non-zero).
+field	tSM_INT wait_for_completion in
+	The tone to generate.
+field	tSM_INT tone_id in
+unstruct
+	This call allows an application to generate a simple output tone
+	specified by
+ref	tone_id
+	on a given output channel
+ref	channel,
+	either continuously or for a given duration.
+	<p>
+	The parameter
+ref	tone_id
+	references one of the pre-loaded simple output tones, listed in
+	<a href="../prospapi_outtones.html">
+	Prosody speech processing: pre-loaded output tones</a>,
+	or one previously defined through a call to
+fnref	sm_add_output_tone.
+	<p>
+	If the tone is to be output continuously (or until aborted with
+fnref	sm_play_tone_abort),
+	the parameter
+ref	duration
+	should be set to zero. Otherwise
+ref	duration
+	should be set to the required tone duration in milliseconds.
+	<p>
+	The
+ref	wait_for_completion
+	flag may be set by the application in which case this API call
+	will not return until the tone has been completely output,
+	however no other Prosody API function can be performed on the
+	channel during this waiting period.
+	Obviously setting this flag is not useful when the tone has been
+	specified as being a continuous tone
+	since there would then be no way to stop the tone.
+	See the document <a href="../an-wait_for_completion.html">Prosody
+	application note: waiting for completion</a> for examples of
+	how to wait without blocking other functions.
+	<p>
+	Alternatively the application can wait to be notified by an
+	event that tone generation of a given duration has completed.
+	When a write event has been associated with channel (see
+	<a href="apifn-sm_channel_set_event.html">sm_channel_set_event</a>),
+	then the driver will notify the application with that event
+	whenever it needs to invoke
+fnref	sm_play_tone_status.
+	<p>
+	This requires the module
+modref	tonegen
+	to have been downloaded.
+	<p>
+	The channel is reserved for playing the tone until the API has
+	reported completion. If the
+ref	wait_for_completion
+	flag is set, then the API considers that completion has been
+	reported when this API function returns, otherwise completion
+	is reported only by
+fnref	sm_play_tone_status
+	returning the status
+	<a href="apifn-sm_play_tone_status.html#field-kSMPlayToneStatusComplete">
+	kSMPlayToneStatusComplete</a>. In this case the
+	application <strong>must</strong> call
+fnref	sm_play_tone_status
+	repeatedly until it reports completion. It should use an event
+	on the channel to notify it when to check the status.
+	No other output activity can take place on the channel until the
+	completion of the tone has been reported, Note that the event
+	itself does not indicate completion of the tone. It is possible
+	for the event to be signalled even if the tone has not yet
+	completed, so it is essential that the application checks the
+	status and continues waiting if the tone has not completed.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - unknown tone or inconsistent parameters
+
+	Determine status of previously initiated tone generation
+apifn	sm_play_tone_status
+params	sm_play_tone_status_parms statusp
+	The channel which is playing a tone.
+field	tSMChannelId channel inout
+	The status of the tone generation.
+enumstart	kSMPlayToneStatus
+	The tone generation job has completed.
+enum	kSMPlayToneStatusComplete
+	The tone generation job is still ongoing.
+enum	kSMPlayToneStatusOngoing
+enumend	status out
+unstruct
+	This call, typically invoked in response to a write event being
+	signalled, allows an application to determine the status of a
+	specific on-going tone generation job.
+	<p>
+	This function can also be used for 'any channel' operation. This 
+	mode of operation is a legacy feature and is not recommended for 
+	new applications. See 
+	<a href="../anychan.html">Prosody TiNG: any channel operation</a>
+	for more details.
+	<p>
+	When this function reports that the channel status is
+ref	kSMPlayToneStatusComplete,
+	this also marks the end of the use of the channel for playing a
+	tone, returning the channel output to an idle state ready to
+	start a new replay or other output operation. Note that this
+	means that if
+fnref	sm_play_tone_status
+	is used again on the channel before starting a new tone, then it
+	will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Abort generation of tone
+apifn	sm_play_tone_abort
+	The channel which is playing a tone.
+param	tSMChannelId channel
+	This call enables an application to abort a previously initiated
+	tone generation job on the specified channel (as long as the
+	<a href="apifn-sm_play_tone.html#field-wait_for_completion">
+	wait_for_completion</a> flag was not used in the
+	previous call to
+fnref	sm_play_tone).
+	The channel will revert to outputting silence.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Plays multiple tones on a channel
+apifn	sm_play_tone_list
+params	sm_play_tone_list_parms tonep
+	The channel on which the tones are to be generated.
+field	tSMChannelId channel in
+	Pointer to an array containing the list of tones to play back.
+struct	sm_play_tone_item
+	The operation to perform at this stage of the tone generation.
+enumstart   kSMToneOperation
+	Stop the tone generation.
+fnref	sm_play_tone_list_status
+	will report <code>kSMPlayToneListStatusComplete</code>. All
+	other parameters are ignored and should be zero.
+enum	kSMToneOperationStop
+	Combine the first and second signals by summing their output.
+	This is the method used for generating DTMF tones.
+enum	kSMToneOperationSum
+	Combine the first and second signals by treating the first as a
+	carrier wave, over which the second signal is modulated. The
+ref	tones-amplitude2
+	parameter specifies the amplitude of the modulation. The output
+	waveform is
+	<code>amplitude1 * sinewave(frequency1) * (1 + amplitude2 * sinewave(frequency2))</code>
+	(after all parameters have been scaled appropriately).
+enum	kSMToneOperationModulate
+enumend	operation in
+	The duration of this tone, specified in milliseconds.
+field	tSM_UT32 duration in
+	The first component frequency of the tone to generate, specified
+	in Hz. If
+ref	tones-operation
+	is <code>kSMToneOperationModulate</code> then this tone specifies the
+	carrier.
+field	double frequency1 in
+	The amplitude of the first component frequency, specified in dBm0
+	(according to CCITT G.711) and must be in the range from -35 dBm0 to
+	+3 dBm0.
+field	double amplitude1 in
+	The second component frequency of the tone to generate, specified
+	in Hz. If
+ref	tones-operation
+	is <code>kSMToneOperationModulate</code> then this tone specifies the
+	modulating signal.
+field	double frequency2 in
+	If
+ref	tones-operation
+	is <code>kSMToneOperationSum</code> then this is the
+	amplitude of the second component frequency, specified in dBm0
+	(according to CCITT G.711) and must be in the range from -35 dBm0 to
+	+3 dBm0.
+	If
+ref	tones-operation
+	is <code>kSMToneOperationModulate</code> then this is the
+	amplitude relative to the carrier wave, with 0 dB corresponding
+	to 100% modulation. For example, a 50% modulation would be
+	specified as 20 * log10(0.5) = -6.0206 dB.
+field	double amplitude2 in
+unstruct    *tones
+	The number of entries in the
+ref	tones
+	array.
+field	tSM_INT tone_count in
+unstruct
+	This call allows an application to generate multiple simple tones on
+	a given output channel
+ref	channel.
+	<p>
+	The application can wait to be notified by an event that tone
+	generation of a given duration has completed. When a write event has
+	been associated with channel (see
+fnref	sm_channel_set_event),
+	then the driver will notify the application with that event whenever
+	it needs to invoke
+fnref	sm_play_tone_list_status.
+	<p>
+	The
+fnref	sm_play_tone_list_abort
+	call may be used to stop an ongoing tone generation.
+	<p>
+	This call offers a superset of the functionality provided by
+fnref	sm_play_tone,
+fnref	sm_play_cptone
+	and
+fnref	sm_play_digits.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - unknown tone or inconsistent parameters
+
+	Determine status of previously initiated tone list generation
+apifn	sm_play_tone_list_status
+params	sm_play_tone_list_status_parms statusp
+	The channel which is playing a tone.
+field	tSMChannelId channel inout
+	The status of the tone generation.
+enumstart	kSMPlayToneListStatus
+	The tone generation job is still ongoing.
+enum	kSMPlayToneListStatusOngoing
+	The tone generation job has completed. This is signalled when the
+	<code>kSMToneOperationStop</code> code is encountered in the tone list.
+enum	kSMPlayToneListStatusComplete
+	The tone generation job is still ongoing and the module has capacity
+	to buffer further data for the job.
+enum	kSMPlayToneListStatusHasCapacity
+	Data has not been supplied sufficiently frequently to generation job
+	and the output has been padded out with silence.
+enum	kSMPlayToneListStatusUnderrun
+enumend	status out
+unstruct
+	This call, typically invoked in response to a write event being
+	signalled, allows an application to determine the status of a
+	specific on-going tone list generation job.
+	<p>
+	In order to determine the status of a specific tone generation
+	job on a particular output channel, the application should set
+ref	channel
+	to specify the job concerned.
+	<p>
+	When this function reports that the channel status is
+ref	kSMPlayToneListStatusComplete,
+	this also marks the end of the use of the channel for playing
+	tones, returning the channel output to an idle state ready to
+	start a new replay or other output operation. Note that this
+	means that if
+fnref	sm_play_tone_list_status
+	is used again on the channel before starting a new tone, then it
+	will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Abort generation of tone list
+apifn	sm_play_tone_list_abort
+	The channel which is playing a tone.
+param	tSMChannelId channel
+	This call enables an application to abort the previously
+	initiated playing of a list of tones. The channel stops
+	generating tones as soon as possible, causing the status
+	<code>kSMPlayToneListStatusComplete</code> to be reported by
+fnref	sm_play_tone_list_status
+	when the tone generation has stopped.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Generate call-progress tone on a channel
+apifn	sm_play_cptone
+params	sm_play_cptone_parms cptonep
+	The channel on which the tone is to be played.
+field	tSMChannelId channel in
+	The duration of the tone (mS), or the value zero for indefinite
+	length. This parameter is ignored if
+ref	type
+	is
+ref	kSMPlayCPToneTypeOneShot.
+field	tSM_UT32 duration in
+	An indicator of whether this function would return as soon
+	as it has set up the generation of the tone (0), or wait
+	until the end of the tone (non-zero). If this value is zero,
+	the application must have an event associated with this
+	channel and invoke
+fnref	sm_play_cptone_status
+	whenever the event is set.
+field	tSM_INT wait_for_completion in
+	The style of playing to use.
+enumstart	kSMPlayCPToneType
+	Output sequence of
+ref	tone_count
+	cadences just once.
+enum	kSMPlayCPToneTypeOneShot
+	Repeatedly output sequence of
+ref	tone_count
+	cadences.
+enum	kSMPlayCPToneTypeRepeat
+	Continuously output tone specified by
+ref	cadences-tone_id
+	in first element of
+ref	cadences.
+	Both
+ref	cadences-on_cadence,
+ref	cadences-off_cadence
+	and other elements of
+ref	cadences
+	are ignored. Since this is the same as using
+fnref	sm_play_tone,
+	the use of this value is deprecated in favour of
+fnref	sm_play_tone.
+enum	kSMPlayCPToneTypeContinuous
+enumend	type in
+	The number of items in
+ref	cadences.
+field	tSM_INT tone_count in
+	The sequence of tones.
+struct	sm_cadence
+	A tone identifier.
+field	tSM_INT tone_id in
+	The duration (in mS) that this tone is on for.
+field	tSM_INT on_cadence in
+	The duration (in mS) of silence after this tone.
+field	tSM_INT off_cadence in
+const	kSMMaxPlayCPToneCadences 8
+unstruct	cadences[kSMMaxPlayCPToneCadences] play_cptone
+unstruct
+	This call allows an application to generate a call-progress tone
+	on specified output channel
+ref	channel.
+	<p>
+	If the call-progress tone is to be output continuously (or until
+	interrupted by
+fnref	sm_play_cptone_abort),
+	the parameter
+ref	duration
+	should be set to zero. Otherwise
+ref	duration
+	should be set to the required call-progress tone duration in
+	milliseconds (the
+ref	duration
+	parameter is ignored if
+ref	type
+	is
+ref	kSMPlayCPToneTypeOneShot).
+	<p>
+	Each element of
+ref	cadences
+	specifies an on-period
+ref	cadences-on_cadence
+	and an off-period
+ref	cadences-off_cadence
+	both specified in milliseconds, and also
+ref	cadences-tone_id
+	referencing to one of the module's currently defined simple
+	output tones (see
+	<a href="../prospapi_outtones.html">
+	Prosody speech processing: pre-loaded output tones</a>,
+	for list of ids for output tones
+	downloaded with module firmware and see
+	description of
+fnref	sm_add_output_tone
+	for how an application
+	may define its own simple output tones). Here are some
+	examples of call-progress tones which use
+ref	kSMPlayCPToneTypeRepeat:
+	<p>
+	<table border>
+	<tr><th rowspan=2>Name</th><th rowspan=2>tone_count</th>
+		<th colspan=4>cadences</th></tr>
+	<tr><th>pos</th><th>tone_id</th><th>on_cadence</th><th>off_cadence</th></tr>
+	<tr><td rowspan=2>U.K. ring tone</td><td rowspan=2>2</td>
+		<td>0</td><td>17</td> <td>400</td> <td>208</td></tr>
+	<tr>
+		<td>1</td><td>17</td> <td>400</td> <td>2000</td></tr>
+	<tr><td>U.K. busy</td><td>1</td>
+		<td>0</td><td>16</td> <td>384</td> <td>384</td></tr>
+	<tr><td>E.C. busy</td><td>1</td>
+		<td>0</td><td>18</td> <td>512</td> <td>512</td></tr>
+	<tr><td rowspan=3>S.I.T.</td><td rowspan=3>3</td>
+		<td>0</td><td>19</td> <td>336</td> <td>32</td></tr>
+	<tr>
+		<td>1</td><td>20</td> <td>336</td> <td>32</td></tr>
+	<tr>
+		<td>2</td><td>21</td> <td>336</td> <td>1008</td></tr>
+	</table>
+	<p>
+	The
+ref	wait_for_completion
+	flag may be set by the application in which case the API call
+	will not complete until the tone has been completely output,
+	however no other Prosody API function can be performed on the
+	channel during this waiting period.
+	Obviously setting this flag is not useful when the tone has been
+	specified as being a continuous tone with no fixed duration,
+	since there would then be no way to stop the tone.
+	See the document <a href="../an-wait_for_completion.html">Prosody
+	application note: waiting for completion</a> for examples of
+	how to wait without blocking other functions.
+	<p>
+	Alternatively the application can wait to be notified by an
+	event that tone generation of a given duration has completed.
+	When a write event has been associated with channel (see
+	<a href="apifn-sm_channel_set_event.html">sm_channel_set_event</a>),
+	then the driver will notify the application with that event
+	whenever it needs to invoke
+fnref	sm_play_cptone_status.
+	<p>
+	This requires the module
+modref	tonegen
+	to have been downloaded.
+	<p>
+	The channel is reserved for playing the tone until the API has
+	reported completion. If the
+ref	wait_for_completion
+	flag is set, then the API considers that completion has been
+	reported when this API function returns, otherwise completion
+	is reported only by
+fnref	sm_play_cptone_status
+	returning the status
+	<a href="apifn-sm_play_cptone_status.html#field-kSMPlayCPToneStatusComplete">
+	kSMPlayCPToneStatusComplete</a>. In this case the
+	application <strong>must</strong> call
+fnref	sm_play_cptone_status
+	periodically and should use an event on the channel to notify it
+	when to check the status.
+	No other output activity can
+	take place on the channel until the completion of the tone has
+	been reported.
+	Note that the event itself does not
+	indicate completion of the tone. It is possible for the event
+	to be signalled even if the tone has not yet completed, so it
+	is essential that the application checks the status and
+	continues waiting if the tone has not completed.
+	<p>
+	Note that the only way to stop a continuous tone is by calling
+fnref	sm_play_cptone_abort.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - unknown tone type, inconsistent parameters
+
+	Determine status of previously initiated call-progress tone generation
+apifn	sm_play_cptone_status
+params	sm_play_cptone_status_parms statusp
+	The channel which is playing a call-progress tone.
+field	tSMChannelId channel inout
+	The status of the channel.
+enumstart	kSMPlayCPToneStatus
+	The call-progress tone generation job has completed.
+enum	kSMPlayCPToneStatusComplete
+	The call-progress tone generation job is still ongoing.
+enum	kSMPlayCPToneStatusOngoing
+enumend	status out
+unstruct
+	This call, typically invoke in response to a write event
+	being signalled, allows an application to determine the status of a
+	specific on-going call-progress tone generation job.
+	<p>
+	In order to determine the status of a specific call-progress
+	tone generation job on a particular output channel, the
+	application should set
+ref	channel
+	to specify the job concerned. On successful completion, the
+ref	status
+	parameter will indicate the status of that channel.
+	<p>
+	This function can also be used for 'any channel' operation. This 
+	mode of operation is a legacy feature and is not recommended for 
+	new applications. See 
+	<a href="../anychan.html">Prosody TiNG: any channel operation</a>
+	for more details.
+	<p>
+	When this function reports that the channel status is
+ref	kSMPlayCPToneStatusComplete,
+	this also marks the end of the use of the channel for playing a
+	tone, returning the channel output to an idle state ready to
+	start a new replay or other output operation. Note that this
+	means that if
+fnref	sm_play_cptone_status
+	is used again on the channel before starting a new tone, then it
+	will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Abort generation of call-progress tone
+apifn	sm_play_cptone_abort
+	The channel which is playing a call-progress tone.
+param	tSMChannelId channel
+	This call enables an application to abort a previously initiated
+	call-progress tone generation job on the specified channel (as
+	long as the
+	<a href="apifn-sm_play_cptone.html#field-wait_for_completion">wait_for_completion</a>
+	flag was not used in the
+	previous call to
+fnref	sm_play_cptone).
+	The channel will revert to
+	outputting silence.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Dial DTMF digits on a channel
+apifn	sm_play_digits
+params	sm_play_digits_parms digitsp
+	The channel on which the digits are to be played.
+field	tSMChannelId channel in
+	An indicator of whether this function would return as soon
+	as it has set up the generation of the tone (0), or wait
+	until the end of the tone (non-zero). If this value is zero,
+	the application must have an event associated with this
+	channel and invoke
+fnref	sm_play_digits_status
+	whenever the event is set.
+field	tSM_INT wait_for_completion in
+	The details of the digits to play.
+struct	sm_digits
+	The type of digits to play.
+enumstart	kSMDigitType
+enum	kSMDTMFDigits
+enumend	type in
+	Unused. Set to zero.
+field	tSM_INT qualifier in
+const	kSMMaxDigits 32
+const	kSMMaxDigits_plus1 33
+	The digits to play.
+field	char digit_string[kSMMaxDigits_plus1] in
+	The amount of silence (in mS) to leave between digits.
+field	tSM_INT inter_digit_delay in
+	The duration (in mS) of each digit.
+field	tSM_INT digit_duration in
+unstruct	digits
+unstruct
+	This call outputs a sequence of DTMF digits in-band on the output
+	channel specified. The
+ref	digits
+	structure contains details of the digits to be dialled. The
+ref	digits-type
+	parameter determines the way digits contained in the zero
+	terminated string
+ref	digits-digit_string
+	are output on the timeslot.
+	<p>
+	The
+ref	digits-qualifier
+	parameter is not currently used and should be set to zero.
+	<p>
+	The
+ref	digits-inter_digit_delay
+	and
+ref	digits-digit_duration
+	parameters are specified in milliseconds. Set parameters to zero for default delay and
+	duration.
+	<p>
+	The characters permitted in
+ref	digits-digit_string
+	depend on the
+ref	digits-type
+	parameter specified. For <code>kSMDTMFDigits</code>, only
+	'0'..'9','*', '#' , and 'A'..'D' are permitted.
+	<p>
+	The
+ref	wait_for_completion
+	flag may be set by the application in which case the API call
+	will not return until the digits have been completely output,
+	however no other Prosody API function can be performed on the
+	channel during this waiting period.
+	See the document <a href="../an-wait_for_completion.html">Prosody
+	application note: waiting for completion</a> for examples of
+	how to wait without blocking other functions.
+	<p>
+	Alternatively the application can wait to be notified by an
+	event indicating that the digits have been completely output.
+	This requires the module
+modref	tonegen
+	to have been downloaded.
+	<p>
+	The channel is reserved for playing the digits until the API has
+	reported completion. If the
+ref	wait_for_completion
+	flag is set, then the API considers that completion has been
+	reported when this API function returns, otherwise completion
+	is reported only by
+fnref	sm_play_digits_status
+	returning the status
+	<a href="apifn-sm_play_digits_status.html#field-kSMPlayDigitsStatusComplete">
+	kSMPlayDigitsStatusComplete</a>. In this case the application
+	<strong>must</strong> call
+fnref	sm_play_digits_status
+	periodically and should use a write event on the channel to
+	notify it when to check the status.
+	No other output activity can
+	take place on the channel until the completion of the digits has
+	been reported, so
+	Note that the event itself does not
+	indicate completion of the digits. It is possible for the event
+	to be signalled even if the digits have not yet completed, so it
+	is essential that the application checks the status and
+	continues waiting if the digits have not completed.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - illegal type or digit for type
+
+	Determine status of previously initiated DTMF dialling
+apifn	sm_play_digits_status
+params	sm_play_digits_status_parms statusp
+	The channel which is playing digits.
+field	tSMChannelId channel inout
+	The channel status.
+enumstart	kSMPlayDigitsStatus
+	The dialling has completed.
+enum	kSMPlayDigitsStatusComplete
+	The dialling is still ongoing.
+enum	kSMPlayDigitsStatusOngoing
+enumend	status out
+unstruct
+	This call, typically invoke in response to a write event
+	being signalled, allows an application to determine the status of a
+	specific on-going DTMF dialling job.
+	<p>
+	In order to determine the status of a specific dialling job on a
+	particular output channel, the application should set
+ref	channel
+	to specify the job concerned. On successful completion, the
+ref	status
+	parameter indicates the status.
+	<p>
+	This function can also be used for 'any channel' operation. This 
+	mode of operation is a legacy feature and is not recommended for 
+	new applications. See 
+	<a href="../anychan.html">Prosody TiNG: any channel operation</a>
+	for more details.
+	<p>
+	When this function reports that the channel status is
+ref	kSMPlayDigitsStatusComplete,
+	this also marks the end of the use of the channel for playing
+	digits, returning the channel output to an idle state ready to
+	start a new replay or other output operation. Note that this
+	means that if
+fnref	sm_play_digits_status
+	is used again on the channel before starting a new tone, then it
+	will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Set repertoire of digits, simple tones, and call-progress tones to listen for on channel
+apifn	sm_listen_for
+params	sm_listen_for_parms listenp
+	The channel on which to listen.
+field	tSMChannelId channel in
+	The tone detection to enable, if any.
+	If a tone detection is to be used, the module
+modref	td
+	must have been downloaded.
+enumstart	kSMToneDetection
+	Simple tones never recognised.
+enum	kSMToneDetectionNone
+	Simple tone detection enabled, no minimum period. If
+	the correct frequencies are detected with the correct
+	signal to noise ratio, twist, etc. for however short a
+	duration, the tone is considered to be present and is
+	recognised. 
+enum	kSMToneDetectionNoMinDuration
+	Simple tone detection enabled, tone must be valid
+	for minimum period to be detected. If the tone is valid
+	for 64mS it will definitely be detected. Tones of
+	shorter duration between 32mS and 64mS may be detected
+	but cannot be guaranteed. The minimum duration of a tone can
+	be increased by setting the parameter
+	<a href="apifn-sm_adjust_input_tone_set.html#field-kAdjustToneSetIntParamIdMinOnTime">kAdjustToneSetIntParamIdMinOnTime</a>
+	with
+fnref	sm_adjust_input_tone_set.
+enum	kSMToneDetectionMinDuration64
+	This mode uses a slightly more complex algorithm for
+	analysing duration of a valid tone, and enables robust
+	detection of tones with duration as short as 40mS.
+enum	kSMToneDetectionMinDuration40
+	This mode is like
+ref	kSMToneDetectionNoMinDuration
+	but application notified when end of tone detected.
+enum	kSMToneEndDetectionNoMinDuration
+	This mode is like
+ref	kSMToneDetectionMinDuration64
+	but application notified when end of tone detected.
+enum	kSMToneEndDetectionMinDuration64
+	This mode is like
+ref	kSMToneDetectionMinDuration40
+	but application notified when end of tone detected.
+enum	kSMToneEndDetectionMinDuration40
+	This mode is like
+ref	kSMToneEndDetectionNoMinDuration
+	but returns additional tone duration information to application.
+enum	kSMToneLenDetectionNoMinDuration
+	This mode is like
+ref	kSMToneEndDetectionMinDuration64
+	but returns additional tone duration information to application.
+enum	kSMToneLenDetectionMinDuration64
+	This mode is like
+ref	kSMToneEndDetectionMinDuration40
+	but returns additional tone duration information to application.
+enum	kSMToneLenDetectionMinDuration40
+	This mode is only valid when specified in the parameters for
+fnref	sm_record_start
+	and a tone detection mode is currently active on the same
+	channel, started by
+fnref	sm_listen_for.
+	Any tones detected on the same channel as the recording
+	will be eliminated from the recorded data.
+enum	kSMToneDetectionAsListenFor
+enumend	tone_detection_mode in
+	The tone set for tone detection.
+field	tSM_INT active_tone_set_id in
+	Indicator of whether tone detection should convert the result
+	into a digit or not.
+enumstart	kSMDigitMapping
+	Report tone IDs.
+enum	kSMNoDigitMapping
+	Report tones as digit codes.
+enum	kSMDTMFToneSetDigitMapping
+enumend	map_tones_to_digits in
+	Indicator of whether detection of call-progress tones is to be
+	enabled (non-zero) or not (zero).
+field	tSM_INT enable_cptone_recognition in
+	Indicator of whether grunt detection is to be
+	enabled (non-zero) or not (zero).
+	If enabled, this requires the module
+modref	grunt
+	to have been downloaded.
+field	tSM_INT enable_grunt_detection in
+	The duration of silence (in mS) required before a signal is
+	considered to be silent.
+field	tSM_INT grunt_latency in
+	The minimum level, in dBm0, that the noise estimate of the grunt detector may
+	reach. The default is -55 dBm0. Only used if
+ref enable_grunt_detection
+	is non zero.
+	Requires the module
+modref	grunt.
+field	double min_noise_level in
+	The threshold, in dB, above the noise estimate of the grunt detector at
+	which a signal is considered present. The default is 15 dB. Only used if
+ref min_noise_level
+	is non zero.
+	Requires the module
+modref	grunt.
+field	double grunt_threshold in
+	The period, in ms, following start of speech, to disable updating the estimate of the background noise energy
+	(a non-zero period, typically 1000ms, can be required when long periods of uninterrupted speech are expected).
+	Requires the module
+modref	grunt.
+field	tSM_UT32 grunt_holdoff in
+unstruct
+	This call controls the simple tones, call-progress tones and
+	digits that may be recognised on the specified
+	channel
+ref	channel.
+	<p>
+	It may be called at any time to alter the tone and digit
+	recognition properties for a particular channel.
+	<p>
+	Contact Aculab technical support for details of an
+	application library which can detect pulse-dialled digits.
+	<p>
+	The parameters
+ref	tone_detection_mode
+	and
+ref	active_tone_set_id
+	determine if and by what criteria simple tones are recognised on
+	the input channel. If tone detection is enabled then any simple
+	tone that occurs on the channel and that meets the recognition
+	criteria will be notified to the application.
+	<p>
+	In order to be recognised, a tone must be a member of the input
+	tone set
+ref	active_tone_set_id
+	(see
+	<a href="../prospapi_intones.html">
+	Prosody speech processing: pre-loaded input tones</a>
+	for predefined tone sets, and
+fnref	sm_add_input_tone_set
+	for application defined tone sets). It must also fulfil the
+	criteria for the specified mode (see
+	<a href="../prospapi_intones.html">
+	Prosody speech processing: pre-loaded input tones</a>
+	for more details).
+	<p>
+	When a tone is recognised, the recognition event associated with
+	the channel is set and the application can then retrieve a tone
+	identifier for the recognised tone by calling
+fnref	sm_get_recognised.
+	However if
+ref	map_tones_to_digits
+	is set to a value of <code>kSMDTMFToneSetDigitMapping</code>
+	then when a tone occurs on the channel corresponding to a DTMF
+	digit,
+fnref	sm_get_recognised
+	reports the digit directly, with the mapping between DTMF
+	tones and DTMF digits already done.
+	<p>
+	If
+ref	enable_cptone_recognition
+	is set to a non-zero value, then any call-progress tone that
+	occurs on the channel and that corresponds to a member of set of
+	call-progress tones currently recognisable by the module will be
+	notified to the application. See
+	<a href="../prospapi_cptones.html">
+	Prosody speech processing: pre-loaded call-progress tones</a>,
+	for a list of
+	default set of call-progress tones recognisable by the module.
+	To alter the default set of recognisable call-progress tones,
+	see the calls
+fnref	sm_reset_input_cptones
+	and
+fnref	sm_add_input_cptone.
+	<p>
+	Note that call-progress tone detection may not be used
+	simultaneously with tone or digit detection on the same channel.
+	<p>
+	If
+ref	enable_grunt_detection
+	is set to a non-zero value, then the application will be
+	notified when the signal energy on the input channel goes above
+	an adaptive threshold, which is
+ref	grunt_threshold
+	above the estimated ambient
+	background noise level. The application will be notified again
+	when this signal burst ends. The grunt_latency parameter, if
+	non-zero, enables holding back of the &quot;end of grunt&quot;
+	notification by grunt_latency milliseconds so if the signal
+	restarts during this period, a premature &quot;end of
+	grunt&quot; notification is not given. The grunt detection
+	algorithm makes the assumption that there is activity on the
+	line at initialisation. Therefore, the first notification will
+	always be an "end of grunt". If the line is silent when grunt
+	detection is enabled, an "end of grunt" notification will happen
+	within
+ref	grunt_latency
+	milliseconds from the start. For natural speech
+ref	grunt_latency
+	should be set to 1000 milliseconds or longer.
+	<p>
+	If a recognition event has been previously associated with channel (see
+fnref	sm_channel_set_event),
+	then the driver will notify the application with that event
+	whenever one of the above is recognised on the input channel.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - illegal tone or digit mode
+
+	Detect ANS and ANSam V.8 tones
+apifn	sm_ans_listen_for
+params	sm_ans_listen_for_parms listenp
+	The channel on which to listen.
+field	tSMChannelId channel in
+	The detection mode to use.
+enumstart	kSMANSMode
+	Stop detecting ANS and ANSam tones.
+enum	kSMANSModeDisable
+	Initiate ANS and ANSam tone detection.
+enum	kSMANSModeDetect
+enumend	detection_mode in
+unstruct
+	This call controls detection of the ITU-T V.8 tones ANS and ANSam,
+	which are used in the preliminary stages of modem negotiation.
+	<p>
+	When a tone is recognised, the recognition event associated with the
+	channel is set and the application can then retrieve a tone identifier
+	for the recognised tone by calling
+fnref	sm_get_recognised.
+	<p>
+	The module
+modref	ansam
+	is required by this call.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - illegal mode
+
+version deprecated
+	Set vocabulary of words to listen for on a channel
+apifn	sm_asr_listen_for
+params	sm_asr_listen_for_parms listenp
+	The channel on which to listen.
+field	tSMChannelId channel in
+	The number of items in
+ref	vocab_item_ids
+	and
+ref	vocab_recog_ids.
+field	tSM_INT vocab_item_count in
+	The vocabulary items to make active.
+field	tSM_UT32 *vocab_item_ids in vocab_item_list
+	The identifiers to use when reporting recognition results.
+field	tSM_INT *vocab_recog_ids in vocab_recog_list
+	The recognition mode to use.
+enumstart	kSMASRMode
+	Inhibit ASR recognition.
+enum	kSMASRModeDisabled
+	Initiate ASR recognition. Once a word has been detected or a
+	timeout has occurred, ASR recognition is inhibited.
+enum	kSMASRModeOneShot
+	Repeatedly initiate ASR recognition with the same active
+	vocabulary and recognition parameters. Continue producing
+	recognition results until the ASR is disabled.
+enum	kSMASRModeContinuous
+enumend	asr_mode in
+	Pointer to ASR parameters, or zero to use the defaults.
+	<p>
+	Where a paramater is specified as being a number of frames,
+	this refers to units of time with 1 frame being equivalent to
+	16ms.
+	<p>
+	Recognition performance can sometimes be improved by adjusting
+	some of these parameters. If it is felt that any of these values
+	needs changing, it is normally best to change only one value at
+	a time. This procedure can be very time-consuming and attempting
+	to change more than one value at the same time will make the
+	process too complicated.
+	<p>
+	If there is no better way to choose an optimum value for any of
+	these parameters, it is best initially to change from the
+	default by a factor of two (or by one half, if it needs to be
+	made smaller). If that improves matters, try changing by another
+	factor of two, and so on, until performance becomes worse. At
+	that point, back-track to mid-way between the values already
+	tried, on either side of the best one. Repeat this back-tracking
+	until there is no significant difference between the performance
+	of the two best values.
+	<p>
+struct	sm_asr_characteristics
+	Default <code>8</code>. See discussion under
+ref	vfr_diff_threshold.
+field	tSM_INT vfr_max_frames in
+	Default <code>0.5</code>.
+	<p>
+	The recogniser uses a simple variable-frame-rate analysis of
+	incoming speech in order to reduce the average computational
+	loading. In practice, its main function is to skip over extended
+	periods of silence without performing more than the absolute
+	minimum of processing.
+ref	vfr_max_frames
+	sets the maximum number of input frames which will be examined
+	before a frame is passed on to the recogniser proper, while
+ref	vfr_diff_threshold
+	is the change in the input frames required in order to trigger a
+	frame to be passed on. Setting it to zero has the same effect as
+	setting
+ref	vfr_max_frames
+	to 1, i.e. it disables the VFR mechanism and passes all frames
+	straight to the recogniser.
+ref	vfr_diff_threshold
+	normally satisfies this condition:
+	<p>
+	<code>0 &lt;= vfr_diff_threshold &lt;= 1.0</code>
+	<p>
+	In cases where vocabulary size is small (or words are short),
+	there may be an increase in accuracy if
+ref	vfr_max_frames
+	is set to a small value, say 1 or 2, and / or
+ref	vfr_diff_threshold
+	is decreased. This will cause fewer frames of data to be
+	skipped, but it will increase the average computational loading
+	on the respective module. Thus this method should only be used
+	if the loading is not too heavy. Conversely, if a module is too
+	heavily loaded,
+ref	vfr_diff_threshold
+	can be increased somewhat to reduce the loading (but at the
+	expense of reduced accuracy). It is unlikely that an increase in
+ref	vfr_max_frames
+	will have any useful effect, and it only really makes sense to
+	set it such that:
+	<p>
+	<code>1 &lt;= vfr_ max_frames &lt;= pse_min_frames</code> 
+field	double vfr_diff_threshold in
+	Default <code>63</code>. This, together with
+ref	pse_min_frames,
+	determines the maximum and minimum latency in the ASR system
+	(i.e. the delay between the speech ending and a result being
+	produced). If
+ref	pse_min_frames
+	is too small, recognition accuracy will suffer because a
+	premature result may be produced if there is a brief hesitation
+	or quiet interval within an utterance. If
+ref	pse_max_frames
+	is too large, there will occasionally be long delays before a
+	result is produced. In cases where lines are noisy or there are
+	problems with excessive echo, it may be advantageous to increase
+ref	pse_min_frames
+	and / or decrease
+ref	pse_max_frames,
+	subject to these constraints:
+	<p>
+	<code>1 &lt;= pse_min_frames &lt;= pse_max_frames &lt;= 125</code>
+	<p>
+	where the value 125 is two seconds.
+field	tSM_INT pse_max_frames in
+	Default <code>21</code>. See discussion under
+ref	pse_max_frames.
+field	tSM_INT pse_min_frames in
+	Default <code>0.16</code>.
+	Increase this value to make more recognition results be
+	classified as uncertain, decrease it for fewer. The value zero causes
+	no result to be reported as uncertain.
+	See discussion under
+ref	vit_hard_threshold.
+field	double vit_soft_threshold in
+	Default <code>0.08</code>.
+	Increase this value to make more recognition results be
+	classified as rejected, decrease it for fewer. The value zero causes
+	no result to be reported as rejected,
+	<p>
+	It is unlikely that values
+	greater than 1.0 would ever be used for this parameter, and
+ref	vit_hard_threshold
+	is normally set greater than
+ref	vit_soft_threshold:
+	<p>
+	<code>0 &lt;= vit_soft_threshold &lt; vit_hard_threshold &lt; 1.0</code>
+field	double vit_hard_threshold in
+	This is designed to facilitate compensation
+	for an unusual signal-to-noise ratio, or poor speech quality. It is a
+	log-probability, so can be positive or negative. It affects the
+	likelihood of speech being classified as background noise, and
+	vice-versa. Optimising this parameter is not always straightforward,
+	however: timeouts can be caused by it being too positive or
+	too negative.
+	<p>
+	If <code>vit_snr_adjust</code> is too positive, background noise
+	may be detected as speech, both before and after the end of the
+	utterance. The result of this is a timeout because the recogniser never
+	detects the end of the utterance. If it is too negative,
+	the speech will be less likely to be detected at all, and this will
+	also result in a timeout.
+	<p>
+	It is sometimes possible to tell whether
+	<code>vit_snr_adjust</code> is too positive or too negative by
+	the nature of recognition errors. If the recognition errors
+	appear to be due to the initial and/or final parts of the spoken
+	words being ignored, it should be made more positive. If they
+	appear to be due to background noise immediately before and/or
+	after the spoken words being treated as part of the utterance,
+	it should be made more negative.
+	<p>
+	If the errors offer no clues as to the cause of the problem, and
+	the recogniser is giving too many timeouts and/or poor accuracy,
+	<code>vit_snr_adjust</code> should initially be made slightly more
+	positive. Only if that causes the timeouts to increase, should it be
+	made negative.
+	<p>
+	A suitable amount to add or subtract is <code>5</code>.
+	<p>
+	Default <code>0.0</code>
+field	double vit_snr_adjust in
+unstruct	*specific_parameters	vocab_params
+	The channel whose output may be echoed back into the input being
+	analysed.
+field	tSMChannelId sidetone in
+unstruct
+	This function controls the spoken words that may be recognised on
+	the specified channel
+	and may be called to start or stop speech recognition on the channel.
+	<p>
+	While listening for speech, a channel has an active
+	vocabulary consisting of a set of vocabulary items which
+	may be any subset of the current vocabulary loaded into the
+	module using
+fnref	sm_add_input_vocab.
+ref	vocab_item_count
+	specifies how many items are in the active vocabulary, and
+	the array pointed to by
+ref	vocab_item_ids
+	specifies the items by ID value (as returned by
+fnref	sm_add_input_vocab).
+	The active vocabulary must include the "noise" vocabulary item.
+	Whenever one of the items in the active vocabulary is
+	recognised, it will be identified to the application (via
+fnref	sm_get_recognised)
+	using the corresponding user ID specified in the array
+ref	vocab_recog_ids.
+	<p>
+	User IDs should be non-zero because a zero ID value is returned
+	by
+fnref	sm_get_recognised
+	to indicate no item in the active vocabulary could be matched
+	with the utterance. More than one vocabulary item can be made to
+	return the same user ID (so that, for example, the words "Zero",
+	"Nought" and "Oh" could all return the same user ID).
+	Conversely, the same vocabulary item may be return different
+	user ids on different channels so that multiple applications can
+	assign user ids independently of one another on different
+	channels.
+	<p>
+	When a result is awaiting collection from
+fnref	sm_get_recognised
+	if an event has been previously associated with channel (see
+fnref	sm_channel_set_event),
+	then that event will be signalled.
+	<p>
+	If
+ref	specific_parameters
+	is set to a non-zero value, then the module's default set of ASR
+	parameters is overridden with the set pointed to by
+ref	specific_parameters.
+	<p>
+	Non-speech sounds (including call-progress and DTMF tones) and
+	echoes of replayed voice prompts may produce unwanted
+	ASR results. These two problems can be ameliorated
+	(respectively) by these two methods:
+	<ol>
+		<li>Enabling DTMF recognition together with ASR: this
+		automatically inhibits ASR for the duration of any
+		recognised DTMF tone and then restarts it immediately
+		afterwards.
+		<li>Indicating which output may be the source of any echo
+		(using the
+ref	sidetone
+		field). This selectively
+		reduces the recogniser's sensitivity to any echo derived
+		from the specified channel output.
+	</ol>
+	<p>
+	Bear in mind that speech recognition is a
+	computationally intensive process, and the load on the
+	Prosody Processor is proportional to the size and complexity of
+	the active vocabulary. There is a limit to the combined sizes of
+	all the channels' active vocabularies on a module.
+	The application must ensure that
+fnref	sm_asr_listen_for
+	is not invoked such that the resource limits of the Prosody
+	Processor are exceeded by the combined load of all activities
+	including speech recognition.
+	<p>
+	Requires the module
+modref	iwr
+	to have been downloaded.
+	Since Prosody X and Prosody S do not implement ASR, this function always
+	returns an error.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - illegal vocab id or mode or parameter
+error	ERR_SM_NO_RESOURCES - not enough computation resources left for this ASR recognition
+error	ERR_SM_WRONG_CHANNEL_STATE - no active channel vocabulary and item count is zero
+version +
+
+	Poll for recognised digit, tone, or call-progress tone
+apifn	sm_get_recognised
+params	sm_recognised_parms recogp
+	The channnel on which recognition is being checked.
+field	tSMChannelId channel inout
+	The recognition result.
+enumstart	kSMRecognition
+	No digit, simple or call-progress tone has been
+	recognised
+enum	kSMRecognisedNothing
+enum	kSMRecognisedTrainingDigit
+	A pulse dialled or DTMF dialled digit has been
+	recognised and a character representation for it has
+	been stored in
+ref	param0.
+	In
+ref	param1
+	will be an indication of the digit type
+	(<code>kSMPulseDigits</code> or
+	<code>kSMDTMFDigits</code>) unless a tone detection mode
+	of type <code>kSMToneLen...</code> was specified in
+	which case it will contain the duration in milliseconds
+	of the detected DTMF digit.
+enum	kSMRecognisedDigit
+	A simple tone has been recognised from the active
+	set of input tones for the channel. The parameter
+ref	param0
+	and
+ref	param1
+	are assigned values as described above.
+enum	kSMRecognisedTone
+	A call-progress tone has been recognised and the
+	corresponding identifier has been stored in
+ref	param0.
+enum	kSMRecognisedCPTone
+	The beginning of a grunt has been detected.
+ref	param0
+	is set to the duration of the preceding silence in milliseconds.
+enum	kSMRecognisedGruntStart
+	The end of a grunt has been detected,
+ref	param0
+	is set to grunt duration in milliseconds, and
+ref	param1
+	to grunt average energy in negative dBm0 (average is
+	calculated only over periods during which signal is present).
+enum	kSMRecognisedGruntEnd
+	Obsolete
+enum	kSMRecognisedASRResult
+	Obsolete
+enum	kSMRecognisedASRUncertain
+	Obsolete
+enum	kSMRecognisedASRRejected
+	Obsolete
+enum	kSMRecognisedASRTimeout
+	A signal has been categorised, the parameter
+ref	param0
+	indicates the algorithm id (see
+fnref	sm_catsig_listen_for)
+	and
+ref	param1
+	is a value indicating the signal category with respect
+	to this algorithm (eg. live speaker or answer
+	machine).
+enum	kSMRecognisedCatSig
+	The recognition FIFO has been overrun because it has
+	not been polled frequently enough through calls to
+fnref	sm_get_recognised.
+enum	kSMRecognisedOverrun
+	An ANS or ANSam tone has been detected (see
+fnref	sm_ans_listen_for).
+	The parameter
+ref	param0
+	will describe the tone detected: 0 for end of tone, 1 for an ordinary
+	ANS tone, or 2 for the modulated ANSam tone. The parameter
+ref	param1
+	will be non zero if the ANS or ANSam tone has phase reversals
+enum	kSMRecognisedANS
+	A beep has been recognised
+	The parameter
+ref	param0
+	will be the beep frequency and
+ref	param1
+	will be zero at the start of the beep and non-zero when the beep ends.
+enum	kSMRecognisedBeep
+	An 'on-hook' state has been recognised
+enum	kSMRecognisedOnHook
+enumend	type out
+	A parameter giving details of what was detected. The
+	interpretation of this depends on the
+ref	type
+	field.
+field	tSM_INT param0 out
+	Another parameter giving details of what was detected. The
+	interpretation of this also depends on the
+ref	type
+	field.
+field	tSM_INT param1 out
+unstruct
+	This call, typically invoked in response to a recognition event
+	being signalled, allows an application to determine what item,
+	if any, was detected.
+	This includes simple
+	tones, call-progress tones and grunts.
+	<p>
+	In order to poll a specific input channel, the application
+	should set
+ref	channel
+	to specify the input channel concerned. On successful
+	completion, the
+ref	type
+	parameter will have been set to indicate the status of
+	detections on that channel.
+	<p>
+	If the type returned is
+ref	kSMRecognisedTone,
+	then
+ref	param0
+	and
+ref	param1
+	may be used to determine the two component frequencies that
+	together made up the recognised simple tone. Normally
+ref	param0
+	will be the zero based index into the set of band 1 frequencies
+	of the active tone set, and
+ref	param1
+	will be the zero based index into the set of band 2 frequencies
+	of the active tone set (e.g. if there are 4 frequencies in band 1
+	for the active tone set, param0 may have any value between 0 and
+	3, note it does not reflect the actual id for the input
+	frequency, just its offset in the enumerated band 1 set of input
+	frequencies).
+	<p>
+	When the band 2 set of frequencies is empty in the
+	active tone set then
+ref	param1
+	will be the zero based index into the set of band 1 frequencies
+	of the active tone set, and
+ref	param0
+	will be zero.
+	<p>
+	However if a tone detection mode of type
+	<code>kSMToneLen...</code> was specified in
+fnref	sm_listen_for
+	then
+ref	param0
+	will contain identifiers for the two component
+	frequencies packed into a single integer as follows:
+	<p>
+ref	param0
+	= normal-param0 + 256 * normal-param1
+	<p>
+	and
+ref	param1
+	will contain the duration in milliseconds of the detected tone
+	(granularity of 32 mS).
+	<p>
+	If the type returned is
+ref	kSMRecognisedCPTone,
+	then no part of the call-progress tone being reported can be
+	recognised as part of a later call-progress tone, but any
+	signal after the call-progress tone will be analysed and may
+	trigger recognition of another call-progress tone. For
+	example, if a ringing signal is being received, and this
+	matches a cadence in the call-progress table, then each
+	complete cadence of ringing received will be reported as a
+	separate call-progress tone.
+	<p>
+	This function can also be used for 'any channel' operation. This 
+	mode of operation is a legacy feature and is not recommended for 
+	new applications. See 
+	<a href="../anychan.html">Prosody TiNG: any channel operation</a>
+	for more details.
+	<p>
+	This function may report that nothing has been detected
+	even if a wait done on an event associated with this channel has
+	woken up. This is because sm_get_recognised() has decided that,
+	although something happened, it was not one of the events which
+	is 'interesting'. This is typically noticed when tone detection
+	has been enabled, which will wake the event periodically
+	(between about once per second to once per minute) to
+	keep the library informed of the channel status. These extra
+	wakeups only cause a tone to be reported if the current status
+	is that a continuous tone is being received and this matches a
+	tone with unlimited duration.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_CHANNEL - if channel was invalid or no longer allocated, or call invoked in any channel mode when no suitable channels
+
+	This call discards all buffered but as yet uncollected recognised items
+apifn	sm_discard_recognised
+	The channel for which recognition results are to be discarded.
+param	tSMChannelId channel
+	This call discards all buffered but as yet uncollected (by
+fnref	sm_get_recognised)
+	recognised items for the channel
+ref	channel.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Prepare channel ready to be used as conference output.
+apifn	sm_conf_prim_start
+params	sm_conf_prim_start_parms confp
+	The channel on which a conference output is to be started.
+field	tSMChannelId channel in
+	The volume adjustment (in dB).
+field	tSM_INT volume in
+	Indicator of whether automatic gain control is to be
+	enabled (non-zero) or not (zero).
+field	tSM_INT agc in
+	The type of conferencing that will be used.
+enumstart	kSMConfType
+	Standard conferencing.
+enum	kSMConfTypeStandard
+version deprecated
+	Obsolete mode that permited individual adjustment of the volume
+	of each participant's contribution to each output.
+version -
+enum	kSMConfTypeIndividualVolume
+enumend	conf_type in
+unstruct
+	Sets up an output channel
+ref	channel
+	on which will be output the conferenced sum of all participating
+	input channels (each participant is added to the conference
+	through a call to
+fnref	sm_conf_prim_add).
+	The
+ref	volume
+	and
+ref	agc
+	parameters control the output level, and are specified as for
+fnref	sm_replay_start.
+	<p>
+	The
+ref	channel
+	and all the participating input channels will all need to be
+	processed by the same module. This can be ensured by using
+fnref	sm_channel_alloc_placed.
+	<p>
+	This requires the module
+modref	conf
+	to have been downloaded.
+	<p>
+	The channel output is reserved for conferencing until
+fnref	sm_conf_prim_abort
+	or
+fnref	sm_conf_prim_stop
+	stops the channel output from being used.
+	No other output activity can
+	take place on the channel during this time.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - illegal volume/agc value
+error	ERR_SM_WRONG_CHANNEL_STATE - if already in use
+
+	Prepare channel ready to be used as conference output with identical inputs to another conference output channel.
+apifn	sm_conf_prim_clone
+params	sm_conf_prim_clone_parms clonep
+	The channel on which a conference output is to be started.
+field	tSMChannelId channel in
+	The channel on which a conference output has already been started
+	and which is to serve as a model.
+field	tSMChannelId model in
+unstruct
+	Sets up an output channel
+ref	channel
+	on which will be output the same conferenced sum as currently
+	being output on channel
+ref	model.
+	Each current participant of
+ref	model
+	is added to the set of participants for
+ref	channel,
+	and the output volume and AGC values are copied across.
+	<p>
+	The conferences on
+ref	channel
+	and
+ref	model
+	will be completely independent of each other, for instance if a
+	new participant is added at a later stage to
+ref	model,
+	it will not be automatically added to
+ref	channel.
+	<p>
+	Both
+ref	channel
+	and
+ref	model
+	will need to be on the same module.
+	<p>
+	If
+ref	model
+	is set to <code>kSMNullChannelId</code>, this call is equivalent to
+fnref	sm_conf_prim_start
+	with zero volume and agc parameters.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - if already in use, or model is not conferencing
+
+	Prepare channel ready to be used as conference input.
+apifn	sm_conf_prim_attach
+params	sm_conf_prim_attach_parms confp
+	The channel to be used for conference input.
+field	tSMChannelId channel in
+	The type of conferencing that will be used.
+enumref	kSMConfType conf_type in
+unstruct
+	Sets up an input channel
+ref	channel
+	ready to be added as a participant of one or more conferences
+	through calls to
+fnref	sm_conf_prim_add.
+	<p>
+	The channel input is kept continuously ready for conferencing until
+fnref	sm_conf_prim_detach
+	is used on it.
+	<p>
+	Standard conferencing can implicitly attach
+	a channel input for conferencing when
+fnref	sm_conf_prim_add
+	adds it to the first conference, and the channel is then also
+	implicitly detached when
+fnref	sm_conf_prim_leave
+	removes it from the last conference. This implicit attaching and
+	detaching does not apply to conferences with individual volume
+	control.
+	<p>
+	When a channel input is detached (whether explicitly or
+	implicitly), all of the input conference settings are lost (such
+	as the input ID and volume) and all resources used by that input
+	for conferencing are freed. This means that it is usually more
+	convenient to attach explicitly as this allows the input to be
+	set up before it is a participant in any conference and it retains
+	the settings during any period when it is temporarily not a
+	participant in any conference.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - if already attached
+
+	Undo preparation for conferencing of channel input.
+apifn	sm_conf_prim_detach
+params	sm_conf_prim_detach_parms confp
+	The channel to be detached.
+field	tSMChannelId channel in
+	The type of conferencing to detach.
+enumref	kSMConfType conf_type in
+unstruct
+	Detaches the channel input from conferencing. The channel must have
+	previously been attached with
+fnref	sm_conf_prim_attach
+	and not be a participant in any conference.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - if not attached or in a conference
+
+	Add channel input to set whose sum forms conference output.
+apifn	sm_conf_prim_add
+params	sm_conf_prim_add_parms confp
+	The channel on which the conference output has been started
+	to which a new participant is to be added.
+field	tSMChannelId channel in
+	The input channel which is to be added to the conference
+	output channel.
+field	tSMChannelId participant in
+	An identifier which identifies this participant.
+field	tSM_INT id out
+	This field is present for backwards compatibility and should be zero.
+field	float factor in
+unstruct
+	Adds a new conference
+ref	participant
+	to the set of input channels whose conferenced sum is currently
+	being output on output channel
+ref	channel.
+	All channels in a conference must have been allocated on a
+	single Prosody processor module.
+	<p>
+	The
+ref	participant
+	must be a channel which has been attached to conferencing with
+fnref	sm_conf_prim_attach
+	unless the conference type is
+	<a href="apifn-sm_conf_prim_start.html#field-kSMConfTypeStandard">kSMConfTypeStandard</a>
+	in which case the channel input is implicitly attached if necessary.
+	<p>
+	On return
+ref	id
+	will be set to a value which is an identifier for this conference 
+	participant. This identifier can be used in the call for the participant
+	to leave the conference (see
+fnref	sm_conf_prim_leave).
+	<p>
+	Note that a particular participant input channel is assigned the
+	same
+ref	id
+	for every conference it is added into (or cloned into) while attached.
+	If a channel is detached and attached again, it may be allocated
+	a different
+ref	id
+	value.
+	This requires the module
+modref	inchan
+	to have been downloaded.
+	<p>
+	If the
+ref	participant
+	has any kind of tone detection enabled through a call to
+fnref	sm_listen_for
+	then tones detected will be suppressed from entering the
+	conference. This means that as soon as the detector discovers
+	that a tone is present, this participant will be temporarily
+	suspended from the conference and restored when the tone
+	detector determines that the tone has finished. Note,
+	however, that this may permit a very short initial burst of
+	tone to be audible in the conference as, to keep the
+	transmission latency low, the detector cannot rewind back to
+	the start of a tone. Any such short burst of tone will be
+	shorter than the tone detector's minimum tone criterion.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - illegal agc value, or attempt to use channels on different Prosody modules
+error	ERR_SM_WRONG_CHANNEL_STATE - if no conference started on channel
+
+	Remove input channel from set whose sum forms conference output.
+apifn	sm_conf_prim_leave
+params	sm_conf_prim_leave_parms confp
+	The channel on which the conference output has been started
+	from which a participant is to be removed.
+field	tSMChannelId channel in
+	The identifier of the participant to be removed from the
+	conference.
+field	tSM_INT id in
+unstruct
+	Removes a conference participant (identified by
+ref	id)
+	from the set of input channels whose conferenced sum is
+	currently being output on the output channel
+ref	channel.
+	<p>
+	The parameter
+ref	id
+	should be the value assigned to this conference participant in
+	an earlier call to
+fnref	sm_conf_prim_add.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - unknown participant id
+error	ERR_SM_WRONG_CHANNEL_STATE - if no conference started on channel
+
+	Retrieve conference information (eg. active speakers)
+apifn	sm_conf_prim_info
+params	sm_conf_prim_info_parms confp
+	The channel on which the conference output has been started
+	on which information is required.
+field	tSMChannelId channel in
+	The number of active (i.e. non silent) participants in this
+	conference.
+field	tSM_INT participant_count out
+	A bitmap of participants, indicating which are active.
+	This functionality is not available on Prososdy X.
+field	char speakers[8] out
+unstruct
+	Returns information regarding the conference currently being
+	output on channel
+ref	channel.
+	<p>
+	On return, the parameter
+ref	participant_count
+	is set to the number of input channels being summed together in
+	order to produce the conferenced output, and
+ref	speakers
+	is a bit mask with bits being set for each participating input
+	channel in the conference which is currently active. Bits set in
+ref	speakers
+	correspond to the participant ids returned by
+fnref	sm_conf_prim_add,
+	with bit <code>b</code> of <code>speakers[N]</code> corresponding to
+	participant id <code>B + 8 * N</code>.
+	Note that the
+ref	speakers
+	field is always zero on Prososdy X.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - if no conference started on channel
+
+	Adjust input parameters for channel that is a conference participant.
+apifn	sm_conf_prim_adj_input
+params	sm_conf_prim_adj_input_parms confp
+	The input channel which is attached to conferencing and
+	which is to be adjusted.
+field	tSMChannelId channel in
+	The new value for the volume (in dB).
+field	tSM_INT volume in
+	The new value for the indicator of whether automatic gain
+	control is to be enabled (non-zero) or disabled (zero).
+field	tSM_INT agc in
+unstruct
+	Enable or disable automatic-gain-control/noise-reduction for an
+	input channel which is a conference participant in one or more
+	conference summed output channels.
+	<p>
+	The
+ref	volume
+	parameter may be set to a the gain (in dB) or to the value
+	<code>kSMConfAdjInputVolumeMute</code> which will cause the
+	input to be completely muted. The range of gain supported is
+	at least +8 to -22 dB,
+	<p>
+	The default input conference settings for a channel are 0 dB
+	volume adjustment with AGC disabled.
+	<p>
+	Note: all input settings are lost when the channel is no longer
+	a conference input unless the channel has been explicitly attached
+	for conferencing by calling
+fnref	sm_conf_prim_attach.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - unknown participant id or bad agc value
+error	ERR_SM_WRONG_CHANNEL_STATE - if channel not in a conference
+
+	Adjust input settings for channel that is a conference participant.
+apifn	sm_conf_prim_adj_input_settings
+params	sm_conf_prim_adj_input_settings_parms confp
+	The input channel which is attached to conferencing and
+	which is to be adjusted.
+field	tSMChannelId channel in
+	The rate at which the AGC decays the estimate of the loudest signal, 
+	as a fraction.
+field	float max_level_decay in
+	The target output level in dBm0.
+field	float target_level in
+unstruct
+	Note: all input settings are lost when the channel is no longer
+	a conference input unless the channel has been explicitly attached
+	for conferencing by calling
+fnref	sm_conf_prim_attach.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - if channel not in a conference
+
+	Adjust parameters controlling active speaker detection
+apifn	sm_conf_prim_adj_tracking 
+params	sm_conf_prim_adj_tracking_parms trackp
+	The input channel which has been attached to conferencing and
+	which is to be adjusted.
+field	tSMChannelId channel in
+	The new value for the minimum noise level (in dBm0).
+field	double min_noise_level in
+	The new value for the speech threshold ratio.
+field	double speech_thresh in
+unstruct
+	Adjusts two parameters for the designated input channel that
+	control the criteria by which the channel is reported as having
+	an <em>active input</em> when it is included as one of the 
+	participants in a conference. An input is only added to a 
+	conference when it is considered to be active.
+	<p>
+	The speech detection algorithm assumes a fairly constant level
+	of background noise, over which is the speech. It also assumes
+	that there are some pauses in the speech.
+	<p>
+	The signal on an incoming timeslot is analysed to produce two
+	measurements that determine the eventual noise threshold. These
+	measurements are <code>Lmin</code>, which is the lowest energy
+	monitored, and <code>Lmax</code>, which is the highest energy
+	monitored. Since the speech is assumed to have pauses,
+	<code>Lmin</code> is the quietest level of noise. To allow for
+	some variation in the level of noise, the noise threshold is
+	set a little above the <code>Lmin</code> level. The signal
+	is assumed to contain speech when it is above this threshold.
+	The exact threshold value used is:
+	<pre>
+		Lmin + (Lmax - Lmin) * speech_thresh
+	</pre>
+	<p>
+	This means that <code>speech_thresh</code> specifies the
+	proportion of the distance between <code>Lmin</code> and
+	<code>Lmax</code> that the threshold is above <code>Lmin</code>.
+	The diagram illustrates this:
+	<p>
+	<img src="asd.png" alt="diagram of speech threshold">.
+	<p>
+	The default value of <code>speech_thresh</code> is
+	<code>0.01</code>, which means it raises the threshold above
+	<code>Lmin</code> by 1% of the difference between the loudest
+	and quietest sounds in the signal. To make the detector less
+	sensitive, this value should be increased, though values above
+	<code>0.03</code> usually make it too insensitive.
+	<p>
+	The other adjustable parameter, <code>min_noise_level</code>,
+	specifies the smallest value permitted for <code>Lmin</code>.
+	If the value calculated from the signal is below this, then this
+	value is used instead. This prevents the threshold from being set 
+	too low when there is no noise, such as when the caller has muted 
+	their phone. The default value for this level is
+	<code>-53</code> dBm0. To make the detector less sensitive, this
+	value should be increased, though values above <code>-34</code>
+	usually make it too insensitive.
+	<p>
+	When <code>speech_thresh</code> is zero, if the signal level is 
+	above <code>min_noise_level</code> then the signal is considered 
+	to be active. In this case, setting <code>min_noise_level</code> 
+	to <code>-90</code> dBm0 or lower will cause the input to be
+	considered active always.
+	<p>
+	Note: all input settings are lost when the channel is no longer
+	a conference input unless the channel has been explicitly attached
+	for conferencing by calling
+fnref	sm_conf_prim_attach.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - illegal volume or agc value
+error	ERR_SM_WRONG_CHANNEL_STATE - if no conference started on channel
+
+	Adjust conference output level.
+apifn	sm_conf_prim_adj_output
+params	sm_conf_prim_adj_output_parms confp
+	The channel on which the conference output has been started
+	which is to be adjusted.
+field	tSMChannelId channel in
+	The new value for the volume (in dB).
+field	tSM_INT volume in
+	The new value for the indicator of whether automatic gain
+	control is to be enabled.
+field	tSM_INT agc in
+unstruct
+	Adjust output level for conference being output on channel
+ref	channel.
+	The volume and agc parameters should be set as for
+fnref	sm_conf_prim_start.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - illegal volume or agc value
+error	ERR_SM_WRONG_CHANNEL_STATE - if no conference started on channel
+
+	Abort a conference.
+apifn	sm_conf_prim_abort
+	The channel on which the conference output has been started
+	which is to be aborted.
+param	tSMChannelId channel
+	Aborts conference on specified channel which will revert to
+	outputting silence.
+	<p>
+	This function waits for the conference output to be stopped, and is 
+	equivalent to calling
+fnref	sm_conf_prim_stop
+	with a zero nowait field.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - if no conference started on channel
+
+version deprecated
+	Nominate for an input channel, the output channel a fraction of whose output signal will be assumed to form part of the input channel signal
+apifn	sm_set_sidetone_channel
+params	sm_set_sidetone_channel_parms sidetp
+	The input channel which is attached to conferencing whose
+	sidetone is to be configured.
+field	tSMChannelId channel in
+	The output channel which is to be configured as a sidetone.
+field	tSMChannelId output in
+unstruct
+	When both an input channel and an output channel are switched
+	through to an analogue telephone, the hybrid will cause a
+	fraction of the output signal to appear as part of the input
+	signal received from that telephone. This signal fraction is
+	sometimes called <cite>sidetone</cite>. When a signal is fed
+	into a conference with
+fnref	sm_conf_prim_add
+	the firmware can temporarily suspend this input from the
+	conference during times when it appears to contain only an
+	echo of the signal being sent to the corresponding output. Note
+	that this does not remove the echo - it suppresses the whole
+	signal - nor does it suppress recording or detection of the
+	signal, which continues normally.
+	<p>
+	However, see
+fnref	sm_condition_input
+	for a more general way to remove this echo, at the expense of
+	using more processing resources.
+	<p>
+	This API call nominates for an input channel
+ref	channel,
+	the output channel,
+ref	output,
+	whose sidetone will be assumed to form part of the input channel
+	signal. It should only be enabled when
+ref	output
+	is a channel whose output signal is from a conferencing job.
+	<p>
+	If
+ref	output
+	is set to <code>kSMNullChannelId</code>, it will be assumed no
+	sidetone is present in the input channel signal.
+version	Ps
+	Not supported by Prosody S.
+version	+
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - if channel not attached to conferencing
+version +
+
+	Stop a conference.
+apifn	sm_conf_prim_stop
+params	sm_conf_prim_stop_parms stopp
+	The channel on which the conference output has been started
+	which is to be stopped.
+field	tSMChannelId channel in
+	Indicates if the function should return without waiting for the 
+	conference to stop. In this case the function
+fnref	sm_conf_prim_status
+	must be used to determine when the conference has stopped.
+field tSM_UT32 no_wait in
+unstruct
+	Stops the conference on a specified channel which will revert to
+	outputting silence.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - if no conference started on channel
+
+	Determine conference status
+apifn	sm_conf_prim_status
+params	sm_conf_prim_status_parms statusp
+	The conference channel to interrogate
+field	tSMChannelId channel in
+enumstart kSMConfStatus
+	Indicates that there is nothing significant to report
+enum	kSMConfStatusRunning
+	Indicates that the conference output has been stopped
+enum	kSMConfStatusStopped
+	Indicates there is active input information in the
+ref	u-active_inputs
+	field.
+enum	kSMConfStatusActiveInputs
+enumend status out
+	Additional information relating to the current status of the conference
+union
+	This field is only valid if the
+ref	status
+	is
+ref	kSMConfStatusActiveInputs.
+struct
+	The most significant inputs in order of significance.
+struct conf_active_input
+	The input identifier. An id	of -1 means that none of the inputs are 
+	ranked in this position.
+field	tSM_INT id out
+	A measure of the input power level
+field	tSM_INT power out
+unstruct	input[4] 
+unstruct	active_inputs conf_active_ids
+unstruct	u
+unstruct
+	Returns the current status of the conference or an error to indicate
+	a problem.
+	<p>
+	When the write event is signalled the user must call this function to 
+	determine the nature of the status change.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Configure the active input reporting of a conference
+apifn	sm_conf_prim_config_activity_reporting
+params	sm_conf_prim_config_activity_reporting_parms activityp
+	The channel which is a conference output.
+field	tSMChannelId channel in
+	The minimum time (in ms) between active input reports.
+field	tSM_UT32 delay in
+	The sensitivity to input power variation
+field	tSM_UT32 sensitivity in
+unstruct
+	Configures the active speaker reporting for a conference output.
+	Once configured a conference output will report changes in the active
+	inputs via
+fnref	sm_conf_prim_status.
+	The
+ref	delay
+	is the minimum time between these reports. Specifying a delay of zero 
+	will disable active input reporting. Reports will be generated if the
+	ranking of the active inputs change or the measured input power	varies 
+	significantly. The
+ref	sensitivity
+	determines how much the power must have changed by before a report is
+	generated. The valid range is 0 to 100. A value of 100 will cause any 
+	change in the input power to produce a report. 
+	<p>
+	The activity reporting configuration is not copied to conferences created 
+	with
+fnref sm_conf_prim_clone.
+	Activity reporting is disabled by default.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Condition input signal with, for example, an echo cancellation algorithm
+apifn	sm_condition_input
+params	sm_condition_input_parms condp
+	The channel on whose input conditioning is to be performed.
+field	tSMChannelId channel in
+	The reference channel, if any, which is to be used for
+	conditioning.
+field	tSMChannelId reference in
+	What sort of reference to use.
+enumstart	kSMInputCondRef
+	No reference signal.
+enum	kSMInputCondRefNone
+	Use reference input signal.
+enum	kSMInputCondRefUseInput
+	Use reference output signal.
+enum	kSMInputCondRefUseOutput
+enumend	reference_type in
+	The type of conditioning to perform.
+enumstart	kSMInputCond
+	Disable input conditioning. This also disables any
+	redirection of a signal such as may have been set up using
+ref	alt_data_dest.
+enum	kSMInputCondNone
+	Remove echo from the input with respect to the specified reference
+	signal.
+	Requires the modules
+modref	echocan
+	and
+modref	passthru
+	to have been downloaded.
+enum	kSMInputCondEchoCancelation
+enumend	conditioning_type in
+	Unused.
+field	tSM_INT conditioning_param in
+	A channel to receive the resulting conditioned signal, if any
+	form of conditioning is enabled.
+field	tSMChannelId alt_data_dest in
+	What kind of alternative destination to use.
+enumstart	kSMInputCondAltDest
+	Conditioned signal not redirected - conditioned signal replaces
+	signal input to
+ref	channel.
+enum	kSMInputCondAltDestNone
+	Conditioned signal replaces signal input to
+ref	alt_data_dest.
+enum	kSMInputCondAltDestInput
+	Conditioned signal replaces signal being output on
+ref	alt_data_dest.
+enum	kSMInputCondAltDestOutput
+enumend	alt_dest_type in
+	For Aculab use only: selects an echo cancellation test mode.
+	If non-zero, creates simulated echo.
+	This is not part of the official API and may be changed
+	arbitrarily.
+field	int ectest_type in
+	For Aculab use only: the amount of signal to mix in as
+	simulated echo. Only used when
+ref	ectest_type
+	is 1.
+field	float ectest_gain in
+	For Aculab use only: the delay (in samples) for the
+	simulated echo. Only used when
+ref	ectest_type
+	is 1.
+field	int ectest_delay in
+	For Aculab use only: the length of the echo generation
+	filter. Only used when
+ref	ectest_type
+	is 2.
+field	unsigned ectest_flen in
+	For Aculab use only: the echo generation filter. Only used when
+ref	ectest_type
+	is 2.
+field	float *ectest_filt in ectest_filt
+unstruct
+	Applies or disables conditioning to the signal input to channel
+ref	channel
+	with respect to reference signal on channel
+ref	reference.
+	The input signal to be conditioned is called the
+	<em>primary</em>.
+	The reference may either be the input to a channel or the output
+	from a channel. In particular, it can be the output from
+ref	channel
+	(but not its input). Note that Prosody switching functions (such
+	as
+fnref	sm_switch_channel_input
+	or
+fnref	sm_channel_datafeed_connect)
+	must not be used on a reference while it is in use.
+	<p>
+	If input signal conditioning is enabled, the conditioned version
+	of the input is generated and is directed to one of several places.
+	<ul>
+	<li>If
+ref	alt_dest_type
+	is
+ref	kSMInputCondAltDestNone
+	then when other speech
+	processing functions such as conferencing or recording are
+	performed on
+ref	channel,
+	the conditioned version of the input signal will be used.
+	<li>If
+ref	alt_dest_type
+	is
+ref	kSMInputCondAltDestInput
+	then when such speech processing functions are performed on
+ref	alt_data_dest,
+	the conditioned version of the input signal
+	will be used. (If
+fnref	sm_condition_input
+	is used on such a channel, the result is undefined).
+	<li>If
+ref	alt_dest_type
+	is
+ref	kSMInputCondAltDestOutput
+	then the conditioned signal appears as the output from the channel
+ref	alt_data_dest,
+	which may be the same channel as
+ref	channel.
+	</ul>
+	<p>
+	Note that Prosody switching functions (such as
+fnref	sm_switch_channel_output
+	or
+fnref	sm_channel_datafeed_connect)
+	must not be used on the destination while echo cancellation is
+	being performed.
+	<p>
+	All channels specified by
+ref	channel,
+ref	alt_data_dest,
+	and
+ref	reference
+	will need to be processed by the same module. This can be
+	ensured through the use of
+fnref	sm_channel_alloc_placed
+	<p>
+	The two commonest configurations are:
+	<dl>
+	<dt>Cancelling the echo from a prompt being played
+	<dd>
+	In this situation you use one channel, playing the prompt on it,
+	using its output as the reference (so
+ref	reference
+	=
+ref	channel
+	and
+ref	reference_type
+	=
+ref	kSMInputCondRefUseOutput),
+	and recording its input.
+	<dt>Stand alone echo cancellation
+	<dd>
+	Here you want to send the conditioned signal to an external
+	destination, rather than recording it. You need at least two
+	channels because you need two inputs - one for the
+	<em>primary</em> and one for the <em>reference</em> - and one
+	output, while a single Prosody channel can have at most one
+	input and one output. One way to arrange this is to have
+ref	channel,
+	whose input is the primary, be specified as the output (i.e.
+ref	alt_data_dest
+	=
+ref	channel
+	and
+ref	alt_dest_type
+	=
+ref	kSMInputCondAltDestOutput),
+	with a different channel being used for
+ref	reference.
+	</dl>
+version	Ps
+	Not supported by Prosody S.
+version	+
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_BAD_PARAMETER - illegal parameter value
+
+	Adjust input conditioning
+apifn	sm_condition_adjust
+params	sm_condition_adjust_parms condp
+	The channel to which conditioning is being applied.
+field	tSMChannelId channel in
+	What sort adjustment to perform.
+enumstart	kSMInputCondAdjust
+	Select whether linear or non-linear echo cancellation with muting is
+	performed. This adjustment is only valid if the input
+	conditioning is currently
+	<a href="apifn-sm_condition_input.html#field-kSMInputCondEchoCancelation">
+	kSMInputCondEchoCancelation</a>.
+	The
+ref	adjust_value
+	field selects which to use, with the value zero selecting linear
+	echo cancellation, and other values selecting non-linear
+	cancellation with muting. Non-linear echo cancellation with muting
+	suppresses the signal when it calculates that, after having the echo
+	removed, there is no significant signal remaining. This mode of
+	operation is suitable for large-scale conferencing and some IVR
+	applications, where it is important that the signal is completely
+	muted whenever the caller is not speaking. Negative values represent
+	the lower limit in dBm0. Positive values cause the default value
+	of -42dBm0 to be used.
+enum	kSMInputCondAdjustNonLinearWithMuting
+	Select whether linear or non-linear echo cancellation with comfort 
+	noise generation is performed. This adjustment is only valid if the
+	input conditioning is currently
+	<a href="apifn-sm_condition_input.html#field-kSMInputCondEchoCancelation">
+	kSMInputCondEchoCancelation</a>.
+	The
+ref	adjust_value
+	field selects which to use, with the value zero selecting linear
+	echo cancellation, and other values selecting non-linear
+	cancellation with comfort noise generation (CNG). In this mode
+	the echo canceller replaces any residual traces of echo with
+	"comfort noise". This is most appropriate to IP gateway applications
+	where background noise is desirable to maintain the illusion of
+	continuity. Negative values represent the threshold in dBm0.
+	Positive values cause the default value of -42dBm0 to be used.
+enum	kSMInputCondAdjustNonLinearWithCNG
+	Selects whether or not AGC should be enabled according to the
+ref	adjust_value
+	field (zero is disable, one is enable). If AGC is
+	disabled, the signal level is modified only to cancel the
+	echo. If AGC is enabled, after the echo has been removed the
+	signal is adjusted by applying a gain which varies in order
+	to amplify weak signals more than strong ones.
+enum	kSMInputCondAdjustAGC
+	Selects, based on the
+ref	adjust_value
+	field, whether or not the AGC gain can adapt (0) or is fixed
+	(1) at its current value. This can be used after the AGC gain
+	factor has adjusted itself to prevent further changes.
+enum	kSMInputCondAdjustFixGain
+enumend	adjust_type in
+	The value to use for this adjustment. The interpretation of
+	this value depends on the adjustment type being performed
+	with the exception of the value zero. For any particular
+	adjustment type, there is a default which is used if no
+	adjustment has been made. The value zero adjusts the
+	conditioning back to that default.
+field	tSM_INT adjust_value in
+unstruct
+	Adjusts the input conditioning currently being performed on a
+	channel.
+explain
+	0
+retval
+error	ERR_SM_WRONG_CHANNEL_STATE - if channel input signal not currently being conditioned.
+error	ERR_SM_BAD_PARAMETER - illegal parameter value
+
+	Adjust span of input conditioning
+apifn	sm_condition_adjust_span
+params	sm_condition_adjust_span_parms condp
+	The channel to which conditioning is being applied.
+field	tSMChannelId channel in
+	The new span to use (in milliseconds);
+field	tSM_INT span in
+unstruct
+	Adjusts the input conditioning currently being performed on a
+	channel to use the specified span (also called <em>tail length</em>).
+	A side effect of this is that the input conditioning may be
+	re-initialised.
+explain
+	0
+retval
+error	ERR_SM_WRONG_CHANNEL_STATE - if channel input signal not currently being conditioned.
+
+	Re-initialise conditioning of input signal
+apifn	sm_condition_reinit
+	The channel to which conditioning is being applied.
+param	tSMChannelId channel
+	Re-initialises input conditioning algorithm currently being
+	applied to signal on the specified input channel.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - if channel input signal not currently being conditioned.
+
+	Expand repertoire of frequencies which may be used as components in user defined tones generated on output channels
+apifn	sm_add_output_freq
+params	sm_output_freq_parms freqp
+	The module whose repertoire is to be modified.
+field	tSMModuleId module in
+	The frequency of the frequency component to be added (Hz).
+field	double freq in
+	The amplitude of the frequency component to be added (dBm0).
+field	double amplitude in
+	The identifier returned if the frequency component is added.
+field	tSM_INT id out
+unstruct
+	This call may be used to add a component frequency to the
+	repertoire of those supported by the given module. On return
+ref	id
+	will be set to an identifier for the new component frequency.
+	This id may be used as a parameter to
+fnref	sm_add_output_tone
+	when defining new output tones supported by the module.
+	<p>
+	The frequency
+ref	freq
+	must be specified in Hz and be in the range from 150 Hz to 3600
+	Hz. The amplitude
+ref	amplitude
+	must be specified in dBm0 (according to CCITT G.711) and be in
+	the range from -35 dBm0 to +3 dBm0.
+	<p>
+	See
+	<a href="../prospapi_outtones.html">
+	Prosody speech processing: pre-loaded output tones</a>,
+	for list of predefined component frequencies.
+	<p>
+	The database of tones is in the API library which is part of
+	the application. Consequently, a very large number of tones
+	can usually be added before running out of resources.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+error	ERR_SM_NO_RESOURCES - if no resources to store new frequency component
+error	ERR_SM_BAD_PARAMETER - if frequency or amplitude parameter out of range
+error	ERR_SM_CHANNEL_ALLOCATED - channel still allocated
+
+	Define a simple tone that may be generated on an output channel
+apifn	sm_add_output_tone
+params	sm_output_tone_parms tonep
+	The module whose tone set if to be modified.
+field	tSMModuleId module in
+	The identifier of the first component of the tone.
+field	tSM_INT component1_id in
+	The identifier of the second component of the tone.
+field	tSM_INT component2_id in
+	The identifier returned if the tone pair is added.
+field	tSM_INT id out
+unstruct
+	This call may be used to add a new output tone to the repertoire
+	of those supported by the given module. The new tone will be a
+	dual tone having two components identified by
+ref	component1_id
+	and
+ref	component2_id
+	where these each refer to either a predefined component frequency
+	or one defined by the application through a call to
+fnref	sm_add_output_freq.
+	On return
+ref	id
+	will be set to an identifier for the new tone. This identifier
+	may be used in calls to
+fnref	sm_play_tone
+	and
+fnref	sm_play_cptone
+	to refer to the newly defined output tone.
+	<p>
+	See
+	<a href="../prospapi_outtones.html">
+	Prosody speech processing: pre-loaded output tones</a>,
+	for list of predefined component frequencies, and
+	for list of predetermined simple output tones.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+error	ERR_SM_NO_RESOURCES - if no resources to store new output tone
+error	ERR_SM_BAD_PARAMETER - if component id parameter out of range
+error	ERR_SM_CHANNEL_ALLOCATED - channel still allocated
+
+	Define frequency coefficients used to recognise tones on input channel
+apifn	sm_add_input_freq_coeffs
+params	sm_input_freq_coeffs_parms freqcoeffp
+	The module whose tone set if to be modified.
+field	tSMModuleId module in
+	The upper frequency boundary (in Hz).
+field	double upper_limit in
+	The lower frequency boundary (in Hz).
+field	double lower_limit in
+	The identifier of the tone added.
+field	tSM_INT id out
+unstruct
+	This call may be used to add a pair of input frequency coefficients
+ref	(upper_limit,
+ref	lower_limit
+	specified in Hz) to the repertoire of those supported by the
+	given module. These coefficients are used to specify upper and
+	lower rejection frequencies for tone recognition. On return
+ref	id
+	will be set to an identifier for the new input frequency
+	coefficient pair.
+	<p>
+	See 
+	<a href="../prospapi_intones.html">
+	Prosody speech processing: pre-loaded input tones</a>
+	for list of predefined frequency coefficients.
+	<p>
+	See 
+	<a href="../tonedet.html">
+	Prosody speech processing: Details of tone detection
+	algorithm</a> for more details on choosing upper and lower
+	rejection limits for a given input frequency.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+error	ERR_SM_NO_RESOURCES - if no resources to store new coefficients
+error	ERR_SM_BAD_PARAMETER - if frequency or amplitude parameter out of range
+error	ERR_SM_CHANNEL_ALLOCATED - channel still allocated
+
+	Define a set of simple tones that can be listened for on an input channel
+apifn	sm_add_input_tone_set
+params	sm_input_tone_set_parms tonesetp
+	The module to which the tone set is to be added.
+field	tSMModuleId module in
+	One more than the identifier of the first tone in band 1.
+field	tSM_INT band1_first_freq_coeffs_id in
+	The number of tones in band 1.
+field	tSM_INT band1_freq_count in
+	One more than the identifier of the first tone in band 2.
+field	tSM_INT band2_first_freq_coeffs_id in
+	The number of tones in band 2.
+field	tSM_INT band2_freq_count in
+	The maximum power of the third loudest frequency. If the third
+	frequency exceeds this, then it prevents detection of a
+	tone. This is specified as a factor so, for example, the
+	value <code>0.1</code> indicates that the third frequency must
+	be no stronger than a tenth the power of the second frequency.
+field	double req_third_peak in
+	The minimum signal to noise ratio. This is given as a factor
+	to be multiplied by the total power. For example, the value
+	<code>0.25</code> means that the detected signal must be more
+	than a quarter of the total received power.
+field	double req_signal_to_noise_ratio in
+	The minimum power. For dual tones this is the power of the
+	tone with the lesser amplitude.
+field	double req_minimum_power in
+	The maximum twist. This is the ratio of power between the two
+	components of a dual tone. For example, a value of
+	<code>10</code> means that the stronger must be no more than
+	ten times the power of the weaker.
+field	double req_twist_for_dual_tone in
+	The identifier of this tone set.
+field	tSM_INT id out
+unstruct
+	This call may be used to define an additional set of simple
+	input tones (recognisable on any input channel) for the
+	specified module
+ref	module.
+	<p>
+	The new set of input tones is defined with respect to two sets
+	of possible component frequencies, band 1 and band 2, and
+	various other parameters
+ref	req_third_peak,
+ref	req_signal_to_noise_ratio,
+ref	req_minimum_power
+	and
+ref	req_twist_for_dual_tone.
+	<p>
+	Band 1 is comprised of
+ref	band1_freq_count
+	coefficients whose ids range from:
+ref	band1_first_freq_coeffs_id
+	to
+ref	band1_first_freq_coeffs_id
+	+
+ref	band1_freq_count
+	- 1
+	<p>
+	Similarly Band 2 is comprised of
+ref	band2_freq_count
+	coefficients whose ids range from:
+ref	band2_first_freq_coeffs_id
+	to
+ref	band2_first_freq_coeffs_id
+	+
+ref	band2_freq_count
+	- 1
+	<p>
+	The new set of input tones will consist of all those tones that
+	have a component frequency that is within the limits for a
+	frequency coefficient pair taken from band 1, and another that
+	is within the limits for a frequency coefficient pair taken from
+	band 2.
+	<p>
+	For example, if band 1 was defined as the set of input frequency
+	coefficient ids {0,1,2,3} and band 2 was defined as {4,5,6,7},
+	then the defined input tone set would be:
+	<p><table>
+	<tr> <td>{</td>
+		<td>&lt;0,4&gt;,</td> <td>&lt;0,5&gt;,</td>
+		<td>&lt;0,6&gt;,</td> <td>&lt;0,7&gt;,</td>
+	</tr>
+	<tr> <td></td>
+		<td>&lt;1,4&gt;,</td> <td>&lt;1,5&gt;,</td>
+		<td>&lt;1,6&gt;,</td> <td>&lt;1,7&gt;,</td>
+	</tr>
+	<tr> <td></td>
+		<td>&lt;2,4&gt;,</td> <td>&lt;2,5&gt;,</td>
+		<td>&lt;2,6&gt;,</td> <td>&lt;2,7&gt;,</td>
+	</tr>
+	<tr> <td></td>
+		<td>&lt;3,4&gt;,</td> <td>&lt;3,5&gt;,</td>
+		<td>&lt;3,6&gt;,</td> <td>&lt;3,7&gt;</td>
+	<td>}</td>
+	</tr>
+	</table>
+	<p>
+	On return
+ref	id
+	will be set to an identifier for the new set of input tones.
+	This id may be used as a parameter to
+fnref	sm_listen_for
+	in order to specify the new set of input tones as those to be
+	recognised on an input channel.
+	<p>
+	If single tones (as opposed to dual tones) are required to be
+	detected, then either
+ref	band1_freq_count
+	or
+ref	band2_freq_count
+	should be set to zero. In this case the corresponding
+ref	band1_first_freq_coeffs_id
+	or
+ref	band2_first_freq_coeffs_id
+	is ignored.
+	<p>
+	See
+	<a href="../prospapi_intones.html">
+	Prosody speech processing: pre-loaded input tones</a>
+	for list of predefined input frequency
+	coefficient pairs, and for list of predefined input tone
+	sets.
+	See
+	<a href="../tonedet.html">Prosody - Details of Tone Detection Algorithm</a>
+	for an explanation of the other parameters to this call.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+error	ERR_SM_NO_RESOURCES - if no resources to store new set of input tones
+error	ERR_SM_BAD_PARAMETER - if frequency or amplitude parameter out of range
+error	ERR_SM_CHANNEL_ALLOCATED - channel still allocated
+
+	Alter tone detection accept/reject characteristics
+apifn	sm_adjust_input_tone_set
+params	sm_adjust_tone_set_parms tonesetp
+	The module containing the tone set to be adjusted.
+field	tSMModuleId module in
+	The tone set to adjust.
+field	tSM_INT tone_set_id in
+	An indicator of which parameter to adjust.
+enumstart	kAdjustToneSet
+	The value initially set by the 
+	<a href="apifn-sm_add_input_tone_set.html#field-req_third_peak">req_third_peak</a>
+	field of
+fnref	sm_add_input_tone_set
+	is replaced with the value of the
+ref	parameter_value-fp_value
+	field.
+enum	kAdjustToneSetFPParamId3rdPeak
+	The value initially set by the 
+	<a href="apifn-sm_add_input_tone_set.html#field-req_signal_to_noise_ratio">req_signal_to_noise_ratio</a>
+	field of
+fnref	sm_add_input_tone_set
+	is replaced with the value of the
+ref	parameter_value-fp_value
+	field.
+enum	kAdjustToneSetFPParamIdSNRatio
+	The value initially set by the 
+	<a href="apifn-sm_add_input_tone_set.html#field-req_minimum_power">req_minimum_power</a>
+	field of
+fnref	sm_add_input_tone_set
+	is replaced with the value of the
+ref	parameter_value-fp_value
+	field.
+enum	kAdjustToneSetFPParamIdMinPower
+	The value initially set by the 
+	<a href="apifn-sm_add_input_tone_set.html#field-req_twist_for_dual_tone">req_twist_for_dual_tone</a>
+	field of
+fnref	sm_add_input_tone_set
+	is replaced with the value of the
+ref	parameter_value-fp_value
+	field.
+enum	kAdjustToneSetFPParamIdTwist
+	The minimum time (in mS, &gt;= 64) for which a tone must persist
+	before it is considered to be valid is set to the value of the
+ref	parameter_value-int_value
+	field. This value is used to increase the minimum tone
+	duration when the tone detection mode is
+	<a href="apifn-sm_listen_for.html#field-kSMToneDetectionMinDuration64">
+	kSMToneDetectionMinDuration64</a> or another of the
+	<code>...MinDuration64</code> detection modes.
+enum	kAdjustToneSetIntParamIdMinOnTime
+	The minimum time (in mS, &gt;= 64) for which a tone must cease
+	before it is considered to have ended is set to the value
+	of the
+ref	parameter_value-int_value
+	field.
+	This value is used to increase the minimum silence
+	duration when the tone detection mode is
+	<a href="apifn-sm_listen_for.html#field-kSMToneDetectionMinDuration64">
+	kSMToneDetectionMinDuration64</a> or another of the
+	<code>...MinDuration64</code> detection modes.
+enum	kAdjustToneSetIntParamIdMinOffTime
+	The minimum frequency to consider when listening for tones.
+	Any signal at a lower frequency will be ignored (even when
+	checking signal to noise ratio). The value (in Hz) is
+	specified in the
+ref	parameter_value-fp_value
+	field.
+enum	kAdjustToneSetFPParamIdStartFreq
+	The maximum frequency to consider when listening for tones.
+	Any signal at a higher frequency will be ignored (even when
+	checking signal to noise ratio). The value (in Hz) is
+	specified in the
+ref	parameter_value-fp_value
+	field.
+enum	kAdjustToneSetFPParamIdStopFreq
+enumend	parameter_id in
+	The parameter value.
+union
+	A floating point parameter value.
+field	double fp_value in
+	An integer parameter value.
+field	tSM_INT int_value in
+unstruct	parameter_value
+unstruct
+	This call may be used to alter the tone detection
+	characteristics of a pre-loaded or user defined (through
+fnref	sm_add_input_tone_set)
+	input tone set for the specified module
+ref	module.
+	<p>
+	The tone set to be modified is identified through the
+ref	tone_set_id
+	parameter, this must either be the identifier for one of the
+	pre-loaded input tone sets (see
+	<a href="../prospapi_intones.html">
+	Prosody speech processing: pre-loaded input tones</a>),
+	or an identifier returned by
+fnref	sm_add_input_tone_set.
+	<p>
+	Invoking the call will change a single input tone set parameter,
+	that parameter being identified by the value supplied
+ref	parameter_id.
+	<p>
+	The new parameter value must be set in either the
+ref	parameter_value-fp_value
+	or
+ref	parameter_value-int_value
+	element of the parameter_value union according to the parameter
+	type.
+	<p>
+	See
+	<a href="../tonedet.html">Prosody - Details of Tone Detection Algorithm</a>
+	for more
+	details on how adjusting these input tone set parameters affects
+	tone recognition.
+	<p>
+	In previous versions, the values of 
+ref	kAdjustToneSetIntParamIdMinOnTime
+	and
+ref	kAdjustToneSetIntParamIdMinOffTime
+	were not independent, that is setting one value also set the other. These values 
+	are now independent. However, if only one value is &gt;= 64 then that value is used 
+	for both the on and off times in order to retain compatibility with applications that 
+	only set one value.
+	<p>
+	For firmware versions where the on and off times are not independent, the 
+ref	kAdjustToneSetIntParamIdMinOnTime
+	is used (subject the the above compatibility constraint).
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+error	ERR_SM_BAD_PARAMETER - a parameter is out of range
+
+	Un-define all call-progress tones currently recognisable by the module
+apifn	sm_reset_input_cptones
+params	sm_reset_input_cptones_parms resetp
+	The module whose call-progress tone set is to be cleared.
+field	tSMModuleId module in
+	The id of the input tone set in which future call-progress
+	tones are defined.
+field	tSM_INT tone_set_id in
+unstruct
+	Initially, each module has predefined a default set of
+	recognisable call-progress tones. If additional
+	recognisable progress tones are to be defined, it may be
+	necessary to discard the default set first. This may be the case
+	because, for example, the default predefined set assigns the
+	same identifier to two variants of a call-progress tone which
+	actually need to be distinguished by the application.
+	<p>
+	This call resets to empty the set of all call-progress tones
+	recognised by the designated module
+ref	module.
+	When new input call-progress tones to be recognised for the
+	module are defined through calls to
+fnref	sm_add_input_cptone,
+	frequency identifiers specified will be with respect to the set
+	of input tones referenced by
+ref	tone_set_id.
+	<p>
+	See
+	<a href="../prospapi_intones.html">
+	Prosody speech processing: pre-loaded input tones</a>
+	for predefined sets of input tones, and see
+fnref	sm_add_input_tone_set
+	on how to define new ones.
+	<p>
+	This call can only be made when no channel is allocated on
+	the given module.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+error	ERR_SM_CHANNEL_ALLOCATED - channel still allocated
+
+	Define a call-progress tone that can be listened for on an input channel
+apifn	sm_add_input_cptone
+params	sm_input_cptone_parms cptonep
+	The module whose call-progress tone set is to be modified.
+field	tSMModuleId module in
+	The number of entries in the
+ref	states
+	field.
+field	tSM_INT state_count in
+	The sequence of component states representing this tone. The
+	last to occur must be in <code>states[0]</code>, and the first
+	must be in <code>states[state_count-1]</code> - they are in the
+	opposite order in this array to the order they occur in the
+	incoming signal.
+struct	sm_cptone_state
+	The id of a component tone.
+field	tSM_INT freq_id in
+	The minimum duration (in mS) of this component.
+field	tSM_INT maximum_cadence in
+	The maximum duration (in mS) of this component.
+field	tSM_INT minimum_cadence in
+const	kSMMaxCPToneStates 16
+unstruct	states[kSMMaxCPToneStates]	input_cptone
+	The identifier of this call-progress tone.
+field	tSM_INT id in
+unstruct
+	Adds an additional call-progress tone to the repertoire of such tones
+	recognised by the designated
+ref	module.
+	<p>
+	The new call-progress tone is defined by a sequence of (up to
+	<code>kSMMaxCPToneStates</code>) call-progress tone
+ref	states.
+	In order for a signal to be recognised as the new call-progress
+	tone, each of the call-progress tone states must be satisfied in
+	turn.
+	<p>
+	Each state is satisfied when, on the channel being processed, a
+	signal is detected which has a duration of between
+ref	states-minimum_cadence
+	and
+ref	states-maximum_cadence
+	milliseconds and a frequency designated by
+ref	states-freq_id.
+	The actual frequency designated by
+ref	states-freq_id
+	is with respect to the tone set selected as the base set of
+	frequencies for use by call-progress tone detection. By default
+	this is tone set 1 (see
+	<a href="../prospapi_intones.html">
+	Prosody speech processing: pre-loaded input tones</a>),
+	if another base set of frequencies is required then this may be
+	specified by a tone set id specified when invoking
+fnref	sm_reset_input_cptones.
+	<p>
+	The parameter
+ref	id
+	is a value between 1 and 255 specified by the application, prior
+	to calling the function. It is used to identify the recognised
+	call-progress tone, and will be returned by
+fnref	sm_get_recognised
+	whenever the defined call-progress tone is being listened for
+	and is recognised on an input channel. Distinct call-progress
+	tones may be assigned the same
+ref	id
+	so that, for instance, two alternative call-progress tones could
+	return the same id.
+	<p>
+	See
+	<a href="../prospapi_cptones.html">
+	Prosody speech processing: pre-loaded call-progress tones</a>,
+	for list of call-progress tones supported by default and their
+	ids.
+	<p>
+	See
+	<a href="../prospapi_cpnote.html">
+	Prosody speech processing: Notes on adding call-progress tones</a>
+	for further information on adding call-progress tones to
+	be recognised.
+	<p>
+	This call can only be made when no channel is allocated on
+	the given module.
+	<p>
+	The maximum duration of a tone for call-progress tone detection
+	is over 50 days. It is not possible to detect tones longer than
+	this. To match a continuous tone, specify <code>~0U</code> (i.e.
+	the maximum possible unsigned int value) as the maximum
+	duration. This special value allows a tone to match before it
+	finishes (normally detection must wait until the tone finishes
+	so that it can check if the duration exceeded the permitted
+	maximum).
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+error	ERR_SM_NO_RESOURCES - if no resources to store new call-progress tone
+error	ERR_SM_BAD_PARAMETER - if bad call-progress tone definition
+error	ERR_SM_CHANNEL_ALLOCATED - channel still allocated
+
+version deprecated
+	Discard module's current vocabulary
+apifn	sm_reset_input_vocabs
+params	sm_reset_input_vocabs_parms resetp
+	The module whose vocabulary is to be discarded.
+field	tSMModuleId module in
+unstruct
+	Discards current vocabulary of module indicated by
+ref	module.
+	A new vocabulary must be downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+error	ERR_SM_CHANNEL_ALLOCATED - channel still allocated
+version +
+
+version deprecated
+	Add new word to vocabulary
+apifn	sm_add_input_vocab
+params	sm_input_vocab_parms vocabp
+	The module whose vocabulary is to be amended.
+field	tSMModuleId module in
+	The name of the file containing a vocabulary item.
+field	char* filename in
+	The identifier which can be used later to refer to this item.
+field	tSM_UT32 item_id out
+unstruct
+	Download an ASR vocabulary item to the specified module
+ref	module.
+	The vocabulary is contained in the file whose name is referenced by
+ref	filename.
+	The file must be in &quot;.sas&quot; format.
+	<p>
+	When this ASR vocabulary item is to be included in the active
+	vocabulary for a specific channel, the returned vocabulary
+	identifier
+ref	item_id
+	should be included in the list of identifiers specified in a
+	call to
+fnref	sm_asr_listen_for
+	for that channel.
+	<p>
+	If the specified vocabulary item has already been loaded onto
+	the specified module, no loading takes place, but
+ref	item_id
+	is returned with the same value returned by the call to
+fnref	sm_add_input_vocab
+	which performed the original loading operation. This allows
+	separate applications to make use of the same module without
+	explicitly co-ordinating their vocabulary requirements.
+	Note that the
+ref	item_id
+	is local to the process invoking
+fnref	sm_add_input_vocab.
+	Requires the module
+modref	iwr
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if module was invalid
+error	ERR_SM_FILE_ACCESS - problem encountered reading or opening file.
+error	ERR_SM_FILE_FORMAT - file is wrong type.
+error	ERR_SM_DOWNLOAD - problem occurred during download
+error	ERR_SM_NO_RESOURCES - no room to store this vocabulary item.
+version +
+
+	Invoke signal categorisation algorithm
+apifn	sm_catsig_listen_for
+params	sm_catsig_listen_for_parms listenp
+	The channel whose input is to be analysed.
+field	tSMChannelId channel in
+	The signal categorisation algorithm to use.
+enumstart	kBESPCatSigAlg
+	Distinguish a signal coming from a live speaker from one
+	coming from an answering machine. In the result returned by
+fnref	sm_get_recognised
+	the
+	<a href="apifn-sm_get_recognised.html#field-param1">param1
+	field</a> contains the value <code>0</code> when a machine has
+	been detected and <code>1</code> when a live speaker has been
+	detected.
+	Requires the module
+modref	ansdet
+	to have been downloaded.
+enum	kBESPCatSigAlgLiveSpeaker 1
+	Distinguish a signal coming from a live speaker from one
+	coming from an answering machine, ignoring any initial
+	tones. In the result returned by
+fnref	sm_get_recognised
+	the
+	<a href="apifn-sm_get_recognised.html#field-param1">param1
+	field</a> contains the value <code>0</code> when a machine has
+	been detected and <code>1</code> when a live speaker has been
+	detected.
+	Requires the module
+modref	td
+	to have been downloaded.
+enum	kBESPCatSigAlgLiveSpeakerTone
+	Distinguish a signal coming from a live speaker from one
+	coming from an answering machine, ignoring any initial
+	tones. In the result returned by
+fnref	sm_get_recognised
+	the
+	<a href="apifn-sm_get_recognised.html#field-param1">param1
+	field</a> contains the value <code>0</code> when a machine has
+	been detected, <code>1</code> when a live speaker has been
+	detected, <code>2</code> when a tone start has been
+	detected, and <code>3</code> when a tone end has been
+	detected.
+	Requires the module
+modref	td
+	to have been downloaded.
+enum	kBESPCatSigAlgLiveSpeakerToneReport
+	Use live speaker detection algorithm implemented in a ProsodyS plugin.
+	Only available on ProsodyS, and requires plugin. See algorithm 
+	description provided with plugin package for more information.
+enum	kBESPCatSigAlgLiveSpeakerPlugin
+enumend	catsig_alg_id in
+	Only applicable when alg_id of <code>kBESPCatSigAlgLiveSpeakerPlugin</code> is specified. Provides hint 
+	to algorithm regarding signalling state. See algorithm 
+	description provided with plugin package.
+field	tSM_INT catsig_hint_param in
+	Only applicable when alg_id of <code>kBESPCatSigAlgLiveSpeakerPlugin</code> is specified.
+	A zero value indicates no timeout is required, a positive value will specify a timeout in 
+	milliseconds. See algorithm description provided with plugin package.
+field	tSM_INT catsig_timeout in
+	Only applicable when alg_id of <code>kBESPCatSigAlgLiveSpeakerPlugin</code> is specified. 
+	The length of the plugin specific configuration data. See algorithm 
+	description provided with plugin package.
+field	tSM_INT catsig_config_length in
+	Only applicable when alg_id of <code>kBESPCatSigAlgLiveSpeakerPlugin</code> is specified. 
+	A pointer to plugin specific configuration data. See algorithm 
+	description provided with plugin package.
+field	char* catsig_config_data in pluginconfigdata
+	Indicator of whether to abort signal categorisation on this
+	channel (non-zero) or not (zero).
+field	tSM_INT abort_catsig_alg in
+unstruct
+	If this call is invoked with
+ref	abort_catsig_alg
+	set to zero and
+ref	catsig_alg_id
+	set to identifier for a signal categorisation algorithm then
+	this call invokes a signal categorisation algorithm on the given
+	channel input. Once enough of the signal has been processed in
+	order to classify it into a definite category then the
+	application is notified and it can then retrieve an indication
+	of the signal category by calling
+fnref	sm_get_recognised.
+	<p>
+	If a recognition event has been previously associated with channel (see
+fnref	sm_channel_set_event),
+	then the driver will notify the application with that event
+	whenever a signal has been categorised.
+	<p>
+	When invoked with 
+ref catsig_timeout 
+	of zero, if the signal cannot be categorised, 
+	then no event will occur. An application should normally maintain its own timeout 
+	to execute some action if no categorisation event occurs within a reasonable time.
+	<p>
+	When 
+ref	catsig_alg_id
+	of <code>kBESPCatSigAlgLiveSpeakerPlugin</code> is specified and call is invoked with positive 
+ref catsig_timeout 
+	then if signal cannot be categorised within specified timeout, a recognition event will occur
+	and subsequent
+fnref	sm_get_recognised
+	call will give indication that signal categorisation has timed out. See algorithm 
+	description provided with plugin package for more information on timeouts.
+	<p>
+	In order to cancel a signal
+	categorisation algorithm job, the call should be invoked with
+ref	abort_catsig_alg
+	set to 1.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - abort field is inconsistent with channel state
+
+	Provide signalling derived hint to signal categorisation algorithm
+apifn	sm_catsig_signalling_hint
+params	sm_catsig_signalling_hint_parms hintp
+	The channel on which signal categorisation algorithm is running.
+field	tSMChannelId channel in
+	Hint to algorithm.
+field	tSM_INT catsig_hint_param in
+unstruct
+	
+	Only applicable if 
+fnref	sm_catsig_listen_for
+	was invoked with 
+ref	catsig_alg_id
+	set to <code>kBESPCatSigAlgLiveSpeakerPlugin</code>.
+	
+	Provide hint to signal categorisation algorithm.  See algorithm 
+	description provided with plugin package for more information.
+	<p>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_WRONG_CHANNEL_STATE - abort field is inconsistent with channel state
+
+	Adjust signal categorisation algorithm parameter
+apifn	sm_adjust_catsig_module_params
+params	sm_adjust_catsig_module_parms catsigp
+	The module whose signal categorisation parameters are to be
+	modified.
+field	tSMModuleId module in
+	The algorithm identifier of the algorithm whose parameters are
+	to be modified.
+field	tSM_INT catsig_alg_id in
+	The parameter to be modified.
+enumstart	kSMBESPCatSigParam
+enum	kSMBESPCatSigParamF_ln_nrg_coeff 2
+enum	kSMBESPCatSigParamF_min_Lmin
+enum	kSMBESPCatSigParamF_Lmin_decay
+enum	kSMBESPCatSigParamF_speech_thresh
+enum	kSMBESPCatSigParamF_debounce
+enum	kSMBESPCatSigParamI_min_valid_period_count
+enum	kSMBESPCatSigParamI_min_valid_count
+enum	kSMBESPCatSigParamI_glitch_count
+enum	kSMBESPCatSigParamI_qualify_count
+enum	kSMBESPCatSigParamI_alter_duration
+enum	kSMBESPCatSigParamI_max_valid_tone_cnt
+enum	kSMBESPCatSigParamI_min_valid_speech_cnt
+enum	kSMBESPCatSigParamI_threshold_samp_cnt
+enum	kSMBESPCatSigParamI_delay_time
+enum	kSMBESPCatSigParamI_period_time
+enum	kSMBESPCatSigParamI_min_off_count
+enum	kSMBESPCatSigParamI_min_period_off
+enum	kSMBESPCatSigParamF_initial_Lmax
+enumend	parameter_id in
+	The parameter value.
+union
+	A floating-point value. Used when the
+ref	parameter_id
+	refers to a floating point parameter (i.e. its name contains
+	<code>ParamF</code>).
+field	double fp_value in
+	An integer value. Used when the
+ref	parameter_id
+	refers to an integer parameter (i.e. its name contains
+	<code>ParamI</code>).
+field	tSM_INT int_value in
+unstruct	parameter_value
+unstruct
+	Adjust parameter for signal categorisation algorithm.
+	<p>
+	Invoking the call will change a single signal categorisation
+	parameter for the given signal categorisation algorithm, that
+	parameter being identified by the value supplied
+ref	parameter_id.
+	<p>
+	The new parameter value must be set in either the
+ref	parameter_value-fp_value
+	or
+ref	parameter_value-int_value
+	element of the
+ref	parameter_value
+	union according to the parameter type.
+	<p>
+	Adjusting parameters for the signal categorisation algorithm requires 
+	extreme care and should be attempted only under the guidance of Aculab 
+	support. For more background information on how the algorithm works, 
+	please refer to	
+	<a href=../an-lsd.html>Prosody application note: Live Speaker Detection</a>
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_SUCH_MODULE - if no such module exists
+error	ERR_SM_BAD_PARAMETER - if parameter out of range
+
+	Modify criterion which causes a channel to be ready for reading
+apifn	sm_channel_set_input_threshold
+params	sm_channel_set_input_threshold_parms thp
+	The channel whose threshold is to be set.
+field	tSMChannelId channel in
+	The new threshold. When this much data is available to be
+	read, the channel is ready.
+field	tSM_INT minimum_bits in
+unstruct
+	A channel is considered to be ready for you to fetch data
+	from it when there is enough data. This call allows you to
+	specify how much is 'enough'.
+	<p>
+	While there is enough data to make a channel ready, the
+	channel's associated read event (as configured with
+fnref	sm_channel_set_event)
+	remains set.
+	<p>
+	See also the document <a href="../an-data_transfer.html">Prosody
+	application note: considerations for data transfer
+	thresholds</a>.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Modify criterion which causes a channel to be ready for writing
+apifn	sm_channel_set_output_threshold
+params	sm_channel_set_output_threshold_parms thp
+	The channel whose threshold is to be set.
+field	tSMChannelId channel in
+	The new threshold. If the threshold is greater than zero when this much space available for new
+	data, the channel is ready. If it is less than zero, channel becomes ready when the amount of 
+	buffered data falls below that value. If it is zero, capacity changes will no longer change channel 
+	ready state until thresh set to another value. For example, the value -1024 means that notification
+	is to happen when only 128 octets (1024 bits) of data is waiting to be sent.
+field	tSM_INT minimum_bits in
+unstruct
+	A channel is considered to be ready for you to supply data
+	to it when there is enough space. This call allows you to
+	specify how much is 'enough'.
+	<p>
+	While there is enough space for more data to make a channel
+	ready, the channel's associated write event (as configured with
+fnref	sm_channel_set_event)
+	remains set.
+	<p>
+	See also the document <a href="../an-data_transfer.html">Prosody
+	application note: considerations for data transfer
+	thresholds</a>.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Set the phase reversal period of generate tones
+apifn	sm_play_tone_list_phase_reverse
+params	sm_play_tone_list_phase_reverse_parms pp
+	The channel playing a tone list
+field	tSMChannelId channel in
+	The period between phase reversals
+field	tSM_UT32 period in
+unstruct
+	If non-zero, makes the generated tone have phase reversals every
+ref	period
+	milliseconds.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+	
+	Detect a beep
+apifn	sm_beep_listen_for
+params	sm_beep_listen_for_parms listenp
+	The channel on which to listen.
+field	tSMChannelId channel in
+	The minumum beep duration (in milliseconds).
+field	tSM_INT min_duration in
+	The upper frequency boundary (in Hz).
+field	double upper_limit in
+	The lower frequency boundary (in Hz).
+field	double lower_limit in
+unstruct
+	A beep will be recognised if it lasts for at least
+ref	min_duration
+	milliseconds and the frequency is between
+ref lower_limit
+	and
+ref	upper_limit.
+	<p>
+	When a beep is recognised, the recognition event associated with the
+	channel is set and the application can then retrieve the details
+	for the recognised beep by calling
+fnref	sm_get_recognised.
+	<p>
+	Setting
+ref	min_duration
+	to zero disables the detection.
+	<p>
+	The modules
+modref	td
+	and
+modref	beepdet
+	are required.
+explain
+	0
+retval
+
+	Detect a analogue line going on-hook
+apifn	sm_onhook_listen_for
+params	sm_onhook_listen_for_parms listenp
+	The channel on which to listen.
+field	tSMChannelId channel in
+	Indicator of whether on-hook detection is to be
+	enabled (non-zero) or disabled (zero).
+field	tSM_INT enable in
+	The pre pulse maximum power (in dBm0). If zero is specified, 
+	the default of -48.0 is used.
+field	double pre_pulse_max_power in
+	The pulse minimum power (in dBm0). If zero is specified, 
+	the default of -18.0 is used.
+field	double pulse_min_power in
+	The post pulse power floor (in dBm0). If zero is specified, 
+	the default of -42.0 is used.
+field	double post_pulse_floor in
+	The convergence latitude (in dB). If zero is specified, 
+	the default of -6.0 is used.
+field	double latitude in
+	The minimum count ratio. If zero is specified, 
+	the default of 4.0 is used.
+field	double count_ratio in
+	The minimum total ratio. If zero is specified, 
+	the default of 4.0 is used.
+field	double total_ratio in
+	The maximum post pulse duration (in mS). If zero is specified, 
+	the default of 60 is used.
+field	tSM_INT max_duration in
+unstruct
+	When the detector has determined that the analogue telephone has 
+	gone 'on-hook' the recognition event associated with the
+	channel is set and a subsequent call to
+fnref	sm_get_recognised
+	will return the state <code>kSMRecognisedOnHook</code>.
+	<p>
+	The module
+modref	onhook
+	is required.
+explain
+	0
+retval

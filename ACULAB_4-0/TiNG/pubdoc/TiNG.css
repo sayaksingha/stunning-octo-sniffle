@@ -1,0 +1,30 @@
+@import url(aculab.css);
+
+.yes {
+	background-color:lime;
+}
+
+.no {
+	background-color:red;
+}
+
+ins {
+	background-color:green;
+}
+
+del {
+	background-color:red;
+}
+
+.type-LINUX {
+	background-color:#99ff99;
+}
+
+.type-QNX {
+	background-color:#ff99ff;
+}
+
+.type-WINNT {
+	background-color:#99ffff;
+}
+

@@ -1,0 +1,7 @@
+.	polltest.o
+libutil	generic_io.o
+Testlib	errcode_sm.o
+Testlib	error.o
+Testlib	modopen.o
+Testlib	cardopen.o
+apilib

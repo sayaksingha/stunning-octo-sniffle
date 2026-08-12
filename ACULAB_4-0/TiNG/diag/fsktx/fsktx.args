@@ -1,0 +1,4 @@
+b	baudrate	float
+m	markfreq	float
+o	outfile		string
+s	spacefreq	float

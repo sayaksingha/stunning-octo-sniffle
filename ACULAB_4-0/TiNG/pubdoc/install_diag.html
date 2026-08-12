@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: diagnostic programs</title>
+</head>
+<body>
+<h1>Prosody installation guide: diagnostic programs</h1>
+<p>
+After you have finished part of the <a href="install.html">Prosody
+installation procedure</a>
+there are various diagnostic programs you can run. The documentation
+for each one specifies how much of the installation procedure must
+have been completed. The difference
+between a <a href="howto_test.html">test program</a> and a diagnostic
+program is that the diagnostic programs may use unpublished APIs
+(which may change without notice) or
+use techniques which are not appropriate for use in normal
+applications (e.g. have low performance).
+For this reason, although you can look at the source code
+to see how they work, do not copy the techniques you find there.
+Some of the diagnostic programs provided are:
+<table border>
+<tr>
+	<td><a href="diag_incall.html">incall</a>
+	<td>Wait for and answer incoming calls.
+<tr>
+	<td><a href="diag_int2text.html">int2text</a>
+	<td>Convert a file of 32-bit integers in binary to a text
+	file of numbers in decimal (one per line).
+<tr>
+	<td><a href="diag_outcall.html">outcall</a>
+	<td>Make an outgoing call.	
+</table>
+</body>

@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: building software components</title>
+</head>
+<body>
+<h1>Prosody installation guide: building software components</h1>
+<p>
+After doing the <a href="install_build1.html">first-time build</a>,
+go to each of directories listed below and run 'make'. <span
+class="type-WINNT">Note that if you are using Visual Studio on
+Windows and you have built everything with the <a href="vsproj.html">
+Visual Studio Project files</a>, then all of these components have
+already been built and you can proceed to run the tests described in
+<a href="install.html">Prosody installation guide</a></span>.
+<p>
+If you don't want to use 'make', build the targets in each directory as
+described in <a href="build_cconly.html">Prosody installation guide:
+building without using the Makefiles</a>.
+<p>
+<table border>
+<tr>
+	<th>Directory under $(TiNG)
+	<th>Contents
+
+<tr>
+	<td>libutil
+	<td>library of small items used in various places - essential
+	
+
+<tr>
+	<td>apilib
+	<td>API library - essential
+	
+
+<tr>
+	<td>highapi
+	<td>High level API library. This is necessary if you use any
+	of the high level API functions. It is also used by some of
+	the test programs in the <code>test</code> directory.
+
+<tr>
+	<td>call
+	<td>Call control API library. This is only used by a few test
+	programs in the <code>test</code> directory. To build
+	this you must also have the Aculab call control software
+	installed.
+
+<tr>
+	<td>switch
+	<td>Switch driver API library. This is only used by a few
+	test and diagnostic programs in the
+	<code>test</code> and <code>$(TiNG)/diag</code>
+	directories. To build this you must also have the Aculab switch
+	driver software installed.
+
+<tr>
+	<td>adsilib
+	<td>An implementation of ADSI (see
+	<a href="adsilib.html">ADSI library</a>). This is only
+	needed for a very few test programs.
+
+<tr>
+	<td>rtcplib
+	<td>An implementation of RTCP (see
+	<a href="rtcplib.html">Prosody RTCP library</a>). This is only
+	needed for a very few test programs.
+
+<tr>
+	<td>v8lib
+	<td>An implementation of the V.8 standard (see
+	<a href="v8.html">V.8 library</a>). This is only
+	needed for a very few test programs.
+
+<tr>
+	<td>class
+	<td>C++ classes which drive the standard C API. This is only
+	needed for a very few test programs.
+
+<tr>
+	<td>diag/*
+	<td>Various test and diagnostic programs. Each of these has
+	its own directory. These programs are not intended as examples.
+	They may use undocumented features or be written in a way which
+	is inappropriate for a general application.
+
+<tr>
+	<td>test/*
+	<td>Various test programs. Each of these has its own
+	directory. In addition there is a directory
+	<code>Testlib</code> which contains some code which is common
+	to several programs. Build in this directory first and then
+	build each test program in turn. These programs generally use
+	the documented API correctly, so if you look at how they do
+	things they will not mislead you into using undocumented
+	features. Some of these may even be useful as a starting point
+	for writing applications.
+
+</table>
+<p>
+If you cannot build an item, unless it is described above as
+'essential', it may be worth noting what item failed and continuing to
+build the later items. In particular, for Prosody S and Prosody X, it
+is possible to run some tests without the <code>call</code> or
+<code>switch</code> having built.
+<p>
+The program 't0' used in many makefiles is built as part of the
+<a href="install_build1.html">first time build</a>.
+<p>
+Obviously you can do all the building automatically with a command like
+this:
+<pre>
+	for i in libutil apilib highapi adsilib rtcplib v8lib call switch class; do (cd $i; make) done
+	for i in diag/* test/* ; do test -f $i/$TiNGTARGET/objlist &amp;&amp; (cd $i; make) done
+</pre>
+<p>
+That works in a standard shell, such as is used with Linux, or
+available as part of the <a href="http://cygwin.com">Cygwin tools</a> for
+Windows. Using the CMD.EXE command interpreter on Windows, the
+equivalent is:
+<pre>
+	for %d in (libutil apilib highapi adsilib rtcplib v8lib call switch diag test) do (pushd %d &amp; make &amp; popd)
+	for /d %d in (diag\\* test\\*) do (pushd %d &amp; (if exist WINNT_V6\objlist make ) &amp; popd)
+</pre>
+<p>
+You are now ready to run the tests described in
+<a href="install.html">Prosody installation guide</a>.
+</body>
+</html>

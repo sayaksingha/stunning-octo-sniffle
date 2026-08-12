@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_rtcphand_config_bandwidth</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_rtcphand_config_bandwidth</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_rtcphand_config_bandwidth(struct sm_rtcphand_config_bandwidth_parms *<a href="#field-rvp">rvp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-rvp">*rvp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_rtcphand_config_bandwidth_parms {
+	<a href="../apitype.html#type-tSMRTCPHandId">tSMRTCPHandId</a> <a href="#field-rtcphand">rtcphand</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-rtcp_bw">rtcp_bw</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-rtcprx_bw">rtcprx_bw</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-rtcptx_bw">rtcptx_bw</a>;					/* in */
+} SM_RTCPHAND_CONFIG_BANDWIDTH_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures the RTCP bandwidth. 
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-rtcphand">rtcphand</a><dd>The RTCP handler to configure
+
+<dt><a name="field-rtcp_bw">rtcp_bw</a><dd>The bandwidth, in bits per second, allocated for use by RTCP in the
+session in which this RTCP handler is participating. This is
+the value <code>rtcp_bw</code> specified in
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>.
+
+<dt><a name="field-rtcprx_bw">rtcprx_bw</a><dd>The bandwith, in bits per second, allocated for use by RTCP reports
+from RTP receivers. This is the value specified by
+"b=RR:&lt;bandwith-value&gt;" in SDP
+(<a href="http://www.ietf.org/rfc/rfc3556.txt">IETF RFC 3556</a>).
+
+<dt><a name="field-rtcptx_bw">rtcptx_bw</a><dd>The bandwith, in bits per second, allocated for use by RTCP reports
+from RTP senders. This is the value specified by
+"b=RT:&lt;bandwith-value&gt;" in SDP
+(<a href="http://www.ietf.org/rfc/rfc3556.txt">IETF RFC 3556</a>).
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

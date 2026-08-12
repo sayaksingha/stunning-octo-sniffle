@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody application note: WAV files</title>
+</head>
+<body>
+<h1>Prosody application note: WAV files</h1>
+<p>
+The WAV file format is one defined by Microsoft. However there are some
+differences between the formats understood by different programs.
+This document explains some of these differences and how they
+influence the <a href="highapi_wavfile.html">high level WAV file library</a>
+functions provided with Prosody.
+
+<h2>Background - Basic WAV format</h2>
+<p>
+The WAV file format is built from very simple components, called
+chunks. A chunk consists of a four-byte code, a four-byte length, and
+optional data. The length is the length of the optional data (so it's
+zero if there is no optional data). If the length of the data is not
+even, then an extra zero byte of padding must be appended after the
+data (but not included in the length). The contents of a chunk depend on
+the type of chunk, which is determined by its code. Some chunks
+contain a sequence of sub-chunks, while others contain other kinds of
+data. Chunk type codes are, by convention, four printable characters,
+which are also used as the names of the types. For example the RIFF
+chunk starts with 0x52 0x49 0x46 0x46, which is 'R' 'I' 'F' 'F'. The
+lengths are stored least significant byte first (little-endian). A
+WAV file consists of a single chunk which must be a RIFF chunk which
+must contains a four-byte code (which must be 'W' 'A' 'V' 'E')
+and a sequence of sub-chunks. The minimal WAV file has only two
+sub-chunks in the RIFF chunk, and they are 'fmt ' and 'data' chunks
+in that order. The 'fmt ' chunk specifies the data format and the
+'data' chunk contains the actual data.
+<p>
+Here is a diagram of a very small WAV file:
+<table border>
+<tr><th colspan=4>Content<th>Explanation
+<tr><td>52<td>49<td>46<td>46<td>The 'RIFF' code<th rowspan=14>RIFF
+<tr><td>2c<td>00<td>00<td>00<td>The length of the RIFF chunk
+<tr><td>57<td>41<td>56<td>45<td>The 'WAVE' code
+<tr><td>66<td>6d<td>74<td>20<td>The 'fmt ' code<th rowspan=6>fmt
+<tr><td>10<td>00<td>00<td>00<td>The length of the fmt chunk
+<tr><td>11<td>22<td>33<td>44<td rowspan=4>Contents of the fmt chunk
+<tr><td>55<td>66<td>77<td>88
+<tr><td>99<td>aa<td>bb<td>cc
+<tr><td>dd<td>ee<td>ff<td>00
+<tr><td>64<td>61<td>74<td>61<td>The 'data' code<th rowspan=4>data
+<tr><td>07<td>00<td>00<td>00<td>The length of the data chunk
+<tr><td>11<td>22<td>33<td>44<td rowspan=2>Contents of the data chunk
+<tr><td>55<td>66<td>77
+<tr><td><td><td><td>00<td>Padding
+</table>
+
+<h2>WAV file differences</h2>
+<p>
+The original WAV file specification
+(<cite>"Multimedia Programming Interface and Data Specifications 1.0"</cite>,
+published in 1991 by Microsoft and IBM) described a fmt chunk format
+which had 16 bytes. This covered the basic PCM formats and was
+equivalent to the PCMWAVEFORMAT structure. However, when other
+encodings were added to the specification, some required extra
+information, so the fmt chunk was extended as defined in
+<cite>"New Multimedia Data Types and Data Techniques</cite>", published
+in 1994 by Microsoft. Firstly, an extra
+two-byte field was appended, which contains a length. Then, depending
+on the encoding, further bytes were added, with the new length
+indicating how many of these were present. Unfortunately, the
+two-byte length was specified to be present, with the value zero, even
+if there were no further bytes in the fmt chunk. This made the
+encoding of basic PCM formats be different than under the old
+specification even though no extra information was present and quite
+a lot of software cannot read both the old and the new formats.
+<p>
+Note that it is especially unfortunate that the specification
+was modified in this way, since the original already permitted the
+fmt chunk to contain further data, and a length field is not
+necessary since the length of the fmt chunk is known from the
+explicit length field.
+<p>
+The structure equivalent to this version is called WAVEFORMATEX.
+
+<h2>WAVEFORMATEXTENSIBLE</h2>
+<p>
+Microsoft have further modified the WAV file format (<cite>"Multiple
+Channel Audio Data and WAVE files"</cite>, published by Microsoft in
+2001), again extending
+the fmt chunk. This is equivalent to the WAVEFORMATEXTENSIBLE
+structure. It adds more fields, which are included in the length
+recorded in the two-byte length field (as well as in the length field
+of the fmt chunk itself of course). While this alone would not cause
+any incompatibility, the field which describes the data encoding
+(previously at the beginning of the fmt chunk, and sometimes called
+the wFormatTag) is now in this extension, with the old encoding field
+simply indicating that the true encoding (called SubFormat) is to be
+found in its new place. This means that files can be produced by
+applications conforming to this new version of the specification
+which cannot be understood by programs conforming to the previous
+version. This can apply even to files which do not need or use any of
+the new extensions. Obviously, this is a rather unfortunate
+situation, especially as applications written and tested against this
+latest specification may not understand files created by programs
+conforming to the older versions.
+
+<h2>Prosody handling of WAV files</h2>
+<p>
+The high level library supplied with Prosody can understand files
+conforming to either the original (1991) version of the specification
+or the first (1994) revision. It cannot understand files which make
+use of the extensions in the 2001 revision, even if the files use a
+data encoding that Prosody handles.
+<p>
+Files created by the Prosody library conform to the 1994 version of
+the specification because this is currently the most widely supported
+version. However it can trivially be modified to produce files
+conforming to the 1991 version by defining the C preprocessor symbol
+OMIT_CBSIZE when building the library. Note that quite a few
+applications have problems with this format.
+
+<hr>
+<p>
+<small>Document reference: AN ????</small>
+
+</body>
+</html>

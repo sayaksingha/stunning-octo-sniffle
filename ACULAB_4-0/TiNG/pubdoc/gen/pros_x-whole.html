@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody X: API</title>
+</head>
+<body>
+<h1>Prosody X: API</h1>
+<p>
+The following functions are provided by the
+<a href="../pros_x.html">Prosody X API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr>
+	<td><a href="#sm_open_prosody_s_v3">sm_open_prosody_s_v3()</a>
+	<td>&nbsp;
+	<td>Open a card for use with Prosody S version 3.
+
+	<tr>
+	<td><a href="#sm_open_prosody_x">sm_open_prosody_x()</a>
+	<td>&nbsp;
+	<td>Open a card for use with Prosody X.
+
+</table>
+<p>
+This document is also available as
+<a href="pros_x-index.html">separate pages for each function</a>.
+<hr>
+<h2><a name="sm_open_prosody_s_v3">Prosody X: API: sm_open_prosody_s_v3</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_open_prosody_s_v3(struct sm_open_prosody_s_v3_parms *<a href="#field-openp">openp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-openp">*openp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_open_prosody_s_v3_parms {
+	char *<a href="#field-ps_locator">ps_locator</a>;					/* in */
+	<a href="../apitype.html#type-tSMCardId">tSMCardId</a> <a href="#field-card_id">card_id</a>;					/* in */
+} SM_OPEN_PROSODY_S_V3_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Opens a Prosody S version 3 virtual card for use with the Prosody API. This
+function must be invoked by applications using the V6 interface
+to register the <code>tSMCardId</code> value for passing into any
+other Prosody API function which refers to this card.
+<p>
+The security key in the 
+<a class=pref href="#field-ps_locator">ps_locator</a>
+is only validated when establishing a connection with the virtual module.
+Supplying a incorrect key will result in an error return from a function 
+call some time after
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+has reported success, as the connection is made asynchronously.
+<p>
+An open card can be closed by calling
+<a href="apifn-sm_close_prosody.html">sm_close_prosody()</a>.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-ps_locator">ps_locator</a><dd>The IP address of the ProsodyS server, or its registered name
+(i.e. a valid input to the standard function <code>getaddrinfo()</code>),
+then a colon followed by the port the server is listening on.
+If the server is using a security key, the IP address and port is followed 
+by a slash (/) character and the security key. For example,
+&quot;10.202.100.254:2030/mykey&quot;.
+<p>
+Note that IPv6 addresses in numeric form should be enclosed in square brackets, 
+for example &quot;[2010:836B:4179::836B:4179]:2030/mykey&quot;.
+
+<dt><a name="field-card_id">card_id</a><dd>An arbitrary value representing the open card.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_open_prosody_x">Prosody X: API: sm_open_prosody_x</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_open_prosody_x(struct sm_open_prosody_x_parms *<a href="#field-openp">openp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-openp">*openp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_open_prosody_x_parms {
+	char *<a href="#field-px_locator">px_locator</a>;					/* in */
+	<a href="../apitype.html#type-tSMCardId">tSMCardId</a> <a href="#field-card_id">card_id</a>;					/* in */
+} SM_OPEN_PROSODY_X_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Opens a Prosody X card for use with the Prosody API. This
+function must be invoked by applications using the V6 interface
+to register the <code>tSMCardId</code> value for passing into any
+other Prosody API function which refers to this card.
+<p>
+The security key in the 
+<a class=pref href="#field-px_locator">px_locator</a>
+is only validated when establishing a connection with a module on the 
+card. Supplying a incorrect key will result in an error return from a 
+function call some time after
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+has reported success, as the connection is made asynchronously.
+<p>
+<strong>Note:</strong>
+Almost all uses of a Prosody X card require the
+<a href="softmodindex.html#datafeed">datafeed</a>
+firmware module to be downloaded.
+<p>
+An open card can be closed by calling
+<a href="apifn-sm_close_prosody.html">sm_close_prosody()</a>.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-px_locator">px_locator</a><dd>The IP address used by the ProsodyX card, or its registered name
+(i.e. a valid input to the standard function <code>getaddrinfo()</code>).
+If the card is using a security key, the IP address is followed 
+by a slash (/) character and the security key.
+<p>
+Note that IPv6 addresses in numeric form should be enclosed in square
+brackets, for example &quot;[2010:836B:4179::836B:4179]/mykey&quot;.
+
+<dt><a name="field-card_id">card_id</a><dd>An arbitrary value representing the open card.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<p>These functions constitute the
+<a href="../pros_x.html">Prosody X API</a>.
+</body>
+</html>

@@ -1,0 +1,5 @@
+i	infile		string
+o	outfile		string
+n	order		unsigned
+r	rej_ratio	float
+f	freq_ratio	float

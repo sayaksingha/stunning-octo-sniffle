@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_status_profile_specific</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_status_profile_specific</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_status_profile_specific(struct sm_vmprx_status_profile_specific_parms *<a href="#field-psp">psp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-psp">*psp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_status_profile_specific_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-notification_code">notification_code</a>;				/* in */
+	char *<a href="#field-payload">payload</a>;						/* inout */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_length">max_length</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-length">length</a>;						/* out */
+} SM_VMPRX_STATUS_PROFILE_SPECIFIC_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This call should be invoked following a status, kSMVMPRxStatusProfileSpecific, being obtained from 
+<a href="apifn-sm_vmprx_status.html">sm_vmprx_status()</a>
+. The profile specicic notification code obtained from that call should be supplied as the
+<a class=pref href="#field-notification_code">notification_code</a>
+parameter. Additional  profile specific information will be retrieved
+into the supplied buffer. See documentation supplied with ProsodyS profile specific plugin for further details. 
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to query
+
+<dt><a name="field-notification_code">notification_code</a><dd>The notification code previously obtained from 
+<a href="apifn-sm_vmprx_status.html">sm_vmprx_status()</a>
+
+<dt><a name="field-payload">payload</a><dd>A pointer to a buffer to receive the payload related to profile specific state transition
+
+<dt><a name="field-max_length">max_length</a><dd>The length of the buffer
+
+<dt><a name="field-length">length</a><dd>The length of data written to the buffer
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

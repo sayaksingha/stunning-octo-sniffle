@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>pathtest rtptx</title>
+</head>
+<body>
+<h1>pathtest rtptx</h1>
+
+<h2>Status codes</h2>
+<p>
+The status codes printed by rtptx operations are:
+<table>
+<tr><th><code>,</code><td>Idle
+<tr><th><code>*</code><td>Running
+<tr><th><code>S</code><td>Selected SSRC
+<tr><th><code>t</code><td>Continuation of tone detected
+<tr><th><code>T</code><td>Detected a tone
+<tr><th><code>-</code><td>Completed
+</table>
+
+<h2>Settings</h2>
+<p>
+These are the settings used by <code>rtptx</code>:
+
+<h3><code>codec</code> CODEC</h3>
+<p>
+Configures the codec payload type mapping. CODEC is the name of a codec,
+which is one of these:
+<table border>
+<tr><th>a<td>A-law
+<tr><th>u<td>mu-law
+<tr><th>729ab<td>G.729AB
+<tr><th>t<td>RFC2833 (tones)
+</table>
+<p>
+optionally followed by an equals sign and a number, which is the value
+for the payload type. The mapping replaces any previous mapping for that
+codec, and if the payload type value is omitted, no mapping remains for
+that codec type.
+
+<h3><code>dest</code> ADDR</h3>
+<p>
+The address to which it is to send the RTP stream.
+
+<h3><code>destport</code> P</h3>
+<p>
+The port to which it is to send the RTP stream.
+
+<h3><code>ptime</code> N</h3>
+<p>
+The duration represented by each packet (in mS).
+
+<h3><code>rtcpport</code> P</h3>
+<p>
+The associated RTCP port.
+
+<h3><code>rtcp</code> N</h3>
+<p>
+The rtcp handler to use. The special value '-' indicates that no handler
+is to be used. When configuring a default value, this may
+refer to an rtpc handler not yet running, but the handler must be running 
+when creating a new rtprx or adjusting the settings of an existing one.
+
+<h3><code>src</code> ADDR</h3>
+<p>
+The address from which it is to send the RTP stream.
+
+<h3><code>srcport</code> P</h3>
+<p>
+The port from which it is to send the RTP stream.
+
+<h3><code>tosrtcp</code> N</h3>
+<p>
+The TOS value for te RTCP packets.
+
+<h3><code>tosrtp</code> N</h3>
+<p>
+The TOS value for te RTP packets.
+<hr>
+<p>
+This is a command understood by the <a href="pathtest.html">pathtest</a>
+test program.

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody WAV BFILE: API: sm_replay_wav_bf_start</title>
+</head>
+<body>
+<h1>Prosody WAV BFILE: API: sm_replay_wav_bf_start</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_replay_wav_bf_start(char *<a href="#field-filename">filename</a>, <a href="../apitype.html#type-SM_BFILE_REPLAY_PARMS">SM_BFILE_REPLAY_PARMS</a> *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-filename">filename</a>
+<dd>
+The name of the WAV file to be played.
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure as for
+<a href="apifn-sm_replay_bfile_start.html">sm_replay_bfile_start()</a>.
+</dl>
+<h2>Description</h2>
+<p>
+Opens and parses header of WAV file, sets up
+<a href="apifn-sm_replay_bfile_start.html#field-fd">fd</a>,
+<a href="apifn-sm_replay_start.html#field-type">replay_parms.type</a>,
+and
+<a href="apifn-sm_replay_start.html#field-data_length">replay_parms.data_length</a>,
+in structure pointed at by
+<a class=pref href="#field-file_parms">file_parms</a>
+and then invokes
+<a href="apifn-sm_replay_bfile_start.html">sm_replay_bfile_start</a>.
+<p>
+The other elements of the
+<a href="apifn-sm_replay_bfile_start.html#field-file_parms">replay_parms</a>
+structure must be set up as for
+<a href="apifn-sm_replay_bfile_start.html">sm_replay_bfile_start()</a>.
+Note that the offset is assumed to be
+relative to the first octet of speech data following the WAV
+header. If
+<a href="apifn-sm_replay_bfile_start.html#field-offset">offset</a>,
+and
+<a href="apifn-sm_replay_start.html#field-data_length">replay_parms.data_length</a>,
+are both set to zero then
+<a class=pref href="#field-file_parms">file_parms</a>
+will be set up to replay all the speech data in the WAV file.
+<p>
+<strong>Note: It is the responsibility of the application to
+operate the replay as described in
+<a href="../highapi_bf_playrec.html">Prosody high level BFILE play/record</a>
+documentation and to
+close the file following replay completion or abort (using
+<a href="apifn-sm_replay_wav_bf_close.html">sm_replay_wav_bf_close()</a>).
+</strong>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_FILE_ACCESS - problem accessing file containing replay data<li>ERR_SM_FILE_FORMAT - file not WAV format (or unsupported WAV feature)</ul>
+<hr>
+<p>This function is part of the <a href="../highapi_bf_wavfile.html">Prosody WAV BFILE API</a>.
+</body>
+</html>

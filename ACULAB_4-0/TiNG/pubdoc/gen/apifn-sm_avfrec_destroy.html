@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody Audio Video Format (AVF): API: sm_avfrec_destroy</title>
+</head>
+<body class=version-deprecated>
+<h1>Prosody Audio Video Format (AVF): API: sm_avfrec_destroy</h1>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_avfrec_destroy(<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-avfrec">avfrec</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-avfrec">avfrec</a>
+<dd>
+A tSMAVFrecId that has been prevously created by a call to 
+<a href="apifn-sm_avfrec_create.html">sm_avfrec_create()</a>.
+</dl>
+<h2>Description</h2>
+<p>
+Destroys
+<a class=pref href="#field-avfrec">avfrec</a>
+invalidating the tSMAVFrecId.
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosvid.html">Prosody Audio Video Format (AVF) API</a>.
+</body>
+</html>

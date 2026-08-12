@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_condition_reinit</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_condition_reinit</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_condition_reinit(<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-channel">channel</a>
+<dd>
+The channel to which conditioning is being applied.
+</dl>
+<h2>Description</h2>
+<p>
+Re-initialises input conditioning algorithm currently being
+applied to signal on the specified input channel.
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_WRONG_CHANNEL_STATE - if channel input signal not currently being conditioned.</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

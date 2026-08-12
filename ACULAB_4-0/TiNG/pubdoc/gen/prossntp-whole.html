@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody SNTP Client: API</title>
+</head>
+<body>
+<h1>Prosody SNTP Client: API</h1>
+<p>
+The following functions are provided by the
+<a href="../prossntp.html">Prosody SNTP Client API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr>
+	<td><a href="#sm_sntp_config">sm_sntp_config()</a>
+	<td>&nbsp;
+	<td>Configure the SNTP client to send IPv4 requests
+
+	<tr>
+	<td><a href="#sm_sntp_config_ipv6">sm_sntp_config_ipv6()</a>
+	<td>&nbsp;
+	<td>Configure the SNTP client to send IPv6 requests
+
+	<tr>
+	<td><a href="#sm_sntp_create">sm_sntp_create()</a>
+	<td>&nbsp;
+	<td>Create an SNTP Client
+
+	<tr>
+	<td><a href="#sm_sntp_destroy">sm_sntp_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy an SNTP Client
+
+	<tr>
+	<td><a href="#sm_sntp_get_event">sm_sntp_get_event()</a>
+	<td>&nbsp;
+	<td>Get an event for the SNTP client
+
+	<tr>
+	<td><a href="#sm_sntp_status">sm_sntp_status()</a>
+	<td>&nbsp;
+	<td>Fetch status info on a SNTP client
+
+</table>
+<p>
+This document is also available as
+<a href="prossntp-index.html">separate pages for each function</a>.
+<hr>
+<h2><a name="sm_sntp_config">Prosody SNTP Client: API: sm_sntp_config</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sntp_config(struct sm_sntp_config_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sntp_config_parms {
+	<a href="../apitype.html#type-tSMSNTPId">tSMSNTPId</a> <a href="#field-sntp">sntp</a>;						/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN">SOCKADDR_IN</a> <a href="#field-server">server</a>;					/* in */
+	int <a href="#field-TOS">TOS</a>;						/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-no_reply_delay">no_reply_delay</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-had_reply_delay">had_reply_delay</a>;				/* in */
+} SM_SNTP_CONFIG_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This function configures the NTP server used by the SNTP client. If the 
+reply to a NTP request is not received within
+<a class=pref href="#field-no_reply_delay">no_reply_delay</a>
+then the next request is sent. Otherwise the next NTP request is sent
+<a class=pref href="#field-had_reply_delay">had_reply_delay</a>
+after the previous request.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sntp">sntp</a><dd>The SNTP client to configure.
+
+<dt><a name="field-server">server</a><dd>The SOCKADDR_IN structure specifying the destination IP address and port 
+of the NTP server to use. A struct SOCKADDR_IN must be configured with an 
+address family, an IP address and a port. Note that most operating systems 
+define this structure such that fields are in network byte order. The 
+structure must be correctly cast such that an IP V4 address is specified. 
+
+<dt><a name="field-TOS">TOS</a><dd>The Type Of Service (TOS) indicator to be sent in the NTP packets.
+
+<dt><a name="field-no_reply_delay">no_reply_delay</a><dd>The delay, in ms, between requests when no reply has been received.
+
+<dt><a name="field-had_reply_delay">had_reply_delay</a><dd>The delay, in ms, between requests when a reply has been received.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sntp_config_ipv6">Prosody SNTP Client: API: sm_sntp_config_ipv6</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sntp_config_ipv6(struct sm_sntp_config_ipv6_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sntp_config_ipv6_parms {
+	<a href="../apitype.html#type-tSMSNTPId">tSMSNTPId</a> <a href="#field-sntp">sntp</a>;						/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN6">SOCKADDR_IN6</a> <a href="#field-server">server</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-no_reply_delay">no_reply_delay</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-had_reply_delay">had_reply_delay</a>;				/* in */
+} SM_SNTP_CONFIG_IPV6_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This function configures the NTP server used by the SNTP client. If the 
+reply to a NTP request is not received within
+<a class=pref href="#field-no_reply_delay">no_reply_delay</a>
+then the next request is sent. Otherwise the next NTP request is sent
+<a class=pref href="#field-had_reply_delay">had_reply_delay</a>
+after the previous request.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sntp">sntp</a><dd>The SNTP client to configure.
+
+<dt><a name="field-server">server</a><dd>The SOCKADDR_IN6 structure specifying the destination IP address and port 
+of the NTP server to use. A struct SOCKADDR_IN6 must be configured with an 
+address family, an IPv6 address and a port. Note that most operating systems 
+define this structure such that fields are in network byte order.
+
+<dt><a name="field-no_reply_delay">no_reply_delay</a><dd>The delay, in ms, between requests when no reply has been received.
+
+<dt><a name="field-had_reply_delay">had_reply_delay</a><dd>The delay, in ms, between requests when a reply has been received.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sntp_create">Prosody SNTP Client: API: sm_sntp_create</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sntp_create(struct sm_sntp_create_parms *<a href="#field-createp">createp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-createp">*createp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sntp_create_parms {
+	<a href="../apitype.html#type-tSMSNTPId">tSMSNTPId</a> <a href="#field-sntp">sntp</a>;						/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a name="enum-kSMSNTPType">enum kSMSNTPType</a> {
+		<a href="#field-kSMSNTPTypeIPv4">kSMSNTPTypeIPv4</a>,
+		<a href="#field-kSMSNTPTypeIPv6">kSMSNTPTypeIPv6</a>,
+	} <a href="#field-type">type</a>;							/* in */
+	<a href="../apitype.html#type-in_addr">struct in_addr</a> <a href="#field-address">address</a>;					/* in */
+	<a href="../apitype.html#type-in6_addr">struct in6_addr</a> <a href="#field-ipv6_address">ipv6_address</a>;				/* in */
+} SM_SNTP_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Creates an SNTP Client.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sntp">sntp</a><dd>The created SNTP client.
+
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+Indicates the module on which the SNTP client is to be created.
+
+<dt><a name="field-type">type</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMSNTPTypeIPv4">kSMSNTPTypeIPv4</a>
+<dd>The SNTP client is to receive IPv4 packets
+
+<dt><a name="field-kSMSNTPTypeIPv6">kSMSNTPTypeIPv6</a>
+<dd>The SNTP client is to receive IPv6 packets
+
+</dl>
+<dt><a name="field-address">address</a><dd>The address on which the SNTP client listens for replies if
+<a class=pref href="#field-type">type</a>
+is 
+<a class=pref href="#field-kSMSNTPTypeIPv4">kSMSNTPTypeIPv4</a>.
+
+<dt><a name="field-ipv6_address">ipv6_address</a><dd>The address on which the SNTP client listens for replies if
+<a class=pref href="#field-type">type</a>
+is 
+<a class=pref href="#field-kSMSNTPTypeIPv6">kSMSNTPTypeIPv6</a>.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if no suitable output channel free<li>ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified</ul>
+<hr>
+<h2><a name="sm_sntp_destroy">Prosody SNTP Client: API: sm_sntp_destroy</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sntp_destroy(<a href="../apitype.html#type-tSMSNTPId">tSMSNTPId</a> <a href="#field-sntp">sntp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-sntp">sntp</a>
+<dd>
+The SNTP client to destroy. Must have been previously created by a call to
+<a href="#sm_sntp_create">sm_sntp_create()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys an SNTP Client.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sntp_get_event">Prosody SNTP Client: API: sm_sntp_get_event</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sntp_get_event(struct sm_sntp_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sntp_event_parms {
+	<a href="../apitype.html#type-tSMSNTPId">tSMSNTPId</a> <a href="#field-sntp">sntp</a>;						/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_SNTP_EVENT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+the event will be signalled when a status change occurs on the SNTP client.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sntp">sntp</a><dd>The SNTP client.
+
+<dt><a name="field-event">event</a><dd>The event identifier
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sntp_status">Prosody SNTP Client: API: sm_sntp_status</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sntp_status(struct sm_sntp_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sntp_status_parms {
+	<a href="../apitype.html#type-tSMSNTPId">tSMSNTPId</a> <a href="#field-sntp">sntp</a>;						/* in */
+	<a name="enum-kSMSNTPStatus">enum kSMSNTPStatus</a> {
+		<a href="#field-kSMSNTPStatusRunning">kSMSNTPStatusRunning</a>,
+		<a href="#field-kSMSNTPStatusStopped">kSMSNTPStatusStopped</a>,
+		<a href="#field-kSMSNTPStatusSync">kSMSNTPStatusSync</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	union {
+		struct {
+			int <a href="#field-u-sync-has_sync">has_sync</a>;				/* out */
+		} <a href="#field-u-sync">sync</a>;						/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SM_SNTP_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+returns the status of the SNTP client.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sntp">sntp</a><dd>The SNTP client.
+
+<dt><a name="field-status">status</a><dd>The status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMSNTPStatusRunning">kSMSNTPStatusRunning</a>
+<dd>The SNTP client is running
+
+<dt><a name="field-kSMSNTPStatusStopped">kSMSNTPStatusStopped</a>
+<dd>The SNTP client is not running
+
+<dt><a name="field-kSMSNTPStatusSync">kSMSNTPStatusSync</a>
+<dd>The SNTP client synchronisation state has changed
+
+</dl>
+<dt><a name="field-u">u</a><dd>Additional information relating to the current status of the SNTP client
+
+
+<dl>
+<dt><a name="field-u-sync">sync</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMSNTPStatusSync">kSMSNTPStatusSync</a>.
+
+
+<dl>
+<dt><a name="field-u-sync-has_sync">has_sync</a><dd>An indicator of whether the SNTP client is synchronised with the NTP server
+
+</dl>
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>These functions constitute the
+<a href="../prossntp.html">Prosody SNTP Client API</a>.
+</body>
+</html>

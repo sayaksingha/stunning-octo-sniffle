@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+<title>Prosody API: list of error codes</title>
+</head>
+<body>
+<h1>Prosody API: list of error codes</h1>
+<p>
+These are the errors which can be returned by any of the
+<a href="../index.html">Prosody</a> API functions.
+<table border>
+<tr><th>N<th>Name<th>Cause
+<tr><td>-115</td><td>ERR_SM_BAD_DATA_LENGTH</td><td>	invalid length parameter
+</td></tr>
+<tr><td>-135</td><td>ERR_SM_BAD_DATAFEED_CONNECT</td><td>	an attempt to connect a datafeed has been rejected by the firmware
+</td></tr>
+<tr><td>-101</td><td>ERR_SM_BAD_PARAMETER</td><td>	a parameter value is bad
+</td></tr>
+<tr><td>-121</td><td>ERR_SM_CHANNEL_ALLOCATED</td><td>	a channel is allocated when attempting an operation that
+	requires no channels be allocated
+</td></tr>
+<tr><td>-1</td><td>ERR_SM_DEVERR</td><td>	problem accessing the device or other error not covered by a more specific code
+</td></tr>
+<tr><td>-160</td><td>ERR_SM_DISCONNECTED</td><td>	a connection to the DSP is disconnected - typically because of an incorrect security key or network problem
+</td></tr>
+<tr><td>-106</td><td>ERR_SM_DOWNLOAD</td><td>	problem trying to download firmware
+</td></tr>
+<tr><td>-104</td><td>ERR_SM_FILE_ACCESS</td><td>	could not access a file (i.e. open/read/write etc failed)
+</td></tr>
+<tr><td>-105</td><td>ERR_SM_FILE_FORMAT</td><td>	file is not in the expected format
+</td></tr>
+<tr><td>-108</td><td>ERR_SM_FIRMWARE_NOT_RUNNING</td><td>	no firmware is running on a module
+</td></tr>
+<tr><td>-130</td><td>ERR_SM_FIRMWARE_PROBLEM</td><td>	Obsolete
+</td></tr>
+<tr><td>-125</td><td>ERR_SM_INCOMPATIBLE_APP</td><td>	Obsolete
+</td></tr>
+<tr><td>-124</td><td>ERR_SM_INCOMPATIBLE_DRIVER</td><td>	Obsolete
+</td></tr>
+<tr><td>-103</td><td>ERR_SM_MODULE_ACCESS</td><td>	Obsolete
+</td></tr>
+<tr><td>-109</td><td>ERR_SM_MODULE_ALREADY_RUNNING</td><td>	Obsolete
+</td></tr>
+<tr><td>-100</td><td>ERR_SM_NOT_IMPLEMENTED</td><td>	function or option not implemented
+</td></tr>
+<tr><td>-127</td><td>ERR_SM_NOT_SAME_GROUP</td><td>	Obsolete
+</td></tr>
+<tr><td>-123</td><td>ERR_SM_NOT_SAME_MODULE</td><td>	alt_data_source channel not located on same module
+</td></tr>
+<tr><td>-133</td><td>ERR_SM_NO_ASSOCIATED_SWITCH</td><td>	the card is a type which does not have an associated switch driver
+</td></tr>
+<tr><td>-113</td><td>ERR_SM_NO_CAPACITY</td><td>	module does not currently have capacity to buffer this data
+</td></tr>
+<tr><td>-111</td><td>ERR_SM_NO_DATA_AVAILABLE</td><td>	not enough data recorded yet to give to application
+</td></tr>
+<tr><td>-128</td><td>ERR_SM_NO_LICENCE</td><td>	software requires a licence but none is available
+</td></tr>
+<tr><td>-112</td><td>ERR_SM_NO_RECORD_IN_PROGRESS</td><td>	no recording current on timeslot.
+</td></tr>
+<tr><td>-114</td><td>ERR_SM_NO_REPLAY_IN_PROGRESS</td><td>	current replay complete or aborted
+</td></tr>
+<tr><td>-107</td><td>ERR_SM_NO_RESOURCES</td><td>	a lack of resources prevents the operation from completing
+</td></tr>
+<tr><td>-110</td><td>ERR_SM_NO_SUCH_CHANNEL</td><td>	no suitable channel exists
+</td></tr>
+<tr><td>-120</td><td>ERR_SM_NO_SUCH_DIGIT</td><td>	Obsolete
+</td></tr>
+<tr><td>-119</td><td>ERR_SM_NO_SUCH_FIRMWARE</td><td>	no suitable firmware is available
+</td></tr>
+<tr><td>-118</td><td>ERR_SM_NO_SUCH_GROUP</td><td>	the specified group does not exist
+</td></tr>
+<tr><td>-102</td><td>ERR_SM_NO_SUCH_MODULE</td><td>	the specified module does not exist
+</td></tr>
+<tr><td>-170</td><td>ERR_SM_NO_SUCH_STREAM</td><td>	the specified stream does not exist
+</td></tr>
+<tr><td>-131</td><td>ERR_SM_OS_RESOURCE_PROBLEM</td><td>	problem trying to allocate resources (e.g. malloc())
+</td></tr>
+<tr><td>-134</td><td>ERR_SM_OS_OTHER_PROBLEM</td><td>	problem occurred calling native operating system
+</td></tr>
+<tr><td>-2</td><td>ERR_SM_PENDING</td><td>	no error but operation has not yet finished
+</td></tr>
+<tr><td>-116</td><td>ERR_SM_WRONG_CHANNEL_STATE</td><td>	replay or other non-interruptible job still in progress
+</td></tr>
+<tr><td>-117</td><td>ERR_SM_WRONG_CHANNEL_TYPE</td><td>	operation is inappropriate for this type of channel
+</td></tr>
+<tr><td>-129</td><td>ERR_SM_WRONG_FIRMWARE_TYPE</td><td>	firmware does not support algorithm.
+</td></tr>
+<tr><td>-126</td><td>ERR_SM_WRONG_MODULE_TYPE</td><td>	operation is inappropriate for this type of module
+</td></tr>
+<tr><td>-150</td><td>ERR_SM_IWR_NO_NOISE</td><td>	The Isolated Word Recogniser has been started with no noise model
+</td></tr>
+<tr><td>-151</td><td>ERR_SM_IWR_EXCESS_NOISE</td><td>	The Isolated Word Recogniser has been started with more than one noise model
+</td></tr>
+<tr><td>-152</td><td>ERR_SM_IWR_NO_MODEL</td><td>	The Isolated Word Recogniser has been started with no models
+</td></tr>
+<tr><td>-153</td><td>ERR_SM_IWR_EXCESS_MODELS</td><td>	The Isolated Word Recogniser has been started with more models than it can handle
+</td></tr>
+<tr><td>-154</td><td>ERR_SM_IWR_EXCESS_STATES</td><td>	The Isolated Word Recogniser has been started with a defective model
+</td></tr>
+<tr><td>-155</td><td>ERR_SM_IWR_MODEL_CHANGED</td><td>	The Isolated Word Recogniser has detected that a model being used was replaced
+</td></tr>
+<tr><td>-156</td><td>ERR_SM_IWR_MISSING</td><td>	The Isolated Word Recogniser has detected that a model being used has been deleted
+</td></tr>
+</table>
+</body>
+</html>

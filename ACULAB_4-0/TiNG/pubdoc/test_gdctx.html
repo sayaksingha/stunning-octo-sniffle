@@ -1,0 +1,240 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: gdctx</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: gdctx</h1>
+<p>
+This is a data communications tester. It configures a channel to
+transmit data using any protocol and encoding.
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have downloaded firmware modules as listed in
+<a href="prosdc_config.html">Prosody Data Communcations
+Protocols and Encodings</a>.
+<p>
+Run <code>gdctx</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/gdctx</span> or
+<span class="type-WINNT"> gen-WINNT_V6/gdctx</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table border>
+<tr>
+	<th class=bg>Option&nbsp;format<th class=bg>Meaning
+
+<tr>
+	<td><code>-i</code> &lt;inifile&gt;
+		<td>take initial command from this file (then read
+		commands from standard input as normal)
+
+<tr>
+	<td><code>-m</code> &lt;module&gt;
+		<td>The Prosody module to use. This is the number of the
+		module on the card.
+
+<tr>
+	<td><code>-t</code> &lt;timeslot&gt;
+		<td>timeslot to use for output (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>).
+
+
+<tr>
+	<td><code>-p</code> &lt;patlen&gt;
+		<td>length of pattern to test. This can be tested by
+		<a href="test_gdcrx.html">gdcrx</a>.
+
+<tr>
+	<td><code>-e</code> &lt;encoding&gt;
+		<td>The encoding to use. One of
+		"<code>hdlc</code>",
+		"<code>sync</code>", or
+		"<code>async</code>".
+
+<tr>
+	<td><code>-u</code> &lt;modulation&gt;
+		<td>The modulation to use. One of
+		"<code>raw</code>",
+		"<code>cw</code>",
+		"<code>fsk</code>",
+		"<code>v110</code>",
+		"<code>v17</code>",
+		"<code>v27</code>", or
+		"<code>v29</code>".
+
+<tr>
+	<td><code>-s</code> &lt;standard&gt;
+		<td>The type of FSK modulation required. This
+		option is only relevant when the <code>-u fsk</code>
+		is used. It is an alternative to specifying the FSK
+		parameters with <code>-M</code>, <code>-S</code>,
+		and <code>-B</code> options.
+		One of these:
+		<table border>
+		<tr> <th class=bg>name<th class=bg>modulation
+		<tr> <td>v21o<td>V.21 channel 1 (originate)  
+		<tr> <td>v21a<td>V.21 channel 2 (answer)  
+		<tr> <td>v23o<td>V.23 originate (75 bps)  
+		<tr> <td>v23a<td>V.23 answer (1200 bps)  
+		<tr> <td>v23a600<td>V.23 answer (600 bps)  
+		<tr> <td>bell103a<td>Bell 103 answer (300 bps)  
+		<tr> <td>bell103o<td>Bell 103 originate (300 bps)  
+		</table>
+
+<tr>
+	<td><code>-B</code> &lt;speed&gt;
+		<td>The speed (in bps) that the modulation is to use.
+		This option is only relevant when the speed of the
+		modulation can be configured.
+
+<tr>
+	<td><code>-M</code> &lt;markfreq&gt;
+		<td>The frequency to be used by FSK modulation for sending
+		mark. This option is only relevant when the
+		<code>-u fsk</code> is used. It is an alternative to
+		specifying the FSK parameters with the <code>-s</code>
+		option.
+
+<tr>
+	<td><code>-S</code> &lt;spacefreq&gt;
+		<td>The frequency to be used by FSK modulation for sending
+		space. This option is only relevant when the
+		<code>-u fsk</code> is used. It is an alternative to
+		specifying the FSK parameters with the <code>-s</code>
+		option.
+
+<tr>
+	<td><code>-X</code> &lt;stopbits&gt;
+		<td>The number of extra stop bits to use. This option
+		is only relevant when the <code>-u async</code> is used.
+		(See the <a href="encoding_async.html">async encoding</a>
+		description for further details).
+
+<tr>
+	<td><code>-C</code> &lt;crcsize&gt;
+		<td>The length of the CRC to use (in bits). This option
+		is only relevant when the <code>-u hdlc</code> is used.
+		(See the <a href="encoding_hdlc.html">HDLC encoding</a>
+		description for further details).
+
+<tr>
+	<td><code>-c</code> &lt;crc&gt;
+		<td>The CRC polynomial to use. This option is only
+		relevant when the <code>-u hdlc</code> is used.
+		(See the <a href="encoding_hdlc.html">HDLC encoding</a>
+		description for further details).
+
+<tr>
+	<td><code>-x</code> &lt;cardspec&gt;
+		<td>Use a Prosody processor module on this card, specified as
+		described in
+		<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a>
+
+</table>
+<p>
+For example:
+<pre>
+	gdctx -x x:1.2.3.4/mykey -t64:0 -u fsk -s v21a -e async
+</pre>
+<p>
+starts an FSK transmitter configured for the V.21 originating carrier on
+the timeslot <code>64:0</code> and sends data as async.
+<p>
+While it is running, it reads lines of input and interprets them as
+commands. (The <code>-i</code> option can be used to make it run some
+initialisation commands before reading any input). Each line is one
+command, which consists of one character followed by any parameters.
+The commands are:
+<table border>
+<tr>
+	<th class=bg>Character<th class=bg>Meaning
+
+<tr>
+	<td><td>(i.e. blank line - no command) Print status
+
+<tr>
+	<td><code>?</code><td>Print summary of possible commands
+
+<tr>
+	<td><code>c</code> x<td>Invoke
+	<a href="gen/apifn-smdc_line_control.html">smdc_line_control()</a> with
+	the command to use being determined by the next character, x, as
+	follows:
+	<table border>
+	<tr><th>Character<th>Command
+	<tr><td>i<td><code>kSMDCLineCtlCmdInitiatorConnect</code>
+	<tr><td>r<td><code>kSMDCLineCtlCmdResponderConnect</code>
+	<tr><td>d<td><code>kSMDCLineCtlCmdDisconnect</code>
+	</table>
+
+<tr>
+	<td><code>e</code> N<td>Enable (N=1) or disable (N=0)
+	talker echo protection (only relevant for V.27ter, V.29, and
+	V.17)
+
+<tr>
+	<td><code>f</code> N<td>send N flags
+	(only relevant for HDLC)
+
+<tr>
+	<td><code>F</code><td>finish (same giving the
+	<a href="gen/apifn-smdc_tx_control.html#field-kSMDCTxCtlFinish">kSMDCTxCtlFinish</a>
+	command to
+	<a href="gen/apifn-smdc_tx_control.html">smdc_tx_control()</a>).
+	Makes the carrier turn off after remaining data has been
+	sent.
+
+<tr>
+	<td><code>f</code> N<td>send N flags
+	(only relevant for HDLC)
+
+<tr>
+	<td><code>p</code> P[:S]<td>Set prefix to <code>P</code>
+	and suffix to <code>S</code> where each of these is written in binary
+
+
+<tr>
+	<td><code>R</code><td>turn on RTS
+
+<tr>
+	<td><code>r</code><td>turn off RTS
+
+<tr>
+	<td><code>t</code> N<td>Enable (N=1) or disable (N=0)
+	short training sequences (only relevant for V.27ter, V.29, and
+	V.17)
+
+<tr>
+	<td><code>=</code> characters<td>send specified
+	characters plus a CR LF
+
+<tr>
+	<td><code>-</code> characters<td>send specified
+	characters
+
+<tr>
+	<td><code>v</code> characters<td>send specified
+	characters after translating to the code from V.18 Annex A (a
+	5-bit code similar to Baudot)
+
+<tr>
+	<td><code>q</code><td>quit
+
+<tr>
+	<td><code>#</code> anything<td>do nothing - used for
+	comments
+
+</table>
+<p>
+The source code for this program is provided (gdctx.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

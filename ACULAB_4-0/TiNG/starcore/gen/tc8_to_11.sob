@@ -1,0 +1,105 @@
+// DESCRIPTION: 8-to-11 Linear Decimator accompanies records with 11000 Hz sampling
+// GENTIME: Tue Aug  3 16:23:20 2021
+// VERS: 0x00014910 0x00007490
+// RESHINT: RESTBL 52 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x31 0x6f 0x74 0x38 0x00 0x00 0x02 0x00 0x00 0x00 0x00 0x1c 0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x1c 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x49 0x10 0x00 0x00 0x74 0x90 
+(section
+".default"
+(alignment #0)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::.default" (sym ".default::@start")))
+(data))
+(section
+".data"
+(alignment #3)
+(symtab
+(defsym "_TiNG_ftbl_tc8_to_11" (sym ".data::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::.data" (sym ".data::@start")))
+(data // Offset:0x0
+{0000000000000000316F743800014910E000000000000000} // Offset:0x18
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::v107")) #FFFFFFE8)) // Offset:0x19
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::v107")) #FFFFFFF0)) // Offset:0x1A
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::v107")) #FFFFFFF8)) // Offset:0x1B
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::v107"))) // Offset:0x1C
+{00000000} // Offset:0x20
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::v106")) #FFFFFFE8)) // Offset:0x21
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::v106")) #FFFFFFF0)) // Offset:0x22
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::v106")) #FFFFFFF8)) // Offset:0x23
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::v106"))) // Offset:0x24
+(emit (<< (& #FF000000 (sym "_NullDtor_")) #FFFFFFE8)) // Offset:0x25
+(emit (<< (& #FF0000 (sym "_NullDtor_")) #FFFFFFF0)) // Offset:0x26
+(emit (<< (& #FF00 (sym "_NullDtor_")) #FFFFFFF8)) // Offset:0x27
+(emit (& #FF (sym "_NullDtor_"))) // Offset:0x28
+{0000018C} // Offset:0x2C
+(emit (<< (& #FF000000 (sym "_RegisterOneSubtask_")) #FFFFFFE8)) // Offset:0x2D
+(emit (<< (& #FF0000 (sym "_RegisterOneSubtask_")) #FFFFFFF0)) // Offset:0x2E
+(emit (<< (& #FF00 (sym "_RegisterOneSubtask_")) #FFFFFFF8)) // Offset:0x2F
+(emit (& #FF (sym "_RegisterOneSubtask_"))) // Offset:0x30
+{00000000000000000000000000007490}))
+(section
+".rom"
+(alignment #3)
+(symtab
+(defsym "_TiNG_rtbl_cvtrx" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::.rom" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::v107" (+ #34 (sym ".rom::@start")))
+(defsym "_cvtrxkfir" (+ #3C (sym ".rom::@start"))))
+(data // Offset:0x0
+{0000000000000000316F7438000002000000001C000000010000001C00000000000000000000000000000000000149100000749000000000} // Offset:0x38
+(emit (<< (& #FF000000 (sym "_Msg_try_next_subtask")) #FFFFFFE8)) // Offset:0x39
+(emit (<< (& #FF0000 (sym "_Msg_try_next_subtask")) #FFFFFFF0)) // Offset:0x3A
+(emit (<< (& #FF00 (sym "_Msg_try_next_subtask")) #FFFFFFF8)) // Offset:0x3B
+(emit (& #FF (sym "_Msg_try_next_subtask"))) // Offset:0x3C
+{FEECFE6DFDD5FD24FC5DFB82FA95F99CF89CF79AF69DF6C0F661F633F63CF680F6FFF7BAF8AEF9D4FB25FC97FE1EFFAD013502AA03FC051F060706AB0704070E06CA063905640453031401B6004BFEE5FD95FC6FFB82FADEFA8CFA95FAFBFBBDFCD5FE38FFD6019C0375054A0700087F09B00A7D0AD70AB00A0208CE071904F1026CFFA3FCB5F9C7F702F48CF291F136F0A1F0EFF239F490F7FBFC7801FB08700FB717A7201228C3317F3A0A4227499C503255B75A015CF05E6E5E6E5CF05A0155B75032499C42273A0A317F28C3201217A70FB7087001FBFC78F7FBF490F239F0EFF0A1F136F291F48CF702F9C7FCB5FFA3026C04F1071908CE0A020AB00AD70A7D09B0087F0700054A0375019CFFD6FE38FCD5FBBDFAFBFA95FA8CFADEFB82FC6FFD95FEE5004B01B6031404530564063906CA070E070406AB0607051F03FC02AA0135FFADFE1EFC97FB25F9D4F8AEF7BAF6FFF680F63CF633F661F6C0F69DF79AF89CF99CFA95FB82FC5DFD24FDD5FE6DFEEC0000}))
+(section
+".text"
+(alignment #F)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::v105" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::TextStart_tc8_to_11" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::.text" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::DW_2" (+ #A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::DW_3" (+ #10 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::DW_5" (+ #22 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::L30" (+ #15C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::L84" (+ #15C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::L95" (+ #180 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::L66" (+ #1CA (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::L88" (+ #1CA (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::L17" (+ #23A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::DW_112" (+ #266 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::DW_113" (+ #26C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::DW_116" (+ #27A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::.align_0" (+ #27C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::FuncEnd_105" (+ #27C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::Fv105_end" (+ #27C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::v106" (+ #280 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::L101" (+ #2C6 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::TextEnd_tc8_to_11" (+ #2C8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::FuncEnd_106" (+ #2C8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/tc8_to_11/c/tc8_to_11.eln::Fv106_end" (+ #2C8 (sym ".text::@start"))))
+(data // Offset:0x0
+{98C063E76E349620972094C09E209F203C00A100270C802890C0290A80041E91E7EC3680A0005392EAE83A00A10036CB9218FE43EA4898C0D1A3C68B2E0D801096C05315271881FA3880A00057922D0B80029CC034E28006C08836E680065513D912D54665616DDD77736B417776D4467C636C7C9F4490C090C094C87AC17B6835D66E3465E4370080077C636C7C9F4490C090C094C87AE17B4898C03B0380BB4615451398C02A0E8004D5C7C2873DC11C96C6F83A80A0007453CC4C2E0D80043800A100D5445495FA453820A000DF02F944FA4696C0D446FD47FB4832780096F5493840A000D0DEFD4ACF4596C332} // Offset:0xEF
+(emit (+ #4 (<< (& #C0000000 (sym "_setTiNGKFault")) #FFFFFFE5) (<< (& #E000 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0xF0
+(emit (+ #20 (<< (& #1F00 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0xF1
+(emit (& #FF (sym "_setTiNGKFault"))) // Offset:0xF2
+(emit (+ #80 (<< (& #3F000000 (sym "_setTiNGKFault")) #FFFFFFE8))) // Offset:0xF3
+(emit (<< (& #FF0000 (sym "_setTiNGKFault")) #FFFFFFF0)) // Offset:0xF4
+{9AC364E0F34130C02B0180CB94C0F5C9FBC898C07555CC46270480BB3D41EB4294C0C842FDC73620A100FDCAE9EB3820A000FAC6230080BBE81C3490A000501940183840A10067EAECEAC8483680A000EC64841C34A0A0005B949F4790C090C03490A000511B41185D151005A00490C090C026EA77D094C0846190C09EC060E49A452A03801090C090C090C09AC06C3030} // Offset:0x185
+(emit (+ #2 (<< (& #C0000000 (+ #3C (sym ".rom::@start"))) #FFFFFFE5) (<< (& #E000 (+ #3C (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x186
+(emit (+ #20 (<< (& #1F00 (+ #3C (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x187
+(emit (& #FF (+ #3C (sym ".rom::@start")))) // Offset:0x188
+(emit (+ #80 (<< (& #3F000000 (+ #3C (sym ".rom::@start"))) #FFFFFFE8))) // Offset:0x189
+(emit (<< (& #FF0000 (+ #3C (sym ".rom::@start"))) #FFFFFFF0)) // Offset:0x18A
+{C65796C0C7512B02800B975036C0A100E80DEE1F3680A1005278544E3888A10060085278544E3840A0006408CB8BED48405C3490A000EB9D92C378C292C3ED6B1105A00490C096C09F432C00817690C0E83C90C092D05718471B94C0C087CF4B3A00A100D4467DC1C7F8529596C0DF807653C45ED647317C449690C098C7D0DF32} // Offset:0x20B
+(emit (+ #4 (<< (& #C0000000 (sym "_setTiNGKFault")) #FFFFFFE5) (<< (& #E000 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x20C
+(emit (+ #20 (<< (& #1F00 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x20D
+(emit (& #FF (sym "_setTiNGKFault"))) // Offset:0x20E
+(emit (+ #80 (<< (& #3F000000 (sym "_setTiNGKFault")) #FFFFFFE8))) // Offset:0x20F
+(emit (<< (& #FF0000 (sym "_setTiNGKFault")) #FFFFFFF0)) // Offset:0x210
+{9AC364E0F34130C02B0180CB3620A000FAC6C45694C0C481F9C43680A1004F9A47943600A100FAC5441294C0FEC3FA4590C05C964C91ECF1985A92C3EC4492C35D9490C092C39D6398C067E1FAC527E99FD827E9E7E994C09E219F2192C3EA4492C3479294C0962197219F710000000098C06E3460E4E854C3811B9038602E69806335} // Offset:0x293
+(emit (+ #1 (<< (& #C0000000 (sym ".text::@start")) #FFFFFFE5) (<< (& #E000 (sym ".text::@start")) #FFFFFFF8))) // Offset:0x294
+(emit (+ #20 (<< (& #1F00 (sym ".text::@start")) #FFFFFFF8))) // Offset:0x295
+(emit (& #FF (sym ".text::@start"))) // Offset:0x296
+(emit (+ #80 (<< (& #3F000000 (sym ".text::@start")) #FFFFFFE8))) // Offset:0x297
+(emit (<< (& #FF0000 (sym ".text::@start")) #FFFFFFF0)) // Offset:0x298
+{EB545A9390C0EA4896C05C92290A8004E954E8AC841A92C3C081459296C0EA4E270480BB430A441292C841196C309F71}))

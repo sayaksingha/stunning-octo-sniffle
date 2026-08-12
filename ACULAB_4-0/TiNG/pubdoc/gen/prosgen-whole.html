@@ -1,0 +1,3204 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API</title>
+</head>
+<body>
+<h1>Prosody generic: API</h1>
+<p>
+The following functions are provided by the
+<a href="../prosgen.html">Prosody generic API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr>
+	<td><a href="#sm_channel_alloc_placed">sm_channel_alloc_placed()</a>
+	<td>&nbsp;
+	<td>Allocate a channel on a specific module
+
+	<tr>
+	<td><a href="#sm_channel_collector_connect">sm_channel_collector_connect()</a>
+	<td>&nbsp;
+	<td>Connect a collector to a channel
+
+	<tr>
+	<td><a href="#sm_channel_datafeed_connect">sm_channel_datafeed_connect()</a>
+	<td>&nbsp;
+	<td>Connect a datafeed to a channel
+
+	<tr>
+	<td><a href="#sm_channel_dispatcher_connect">sm_channel_dispatcher_connect()</a>
+	<td>&nbsp;
+	<td>Connect a channel to a dispatcher
+
+	<tr>
+	<td><a href="#sm_channel_get_datafeed">sm_channel_get_datafeed()</a>
+	<td>&nbsp;
+	<td>Obtain a datafeed from an output channel
+
+	<tr>
+	<td><a href="#sm_channel_info">sm_channel_info()</a>
+	<td>&nbsp;
+	<td>Get channel information so data can be switched through to it
+
+	<tr>
+	<td><a href="#sm_channel_input_data_redirect">sm_channel_input_data_redirect()</a>
+	<td>&nbsp;
+	<td>Redirect the data received by an input channel to a datafeed
+
+	<tr>
+	<td><a href="#sm_channel_output_source_datafeed_connect">sm_channel_output_source_datafeed_connect()</a>
+	<td>&nbsp;
+	<td>Provide alternative source data to an output channel
+
+	<tr>
+	<td><a href="#sm_channel_release">sm_channel_release()</a>
+	<td>&nbsp;
+	<td>Release a previously allocated channel
+
+	<tr>
+	<td><a href="#sm_channel_set_event">sm_channel_set_event()</a>
+	<td>&nbsp;
+	<td>Associate event with specific/any channel
+
+	<tr>
+	<td><a href="#sm_channel_set_output_rate">sm_channel_set_output_rate()</a>
+	<td>&nbsp;
+	<td>Configure the sample rate for a channel's output
+
+	<tr>
+	<td><a href="#sm_close_module">sm_close_module()</a>
+	<td>&nbsp;
+	<td>Close a Prosody module
+
+	<tr>
+	<td><a href="#sm_close_prosody">sm_close_prosody()</a>
+	<td>&nbsp;
+	<td>Closes a card, finishing potential use with Prosody.
+
+	<tr>
+	<td><a href="#sm_collector_destroy">sm_collector_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy a data collector
+
+	<tr>
+	<td><a href="#sm_collector_get_event">sm_collector_get_event()</a>
+	<td>&nbsp;
+	<td>Obtain an event for a collector
+
+	<tr>
+	<td><a href="#sm_collector_status">sm_collector_status()</a>
+	<td>&nbsp;
+	<td>Determine collector status
+
+	<tr>
+	<td><a href="#sm_dispatcher_destroy">sm_dispatcher_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy a data dispatcher
+
+	<tr>
+	<td><a href="#sm_error_name">sm_error_name()</a>
+	<td>&nbsp;
+	<td>Generate a name from an error code
+
+	<tr>
+	<td><a href="#sm_get_card_info">sm_get_card_info()</a>
+	<td>&nbsp;
+	<td>Return information about card hosting one or more modules
+
+	<tr>
+	<td><a href="#sm_get_card_rev">sm_get_card_rev()</a>
+	<td>&nbsp;
+	<td>Return information about card hardware revision
+
+	<tr>
+	<td><a href="#sm_get_channel_type">sm_get_channel_type()</a>
+	<td>&nbsp;
+	<td>Determine channel type
+
+	<tr>
+	<td><a href="#sm_get_driver_info">sm_get_driver_info()</a>
+	<td>&nbsp;
+	<td>Return driver version information
+
+	<tr>
+	<td><a href="#sm_get_module_info">sm_get_module_info()</a>
+	<td>&nbsp;
+	<td>Determine if firmware running, obtain module workload
+
+	<tr>
+	<td><a href="#sm_get_stream_info">sm_get_stream_info()</a>
+	<td>&nbsp;
+	<td>Return information about a TDM stream associated with a module
+
+	<tr>
+	<td><a href="#sm_module_get_event">sm_module_get_event()</a>
+	<td>&nbsp;
+	<td>Obtain an event for a module
+
+	<tr>
+	<td><a href="#sm_module_status">sm_module_status()</a>
+	<td>&nbsp;
+	<td>Report the status of a Prosody module connection
+
+	<tr>
+	<td><a href="#sm_open_module">sm_open_module()</a>
+	<td>&nbsp;
+	<td>Open a Prosody module
+
+	<tr>
+	<td><a href="#sm_sec_module">sm_sec_module()</a>
+	<td>&nbsp;
+	<td>Configure module for API related traffic to be encrypted
+
+	<tr>
+	<td><a href="#sm_shutdown_module">sm_shutdown_module()</a>
+	<td>&nbsp;
+	<td>Initiate the closing of a Prosody module
+
+	<tr>
+	<td><a href="#sm_switch_channel_input">sm_switch_channel_input()</a>
+	<td>&nbsp;
+	<td>Switch data from TDM timeslot to channel
+
+	<tr>
+	<td><a href="#sm_switch_channel_output">sm_switch_channel_output()</a>
+	<td>&nbsp;
+	<td>Switch channel data to TDM timeslot
+
+	<tr>
+	<td><a href="#sm_tdmrx_create">sm_tdmrx_create()</a>
+	<td>&nbsp;
+	<td>Create a TDM[rx] endpoint
+
+	<tr>
+	<td><a href="#sm_tdmrx_destroy">sm_tdmrx_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy a previously allocated TDM[rx]
+
+	<tr>
+	<td><a href="#sm_tdmrx_get_datafeed">sm_tdmrx_get_datafeed()</a>
+	<td>&nbsp;
+	<td>Obtain a datafeed from a TDM[rx]
+
+	<tr>
+	<td><a href="#sm_tdmtx_create">sm_tdmtx_create()</a>
+	<td>&nbsp;
+	<td>Create a TDM[tx] endpoint
+
+	<tr>
+	<td><a href="#sm_tdmtx_datafeed_connect">sm_tdmtx_datafeed_connect()</a>
+	<td>&nbsp;
+	<td>Connect a datafeed to a TDM[tx]
+
+	<tr>
+	<td><a href="#sm_tdmtx_destroy">sm_tdmtx_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy a previously allocated TDM[tx]
+
+	<tr>
+	<td><a href="#sm_udp_collector_create">sm_udp_collector_create()</a>
+	<td>&nbsp;
+	<td>Create a UDP data collector
+
+	<tr>
+	<td><a href="#sm_udp_dispatcher_create">sm_udp_dispatcher_create()</a>
+	<td>&nbsp;
+	<td>Create a UDP data dispatcher
+
+	<tr>
+	<td><a href="#smd_ev_create">smd_ev_create()</a>
+	<td>&nbsp;
+	<td>Create operating system event for channel
+
+	<tr>
+	<td><a href="#smd_ev_free">smd_ev_free()</a>
+	<td>&nbsp;
+	<td>Free previously created operating system event
+
+	<tr>
+	<td><a href="#smd_ev_wait">smd_ev_wait()</a>
+	<td>&nbsp;
+	<td>Wait for notification of operating system event
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_config_module_switching">sm_config_module_switching()</a>
+	<td>D
+	<td>Control assignment of channels to external bus timeslots
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_get_card_switch_id">sm_get_card_switch_id()</a>
+	<td>D
+	<td>Determine switch driver associated with card
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_get_channel_ix">sm_get_channel_ix()</a>
+	<td>D
+	<td>Map channel identifier to integer
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_get_channel_module_id">sm_get_channel_module_id()</a>
+	<td>D
+	<td>Return the module on which a channel is located.
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_get_firmware_info">sm_get_firmware_info()</a>
+	<td>D
+	<td>Determine what firmware has been downloaded.
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_get_module_card_id">sm_get_module_card_id()</a>
+	<td>D
+	<td>Return the card on which a module is located.
+
+	<tr class=version-deprecated>
+	<td><a href="#sm_reset_module">sm_reset_module()</a>
+	<td>D
+	<td>Hardware reset a module
+
+</table>
+<p>
+Key to <strong>W</strong> column:
+<table border>
+<tr class=version-deprecated><th>D
+	<td>Deprecated
+</table>
+<p>
+This document is also available as
+<a href="prosgen-index.html">separate pages for each function</a>.
+<hr>
+<h2><a name="sm_channel_alloc_placed">Prosody generic: API: sm_channel_alloc_placed</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_channel_alloc_placed(struct sm_channel_alloc_placed_parms *<a href="#field-channelp">channelp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-channelp">*channelp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_channel_alloc_placed_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* out */
+	<a name="enum-kSMChannelType">enum kSMChannelType</a> {
+		<a href="#field-kSMChannelTypeInput">kSMChannelTypeInput</a>,
+		<a href="#field-kSMChannelTypeOutput">kSMChannelTypeOutput</a>,
+		<a href="#field-kSMChannelTypeHalfDuplex">kSMChannelTypeHalfDuplex</a>,
+		<a href="#field-kSMChannelTypeFullDuplex">kSMChannelTypeFullDuplex</a>,
+	} <a href="#field-type">type</a>;							/* in */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-caps_mask">caps_mask</a>;					/* in */
+} SM_CHANNEL_ALLOC_PLACED_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Allocates, on a specific module, a new channel to generate
+output data and/or process input data. The
+<a class=pref href="#field-type">type</a>
+parameter determines which kind of channel is allocated
+<p>
+If the call completes successfully, the parameter
+<a class=pref href="#field-channel">channel</a>
+will be set to the identifier for that channel.
+<p>
+The task of supporting this channel is assigned by the driver to
+the module specified by the
+<a class=pref href="#field-module">module</a>
+parameter.
+<p>
+The
+<a class=pref href="#field-caps_mask">caps_mask</a>
+parameter is ignored.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The allocated channel.
+
+<dt><a name="field-type">type</a><dd>The type of channel to allocate.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMChannelTypeInput">kSMChannelTypeInput</a>
+<dd>An input channel, which can be used to record data, recognise
+digits and tones etc.
+
+<dt><a name="field-kSMChannelTypeOutput">kSMChannelTypeOutput</a>
+<dd>An output channel, which can be used to replay data, generate
+tones, dial DTMF digits etc.
+
+<dt><a name="field-kSMChannelTypeHalfDuplex">kSMChannelTypeHalfDuplex</a>
+<dd>A channel that may operate either in input mode or in output
+mode (but not both simultaneously, except for DTMF
+detection).
+Resources required by a channel are allocated only as soon as they are
+needed, so there is no advantage in using a half-duplex channel
+over a full-duplex channel, and since it is typically more
+complicated for an application to handle half-duplex channels
+than full-duplex channels, it is recommended that full-duplex
+channels always be used in preference to half-duplex channels.
+
+<dt><a name="field-kSMChannelTypeFullDuplex">kSMChannelTypeFullDuplex</a>
+<dd>A channel that may operate both in input mode and in output mode
+(simultaneous input and output possible).
+
+</dl>
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="#sm_open_module">sm_open_module()</a>
+which indicates the module where the channel is to be allocated.
+
+<dt><a name="field-caps_mask">caps_mask</a><dd>Bitmask of required capabilities, or zero to indicate that the
+default capabilities are required.
+This field is ignored.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if no suitable output channel free<li>ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified</ul>
+<hr>
+<h2><a name="sm_channel_collector_connect">Prosody generic: API: sm_channel_collector_connect</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_channel_collector_connect(struct sm_channel_collector_connect_parms *<a href="#field-dp">dp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-dp">*dp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_channel_collector_connect_parms {
+	<a href="../apitype.html#type-tSMCollectorId">tSMCollectorId</a> <a href="#field-source">source</a>;					/* in */
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+} SM_CHANNEL_COLLECTOR_CONNECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Connects a collector to an output channel, replacing the
+previous collector connected to it. The
+<a class=pref href="#field-source">source</a>
+must be a collector created by a call to
+<a href="#sm_udp_collector_create">sm_udp_collector_create()</a>.
+or the value <code>kSMNullCollectorId</code>.
+The output channel, 
+<a class=pref href="#field-channel">channel</a>,
+will use data collector as its source of
+data (e.g. for replay or transmit operations).
+<p>
+There must be no operation in progress (e.g. replay) on the output
+half of the channel when this function is called.
+<p>
+The default collector for a channel is
+<code>kSMNullCollectorId</code>, which collects data through the API
+(e.g. via
+<a href="apifn-smdc_tx_data.html">smdc_tx_data()</a>).
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-source">source</a><dd>The collector which the channel should use as a source of data
+
+<dt><a name="field-channel">channel</a><dd>The channel that will receive the data
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_channel_datafeed_connect">Prosody generic: API: sm_channel_datafeed_connect</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_channel_datafeed_connect(struct sm_channel_datafeed_connect_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_channel_datafeed_connect_parms {
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-data_source">data_source</a>;				/* in */
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+} SM_CHANNEL_DATAFEED_CONNECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Connects a datafeed to an input channel. The
+<a class=pref href="#field-data_source">data_source</a>
+must be a datafeed obtained a call to any of the
+<code>*_get_datafeed()</code> functions.
+The input channel, 
+<a class=pref href="#field-channel">channel</a>,
+will receive any data that is generated by the object from which 
+<a class=pref href="#field-data_source">data_source</a>
+was derived.
+<p>
+To disconnect a channel from a datafeed, specify 
+<code>kSMNullDatafeedId</code> as the tSMDatafeedId in
+<a class=pref href="#field-data_source">data_source</a>.
+<p>
+Requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-data_source">data_source</a><dd>The datafeed acting as a source of data
+
+<dt><a name="field-channel">channel</a><dd>The channel that will receive the data
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_channel_dispatcher_connect">Prosody generic: API: sm_channel_dispatcher_connect</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_channel_dispatcher_connect(struct sm_channel_dispatcher_connect_parms *<a href="#field-dp">dp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-dp">*dp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_channel_dispatcher_connect_parms {
+	<a href="../apitype.html#type-tSMDispatcherId">tSMDispatcherId</a> <a href="#field-dest">dest</a>;					/* in */
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+} SM_CHANNEL_DISPATCHER_CONNECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Connects an input channel to a dispatcher, replacing the
+previous dispatcher connected to it. The
+<a class=pref href="#field-dest">dest</a>
+must be a dispatcher created by a call to
+<a href="#sm_udp_dispatcher_create">sm_udp_dispatcher_create()</a>.
+or the value <code>kSMNullDispatcherId</code>.
+The input channel, 
+<a class=pref href="#field-channel">channel</a>,
+will use data dispatcher to pass on data it produces
+(e.g. for record or receive operations).
+<p>
+There must be no operation in progress (e.g. record) on the input
+half of the channel when this function is called.
+<p>
+The default dispatcher for a channel is
+<code>kSMNullDispatcherId</code>, which dispatches data through
+the API (e.g. via
+<a href="apifn-smdc_rx_data.html">smdc_rx_data()</a>).
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dest">dest</a><dd>The dispatcher to which the channel should pass data
+
+<dt><a name="field-channel">channel</a><dd>The channel that will produce the data
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_channel_get_datafeed">Prosody generic: API: sm_channel_get_datafeed</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_channel_get_datafeed(struct sm_channel_datafeed_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_channel_datafeed_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* out */
+} SM_CHANNEL_DATAFEED_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Request a datafeed identifier from an output channel. This identifer 
+can subsequently be used in a call to any of the
+<code>*_datafeed_connect()</code> functions
+to connect the output from the channel to a destination.
+It is valid until the channel is released.
+Datafeed connections can only be made between objects allocated
+on the same <code>tSMModuleId</code>.
+<p>
+Requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The output channel from which to obtain a datafeed
+
+<dt><a name="field-datafeed">datafeed</a><dd>The datafeed object associated with the output channel
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_channel_info">Prosody generic: API: sm_channel_info</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_channel_info(struct sm_channel_info_parms *<a href="#field-infop">infop</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-infop">*infop</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_channel_info_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-card">card</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-ost">ost</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-ots">ots</a>;						/* out */
+	<a href="#enum-kSMTimeslotType">enum kSMTimeslotType</a> <a href="#field-otype">otype</a>;				/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-ist">ist</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-its">its</a>;						/* out */
+	<a href="#enum-kSMTimeslotType">enum kSMTimeslotType</a> <a href="#field-itype">itype</a>;				/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-group">group</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-caps_mask">caps_mask</a>;					/* out */
+} SM_CHANNEL_INFO_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This call allows an application to locate a previously allocated
+speech processing resource so that a data can be switched
+through to it by means of a call to the Aculab switch driver
+API.
+<p>
+If 
+<a class=pref href="#field-channel">channel</a>
+is an identifier for a previously allocated
+input, half-duplex, or full-duplex channel, then the parameters
+<a class=pref href="#field-ist">ist</a>,
+and 
+<a class=pref href="#field-its">its</a>
+returned by this call
+may be assigned to the <code>ost</code> and <code>ots</code>
+parameters of a switch driver CONNECT_MODE call to
+sw_set_output, with &lt;ist, its&gt; in the OUTPUT_PARMS
+parameter block being set to the source of the data to be
+processed by the channel.
+<p>
+If 
+<a class=pref href="#field-channel">channel</a>
+is an identifier for a previously allocated
+output, half-duplex, or full-duplex channel, then the parameters
+<a class=pref href="#field-ost">ost</a>,
+and 
+<a class=pref href="#field-ots">ots</a>
+returned by this call may be assigned to the ist and its
+parameters of a switch driver CONNECT_MODE call to sw_set_output
+with &lt;ost, ots&gt; int the OUTPUT_PARMS parameter block being
+set to the destination for data to be generated by the channel.
+<p>
+The parameter
+<a class=pref href="#field-card">card</a>
+is an obsolete parameter set to the value -1
+<p>
+The parameter
+<a class=pref href="#field-group">group</a>
+is an obsolete parameter set to the value zero.
+<p>
+The parameter
+<a class=pref href="#field-caps_mask">caps_mask</a>
+is an obsolete parameter set to the value zero.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel whose information is required.
+
+<dt><a name="field-card">card</a><dd>Obsolete parameter
+
+<dt><a name="field-ost">ost</a><dd>The channel's output stream.
+
+<dt><a name="field-ots">ots</a><dd>The channel's output timeslot.
+
+<dt><a name="field-otype">otype</a><dd>The output timeslot type.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>
+<dd>Signals encoded with A-law companding.
+
+<dt><a name="field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>
+<dd>Signals encoded with mu-law companding.
+
+<dt><a name="field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>
+<dd>Digital data - no companding used.
+
+</dl>
+<dt><a name="field-ist">ist</a><dd>The channel's input stream.
+
+<dt><a name="field-its">its</a><dd>The channel's input timeslot.
+
+<dt><a name="field-itype">itype</a><dd>The input timeslot type.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>
+<dd>Signals encoded with A-law companding.
+
+<dt><a name="field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>
+<dd>Signals encoded with mu-law companding.
+
+<dt><a name="field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>
+<dd>Digital data - no companding used.
+
+</dl>
+<dt><a name="field-group">group</a><dd>Obsolete parameter.
+
+<dt><a name="field-caps_mask">caps_mask</a><dd>Obsolete parameter.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_channel_input_data_redirect">Prosody generic: API: sm_channel_input_data_redirect</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_channel_input_data_redirect(struct sm_channel_input_data_redirect_parms *<a href="#field-redp">redp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-redp">*redp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_channel_input_data_redirect_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-enable">enable</a>;						/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* out */
+} SM_CHANNEL_INPUT_DATA_REDIRECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+When
+<a class=pref href="#field-enable">enable</a>
+is non-zero, request a datafeed identifier from an input channel that 
+will carry the data usually retrieved through the api (e.g. 
+<a href="apifn-sm_get_recorded_data.html">sm_get_recorded_data()</a>
+). This identifer can subsequently be used in a call to any of the
+<code>*_datafeed_connect()</code> functions to connect the input data 
+from the channel to a destination. Note though that the data will be
+raw octets and not audio data, so the destination must be expecting 
+raw octets.	The identifier is valid until the channel is released or 
+this function is called	with
+<a class=pref href="#field-enable">enable</a>
+set to zero.
+<p>
+There must be no operation in progress (e.g. record) on the input
+half of the channel when this function is called.
+<p>
+Datafeed connections can only be made between objects allocated
+on the same <code>tSMModuleId</code>.
+<p>
+Requires the modules
+<a href="softmodindex.html#datafeed">datafeed</a>
+and
+<a href="softmodindex.html#redirect">redirect</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to redirect the received data on
+
+<dt><a name="field-enable">enable</a><dd>Enables (non-zero) or disables (zero) the redirection of data
+
+<dt><a name="field-datafeed">datafeed</a><dd>The datafeed which the received data is passed to when redirected
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_channel_output_source_datafeed_connect">Prosody generic: API: sm_channel_output_source_datafeed_connect</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_channel_output_source_datafeed_connect(struct sm_channel_output_source_datafeed_connect_parms *<a href="#field-outsrcp">outsrcp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-outsrcp">*outsrcp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_channel_output_source_datafeed_connect_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-data_source">data_source</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-threshold">threshold</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-timeout">timeout</a>;					/* in */
+} SM_CHANNEL_OUTPUT_SOURCE_DATAFEED_CONNECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Connects a datafeed to an output channel. The output channel
+will use the datafeed as its source of data (e.g. for replay or transmit 
+operations).
+<p>
+The data can be buffered before being made available to the output 
+channel for processing. The buffer will wait until it has either
+<a class=pref href="#field-threshold">threshold</a>
+octets of data, or
+<a class=pref href="#field-timeout">timeout</a>
+milliseconds have passed since data was last provided to the buffer, 
+before allowing the output channel to process the data. This buffering 
+is repeated if the buffer underruns.
+<p>
+There must be no operation in progress (e.g. replay) on the output
+half of the channel when this function is called.
+<p>
+Datafeed connections can only be made between objects allocated
+on the same <code>tSMModuleId</code>.
+<p>
+Requires the modules
+<a href="softmodindex.html#datafeed">datafeed</a>
+and
+<a href="softmodindex.html#redirect">redirect</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to connect the source to
+
+<dt><a name="field-data_source">data_source</a><dd>The datafeed supplying the data
+
+<dt><a name="field-threshold">threshold</a><dd>The number of octets to collect before data is ready
+
+<dt><a name="field-timeout">timeout</a><dd>The data ready timeout in milliseconds. Zero means no timeout is used.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_channel_release">Prosody generic: API: sm_channel_release</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_channel_release(<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-channel">channel</a>
+<dd>
+The channel to release.
+</dl>
+<h3>Description</h3>
+<p>
+Releases previously allocated channel. All resources used by the
+channel are freed. Any operations in progress on the channel are
+aborted. It is an error to attempt to refer to a channel which
+has been released.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_channel_set_event">Prosody generic: API: sm_channel_set_event</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_channel_set_event(struct sm_channel_set_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_channel_set_event_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-event_type">event_type</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-issue_events">issue_events</a>;					/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* in */
+} SM_CHANNEL_SET_EVENT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+This call may be used to control read/write and/or recognition
+event notification for channels.
+<p>
+Channel associated events must be allocated through a call to
+<a href="#smd_ev_create">smd_ev_create()</a>.
+<p>
+In general an application can hibernate in an operating system
+specific way waiting for data activity on specific channels, or
+on any channel.
+<p>
+A channel may have events associated with reading data, writing
+data and recognition. The
+<a class=pref href="#field-event_type">event_type</a>
+parameter should be set to the type required as follows:
+<p>
+<table border cellpadding=5>
+<tr> <th>Type</th> <th>Associated with</th> </tr>
+<tr>
+	<td>kSMEventTypeReadData</td>
+	<td>Recording of data</td>
+</tr>
+<tr>
+	<td>kSMEventTypeWriteData</td>
+	<td>Replay of data, dial completion, tone generation</td>
+</tr>
+<tr>
+	<td>kSMEventTypeRecog</td>
+	<td>Recognition of tone, digit etc</td>
+</tr>
+</table>
+<p>
+To enable channel specific event notification for a particular
+channel, set
+<a class=pref href="#field-channel">channel</a>
+to the required channel,
+<a class=pref href="#field-issue_events">issue_events</a>
+to <code>kSMChannelSpecificEvent</code>, and
+<a class=pref href="#field-event">event</a>
+to an operating system specific event handle.
+<p>
+To specify the event to be used when waiting for
+read/write/recognition activity on any channel, set
+<a class=pref href="#field-channel">channel</a>
+to <code>kSMNullChannelId</code>,
+<a class=pref href="#field-issue_events">issue_events</a>
+to <code>kSMAnyChannelEvent</code>, and
+<a class=pref href="#field-event">event</a>
+to an operating system specific event handle. To disable further
+use of this event make the same call but with
+<a class=pref href="#field-issue_events">issue_events</a>
+set to <code>kSMChannelNoEvent</code>.
+<p>
+To enable &quot;any channel&quot; event notification for a
+particular channel, set
+<a class=pref href="#field-channel">channel</a>
+to the required channel,
+<a class=pref href="#field-issue_events">issue_events</a>
+to <code>kSMAnyChannelEvent</code>, the
+<a class=pref href="#field-event">event</a>
+parameter is not used.
+<p>
+To disable read/write/recognition event notification for a
+particular channel, set
+<a class=pref href="#field-channel">channel</a>
+to the required channel, and
+<a class=pref href="#field-issue_events">issue_events</a>
+to <code>kSMChannelNoEvent</code>.
+<p>
+By default, no events are associated with a channel.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel with which an event is to be associated.
+
+<dt><a name="field-event_type">event_type</a><dd>The type of the event to associate.
+One of these values:
+<code>kSMEventTypeReadData</code>,
+<code>kSMEventTypeWriteData</code>, or
+<code>kSMEventTypeRecog</code>.
+
+<dt><a name="field-issue_events">issue_events</a><dd>Controls the scope of events: none, one channel, or any channel.
+One of these values:
+<code>kSMChannelNoEvent</code>,
+<code>kSMChannelSpecificEventNonIdle</code>,
+<code>kSMChannelSpecificEvent</code>, or
+<code>kSMAnyChannelEvent</code>.
+
+<dt><a name="field-event">event</a><dd>The event to associate.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_channel_set_output_rate">Prosody generic: API: sm_channel_set_output_rate</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_channel_set_output_rate(struct sm_channel_set_output_rate_parms *<a href="#field-ratep">ratep</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-ratep">*ratep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_channel_set_output_rate_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-sample_rate">sample_rate</a>;					/* in */
+} SM_CHANNEL_SET_OUTPUT_RATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures the sample rate (in samples per second) to be used
+by the output half of a channel.
+<p>
+The sample rate should be configured before using the channel
+for any operation (such as replay) which depends on it. otherwise
+it will default to 8000 samples per second.
+<p>
+If a channel is connected to a timeslot using
+<a href="#sm_switch_channel_output">sm_switch_channel_output()</a>
+the sample rate must be 8000, whether set explicitly or allowed to
+default to 8000.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to be configured.
+
+<dt><a name="field-sample_rate">sample_rate</a><dd>The sample rate.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_WRONG_CHANNEL_TYPE - if channel has no output</ul>
+<hr>
+<h2><a name="sm_close_module">Prosody generic: API: sm_close_module</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_close_module(struct sm_close_module_parms *<a href="#field-closep">closep</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-closep">*closep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_close_module_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module_id">module_id</a>;					/* in */
+} SM_CLOSE_MODULE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Closes a Prosody module that was opened with
+<a href="#sm_open_module">sm_open_module()</a>.
+Note that this function only releases any resources allocated
+by
+<a href="#sm_open_module">sm_open_module()</a>
+and does not tidy up other resources connected with the module
+which may have been allocated by other API functions or the
+application.
+It is a serious error to close a module on which there are
+open channels.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-module_id">module_id</a><dd>The value obtained from
+<a href="#sm_open_module">sm_open_module()</a>
+to be closed.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_close_prosody">Prosody generic: API: sm_close_prosody</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_close_prosody(struct sm_close_prosody_parms *<a href="#field-closep">closep</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-closep">*closep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_close_prosody_parms {
+	<a href="../apitype.html#type-tSMCardId">tSMCardId</a> <a href="#field-card_id">card_id</a>;					/* in */
+} SM_CLOSE_PROSODY_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Reverses the effect of
+<a href="apifn-sm_open_prosody_x.html">sm_open_prosody_x()</a>,
+or
+<a href="apifn-sm_open_prosody_s_v3.html">sm_open_prosody_s_v3()</a>.
+If, after closing the card, you want to use Prosody API
+functions which refer to this card you must invoke
+<a href="apifn-sm_open_prosody_x.html">sm_open_prosody_x()</a>,
+or
+<a href="apifn-sm_open_prosody_s_v3.html">sm_open_prosody_s_v3()</a>
+again.
+It is a serious error to close a card on which there are
+open modules.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-card_id">card_id</a><dd>The card to close.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_collector_destroy">Prosody generic: API: sm_collector_destroy</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_collector_destroy(<a href="../apitype.html#type-tSMCollectorId">tSMCollectorId</a> <a href="#field-collector">collector</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-collector">collector</a>
+<dd>
+A tSMCollectorId that has been prevously created by a call to 
+<a href="#sm_udp_collector_create">sm_udp_collector_create()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys
+<a class=pref href="#field-collector">collector</a>
+invalidating the tSMCollectorId.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_collector_get_event">Prosody generic: API: sm_collector_get_event</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_collector_get_event(struct sm_collector_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_collector_event_parms {
+	<a href="../apitype.html#type-tSMCollectorId">tSMCollectorId</a> <a href="#field-collector">collector</a>;				/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_COLLECTOR_EVENT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+If the call completes successfully 
+<a class=pref href="#field-event">event</a>
+will hold the tSMEventId belonging to 
+<a class=pref href="#field-collector">collector</a>.
+The tSMEventId is valid until the collector is destroyed using 
+<a href="#sm_collector_destroy">sm_collector_destroy()</a>.
+This event will be signalled when a status change occurs on the 
+collector. When the event is signalled the user must call 
+<a href="#sm_collector_status">sm_collector_status()</a>
+to discover the nature of the status change.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-collector">collector</a><dd>The collector 
+
+<dt><a name="field-event">event</a><dd>The event identifier
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_collector_status">Prosody generic: API: sm_collector_status</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_collector_status(struct sm_collector_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_collector_status_parms {
+	<a href="../apitype.html#type-tSMCollectorId">tSMCollectorId</a> <a href="#field-collector">collector</a>;				/* in */
+	<a name="enum-kSMCollectorStatus">enum kSMCollectorStatus</a> {
+		<a href="#field-kSMCollectorStatusRunning">kSMCollectorStatusRunning</a>,
+		<a href="#field-kSMCollectorStatusGotPorts">kSMCollectorStatusGotPorts</a>,
+		<a href="#field-kSMCollectorStatusNewPeer">kSMCollectorStatusNewPeer</a>,
+		<a href="#field-kSMCollectorStatusGotPortsIPv6">kSMCollectorStatusGotPortsIPv6</a>,
+		<a href="#field-kSMCollectorStatusNewPeerIPv6">kSMCollectorStatusNewPeerIPv6</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	union {
+		struct {
+			<a href="../apitype.html#type-in_addr">struct in_addr</a> <a href="#field-u-ports-address">address</a>;			/* out */
+			int <a href="#field-u-ports-port">port</a>;				/* out */
+		} <a href="#field-u-ports">ports</a>;					/* out */
+		struct {
+			<a href="../apitype.html#type-in_addr">struct in_addr</a> <a href="#field-u-peer-address">address</a>;			/* out */
+			int <a href="#field-u-peer-port">port</a>;				/* out */
+		} <a href="#field-u-peer">peer</a>;						/* out */
+		struct {
+			<a href="../apitype.html#type-in6_addr">struct in6_addr</a> <a href="#field-u-ports_ipv6-address">address</a>;		/* out */
+			int <a href="#field-u-ports_ipv6-port">port</a>;				/* out */
+		} <a href="#field-u-ports_ipv6">ports_ipv6</a>;					/* out */
+		struct {
+			<a href="../apitype.html#type-in6_addr">struct in6_addr</a> <a href="#field-u-peer_ipv6-address">address</a>;		/* out */
+			int <a href="#field-u-peer_ipv6-port">port</a>;				/* out */
+		} <a href="#field-u-peer_ipv6">peer_ipv6</a>;					/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SM_COLLECTOR_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Returns the current status of the collector or an error to
+indicate that an error has occurred.
+<p>
+When the collector event, obtained from
+<a href="#sm_collector_get_event">sm_collector_get_event()</a>,
+is signalled the user must call this function to determine the nature
+of the status change. The change in status may indicate that an error 
+occurred whilst processing a user request or it may be notifiying the 
+user of a change to the previous state of the collector.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-collector">collector</a><dd>The collector to interrogate
+
+<dt><a name="field-status">status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMCollectorStatusRunning">kSMCollectorStatusRunning</a>
+<dd>The collector is running normally.
+
+<dt><a name="field-kSMCollectorStatusGotPorts">kSMCollectorStatusGotPorts</a>
+<dd>Indicates that IPv4 port information is available.
+
+<dt><a name="field-kSMCollectorStatusNewPeer">kSMCollectorStatusNewPeer</a>
+<dd>Indicates that UDP packets are being received from a new IPv4 source.
+
+<dt><a name="field-kSMCollectorStatusGotPortsIPv6">kSMCollectorStatusGotPortsIPv6</a>
+<dd>Indicates that IPv6 port information is available.
+
+<dt><a name="field-kSMCollectorStatusNewPeerIPv6">kSMCollectorStatusNewPeerIPv6</a>
+<dd>Indicates that UDP packets are being received from a new IPv6 source.
+
+</dl>
+<dt><a name="field-u">u</a><dd>Additional information relating to the current status of the collector
+
+
+<dl>
+<dt><a name="field-u-ports">ports</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMCollectorStatusGotPorts">kSMCollectorStatusGotPorts</a>.
+
+
+<dl>
+<dt><a name="field-u-ports-address">address</a><dd>The address on which this collector is listening.
+
+<dt><a name="field-u-ports-port">port</a><dd>The UDP port number on which this collector is listening
+
+</dl>
+<dt><a name="field-u-peer">peer</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMCollectorStatusNewPeer">kSMCollectorStatusNewPeer</a>.
+
+
+<dl>
+<dt><a name="field-u-peer-address">address</a><dd>The address from which the data was received.
+
+<dt><a name="field-u-peer-port">port</a><dd>The UDP port number from which the data was received.
+
+</dl>
+<dt><a name="field-u-ports_ipv6">ports_ipv6</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMCollectorStatusGotPortsIPv6">kSMCollectorStatusGotPortsIPv6</a>.
+
+
+<dl>
+<dt><a name="field-u-ports_ipv6-address">address</a><dd>The address on which this collector is listening.
+
+<dt><a name="field-u-ports_ipv6-port">port</a><dd>The UDP port number on which this collector is listening
+
+</dl>
+<dt><a name="field-u-peer_ipv6">peer_ipv6</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMCollectorStatusNewPeerIPv6">kSMCollectorStatusNewPeerIPv6</a>.
+
+
+<dl>
+<dt><a name="field-u-peer_ipv6-address">address</a><dd>The address from which the data was received.
+
+<dt><a name="field-u-peer_ipv6-port">port</a><dd>The UDP port number from which the data was received.
+
+</dl>
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources existed to create the collector</ul>
+<hr>
+<h2><a name="sm_dispatcher_destroy">Prosody generic: API: sm_dispatcher_destroy</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dispatcher_destroy(<a href="../apitype.html#type-tSMDispatcherId">tSMDispatcherId</a> <a href="#field-dispatcher">dispatcher</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-dispatcher">dispatcher</a>
+<dd>
+A tSMDispatcherId that has been prevously created by a call to 
+<a href="#sm_udp_dispatcher_create">sm_udp_dispatcher_create()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys
+<a class=pref href="#field-dispatcher">dispatcher</a>
+invalidating the tSMDispatcherId.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_error_name">Prosody generic: API: sm_error_name</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+char *sm_error_name(struct sm_error_name_parms *<a href="#field-errp">errp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-errp">*errp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_error_name_parms {
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-code">code</a>;						/* in */
+	char <a href="#field-name">name[80]</a>;						/* out */
+} SM_ERROR_NAME_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Generates a name for the supplied Prosody error code. The name is
+one of the <a href="error.html">standard names</a>, unless the
+error code is unrecognised, in which case a suitable representation
+is used.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-code">code</a><dd>The error code whose name is required.
+
+<dt><a name="field-name">name</a><dd>The generated name.
+
+</dl>
+<h3>Returns</h3>
+<p>Returns the address of the
+<a class=pref href="#field-name">name</a>
+field in the supplied parameter structure. This allows the function
+return value to be used as a parameter to another function call.
+For example:
+<pre>
+printf("Error calling sm_replay_start(): %s\n", sm_error_name(&amp;e));
+</pre>
+<p>
+Since this is never null, it can be safely used immediately.
+.
+<hr>
+<h2><a name="sm_get_card_info">Prosody generic: API: sm_get_card_info</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_get_card_info(struct sm_card_info_parms *<a href="#field-cardinfop">cardinfop</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-cardinfop">*cardinfop</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_card_info_parms {
+	<a href="../apitype.html#type-tSMCardId">tSMCardId</a> <a href="#field-card">card</a>;						/* in */
+	<a name="enum-kSMCarrierCardType">enum kSMCarrierCardType</a> {
+		<a href="#field-kSMCarrierCardTypeYetUnknown">kSMCarrierCardTypeYetUnknown</a>,
+		<a href="#field-kSMCarrierCardTypeISAS2">kSMCarrierCardTypeISAS2</a>,
+		<a href="#field-kSMCarrierCardTypeBR4">kSMCarrierCardTypeBR4</a>,
+		<a href="#field-kSMCarrierCardTypeBR8">kSMCarrierCardTypeBR8</a>,
+		<a href="#field-kSMCarrierCardTypePCIP1">kSMCarrierCardTypePCIP1</a>,
+		<a href="#field-kSMCarrierCardTypePCIC1">kSMCarrierCardTypePCIC1</a>,
+		<a href="#field-kSMCarrierCardTypePS">kSMCarrierCardTypePS</a>,
+		<a href="#field-kSMCarrierCardTypePX">kSMCarrierCardTypePX</a>,
+	} <a href="#field-card_type">card_type</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-card_detected">card_detected</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-module_count">module_count</a>;					/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-physical_address">physical_address</a>;				/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-io_address">io_address</a>;					/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-physical_irq">physical_irq</a>;					/* out */
+	char <a href="#field-serial_no">serial_no[kSMMaxSerialNoText]</a>;			/* out */
+} SM_CARD_INFO_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Retrieves information about card hosting Prosody modules
+installed in system. 
+<p>
+On return,
+<a class=pref href="#field-card_type">card_type</a>
+will be set to one of the following values:
+<p>
+<table border cellpadding=5>
+<tr> <th>Card Type</th> <th>Use</th> </tr>
+<tr>
+	<td>kSMCarrierCardTypeYetUnknown</td>
+	<td>Card type not yet determined by driver.</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypeISAS2</td>
+	<td>Obsolete card.</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypeBR4</td>
+	<td>Obsolete card.</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypeBR8</td>
+	<td>Obsolete card.</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypePCIP1</td>
+	<td>Obsolete card.</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypePCIC1</td>
+	<td>Obsolete card.</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypePS</td>
+	<td>Prosody S virtual 'card'</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypePX</td>
+	<td>Prosody X card</td>
+</tr>
+</table>
+<p>
+The parameter 
+<a class=pref href="#field-card_detected">card_detected</a>
+is obsolete.
+<p>
+The number of modules detected on the card is returned in
+<a class=pref href="#field-module_count">module_count</a>.
+<p>
+The parameters
+<a class=pref href="#field-physical_address">physical_address</a>
+, 
+<a class=pref href="#field-io_address">io_address</a>
+, and
+<a class=pref href="#field-physical_irq">physical_irq</a>
+are obsolete.
+<p>
+Some carrier cards have a machine readable serial number. For
+such cards the serial number is returned as a zero terminated
+text string in the character array
+<a class=pref href="#field-serial_no">serial_no</a>.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-card">card</a><dd>The card about which information is required
+
+<dt><a name="field-card_type">card_type</a><dd>The type of the card
+
+One of these values:
+<dl>
+<dt><a name="field-kSMCarrierCardTypeYetUnknown">kSMCarrierCardTypeYetUnknown</a>
+<dd>The card type has not been determined.
+
+<dt><a name="field-kSMCarrierCardTypeISAS2">kSMCarrierCardTypeISAS2</a>
+<dd>Obsolete card type.
+
+<dt><a name="field-kSMCarrierCardTypeBR4">kSMCarrierCardTypeBR4</a>
+<dd>Obsolete card type.
+
+<dt><a name="field-kSMCarrierCardTypeBR8">kSMCarrierCardTypeBR8</a>
+<dd>Obsolete card type.
+
+<dt><a name="field-kSMCarrierCardTypePCIP1">kSMCarrierCardTypePCIP1</a>
+<dd>Obsolete card type.
+
+<dt><a name="field-kSMCarrierCardTypePCIC1">kSMCarrierCardTypePCIC1</a>
+<dd>Obsolete card type.
+
+<dt><a name="field-kSMCarrierCardTypePS">kSMCarrierCardTypePS</a>
+<dd>A Prosody S virtual 'card'. This is a software entity which
+emulates a digital access card and provides a number of channels
+of telephony via the host's IP (Internet Protocol) communications.
+
+<dt><a name="field-kSMCarrierCardTypePX">kSMCarrierCardTypePX</a>
+<dd>A Prosody X card. This is a card which is controlled by IP
+(Internet Protocol).
+
+</dl>
+<dt><a name="field-card_detected">card_detected</a><dd>Obsolete parameter.
+
+<dt><a name="field-module_count">module_count</a><dd>The number of modules on this card.
+
+<dt><a name="field-physical_address">physical_address</a><dd>Obsolete parameter.
+
+<dt><a name="field-io_address">io_address</a><dd>Obsolete parameter.
+
+<dt><a name="field-physical_irq">physical_irq</a><dd>Obsolete parameter.
+
+<dt><a name="field-serial_no">serial_no</a><dd>The serial number of this card.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - if no such card exists</ul>
+<hr>
+<h2><a name="sm_get_card_rev">Prosody generic: API: sm_get_card_rev</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_get_card_rev(struct sm_card_rev_parms *<a href="#field-cardrevp">cardrevp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-cardrevp">*cardrevp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_card_rev_parms {
+	<a href="../apitype.html#type-tSMCardId">tSMCardId</a> <a href="#field-card">card</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-rev">rev[8]</a>;						/* out */
+	char <a href="#field-rev_additional">rev_additional[kSMMaxRevAddText]</a>;			/* out */
+} SM_CARD_REV_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Obsolete call - not applicable to Prosody X or Prosody S.
+<p>
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-card">card</a><dd>The card about which information is required
+
+<dt><a name="field-rev">rev</a><dd>main revision information
+
+<dt><a name="field-rev_additional">rev_additional</a><dd>additional revision information
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - if no such card exists</ul>
+<hr>
+<h2><a name="sm_get_channel_type">Prosody generic: API: sm_get_channel_type</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_get_channel_type(<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-channel">channel</a>
+<dd>
+The channel whose type is to be returned.
+</dl>
+<h3>Description</h3>
+<p>
+Given a channel identifier, 
+<a class=pref href="#field-channel">channel</a>,
+returns its type as was specified for
+<a href="#sm_channel_alloc_placed">sm_channel_alloc_placed()</a>
+<a href="#field-type">type</a> parameter
+when channel allocated.
+<h3>Returns</h3>
+<p>Channel type value (greater than or equal to zero)
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_get_driver_info">Prosody generic: API: sm_get_driver_info</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_get_driver_info(struct sm_driver_info_parms *<a href="#field-drvinfop">drvinfop</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-drvinfop">*drvinfop</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_driver_info_parms {
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-major">major</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-minor">minor</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-step">step</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-custom">custom</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-quality">quality</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-buildno0">buildno0</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-buildno1">buildno1</a>;					/* out */
+} SM_DRIVER_INFO_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Retrieves information about TiNG library version controlling Prosody
+modules installed in system.
+<p>
+On return, the parameters
+<a class=pref href="#field-major">major</a>,
+<a class=pref href="#field-minor">minor</a>
+and
+<a class=pref href="#field-step">step</a>
+will be set to the values <code>X</code>, <code>Y</code>, and
+<code>Z</code> respectively of the three element version no. for
+the library <code>X.Y.Z</code>.
+<p>
+The
+<a class=pref href="#field-custom">custom</a>
+parameter will be set to a non-zero value if the driver build is
+a custom special build of the driver for a specific customer.
+<p>
+The
+<a class=pref href="#field-quality">quality</a>
+parameter will be set to one of the following character values:
+<p>
+<table border cellpadding=5>
+<tr> <th>Quality</th> <th>Character</th> </tr>
+<tr>
+	<td>'B'</td>
+	<td>Beta quality version</td>
+</tr>
+<tr>
+	<td>'T'</td>
+	<td>Test version</td>
+</tr>
+<tr>
+	<td>'D'</td>
+	<td>Development (or alpha quality) version</td>
+</tr>
+<tr>
+	<td>'I'</td>
+	<td>Released version</td>
+</tr>
+</table>
+<p>
+The
+<a class=pref href="#field-buildno0">buildno0</a>
+and
+<a class=pref href="#field-buildno1">buildno1</a>
+parameters are for Aculab use only. However, note that it is essential to include these two
+parameters when describing the version to Aculab support staff.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-major">major</a><dd>Major version number
+
+<dt><a name="field-minor">minor</a><dd>Minor version number
+
+<dt><a name="field-step">step</a><dd>Version step.
+
+<dt><a name="field-custom">custom</a><dd>Indicator of custom software
+
+<dt><a name="field-quality">quality</a><dd>Quality code
+
+<dt><a name="field-buildno0">buildno0</a><dd>Part of build code
+
+<dt><a name="field-buildno1">buildno1</a><dd>Another part of build code
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_get_module_info">Prosody generic: API: sm_get_module_info</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_get_module_info(struct sm_module_info_parms *<a href="#field-moduleinfop">moduleinfop</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-moduleinfop">*moduleinfop</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_module_info_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-firmware_running">firmware_running</a>;				/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-firmware_id">firmware_id</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-average_loading">average_loading</a>;				/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_loading">max_loading</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-module_slot">module_slot</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-min_stream">min_stream</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-stream_count">stream_count</a>;					/* out */
+} SM_MODULE_INFO_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Fetches information about a module.
+Note that fields apart from
+<a class=pref href="#field-module_slot">module_slot</a>
+,
+<a class=pref href="#field-min_stream">min_stream</a>
+and
+<a class=pref href="#field-stream_count">stream_count</a>
+are undefined for Prosody S and for Prosody X. The <a href="../protocol_cpumon.html">cpumon</a>
+facility should be used to obtain work load information.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="#sm_open_module">sm_open_module()</a>
+which indicates the module on which information is required.
+
+<dt><a name="field-firmware_running">firmware_running</a><dd>Indicator of whether or not firmware is running on this module.
+Zero if firmware is not running.
+Note that this refers to the kernel, not individual software
+modules.
+
+<dt><a name="field-firmware_id">firmware_id</a><dd>This field is obsolete.
+
+<dt><a name="field-average_loading">average_loading</a><dd>The percentage (0..100) average work load of the module over the last
+second.
+
+<dt><a name="field-max_loading">max_loading</a><dd>The percentage (0..100) peak work load of the module over the
+last second.
+
+<dt><a name="field-module_slot">module_slot</a><dd>The position of the module on its carrier card.
+
+<dt><a name="field-min_stream">min_stream</a><dd>The number of the first stream accessible to this module.
+
+<dt><a name="field-stream_count">stream_count</a><dd>The count of streams accessible to this module.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists</ul>
+<hr>
+<h2><a name="sm_get_stream_info">Prosody generic: API: sm_get_stream_info</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_get_stream_info(struct sm_stream_info_parms *<a href="#field-streaminfop">streaminfop</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-streaminfop">*streaminfop</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_stream_info_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-stream">stream</a>;						/* in */
+	char <a href="#field-serial_no">serial_no[kSMMaxSerialNoText]</a>;			/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-serial_port_ix">serial_port_ix</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-timeslot_count">timeslot_count</a>;					/* out */
+} SM_STREAM_INFO_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Retrieves information about a TDM stream associated with ProsodyS virtual card
+and provided by a thin TDM interface card installed in system. 
+<p>
+On entry the parameter
+<a class=pref href="#field-stream">stream</a>
+indicates module TDM stream for which information is required.
+On return the parameter
+<a class=pref href="#field-serial_no">serial_no</a>
+indicates serial number of thin TDM interface card, 
+<a class=pref href="#field-serial_port_ix">serial_port_ix</a>
+indicates stream index (starting from zero) relative to that thin TDM interface card.
+<a class=pref href="#field-timeslot_count">timeslot_count</a>
+indicates number of timeslots in stream.
+<p>
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="#sm_open_module">sm_open_module()</a>
+which indicates the module on which information is required.
+
+<dt><a name="field-stream">stream</a><dd>Stream number for which information required (or index of that stream relative to module)
+
+<dt><a name="field-serial_no">serial_no</a><dd>The serial number of card providing this stream.
+
+<dt><a name="field-serial_port_ix">serial_port_ix</a><dd>Serial port on card providing this stream
+
+<dt><a name="field-timeslot_count">timeslot_count</a><dd>The count of timeslots in this stream.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists</ul>
+<hr>
+<h2><a name="sm_module_get_event">Prosody generic: API: sm_module_get_event</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_module_get_event(struct sm_module_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_module_event_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module_id">module_id</a>;					/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_MODULE_EVENT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+If the call completes successfully 
+<a class=pref href="#field-event">event</a>
+will hold the tSMEventId belonging to 
+<a class=pref href="#field-module_id">module_id</a>.
+The tSMEventId is valid until the module is closed using 
+<a href="#sm_close_module">sm_close_module()</a>.
+This event will be signalled when a status change occurs on the 
+module. When the event is signalled the user must call 
+<a href="#sm_module_status">sm_module_status()</a>
+to discover the nature of the status change.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-module_id">module_id</a><dd>The module 
+
+<dt><a name="field-event">event</a><dd>The event identifier
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_module_status">Prosody generic: API: sm_module_status</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_module_status(struct sm_module_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_module_status_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module_id">module_id</a>;					/* in */
+	<a name="enum-kSMModuleStatus">enum kSMModuleStatus</a> {
+		<a href="#field-kSMModuleStatusRunning">kSMModuleStatusRunning</a>,
+		<a href="#field-kSMModuleStatusShutdown">kSMModuleStatusShutdown</a>,
+	} <a href="#field-status">status</a>;						/* out */
+} SM_MODULE_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Reports the status of a Prosody module connection that was opened with
+<a href="#sm_open_module">sm_open_module()</a>.
+Card types that use asynchronous control methods may block in
+<a href="#sm_close_module">sm_close_module()</a>.
+After using
+<a href="#sm_shutdown_module">sm_shutdown_module()</a>
+to initiate the closing of a module, this function will report a status of
+<a class=pref href="#field-kSMModuleStatusShutdown">kSMModuleStatusShutdown</a>
+when
+<a href="#sm_close_module">sm_close_module()</a>
+will not block. 
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-module_id">module_id</a><dd>The value obtained from
+<a href="#sm_open_module">sm_open_module()</a>
+to be closed.
+
+<dt><a name="field-status">status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMModuleStatusRunning">kSMModuleStatusRunning</a>
+<dd>The module connection is running.
+
+<dt><a name="field-kSMModuleStatusShutdown">kSMModuleStatusShutdown</a>
+<dd>The module connection has been shutdown.
+
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_open_module">Prosody generic: API: sm_open_module</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_open_module(struct sm_open_module_parms *<a href="#field-module_parmsp">module_parmsp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-module_parmsp">*module_parmsp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_open_module_parms {
+	<a href="../apitype.html#type-tSMCardId">tSMCardId</a> <a href="#field-card_id">card_id</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-module_ix">module_ix</a>;					/* in */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module_id">module_id</a>;					/* out */
+} SM_OPEN_MODULE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Opens a specified Prosody module.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-card_id">card_id</a><dd>The card,
+which has been opened (e.g. with
+<a href="apifn-sm_open_prosody_x.html">sm_open_prosody_x()</a>
+) and on which is the module to be opened,
+
+<dt><a name="field-module_ix">module_ix</a><dd>The physical module number of the module to open. This is the
+zero-based index of the module on the card specified by
+<a class=pref href="#field-card_id">card_id</a>.
+The module numbers refer to positions on the card, so a card
+which has connectors for plugging in a module will always use
+the same number for a module plugged into a particular position
+regardless of which other positions are occupied.
+
+<dt><a name="field-module_id">module_id</a><dd>The opened module.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_NO_SUCH_MODULE - if no such module exists</ul>
+<hr>
+<h2><a name="sm_sec_module">Prosody generic: API: sm_sec_module</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sec_module(struct sm_sec_module_parms *<a href="#field-module_parmsp">module_parmsp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-module_parmsp">*module_parmsp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sec_module_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module_id">module_id</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-exclude_data_to_module">exclude_data_to_module</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-exclude_data_from_module">exclude_data_from_module</a>;			/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-key_id">key_id</a>;						/* in */
+	char *<a href="#field-context">context</a>;						/* in */
+	<a href="../apitype.html#type-tSMSecCallback">tSMSecCallback</a> <a href="#field-encdec">encdec</a>;					/* in */
+} SM_SEC_MODULE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Sets up encrypted communication with module.  Must be used in conjunction 
+with a compatible external encryption library, for example
+kmlib3des.
+If encryption is required, this function must be invoked immediately after 
+calling
+<a href="#sm_open_module">sm_open_module()</a>.
+Requires an encryption capable kernel to be running on the module.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-module_id">module_id</a><dd>An id for an open module previously obtained from
+<a href="#sm_open_module">sm_open_module()</a>
+
+<dt><a name="field-exclude_data_to_module">exclude_data_to_module</a><dd>If non-zero causes bulk data (e.g. replay data) sent to module to be 
+excluded from encryption.
+
+<dt><a name="field-exclude_data_from_module">exclude_data_from_module</a><dd>If non-zero causes bulk data (e.g. record data) sent from module to be 
+excluded from encryption.
+
+<dt><a name="field-key_id">key_id</a><dd>An id from an external encryption library used to identify a previously 
+agreed key for use with this module.
+
+<dt><a name="field-context">context</a><dd>The context from an external encryption library used by TiNG library in 
+callbacks.
+
+<dt><a name="field-encdec">encdec</a><dd>The callback with type void (*)(tSM_INT,tSM_INT,void*,tSM_UT8*) from an 
+external encryption library used by TiNG library to encrypt and decrypt 
+messages.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_NO_SUCH_MODULE - if no such module exists</ul>
+<hr>
+<h2><a name="sm_shutdown_module">Prosody generic: API: sm_shutdown_module</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_shutdown_module(struct sm_shutdown_module_parms *<a href="#field-shutdownp">shutdownp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-shutdownp">*shutdownp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_shutdown_module_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module_id">module_id</a>;					/* in */
+} SM_SHUTDOWN_MODULE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Initiates the closing of a Prosody module that was opened with
+<a href="#sm_open_module">sm_open_module()</a>.
+Card types that use asynchronous control methods may block in
+<a href="#sm_close_module">sm_close_module()</a>.
+This function initiates the close procedure and does not block.
+The resources used are not released until
+<a href="#sm_close_module">sm_close_module()</a>
+is called, which may still block unless
+<a href="#sm_module_status">sm_module_status()</a>
+has reported a status of
+<a href="#field-kSMModuleStatusShutdown">
+kSMModuleStatusShutdown</a>.
+It is a serious error to close a module on which there are
+open channels.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-module_id">module_id</a><dd>The value obtained from
+<a href="#sm_open_module">sm_open_module()</a>
+to be closed.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_switch_channel_input">Prosody generic: API: sm_switch_channel_input</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_switch_channel_input(struct sm_switch_channel_parms *<a href="#field-switchp">switchp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-switchp">*switchp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_switch_channel_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-st">st</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-ts">ts</a>;						/* in */
+	<a href="#enum-kSMTimeslotType">enum kSMTimeslotType</a> <a href="#field-type">type</a>;				/* in */
+} SM_SWITCH_CHANNEL_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Assigns (or de-assigns) a timeslot to
+<a class=pref href="#field-channel">channel</a>.
+The same timeslot may be used as input
+to several channels.
+<p>
+This function can be used with Prosody X cards in TDM only applications
+for backward compatibility. For new applications it is recommended that 
+<a href="#sm_tdmrx_create">sm_tdmrx_create()</a>
+and 
+<a href="#sm_tdmrx_get_datafeed">sm_tdmrx_get_datafeed()</a>
+be used.
+To use this function with a Prosody X 
+card the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+must be downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel to which the input is to be switched.
+
+<dt><a name="field-st">st</a><dd>The source stream.
+
+<dt><a name="field-ts">ts</a><dd>The source timeslot.
+
+<dt><a name="field-type">type</a><dd>The data encoding used on this timeslot.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>
+<dd>Signals encoded with A-law companding.
+
+<dt><a name="field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>
+<dd>Signals encoded with mu-law companding.
+
+<dt><a name="field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>
+<dd>Digital data - no companding used.
+
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_WRONG_CHANNEL_TYPE - if channel has no input<li>ERR_SM_BAD_PARAMETER - if invalid parameter specified or channel is associated with BR module</ul>
+<hr>
+<h2><a name="sm_switch_channel_output">Prosody generic: API: sm_switch_channel_output</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_switch_channel_output(struct sm_switch_channel_parms *<a href="#field-switchp">switchp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-switchp">*switchp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_switch_channel_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-st">st</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-ts">ts</a>;						/* in */
+	<a href="#enum-kSMTimeslotType">enum kSMTimeslotType</a> <a href="#field-type">type</a>;				/* in */
+} SM_SWITCH_CHANNEL_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Assigns (or de-assigns) a timeslot to
+<a class=pref href="#field-channel">channel</a>.
+No timeslot can be used as output by more than one channel at a
+time.
+<p>
+This function can be used with Prosody X cards in TDM only applications
+for backward compatibility. For new applications it is recommended that 
+<a href="#sm_tdmtx_create">sm_tdmtx_create()</a>
+and 
+<a href="#sm_tdmtx_datafeed_connect">sm_tdmtx_datafeed_connect()</a>
+be used.
+To use this function with a Prosody X 
+card the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+must be downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel from which the output is to be switched.
+
+<dt><a name="field-st">st</a><dd>The destination stream.
+
+<dt><a name="field-ts">ts</a><dd>The destination timeslot.
+
+<dt><a name="field-type">type</a><dd>The data encoding used on this timeslot.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>
+<dd>Signals encoded with A-law companding.
+
+<dt><a name="field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>
+<dd>Signals encoded with mu-law companding.
+
+<dt><a name="field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>
+<dd>Digital data - no companding used.
+
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_WRONG_CHANNEL_TYPE - if channel has no output<li>ERR_SM_BAD_PARAMETER - if invalid parameter specified or channel is associated with BR module</ul>
+<hr>
+<h2><a name="sm_tdmrx_create">Prosody generic: API: sm_tdmrx_create</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_tdmrx_create(struct sm_tdmrx_create_parms *<a href="#field-tdmrxp">tdmrxp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-tdmrxp">*tdmrxp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_tdmrx_create_parms {
+	<a href="../apitype.html#type-tSMTDMrxId">tSMTDMrxId</a> <a href="#field-tdmrx">tdmrx</a>;					/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-stream">stream</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-timeslot">timeslot</a>;					/* in */
+	<a href="#enum-kSMTimeslotType">enum kSMTimeslotType</a> <a href="#field-type">type</a>;				/* in */
+} SM_TDMRX_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Allocates, on a specific module, a new TDM[rx] to receive
+incoming TDM data. The TDM[rx] will receive it's data from the
+specified
+<a class=pref href="#field-stream">stream</a>
+and
+<a class=pref href="#field-timeslot">timeslot</a>.
+The streams which can be used with this call depend on the type
+of Prosody carrier card being used. They are special internal
+streams which are only accessible to Prosody and the switch
+driver.
+All data received by the
+<a class=pref href="#field-tdmrx">tdmrx</a>
+can be read from its datafeed. The datafeed may be obtained using
+<a href="#sm_tdmrx_get_datafeed">sm_tdmrx_get_datafeed()</a>.
+<p>
+If the call completes successfully, the parameter
+<a class=pref href="#field-tdmrx">tdmrx</a>
+will be set to the identifier for that tdmrx.
+<p>
+On Prosody X this function requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-tdmrx">tdmrx</a><dd>The newly created TDM[rx].
+
+<dt><a name="field-module">module</a><dd>A value obtained from 
+<a href="#sm_open_module">sm_open_module()</a>
+which indicates the module where the TDM[rx] is to be allocated.
+
+<dt><a name="field-stream">stream</a><dd>The TDM stream to which the TDM[rx] will be attached
+
+<dt><a name="field-timeslot">timeslot</a><dd>The TDM timeslot to which the TDM[rx] will be attached
+
+<dt><a name="field-type">type</a><dd>The data encoding used on this timeslot.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>
+<dd>Signals encoded with A-law companding.
+
+<dt><a name="field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>
+<dd>Signals encoded with mu-law companding.
+
+<dt><a name="field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>
+<dd>Digital data - no companding used.
+
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources exist to create the TDM[rx]</ul>
+<hr>
+<h2><a name="sm_tdmrx_destroy">Prosody generic: API: sm_tdmrx_destroy</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_tdmrx_destroy(<a href="../apitype.html#type-tSMTDMrxId">tSMTDMrxId</a> <a href="#field-tdmrx">tdmrx</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-tdmrx">tdmrx</a>
+<dd>
+A tSMTDMrxId that has been prevously created by a call to 
+<a href="#sm_tdmrx_create">sm_tdmrx_create()</a>
+.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys
+<a class=pref href="#field-tdmrx">tdmrx</a>
+and invalidates the tSMTDMrxId.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_tdmrx_get_datafeed">Prosody generic: API: sm_tdmrx_get_datafeed</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_tdmrx_get_datafeed(struct sm_tdmrx_datafeed_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_tdmrx_datafeed_parms {
+	<a href="../apitype.html#type-tSMTDMrxId">tSMTDMrxId</a> <a href="#field-tdmrx">tdmrx</a>;					/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* out */
+} SM_TDMRX_DATAFEED_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Request a datafeed identifier from a TDM[rx]. This identifer can 
+subsequently be used in a call to any of the
+<code>*_datafeed_connect()</code> functions except
+<a href="#sm_tdmtx_datafeed_connect">sm_tdmtx_datafeed_connect()</a>.
+It is valid until the TDM[rx] is destroyed.
+Datafeed connections can only be made between objects allocated
+on the same <code>tSMModuleId</code>.
+<p>
+Requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-tdmrx">tdmrx</a><dd>The tdm[rx] from which to obtain a datafeed
+
+<dt><a name="field-datafeed">datafeed</a><dd>The datafeed object associated with the TDM[rx]
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_tdmtx_create">Prosody generic: API: sm_tdmtx_create</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_tdmtx_create(struct sm_tdmtx_create_parms *<a href="#field-tdmtxp">tdmtxp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-tdmtxp">*tdmtxp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_tdmtx_create_parms {
+	<a href="../apitype.html#type-tSMTDMtxId">tSMTDMtxId</a> <a href="#field-tdmtx">tdmtx</a>;					/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-stream">stream</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-timeslot">timeslot</a>;					/* in */
+	<a href="#enum-kSMTimeslotType">enum kSMTimeslotType</a> <a href="#field-type">type</a>;				/* in */
+} SM_TDMTX_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Allocates, on a specific module, a new TDM[tx] to send TDM data. The TDM[tx] will send it's data
+to the specified 
+<a class=pref href="#field-stream">stream</a>
+and
+<a class=pref href="#field-timeslot">timeslot</a>.
+The streams which can be used with this call depend on the type
+of Prosody carrier card being used. They are special internal
+streams which are only accessible to Prosody and the switch
+driver.
+The
+<a class=pref href="#field-tdmtx">tdmtx</a>
+will begin sending data when it has been succesfully connected to a 
+valid datafeed using
+<a href="#sm_tdmtx_datafeed_connect">sm_tdmtx_datafeed_connect()</a>.
+<p>
+If the call completes successfully, the parameter
+<a class=pref href="#field-tdmtx">tdmtx</a>
+will be set to the identifier for that tdmtx.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-tdmtx">tdmtx</a><dd>The newly created TDM[tx].
+
+<dt><a name="field-module">module</a><dd>A value obtained from 
+<a href="#sm_open_module">sm_open_module()</a>
+which indicates the module where the TDM[tx] is to be allocated.
+
+<dt><a name="field-stream">stream</a><dd>The TDM stream to which the TDM[tx] will be attached
+
+<dt><a name="field-timeslot">timeslot</a><dd>The TDM timeslot to which the TDM[tx] will be attached
+
+<dt><a name="field-type">type</a><dd>The data encoding used on this timeslot.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>
+<dd>Signals encoded with A-law companding.
+
+<dt><a name="field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>
+<dd>Signals encoded with mu-law companding.
+
+<dt><a name="field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>
+<dd>Digital data - no companding used.
+
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources exist to create the TDM[tx]</ul>
+<hr>
+<h2><a name="sm_tdmtx_datafeed_connect">Prosody generic: API: sm_tdmtx_datafeed_connect</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_tdmtx_datafeed_connect(struct sm_tdmtx_datafeed_connect_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_tdmtx_datafeed_connect_parms {
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-data_source">data_source</a>;				/* in */
+	<a href="../apitype.html#type-tSMTDMtxId">tSMTDMtxId</a> <a href="#field-tdmtx">tdmtx</a>;					/* in */
+} SM_TDMTX_DATAFEED_CONNECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Connects a datafeed to a TDM[tx]. The
+<a class=pref href="#field-data_source">data_source</a>
+must be a datafeed obtained from any of the
+<code>*_get_datafeed()</code> functions except
+<a href="#sm_tdmrx_get_datafeed">sm_tdmrx_get_datafeed()</a>.
+The TDM[tx]
+<a class=pref href="#field-tdmtx">tdmtx</a>
+will receive any data that is generated by the output task from which 
+<a class=pref href="#field-data_source">data_source</a>
+was derived.
+<p>
+To disconnect a TDM[tx] from a datafeed, specify 
+<code>kSMNullDatafeedId</code> as the tSMDatafeedId in
+<a class=pref href="#field-data_source">data_source</a>
+<p>
+Requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-data_source">data_source</a><dd>The datafeed acting as a source of data
+
+<dt><a name="field-tdmtx">tdmtx</a><dd>The TDM[tx] that will receive the data
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_tdmtx_destroy">Prosody generic: API: sm_tdmtx_destroy</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_tdmtx_destroy(<a href="../apitype.html#type-tSMTDMtxId">tSMTDMtxId</a> <a href="#field-tdmtx">tdmtx</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-tdmtx">tdmtx</a>
+<dd>
+A tSMTDMtxId that has been prevously created by a call to 
+<a href="#sm_tdmtx_create">sm_tdmtx_create()</a>
+.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys
+<a class=pref href="#field-tdmtx">tdmtx</a>
+and invalidates the tSMTDMtxId.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_udp_collector_create">Prosody generic: API: sm_udp_collector_create</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_udp_collector_create(struct sm_udp_collector_create_parms *<a href="#field-dp">dp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-dp">*dp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_udp_collector_create_parms {
+	<a href="../apitype.html#type-tSMCollectorId">tSMCollectorId</a> <a href="#field-collector">collector</a>;				/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a name="enum-kSMCollectorType">enum kSMCollectorType</a> {
+		<a href="#field-kSMCollectorTypeIPv4">kSMCollectorTypeIPv4</a>,
+		<a href="#field-kSMCollectorTypeIPv6">kSMCollectorTypeIPv6</a>,
+	} <a href="#field-type">type</a>;							/* in */
+	<a href="../apitype.html#type-in_addr">struct in_addr</a> <a href="#field-address">address</a>;					/* in */
+	<a href="../apitype.html#type-in6_addr">struct in6_addr</a> <a href="#field-ipv6_address">ipv6_address</a>;				/* in */
+} SM_UDP_COLLECTOR_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Allocates, on a specific module, a new UDP collector
+to receive incoming UDP data. If the call completes
+successfully, the parameter
+<a class=pref href="#field-collector">collector</a>
+will be set to the identifier for that collector.
+<p>
+A collector is automatically allocated a port number for
+incoming UDP data, this information may be obtained from
+<a href="#sm_collector_status">sm_collector_status()</a>.
+<p>
+This requires the module
+<a href="softmodindex.html#fromudp">fromudp</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-collector">collector</a><dd>The newly created collector.
+
+<dt><a name="field-module">module</a><dd>A value obtained from 
+<a href="#sm_open_module">sm_open_module()</a>
+which indicates the module where the collector to be allocated.
+
+<dt><a name="field-type">type</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMCollectorTypeIPv4">kSMCollectorTypeIPv4</a>
+<dd>The collector is to receive IPv4 packets
+
+<dt><a name="field-kSMCollectorTypeIPv6">kSMCollectorTypeIPv6</a>
+<dd>The collector is to receive IPv6 packets
+
+</dl>
+<dt><a name="field-address">address</a><dd>The address on which this UDP collector is to listen if
+<a class=pref href="#field-type">type</a>
+is 
+<a class=pref href="#field-kSMCollectorTypeIPv4">kSMCollectorTypeIPv4</a>.
+
+<dt><a name="field-ipv6_address">ipv6_address</a><dd>The address on which this UDP collector is to listen if
+<a class=pref href="#field-type">type</a>
+is 
+<a class=pref href="#field-kSMCollectorTypeIPv6">kSMCollectorTypeIPv6</a>.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_udp_dispatcher_create">Prosody generic: API: sm_udp_dispatcher_create</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_udp_dispatcher_create(struct sm_udp_dispatcher_create_parms *<a href="#field-dp">dp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-dp">*dp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_udp_dispatcher_create_parms {
+	<a href="../apitype.html#type-tSMDispatcherId">tSMDispatcherId</a> <a href="#field-dispatcher">dispatcher</a>;				/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a name="enum-kSMDispatcherType">enum kSMDispatcherType</a> {
+		<a href="#field-kSMDispatcherTypeIPv4">kSMDispatcherTypeIPv4</a>,
+		<a href="#field-kSMDispatcherTypeIPv6">kSMDispatcherTypeIPv6</a>,
+	} <a href="#field-type">type</a>;							/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN">SOCKADDR_IN</a> <a href="#field-destination">destination</a>;				/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN">SOCKADDR_IN</a> <a href="#field-source">source</a>;					/* in */
+	int <a href="#field-TOS">TOS</a>;						/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN6">SOCKADDR_IN6</a> <a href="#field-destination_ipv6">destination_ipv6</a>;				/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN6">SOCKADDR_IN6</a> <a href="#field-source_ipv6">source_ipv6</a>;				/* in */
+} SM_UDP_DISPATCHER_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Allocates, on a specific module, a new UDP dispatcher
+to transmit data. If the call completes
+successfully, the parameter
+<a class=pref href="#field-dispatcher">dispatcher</a>
+will be set to the identifier for that dispatcher.
+<p>
+This requires the module
+<a href="softmodindex.html#toudp">toudp</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dispatcher">dispatcher</a><dd>The newly created dispatcher.
+
+<dt><a name="field-module">module</a><dd>A value obtained from 
+<a href="#sm_open_module">sm_open_module()</a>
+which indicates the module where the dispatcher to be allocated.
+
+<dt><a name="field-type">type</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMDispatcherTypeIPv4">kSMDispatcherTypeIPv4</a>
+<dd>The dispatcher is to receive IPv4 packets
+
+<dt><a name="field-kSMDispatcherTypeIPv6">kSMDispatcherTypeIPv6</a>
+<dd>The dispatcher is to receive IPv6 packets
+
+</dl>
+<dt><a name="field-destination">destination</a><dd>The SOCKADDR_IN structure specifying the destination IP address
+and port for the UDP stream. A struct SOCKADDR_IN must be
+configured with an address family, an IP address and a port.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+The structure must be correctly cast such that an IP V4 
+address is specified.
+<br>
+This field is ignored unless
+<a class=pref href="#field-type">type</a>
+is
+<a class=pref href="#field-kSMDispatcherTypeIPv4">kSMDispatcherTypeIPv4</a>.
+
+<dt><a name="field-source">source</a><dd>The SOCKADDR_IN structure allows you to specify the source IP
+address and port for the UDP stream. A struct SOCKADDR_IN must
+be configured with an address family. The IP address may be
+specified, or the value INADDR_ANY may be used to indicate
+that any suitable address may be used. The port number may be
+specified, or the value zero may be used to indicate that a
+suitable port number is to be automatically allocated and
+used.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+The structure must be correctly cast such that an IP V4 
+address is specified.
+<br>
+This field is ignored unless
+<a class=pref href="#field-type">type</a>
+is
+<a class=pref href="#field-kSMDispatcherTypeIPv4">kSMDispatcherTypeIPv4</a>.
+
+<dt><a name="field-TOS">TOS</a><dd>The Type Of Service (TOS) indicator to be sent in the UDP packets
+<br>
+This field is ignored unless
+<a class=pref href="#field-type">type</a>
+is
+<a class=pref href="#field-kSMDispatcherTypeIPv4">kSMDispatcherTypeIPv4</a>.
+
+<dt><a name="field-destination_ipv6">destination_ipv6</a><dd>The SOCKADDR_IN6 structure specifying the destination IP address
+and port for the UDP stream. A struct SOCKADDR_IN6 must be
+configured with an address family, an IPv6 address and a port.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+<br>
+This field is ignored unless
+<a class=pref href="#field-type">type</a>
+is
+<a class=pref href="#field-kSMDispatcherTypeIPv6">kSMDispatcherTypeIPv6</a>.
+
+<dt><a name="field-source_ipv6">source_ipv6</a><dd>The SOCKADDR_IN6 structure allows you to specify the source IPv6
+address and port for the UDP stream. A struct SOCKADDR_IN6 must
+be configured with an address family. The IPv6 address may be
+specified, or the value INADDR_ANY may be used to indicate
+that any suitable address may be used. The port number may be
+specified, or the value zero may be used to indicate that a
+suitable port number is to be automatically allocated and
+used.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+<br>
+This field is ignored unless
+<a class=pref href="#field-type">type</a>
+is
+<a class=pref href="#field-kSMDispatcherTypeIPv6">kSMDispatcherTypeIPv6</a>.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smd_ev_create">Prosody generic: API: smd_ev_create</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smd_ev_create(<a href="../apitype.html#type-tSMEventId">tSMEventId</a> *<a href="#field-eventId">eventId</a>, <a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channelId">channelId</a>, int <a href="#field-eventType">eventType</a>, int <a href="#field-eventChannelBinding">eventChannelBinding</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventId">eventId</a>
+<dd>
+The created event
+<dt><a name="field-channelId">channelId</a>
+<dd>
+The channel that this event will be associated with
+<dt><a name="field-eventType">eventType</a>
+<dd>
+The type of the event to create. One of these values:
+<code>kSMEventTypeReadData</code>,
+<code>kSMEventTypeWriteData</code>, or
+<code>kSMEventTypeRecog</code>.
+<dt><a name="field-eventChannelBinding">eventChannelBinding</a>
+<dd>
+Indicator of whether the event is for 'any channel' use or a
+single specific channel. One of the following values:
+<code>kSMChannelSpecificEvent</code>,
+<code>kSMChannelSpecificEventNonIdle</code>, or
+<code>kSMAnyChannelEvent</code>.
+</dl>
+<h3>Description</h3>
+<p>
+Creates an operating system event object suitable for use with
+a specific channel indicated by
+<a class=pref href="#field-channelId">channelId</a>
+(the parameter
+<a class=pref href="#field-eventChannelBinding">eventChannelBinding</a>
+must be set to <code>kSMChannelSpecificEvent</code> in this
+case) or, alternatively, creates an operating system event object for
+collective use by all nominated channels (in which case
+<a class=pref href="#field-channelId">channelId</a>
+must be set to <code>kSMNullChannelId</code> and
+<a class=pref href="#field-eventChannelBinding">eventChannelBinding</a>
+to <code>kSMAnyChannelEvent</code>).
+
+<div class="version-TiNG">
+	<span class=header-TiNG>Only on Prosody version 2 (TiNG):</span>
+See the document
+<a href="../anychan.html">Prosody TiNG: any channel operation</a>
+for how to use 'any channel' events.
+<p>
+An application which waits on a channel-specific event will be woken
+whenever the channel is ready for servicing. This includes whenever
+an operation on the channel may have a status change to report, as
+well as whenever there is no operation in progress on the channel
+(because the channel is ready to start a new operation).
+<p>
+An application which waits on an 'any channel' event will be woken
+when any of the channels which have been associated with that
+event are ready for servicing. In this case a channel which has no
+operation in progress is not considered to be ready for
+servicing. This is because 'any channel' events are provided for
+backward compatibility with Prosody version 1, which had this
+behaviour.
+<p>
+Note that an application may sometimes be woken even though no
+status change is found. This happens in certain cases where the
+API library discovers when checking the status that the change is
+not of a type appropriate to report to the application (which may
+be because it related to a facility not currently in use or because
+it is only for internal purposes within the library).
+
+</div>
+<p>
+The
+<a class=pref href="#field-eventType">eventType</a>
+parameter indicates which type of event should be created, see
+<a href="#sm_channel_set_event">sm_channel_set_event()</a>
+API call description for more details.
+<p>
+An identifier for the new event object is stored in the location
+pointed at by
+<a class=pref href="#field-eventId">eventId</a>.
+You can wait on the event as described in
+<a href="#smd_ev_wait">smd_ev_wait()</a>.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_NO_RESOURCES - if event could not be created<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smd_ev_free">Prosody generic: API: smd_ev_free</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smd_ev_free(<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-eventId">eventId</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventId">eventId</a>
+<dd>
+</dl>
+<h3>Description</h3>
+<p>
+<p>
+Release operating system resources associated with use of event
+previously allocated by
+<a href="#smd_ev_create">smd_ev_create()</a>.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="smd_ev_wait">Prosody generic: API: smd_ev_wait</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int smd_ev_wait(<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-eventId">eventId</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventId">eventId</a>
+<dd>
+</dl>
+<h3>Description</h3>
+<p>
+Wait until given event occurs.
+<p>
+Application developers may prefer to use the underlying
+operating system calls instead of this call, allowing them to
+exploit event wait timeouts, waiting for multiple events etc.
+The use of events on each operating system is described in
+<a href="../events.html">Prosody events</a>.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_config_module_switching">Prosody generic: API: sm_config_module_switching</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_config_module_switching(struct sm_config_module_sw_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_config_module_sw_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-auto_assign_out_ts">auto_assign_out_ts</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-auto_assign_in_ts">auto_assign_in_ts</a>;				/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-out_st0">out_st0</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-out_st1">out_st1</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-out_base_ts">out_base_ts</a>;					/* in */
+	<a name="enum-kSMTimeslotType">enum kSMTimeslotType</a> {
+		<a href="#field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>,
+		<a href="#field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>,
+		<a href="#field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>,
+	} <a href="#field-in_type">in_type</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-in_st0">in_st0</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-in_st1">in_st1</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-in_base_ts">in_base_ts</a>;					/* in */
+	<a href="#enum-kSMTimeslotType">enum kSMTimeslotType</a> <a href="#field-out_type">out_type</a>;				/* in */
+} SM_CONFIG_MODULE_SW_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Overrides default or configured assignment scheme used by driver to
+associate channels with timeslots on card external bus.
+The streams which can be used with this call depend on the type
+of Prosody carrier card being used. On the ISA Prosody card, the
+accessible streams are on the external bus (MVIP), while on
+other cards they are special internal streams which are only
+accessible to Prosody and the switch driver.
+<p>
+When a channel is allocated, it can have an associated external
+bus MVIP or SCbus timeslot automatically assigned to it.
+Alternatively, timeslot assignment may be left to the
+application which can call
+<a href="#sm_switch_channel_output">sm_switch_channel_output()</a>
+or
+<a href="#sm_switch_channel_input">sm_switch_channel_input()</a>
+following channel allocation to explicitly assign an external
+bus timeslot.
+<p>
+If output channel timeslots for module
+<a class=pref href="#field-module">module</a>
+are to be assigned by the application through calls to
+<a href="#sm_switch_channel_output">sm_switch_channel_output()</a>,
+then
+<a class=pref href="#field-auto_assign_out_ts">auto_assign_out_ts</a>
+must be set to zero.
+<p>
+If output channel timeslots for module
+<a class=pref href="#field-module">module</a>
+are to be automatically assigned, then
+<a class=pref href="#field-auto_assign_out_ts">auto_assign_out_ts</a>
+must be set to 1 and the fields
+<a class=pref href="#field-out_st0">out_st0</a>,
+<a class=pref href="#field-out_st1">out_st1</a>
+and
+<a class=pref href="#field-out_base_ts">out_base_ts</a>
+must be set up to specify the external bus streams and timeslots
+to be assigned.
+<p>
+If SCbus external bus timeslots are to be assigned,
+<a class=pref href="#field-out_st0">out_st0</a>
+and
+<a class=pref href="#field-out_st1">out_st1</a>
+should both be set to 24 (the stream assigned to the SCbus) and
+<a class=pref href="#field-out_base_ts">out_base_ts</a>
+should be set to the first SCbus timeslot to be assigned for
+this module.
+<p>
+If MVIP external bus timeslots are to be assigned,
+<a class=pref href="#field-out_st0">out_st0</a>
+and
+<a class=pref href="#field-out_st1">out_st1</a>
+should be set to DSo stream numbers (0..7) for the first 32 and
+second 32 timeslots assigned, and
+<a class=pref href="#field-out_base_ts">out_base_ts</a>
+must be set to zero.
+<p>
+If input channel timeslots for module
+<a class=pref href="#field-module">module</a>
+are to be assigned by the application through calls to
+<a href="#sm_switch_channel_input">sm_switch_channel_input()</a>,
+then
+<a class=pref href="#field-auto_assign_in_ts">auto_assign_in_ts</a>
+must be set to zero.
+<p>
+If input channel timeslots for module
+<a class=pref href="#field-module">module</a>
+are to be automatically assigned, then
+<a class=pref href="#field-auto_assign_in_ts">auto_assign_in_ts</a>
+must be
+set to 1 and the fields
+<a class=pref href="#field-in_st0">in_st0</a>,
+<a class=pref href="#field-in_st1">in_st1</a>
+and
+<a class=pref href="#field-in_base_ts">in_base_ts</a>
+must be set up to specify the external bus streams and timeslots
+to be assigned.
+<p>
+If SCbus external bus timeslots are to be assigned,
+<a class=pref href="#field-in_st0">in_st0</a>
+and
+<a class=pref href="#field-in_st1">in_st1</a>
+should both be set to 24 (the stream assigned to the SCbus) and
+<a class=pref href="#field-in_base_ts">in_base_ts</a>
+should be set to the first SCbus timeslot to be
+assigned for this module.
+<p>
+If MVIP external bus timeslots are to be assigned,
+<a class=pref href="#field-in_st0">in_st0</a>
+and
+<a class=pref href="#field-in_st1">in_st1</a>
+should be set to DSi stream numbers (0..7) for the first 32 and
+second 32 timeslots assigned, and
+<a class=pref href="#field-in_base_ts">in_base_ts</a>
+must be set to zero.
+<p>
+The use of automatic timeslot assignment is not recommended.
+It prevents the sharing of a timeslot between multiple
+channels (which is useful when debugging as it permits the
+recording of an input without interfering with normal
+processing of that input). Normally it is trivial to assign
+timeslots explicitly (for example, by deriving the timeslot
+number from some property of a call, such as the port and
+timeslot number of the call).
+<p>
+The use of automatic timeslot assignment is not supported on
+ProsodyS or ProsodyX.
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-module">module</a>	(Deprecated)
+<dd class=version-deprecated>A value obtained from
+<a href="#sm_open_module">sm_open_module()</a>
+which indicates the module to configure.
+
+<dt class=version-deprecated><a name="field-auto_assign_out_ts">auto_assign_out_ts</a>	(Deprecated)
+<dd class=version-deprecated>Controls whether output timeslots should be assigned automatically.
+The value 1 enables automatic assignment, 0 selects assignment
+by the application.
+
+<dt class=version-deprecated><a name="field-auto_assign_in_ts">auto_assign_in_ts</a>	(Deprecated)
+<dd class=version-deprecated>Controls whether input timeslots should be assigned automatically.
+The value 1 enables automatic assignment, 0 selects assignment
+by the application.
+
+<dt class=version-deprecated><a name="field-out_st0">out_st0</a>	(Deprecated)
+<dd class=version-deprecated>The first stream from which output timeslots are to be
+automatically assigned.
+
+<dt class=version-deprecated><a name="field-out_st1">out_st1</a>	(Deprecated)
+<dd class=version-deprecated>The second stream from which output timeslots are to be
+automatically assigned.
+
+<dt class=version-deprecated><a name="field-out_base_ts">out_base_ts</a>	(Deprecated)
+<dd class=version-deprecated>The lowest numbered timeslot to use for automatic assignment of
+output timeslots.
+This field is ignored.
+
+<dt class=version-deprecated><a name="field-in_type">in_type</a>	(Deprecated)
+<dd class=version-deprecated>The data encoding used on timeslots automatically allocated
+within this stream.
+
+<div class=version-deprecated>
+One of these values:
+<dl>
+<dt><a name="field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>
+<dd>Signals encoded with A-law companding.
+
+<dt><a name="field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>
+<dd>Signals encoded with mu-law companding.
+
+<dt><a name="field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>
+<dd>Digital data - no companding used.
+
+</dl>
+</div>
+<dt class=version-deprecated><a name="field-in_st0">in_st0</a>	(Deprecated)
+<dd class=version-deprecated>The first stream from which input timeslots are to be
+automatically assigned.
+
+<dt class=version-deprecated><a name="field-in_st1">in_st1</a>	(Deprecated)
+<dd class=version-deprecated>The second stream from which input timeslots are to be
+automatically assigned.
+
+<dt class=version-deprecated><a name="field-in_base_ts">in_base_ts</a>	(Deprecated)
+<dd class=version-deprecated>The lowest numbered timeslot to use for automatic assignment of
+input timeslots.
+This field is ignored.
+
+<dt class=version-deprecated><a name="field-out_type">out_type</a>	(Deprecated)
+<dd class=version-deprecated>The data encoding used on timeslots automatically allocated
+within this stream.
+
+<div class=version-deprecated>
+One of these values:
+<dl>
+<dt><a name="field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>
+<dd>Signals encoded with A-law companding.
+
+<dt><a name="field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>
+<dd>Signals encoded with mu-law companding.
+
+<dt><a name="field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>
+<dd>Digital data - no companding used.
+
+</dl>
+</div>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists<li>ERR_SM_FIRMWARE_NOT_RUNNING - if no firmware running on module.<li>ERR_SM_WRONG_MODULE_TYPE - attempt to configure switching on inappropriate module type</ul>
+<hr>
+<h2><a name="sm_get_card_switch_id">Prosody generic: API: sm_get_card_switch_id</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_get_card_switch_id(<a href="../apitype.html#type-tSMCardId">tSMCardId</a> <a href="#field-card">card</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-card">card</a>
+<dd>
+The card whose associated switch driver index is to be
+determined.
+</dl>
+<h3>Description</h3>
+<p>
+Given a Prosody carrier card, returns card ID for use in switch
+driver API calls such as <code>sw_set_output</code>.
+<p>
+Note that this function is deprecated. It is present only to
+permit certain backward compatibility functionality to be
+implemented, should <strong>not</strong> be used by
+applications, and shall eventually be withdrawn from the API.
+<h3>Returns</h3>
+<p>Switch card ID
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_get_channel_ix">Prosody generic: API: sm_get_channel_ix</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_get_channel_ix(<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-channel">channel</a>
+<dd>
+The channel whose index value is to be returned.
+</dl>
+<h3>Description</h3>
+<p>
+Converts a channel identifier to a integer index unique to that
+channel.
+<p>
+
+<div class="version-TiNG">
+	<span class=header-TiNG>Only on Prosody version 2 (TiNG):</span>
+The index returned is in the range 0 &lt;= index &lt; (256*32) and
+is unique only between channels on the same card. Note that
+this function is provided solely to implement backward
+compatibility with the pre-V6 API, and will be removed when
+pre-V6 backward compatibility support is withdrawn.
+
+</div>
+<h3>Returns</h3>
+<p>Channel index value (greater than or equal to zero)
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_get_channel_module_id">Prosody generic: API: sm_get_channel_module_id</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_get_channel_module_id(<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-channel">channel</a>
+<dd>
+The channel to locate.
+</dl>
+<h3>Description</h3>
+<p>
+Given a channel returns the module on which the channel is
+located.
+<p>
+Note that this function no longer implemented, 
+and shall eventually be withdrawn from the API.
+<h3>Returns</h3>
+<p>Always returns the error ERR_SM_NOT_IMPLEMENTED
+.
+<hr>
+<h2><a name="sm_get_firmware_info">Prosody generic: API: sm_get_firmware_info</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_get_firmware_info(struct sm_fwinfo_parms *<a href="#field-fp">fp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-fp">*fp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_fwinfo_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-position">position</a>;					/* inout */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-tasktypecode">tasktypecode</a>;					/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-version">version</a>;					/* out */
+} SM_FWINFO_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+<strong>Obsolete function that is not supported on ProsodyX cards or 
+with ProsodyS v3 servers.</strong>
+<p>
+<h3>Fields</h3>
+
+<dl>
+<dt class=version-deprecated><a name="field-module">module</a>	(Deprecated)
+<dd class=version-deprecated>A value obtained from
+<a href="#sm_open_module">sm_open_module()</a>
+which indicates the module to examine.
+
+<dt class=version-deprecated><a name="field-position">position</a>	(Deprecated)
+<dd class=version-deprecated>The position to examine. Start this at zero and each successive
+call will advance it to consider the next position.
+
+<dt class=version-deprecated><a name="field-tasktypecode">tasktypecode</a>	(Deprecated)
+<dd class=version-deprecated>The task type code of the firmware module. This value is zero if
+this position is empty.
+
+<dt class=version-deprecated><a name="field-version">version</a>	(Deprecated)
+<dd class=version-deprecated>The version code of the firmware module. This value is zero if
+this position is empty.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists</ul>
+<hr>
+<h2><a name="sm_get_module_card_id">Prosody generic: API: sm_get_module_card_id</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_get_module_card_id(<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-mod_id">mod_id</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-mod_id">mod_id</a>
+<dd>
+a value obtained from
+<a href="#sm_open_module">sm_open_module()</a>
+which indicates the module to locate.
+</dl>
+<h3>Description</h3>
+<p>
+Given a module returns the card on which the module is
+located.
+<p>
+Note that this function is deprecated. It is present only to
+permit certain backward compatibility functionality to be
+implemented, should <strong>not</strong> be used by
+applications, and shall eventually be withdrawn from the API.
+<h3>Returns</h3>
+<p>tSMCardId
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_reset_module">Prosody generic: API: sm_reset_module</a></h2>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_reset_module(<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-module">module</a>
+<dd>
+A value obtained from
+<a href="#sm_open_module">sm_open_module()</a>
+which indicates the module to be reset
+</dl>
+<h3>Description</h3>
+<p>
+This function is deprecated. Since a module only needs to be reset
+when downloading a new kernel, the download program should be used
+to reset a module.
+<p>
+Performs hardware reset on given module,
+<a class=pref href="#field-module">module</a>,
+which will then require a new firmware download before it may be
+used for speech processing.
+<p>
+Any channels previously associated with the module must be
+released before invoking this call.
+<p>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists<li>ERR_SM_CHANNEL_ALLOCATED - channels still allocated on module</ul>
+<hr>
+<p>These functions constitute the
+<a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

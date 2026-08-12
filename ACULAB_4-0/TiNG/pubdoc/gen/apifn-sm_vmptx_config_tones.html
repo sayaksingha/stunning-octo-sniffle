@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_tones</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_tones</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_tones(struct sm_vmptx_tone_parms *<a href="#field-tonep">tonep</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-tonep">*tonep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_tone_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-convert_tones">convert_tones</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-elim_tones">elim_tones</a>;					/* in */
+	<a href="../apitype.html#type-tSMVMPTxToneSetId">tSMVMPTxToneSetId</a> <a href="#field-tone_set_id">tone_set_id</a>;				/* in */
+	<a name="enum-kSMVMPtxRFC2833MinDuration">enum kSMVMPtxRFC2833MinDuration</a> {
+		<a href="#field-kSMVMPtxRFC2833MinDurationNoMinimum">kSMVMPtxRFC2833MinDurationNoMinimum</a>,
+		<a href="#field-kSMVMPtxRFC2833MinDuration40">kSMVMPtxRFC2833MinDuration40</a>,
+	} <a href="#field-min_duration">min_duration</a>;						/* in */
+} SM_VMPTX_TONE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Allows an application to specify how DTMF tones in the audio stream are
+handled when transmitting RTP data.
+<p>
+It may be desirable to encode tones as per RFC 2833, rather than using 
+the chosen audio codec. Some codecs, such as G.711, can represent DTMF 
+tones and do not require an alternative encoding, however, 
+applications may still choose to send tones as RFC 2833. For audio 
+codecs that cannot adequately represent DTMF tones (e.g. G.729) it is 
+necessary to send tones using an alternative encoding if the tones must 
+be detected by the system which terminates an RTP stream. In this 
+scenario, applications should supply a non-zero value for
+<a class=pref href="#field-convert_tones">convert_tones</a>
+in order to enable this feature. 
+<p>
+This requires the module
+<a href="softmodindex.html#vtdet">vtdet</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to be configured
+
+<dt><a name="field-convert_tones">convert_tones</a><dd>Indicator of whether tones that could be sent using the RFC 2833 
+standard that are detected in the audio should be encoded as RFC 2833 
+RTP packets. A non-zero value instructs the VMP[tx] to encode these 
+tones according to RFC 2833(see supported tones from RFC2833). 
+
+<dt><a name="field-elim_tones">elim_tones</a><dd>Indicator of whether tones that could be sent using the RFC 2833 
+encoding, that are detected in the audio, should be eliminated
+from the audio. A non-zero value instructs the VMP[tx] to
+eliminate these tones (see supported tones from RFC2833).
+
+<dt><a name="field-tone_set_id">tone_set_id</a><dd>The tone set that is to be used when converting and eliminating
+tones. This is the result of a call to
+<a href="apifn-sm_vmptx_create_toneset.html">sm_vmptx_create_toneset()</a>
+The same module value must have been used to allocate both this
+VMP[tx] and the tone set.
+
+<dt><a name="field-min_duration">min_duration</a><dd>How much tone needs to be detected before RFC 2833 packets are generated.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMVMPtxRFC2833MinDurationNoMinimum">kSMVMPtxRFC2833MinDurationNoMinimum</a>
+<dd>
+<dt><a name="field-kSMVMPtxRFC2833MinDuration40">kSMVMPtxRFC2833MinDuration40</a>
+<dd>
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

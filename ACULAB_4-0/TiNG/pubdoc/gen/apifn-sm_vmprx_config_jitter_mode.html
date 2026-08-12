@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_config_jitter_mode</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_config_jitter_mode</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_config_jitter_mode(struct sm_vmprx_config_jitter_mode_parms *<a href="#field-jitterp">jitterp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-jitterp">*jitterp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_config_jitter_mode_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a name="enum-kSMVMPrxJitterBufferMode">enum kSMVMPrxJitterBufferMode</a> {
+		<a href="#field-kSMVMPrxJitterBufferModeNormal">kSMVMPrxJitterBufferModeNormal</a>,
+		<a href="#field-kSMVMPrxJitterBufferModeAdaptive">kSMVMPrxJitterBufferModeAdaptive</a>,
+	} <a href="#field-mode">mode</a>;							/* in */
+	union {
+		struct {
+			<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-u-adaptive-target_delay">target_delay</a>;			/* in */
+			float <a href="#field-u-adaptive-freq_upper_tolerance">freq_upper_tolerance</a>;		/* in */
+			float <a href="#field-u-adaptive-freq_lower_tolerance">freq_lower_tolerance</a>;		/* in */
+		} <a href="#field-u-adaptive">adaptive</a>;					/* in */
+	} <a href="#field-u">u</a>;							/* in */
+} SM_VMPRX_CONFIG_JITTER_MODE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Allows an application to confgure the mode of the jitter buffer
+belonging to a VMP[rx].
+<p>
+When
+<a class=pref href="#field-mode">mode</a>
+is
+<a class=pref href="#field-kSMVMPrxJitterBufferModeAdaptive">kSMVMPrxJitterBufferModeAdaptive</a>
+the jitter buffer will attempt to keep the delay it introduces to
+<a class=pref href="#field-u-adaptive-target_delay">target_delay</a>.
+The rate at which corrections to the delay are made depends on the 
+packet jitter and the transmitters sample clock frequency. Packet jitter 
+may cause unnecessary corrections. This is more likely when the allowed 
+sample clock frequency tolerance range is large.
+<p>
+The sample clock frequency tolerances are specified as percentages of the 
+expected sample clock frequency. For example, if the expected frequency is 
+8kHz and 
+<a class=pref href="#field-u-adaptive-freq_upper_tolerance">freq_upper_tolerance</a>
+is 1.5 and
+<a class=pref href="#field-u-adaptive-freq_lower_tolerance">freq_lower_tolerance</a>
+is 0.5, then the jitter buffer will attempt to track sample clock 
+frequencies between 8.12kHz and 7.96kHz.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to be configured
+
+<dt><a name="field-mode">mode</a><dd>The mode of the jitter buffer.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMVMPrxJitterBufferModeNormal">kSMVMPrxJitterBufferModeNormal</a>
+<dd>The normal jitter buffer mode.
+
+<dt><a name="field-kSMVMPrxJitterBufferModeAdaptive">kSMVMPrxJitterBufferModeAdaptive</a>
+<dd>The adaptive jitter buffer mode.
+
+</dl>
+<dt><a name="field-u">u</a><dd>
+
+<dl>
+<dt><a name="field-u-adaptive">adaptive</a><dd>This field is only valid if mode is
+<a class=pref href="#field-kSMVMPrxJitterBufferModeAdaptive">kSMVMPrxJitterBufferModeAdaptive</a>
+
+
+<dl>
+<dt><a name="field-u-adaptive-target_delay">target_delay</a><dd>The target delay in milliseconds
+
+<dt><a name="field-u-adaptive-freq_upper_tolerance">freq_upper_tolerance</a><dd>The upper limit of the sample clock frequency tolerance as a percentage
+
+<dt><a name="field-u-adaptive-freq_lower_tolerance">freq_lower_tolerance</a><dd>The lower limit of the sample clock frequency tolerance as a percentage
+
+</dl>
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

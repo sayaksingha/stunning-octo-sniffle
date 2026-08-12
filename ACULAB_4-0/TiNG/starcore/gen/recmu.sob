@@ -1,0 +1,101 @@
+// DESCRIPTION: Recording of mu-law companded audio
+// GENTIME: Tue Aug  3 16:20:56 2021
+// VERS: 0x00014910 0x00007490
+// RESHINT: RESTBL 52 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x6c 0x6d 0x65 0x72 0x00 0x00 0x00 0x20 0x00 0x00 0x00 0x0c 0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x0c 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0xfa 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x49 0x10 0x00 0x00 0x74 0x90 
+(section
+".default"
+(alignment #0)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::.default" (sym ".default::@start")))
+(data))
+(section
+".data"
+(alignment #3)
+(symtab
+(defsym "_TiNG_ftbl_recmu" (sym ".data::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::.data" (sym ".data::@start")))
+(data // Offset:0x0
+{00000000000000006C6D657200014910FFFFFFF000000000} // Offset:0x18
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v103")) #FFFFFFE8)) // Offset:0x19
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v103")) #FFFFFFF0)) // Offset:0x1A
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v103")) #FFFFFFF8)) // Offset:0x1B
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v103"))) // Offset:0x1C
+{00000000} // Offset:0x20
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v101")) #FFFFFFE8)) // Offset:0x21
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v101")) #FFFFFFF0)) // Offset:0x22
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v101")) #FFFFFFF8)) // Offset:0x23
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v101"))) // Offset:0x24
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v102")) #FFFFFFE8)) // Offset:0x25
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v102")) #FFFFFFF0)) // Offset:0x26
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v102")) #FFFFFFF8)) // Offset:0x27
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v102"))) // Offset:0x28
+{00000010} // Offset:0x2C
+(emit (<< (& #FF000000 (sym "_RegisterOneSubtask_")) #FFFFFFE8)) // Offset:0x2D
+(emit (<< (& #FF0000 (sym "_RegisterOneSubtask_")) #FFFFFFF0)) // Offset:0x2E
+(emit (<< (& #FF00 (sym "_RegisterOneSubtask_")) #FFFFFFF8)) // Offset:0x2F
+(emit (& #FF (sym "_RegisterOneSubtask_"))) // Offset:0x30
+{00000000000000000000000000007490}))
+(section
+".rom"
+(alignment #3)
+(symtab
+(defsym "_TiNG_rtbl_recmu" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::.rom" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v103" (+ #34 (sym ".rom::@start"))))
+(data // Offset:0x0
+{00000000000000006C6D6572000000200000000C000000010000000C00000000000000000000FA0000000000000149100000749000000000} // Offset:0x38
+(emit (<< (& #FF000000 (sym "_Msg_try_next_subtask")) #FFFFFFE8)) // Offset:0x39
+(emit (<< (& #FF0000 (sym "_Msg_try_next_subtask")) #FFFFFFF0)) // Offset:0x3A
+(emit (<< (& #FF00 (sym "_Msg_try_next_subtask")) #FFFFFFF8)) // Offset:0x3B
+(emit (& #FF (sym "_Msg_try_next_subtask")))))
+(section
+".text"
+(alignment #F)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v100" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::TextStart_recmu" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::.text" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::DW_2" (+ #6 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::DW_3" (+ #C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::DW_5" (+ #20 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::L4" (+ #C8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::PL001" (+ #120 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::PL000" (+ #160 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::L13" (+ #176 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::L21" (+ #176 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::L1" (+ #178 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::DW_64" (+ #194 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::DW_65" (+ #19A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::DW_66" (+ #1A0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::.align_0" (+ #1A2 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::FuncEnd_100" (+ #1A2 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::Fv100_end" (+ #1A2 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v101" (+ #1B0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::v102" (+ #1E0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::FuncEnd_101" (+ #1E0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::Fv101_end" (+ #1E0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::DW_84" (+ #1E8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::DW_89" (+ #202 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::TextEnd_recmu" (+ #204 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::FuncEnd_102" (+ #204 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/recmu/c/recmu.eln::Fv102_end" (+ #204 (sym ".text::@start"))))
+(data // Offset:0x0
+{94C09620972094C09E209F209AC0290B800490C0270C802096C0E7EC2B0E800E11D65A9124E953939AC02718815090C036CC921894C0D223EE6A9AC02E0F800490C02718813E96C05C962F0D800415D557973C80A10066E976D7EDEC280F800436A0A0005B97846994C0C487C35A96C0D642C6F8F94396C0DF04F844FA4596C0D6C6FB46FC473680A000459FFD483480A0005497727D90C098C7D0DE32} // Offset:0x9D
+(emit (+ #4 (<< (& #C0000000 (sym "_setTiNGKFault")) #FFFFFFE5) (<< (& #E000 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x9E
+(emit (+ #20 (<< (& #1F00 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x9F
+(emit (& #FF (sym "_setTiNGKFault"))) // Offset:0xA0
+(emit (+ #80 (<< (& #3F000000 (sym "_setTiNGKFault")) #FFFFFFE8))) // Offset:0xA1
+(emit (<< (& #FF0000 (sym "_setTiNGKFault")) #FFFFFFF0)) // Offset:0xA2
+{9AC364E0F74130C02B0180CB0696FDC894C0C181FBC694C0FAC5FCC794C0F9C3F8C40115C5563A00A00867E977D75493C2823E00A00120009FDE7BE134EC8218C6A194C0449380933640A000541C9B479AC038C9804F6666C299C59A98C06C7D7CC72B0380226E56D19465E42DBD6D0D9CC0371A8007D61A2103804E90C03C00A0087D44391A800F541CC39998C0DD1938C9804F66663800B0006C7DDD1A7CC72E560A02A0FF3600A100D114928592D065642D1D6D8996C0351A8007D61B96C07D44391C800FDD19DD1C0A02A0FF3480A000929D47975B924B91EBF190C092C3EB4492C35C9390C092C39C6327EC9FE0E7EC94C09E219F2194C0962197219F710000000000000000000000000000E8541B9038602E69806390C0EB545D9390C0ED485C9590C0E8AC92C26C3098C2E94431} // Offset:0x1D3
+(emit (+ #1 (<< (& #C0000000 (sym ".text::@start")) #FFFFFFE5) (<< (& #E000 (sym ".text::@start")) #FFFFFFF8))) // Offset:0x1D4
+(emit (+ #20 (<< (& #1F00 (sym ".text::@start")) #FFFFFFF8))) // Offset:0x1D5
+(emit (& #FF (sym ".text::@start"))) // Offset:0x1D6
+(emit (+ #80 (<< (& #3F000000 (sym ".text::@start")) #FFFFFFE8))) // Offset:0x1D7
+(emit (<< (& #FF0000 (sym ".text::@start")) #FFFFFFF0)) // Offset:0x1D8
+{9F7094C1C081419196C06E34E748E9E896C0F442280B8014189330192000A00132} // Offset:0x1F9
+(emit (+ #4 (<< (& #C0000000 (sym "_SendMsgAndParms")) #FFFFFFE5) (<< (& #E000 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0x1FA
+(emit (+ #20 (<< (& #1F00 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0x1FB
+(emit (& #FF (sym "_SendMsgAndParms"))) // Offset:0x1FC
+(emit (+ #80 (<< (& #3F000000 (sym "_SendMsgAndParms")) #FFFFFFE8))) // Offset:0x1FD
+(emit (<< (& #FF0000 (sym "_SendMsgAndParms")) #FFFFFFF0)) // Offset:0x1FE
+{F041E7689F71}))

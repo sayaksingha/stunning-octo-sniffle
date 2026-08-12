@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: DTMF detection issues</title>
+</head>
+<body>
+<h1>Prosody application note: DTMF detection issues</h1>
+<h2>Channel Types</h2>
+<p>
+On Prosody modules running Aculab speech processing firmware, channels
+are allocated with characteristics governed by the value of the
+<code>type</code> parameter of
+<a href="gen/apifn-sm_channel_alloc_placed.html">sm_channel_alloc_placed()</a>
+as follows:
+<ul>
+<li><code>kSMChannelTypeInput</code> for an input-only channel, capable
+of recording and detecting DTMF.
+<li><code>kSMChannelTypeOutput</code> for an output-only channel,
+capable of replaying and/or generating conference outputs.
+<li><code>kSMChannelTypeHalfDuplex</code> for a channel capable of
+replaying and/or recording, not simultaneously, and simultaneously
+detecting DTMF.
+<li><code>kSMChannelTypeFullDuplex</code> for channel capable of
+replaying and recording and detecting DTMF simultaneously.
+</ul>
+
+<h2>Duty cycle and sensitivity</h2>
+<p>
+Prosody has three different modes of DTMF detection. The correct mode
+should be chosen based on the requirements of the application. Although
+all modes detect all frequencies in the specification, the different
+modes have subtly different behaviour, as follows:
+<ul>
+<li><code>kSMToneDetectionNoMinDuration</code> - is the most sensitive and reacts to the shortest of digit durations.
+<li><code>kSMToneDetectionMinDuration64</code> - is less sensitive
+than NoMinDuration, and will only detect DTMF digits that have a
+duration of at least 64ms. It is therefore slightly more robust against
+talk-off (see below).
+<li><code>kSMToneDetectionMinDuration40</code> - is almost equally
+as sensitive as NoMinDuration, but has extra safeguards against talk-off (see
+below). It will detect digits with durations as short as 40ms. It needs
+at least 48ms gap between digits in a sequence.
+</ul>
+
+<h2>DTMF - Dual Tone, Multiple Frequency</h2>
+<p>
+A DTMF Digit is simply a pair of pure tones, added together. Each digit
+(0, 1, 2, ...) has a high frequency and a low frequency. There are four
+possible low frequencies and four possible high frequencies, making a
+total of 16 combinations. Because the DTMF digit is an audio signal, it
+is susceptible to interference and distortion in the telephone network.
+Further, the tones can be mimicked unintentionally by speech and other
+audio signals.
+
+<h2>Talk-off</h2>
+<p>
+This is the term used when a DTMF detector mistakenly detects a speech
+signal as a DTMF digit. It is often the case that a speech signal
+momentarily contains very strong frequency components in just the right
+frequency bands, and a DTMF detection algorithm actually has to be quite
+shrewd to avoid talk off in some situations.
+<p>
+The measures taken against false (talk-off) detection include a very
+specific definition of frequency limits, a very carefully chosen
+signal-to-noise ratio requirement and a few secondary measures. The
+result of good talk-off performance is inevitably that sensitivity is
+reduced for signals outside of the specified signal requirements
+(frequencies, SNR, duration).
+<p>
+There are two standard talk-off tests, Mitel and Bellcore. Both are
+supplied as analogue cassette tapes, and so are not completely
+consistent within a digital environment. Prosody's DTMF detection
+algorithm performs well within acceptable limits for both tests, as
+shown below. The acceptable number of false-alarms for the Mitel test is
+30, for the Bellcore test is 666.
+<ul>
+<li><code>kSMDetectModeNoMinDuration</code> - Mitel talk-off = 11,
+	Bellcore talk-off = 100 +/- 5
+<li><code>kSMDetectModeMinDuration64</code> - Mitel talk-off = 2,
+	Bellcore talk-off = 9 +/- 1
+<li><code>kSMDetectModeMinDuration40</code> - Mitel talk-off = 0,
+	Bellcore = 60 +/- 5
+</ul>
+<p>
+Note: For MinDuration40 detection, the Bellcore test is not an accurate
+reflection of the talk-off in real-world telephone signals. That is,
+the talk-off performance is better than the figure above would imply.
+
+<h2>Cut-through</h2>
+<p>
+The term 'cut-through' refers to the ability of a system to respond to
+input while an outgoing prompt is in progress. As long as the correct
+types of channels are allocated, there is no reason why DTMF should not
+be detected while an outgoing signal is being generated. In the presence
+of echo, unwanted detections may occur, see below.
+
+<h2>Background noise and Speech Echo</h2>
+<p>
+The DTMF detection on Prosody is very finely tuned in order to detect
+all DTMF digits within its specifications, and to reject the maximum
+amount of talk-off. As soon as an interfering signal is added to the
+DTMF digit, there is a possibility that the digit will not be recognised. As
+long as the power of the interfering signal is much less than the power
+of the DTMF digit itself, there will not be a problem.
+<p>
+Interfering signals can come from two sources - background noise or speech echo:
+<dl>
+<dt>Background noise
+<dd>
+Most telephones in the field will cut off their microphones while
+dialing DTMF digits. Some do not, and so any noise present in the
+environment of the user will be added to the digit and potentially
+modify the signal to beyond detectable limits. There is no direct way of
+solving this problem at the server end (i.e. with signal processors such
+as Prosody). One indirect solution is to tell the user to reduce the
+amount of background noise, in the event that no digits are being
+detected. This problem is likely to occur if the user is using a
+portable DTMF tone-pad which is not part of the telephone, and there is
+significant background noise.
+<dt>Digit Interruption
+<dd>
+A common effect of background noise (or indeed noise from within the
+telephone handset) is to momentarily corrupt the signal, causing a gap
+in a dialled digit. Because the DTMF detector hears 'Valid digit -
+invalid period - valid digit' this can commonly cause repeated detection
+of the digit. See <a href="#DebTonDet">De-bouncing tone detection</a>
+below to solve this problem.
+<dt>Echo
+<dd>
+Almost all analogue telephones will reflect a proportion of their
+received signal. This is because of an imperfectly matched hybrid in the
+telephone. If there is a very loud outgoing (from the CT server) signal,
+the small fraction reflected (by the telephone) can add to the DTMF
+digit and can cause the same problem as background noise. If the
+outgoing signal is a pure tone with frequency below around 600Hz, this
+will not affect Prosody DTMF detection.
+<p>
+For this situation there are four solutions:
+<ol>
+<li>Use an echo canceller, which requires extra Prosody channels. One
+module will perform echo cancellation on up to 30 duplex channels. See
+the speech processing API guide for details.
+<li>Avoid playing outgoing tones or stationary signals while detecting
+DTMF.
+<li>If the outgoing signal is a tone of some sort (e.g. a 'beep'),
+ensure that its frequency is below 600Hz
+<li>Limit frequency range of tone detector using
+sm_adjust_input_tone_set()
+</ol>
+</dl>
+
+<h2>Speakerphones</h2>
+<p>
+This is a combination of the 'background noise' and the 'echo'
+situations described above. A telephone should disable its microphone
+while dialling DTMF digits. This is particularly important for
+speakerphones. If this is not the case, the background noise problem
+will occur, and will be exacerbated by the fact that the microphone is
+open to the room. Further, if the speakerphone does not perform any
+acoustic echo cancellation, then a fraction of any outgoing speech will
+be added to the incoming DTMF signal, because of the acoustic coupling
+between loudspeaker and microphone. To an extent, the echo case can be
+solved by the techniques described below, but speakerphone echo tends to
+be far more difficult for an echo canceller to deal with.
+
+<h2>DTMF Echo</h2>
+<p>
+Because analogue telephones reflect some of the outgoing signal, if a
+DTMF digit is present in the outgoing signal, it will potentially be
+detected by the channel which is connected to the incoming channel from
+the same network connection.
+<p>
+Work around this by ensuring that no DTMF tones exist in the outgoing
+signal. If DTMF signals must be transmitted, use echo cancellation to
+remove the DTMF signals. One module will perform echo cancellation on up
+to 30 duplex channels. See the speech processing API guide for details.
+
+<h2>User factors</h2>
+<p>
+If an application uses DTMF for a user to navigate through a series of
+prompts, it is usually more appropriate to use 'trailing-edge' DTMF
+detection, described below. When in this mode, the application only
+responds to DTMF when the digit ceases. If leading edge is used (where
+the application responds when the digit starts) and the user holds a
+DTMF button down for over a second, they will probably miss the
+beginning of the next prompt, especially if the DTMF buttons are in the
+handset of the telephone.
+<p>
+Trailing-edge DTMF detection is enabled by using mode
+<code>kSMToneEndDetectionxxxx</code> rather than
+<code>kSMToneDetectionxxxx</code>.
+
+<h2><a name="DebTonDet">De-bouncing tone detection</a></h2>
+<p>
+It is often the case (particularly in interactive systems for use by the
+general public) that 'dirty' DTMF digits are received. These can take
+various forms with various reasons, but the effect is either:
+<ul>
+<li>Valid DTMF signals appear for very short duration, either before or
+after the intended digit.
+<li>A valid DTMF digit is interrupted either by a short silence or brief
+corruption of the signal.
+</ul>
+<p>
+The Prosody API provides a method for de-bouncing, which means either:
+<ul>
+<li>ignoring any detected tone unless it meets a duration criterion;
+<li>ignoring any spaces (glitches) in the middle of tones.
+</ul>
+<p>
+These are controlled by a call to
+<a href="gen/apifn-sm_adjust_input_tone_set.html">sm_adjust_input_tone_set()</a>
+to adjust the parameters:
+<ul>
+<li><code>kAdjustToneSetIntParamIdMinOnTime</code>
+<li><code>kAdjustToneSetIntParamIdMinOffTime</code>
+</ul>
+<p>
+When adjusted, these parameters apply to all tone detectors on a module
+which are using the tone detection table to which they were applied.
+That is, if
+<a href="gen/apifn-sm_adjust_input_tone_set.html">sm_adjust_input_tone_set()</a>
+is called with module 0 and tone-set 0, then all DTMF detection on
+module 0 will be affected. It is, of course possible to create multiple
+tone-sets, so a duplicate of the DTMF table can be created and modified
+with these parameters, if debouncing is only required on some channels.
+Design of custom tone-tables is explained in the Application Note
+<a href="an-custom-tonedet.html">Configuring universal tone detection on
+Prosody</a>.
+<p>
+De-bouncing will only take effect if the detection mode is
+<code>kSMToneEndDetectionMinDuration64</code> or
+<code>kSMToneLenDetectionMinDuration64</code>.
+<p>
+Note: If tone detection mode <code>kSMToneLenDetectionxxxx</code> is
+used, the application can retrieve the duration of the tone and make
+decisions based on that. This is independent of de-bouncing parameters -
+that is, they will both work together.
+ 
+<h2>DTMF Detection with Conferencing</h2>
+<p>
+A Prosody channel that is connected to a conference can be made to
+detect DTMF digits. In a conferencing environment, echoes in the
+participants' telephones can cause problems. Firstly, if a user hits
+a DTMF digit, all other parties will be disturbed by the sound of that
+digit. Secondly, if one user dials a digit, it can be echoed back from
+some (or potentially all) of the other parties, and therefore detected
+on all channels. When part of a conference the following features are
+enabled:
+<dl>
+<dt>DTMF Muting (Clamping)
+<dd>
+Whenever a conference input has DTMF detection enabled, the input signal
+will be muted as soon as the DTMF digit is detected. This restricts the 
+length of the tone propagated into the conference.
+<dt>DTMF Echo Suppression
+<dd>
+When a DTMF channel is the input to a conference there will be a
+corresponding output channel that is connected to the same telephone.
+Without special processing, any DTMF digit that is transmitted to the
+output channel can potentially be reflected back to the input channel
+and detected as an input digit. Within conferencing, if the two channels
+are registered with each other using
+<a href="gen/apifn-sm_set_sidetone_channel.html">sm_set_sidetone_channel()</a> the DTMF
+detector will not fire when the received digit is an echo. This will
+only work if the input and output channel are allocated on the same
+Prosody module. This is automatically enabled if the
+<a href="highapi_conf.html">Prosody high level
+conferencing API</a> is used, and if the channels are on the same DSP.
+<dt>DTMF Echo Cancellation
+<dd>
+A DTMF channel can also be echo cancelled so that any echo generated by
+telephones is eliminated before any DTMF detection takes place. See
+echolib.c for more information.
+</dl>
+
+<hr>
+<p>
+<small>Document reference: AN 1338</small>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+#!/bin/sh
+find . -type f |
+	sed -e '/\/t\//d' \
+		-e '/\/old\//d' \
+		-e '/\/vss\//d' \
+		-e '/\/errs\//d' \
+		-e '/\/gen[-/]/d' \
+		-e '/\/tags$/d' \
+		-e '/^\.\/asspcode-[lv]$/d' \
+		-e 's/^\.\///' | sort 

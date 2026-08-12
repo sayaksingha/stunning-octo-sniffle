@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Encodings: HDLC data delivery</title>
+</head>
+<body>
+<h1>Prosody data communications Encodings: HDLC data delivery</h1>
+<p>
+As described in
+<a href="encoding_hdlc.html">Prosody data communications Encodings: HDLC</a>,
+data is delivered in a sequence of 32-bit words, followed by a marker
+word which also provides a status word called <code>S1</code>.
+<code>S1</code> contains any remaining data bits.
+The table below shows how the last bits of a frame are delivered.
+Bits shown as <code>d</code> are data bits from the frame and other
+bits are added by the receiver.
+If a frame has less than 26 data bits, no data words will have been
+delivered before the end-of-frame marker, so there will be no 'last data
+word', and all the data bits appear in <code>S1</code>. If you are
+only interested in frames which contain whole octets with no extra
+bits left over, you can check frames like this:
+<pre>
+		// assume 'bp' points to space for next octet
+	if (S1 != 0x3e) {	// one, two, or three octets to go
+		*bp++ = S1 &amp; 0xff;
+		S1 &gt;&gt;= 8;
+		if (S1 != 0x3e) {	// one or two octets to go
+			*bp++ = S1 &amp; 0xff;
+			S1 &gt;&gt;= 8;
+			if (S1 != 0x3e) {	// one octet to go
+				*bp++ = S1 &amp; 0xff;
+				S1 &gt;&gt;= 8;
+			}
+		}
+	}
+	if (S1 != 0x3e) {	// shouldn't be any left now
+		// error - not an integral number of octets
+	} else {
+		// handle frame
+	}
+</pre>
+<p>
+Note that the CRC is delivered with the data as normal data bits, so
+you may need to trim it off before processing the received frame.
+<p>
+<table border>
+<tr>
+	<th>Frame length (bits)
+	<th>Frame length (octets)
+	<th>S1
+	<th>last data word
+
+
+<tr>
+	<td>32x + 26
+	<td>-
+	<td>00000000 00000000 00000000 00000000
+	<td>111110dd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 27
+	<td>-
+	<td>00000000 00000000 00000000 00000001
+	<td>11110ddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 28
+	<td>-
+	<td>00000000 00000000 00000000 00000011
+	<td>1110dddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 29
+	<td>-
+	<td>00000000 00000000 00000000 00000111
+	<td>110ddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 30
+	<td>-
+	<td>00000000 00000000 00000000 00001111
+	<td>10dddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 31
+	<td>-
+	<td>00000000 00000000 00000000 00011111
+	<td>0ddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 0
+	<td>4x+0
+	<td>00000000 00000000 00000000 00111110
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 1
+	<td>-
+	<td>00000000 00000000 00000000 0111110d
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 2
+	<td>-
+	<td>00000000 00000000 00000000 111110dd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 3
+	<td>-
+	<td>00000000 00000000 00000001 11110ddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 4
+	<td>-
+	<td>00000000 00000000 00000011 1110dddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 5
+	<td>-
+	<td>00000000 00000000 00000111 110ddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 6
+	<td>-
+	<td>00000000 00000000 00001111 10dddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 7
+	<td>-
+	<td>00000000 00000000 00011111 0ddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 8
+	<td>4x+1
+	<td>00000000 00000000 00111110 dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 9
+	<td>-
+	<td>00000000 00000000 0111110d dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 10
+	<td>-
+	<td>00000000 00000000 111110dd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 11
+	<td>-
+	<td>00000000 00000001 11110ddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 12
+	<td>-
+	<td>00000000 00000011 1110dddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 13
+	<td>-
+	<td>00000000 00000111 110ddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 14
+	<td>-
+	<td>00000000 00001111 10dddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 15
+	<td>-
+	<td>00000000 00011111 0ddddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 16
+	<td>4x+2
+	<td>00000000 00111110 dddddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 17
+	<td>-
+	<td>00000000 0111110d dddddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 18
+	<td>-
+	<td>00000000 111110dd dddddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 19
+	<td>-
+	<td>00000001 11110ddd dddddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 20
+	<td>-
+	<td>00000011 1110dddd dddddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 21
+	<td>-
+	<td>00000111 110ddddd dddddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 22
+	<td>-
+	<td>00001111 10dddddd dddddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 23
+	<td>-
+	<td>00011111 0ddddddd dddddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 24
+	<td>4x+3
+	<td>00111110 dddddddd dddddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+
+<tr>
+	<td>32x + 25
+	<td>-
+	<td>0111110d dddddddd dddddddd dddddddd
+	<td>dddddddd dddddddd dddddddd dddddddd
+
+</table>
+</body>
+</html>

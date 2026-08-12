@@ -3,7 +3,7 @@ ROOTDIR = $(PROJ_HOME)
 
    include $(PROJ_HOME)/makeutil/header.mod
 #DEFS += -D_XOPEN_SOURCE=600 -DLINUX -DCOMMONOAM -DLINT_ARGS
-   DECFS += -DLINUX -DLINT_ARGS -D_REENTRANT -DKAFKA_BRIDGE
+DECFS += -DLINUX -DLINT_ARGS -D_REENTRANT -DKAFKA_BRIDGE
 #FLAGS += #-DSS7_1_4 #-DGT_IND #-D__cplusplus=1
 
 #FLAGS += -D__cplusplus=1
@@ -108,7 +108,7 @@ OBJS3 = TcapAculabTransDlgMap.o
 OBJS3 := $(OBJS3:%=$(OBJDIR)/%)
 
 # list of libraries.
-#LIBS3 = $(PROJ_HOME)/Aculab/tcap/lib/libAculabDlgMgr.a 
+#LIBS3 = $(PROJ_HOME)/Aculab/tcap_ansi/lib/libAculabDlgMgr.a 
 LIBS3 =  
         
 
@@ -126,7 +126,7 @@ OBJS4 = TcapAculabUtil.o TcapAculabApi.o
 OBJS4 := $(OBJS4:%=$(OBJDIR)/%)
 
 # list of libraries.
-#LIBS4 = $(PROJ_HOME)/Aculab/tcap/lib/libAculabDlgMgr.a
+#LIBS4 = $(PROJ_HOME)/Aculab/tcap_ansi/lib/libAculabDlgMgr.a
 LIBS4 =  
 
 
@@ -145,14 +145,14 @@ OBJS5 = TcapAculabHandler.o TcapAculabHandlerMain.o
 OBJS5 := $(OBJS5:%=$(OBJDIR)/%)
 
 # list of libraries.
-LIBS5 = $(PROJ_HOME)/Aculab/tcap/lib/libAculabUtil.a\
-        $(PROJ_HOME)/Aculab/tcap/lib/libAculabTransDlgMap.a\
-        $(PROJ_HOME)/Aculab/tcap/lib/libAculabDlgMgr.a\
-        $(PROJ_HOME)/Aculab/tcap/lib/libAculabApi.a
+LIBS5 = $(PROJ_HOME)/Aculab/tcap_ansi/lib/libAculabUtil.a\
+        $(PROJ_HOME)/Aculab/tcap_ansi/lib/libAculabTransDlgMap.a\
+        $(PROJ_HOME)/Aculab/tcap_ansi/lib/libAculabDlgMgr.a\
+        $(PROJ_HOME)/Aculab/tcap_ansi/lib/libAculabApi.a
         
 
 # output file name.
-OFILE5 = TCAP_Handler_ACULAB
+OFILE5 = TcapAnsiHandler 
 
 # Program dependencies
 $(OFILE5): $(LIBDIR)/$(OFILE5)
@@ -164,10 +164,10 @@ OBJS6 = TcapAculabHandlerTraffic.o TcapAculabHandlerTrafficMain.o
 OBJS6 := $(OBJS6:%=$(OBJDIR)/%)
 
 # list of libraries.
-LIBS6 = $(PROJ_HOME)/Aculab/tcap/lib/libAculabDlgMgr.a
+LIBS6 = $(PROJ_HOME)/Aculab/tcap_ansi/lib/libAculabDlgMgr.a
 
 # output file name.
-OFILE6 = TCAP_Handler_ACULAB_Traffic
+OFILE6 = TcapAnsiHandler_Traffic
 $(OFILE6): $(LIBDIR)/$(OFILE6)
 $(BINDIR)/$(OFILE6): $(OBJS6) $(LIBS6)
 
@@ -178,11 +178,11 @@ OBJS7 = TcapAculabDlgCleaner.o TcapAculabDlgCleanerMain.o
 OBJS7 := $(OBJS7:%=$(OBJDIR)/%)
 
 # list of libraries.
-LIBS7 = $(PROJ_HOME)/Aculab/tcap/lib/libAculabUtil.a\
-         $(PROJ_HOME)/Aculab/tcap/lib/libAculabDlgMgr.a
+LIBS7 = $(PROJ_HOME)/Aculab/tcap_ansi/lib/libAculabUtil.a\
+         $(PROJ_HOME)/Aculab/tcap_ansi/lib/libAculabDlgMgr.a
 
 # output file name.
-OFILE7 = TCAP_Handler_ACULAB_Dlg_Cleaner
+OFILE7 = TcapAnsiHandler_DlgCleaner
 $(OFILE7): $(LIBDIR)/$(OFILE7)
 $(BINDIR)/$(OFILE7): $(OBJS7) $(LIBS7)
 #################################################################

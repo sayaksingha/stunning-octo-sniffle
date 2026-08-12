@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_config_forwarding</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_config_forwarding</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_config_forwarding(struct sm_vmprx_config_forwarding_parms *<a href="#field-configp">configp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_config_forwarding_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a name="enum-kVMPrxFwdMode">enum kVMPrxFwdMode</a> {
+		<a href="#field-kVMPrxFwdModeNone">kVMPrxFwdModeNone</a>,
+		<a href="#field-kVMPrxFwdModeAll">kVMPrxFwdModeAll</a>,
+		<a href="#field-kVMPrxFwdModeTypes">kVMPrxFwdModeTypes</a>,
+	} <a href="#field-mode">mode</a>;							/* in */
+	<a name="enum-kSMVMPrxFwdDestType">enum kSMVMPrxFwdDestType</a> {
+		<a href="#field-kSMVMPrxFwdDestTypeIPv4">kSMVMPrxFwdDestTypeIPv4</a>,
+		<a href="#field-kSMVMPrxFwdDestTypeIPv6">kSMVMPrxFwdDestTypeIPv6</a>,
+	} <a href="#field-dest_type">dest_type</a>;						/* in */
+	union {
+		struct {
+			<a href="../apitype.html#type-SOCKADDR_IN">SOCKADDR_IN</a> <a href="#field-u-ipv4-destination">destination</a>;		/* in */
+			<a href="../apitype.html#type-SOCKADDR_IN">SOCKADDR_IN</a> <a href="#field-u-ipv4-source">source</a>;			/* in */
+			int <a href="#field-u-ipv4-TOS">TOS</a>;				/* in */
+		} <a href="#field-u-ipv4">ipv4</a>;						/* in */
+		struct {
+			<a href="../apitype.html#type-SOCKADDR_IN6">SOCKADDR_IN6</a> <a href="#field-u-ipv6-destination">destination</a>;		/* in */
+			<a href="../apitype.html#type-SOCKADDR_IN6">SOCKADDR_IN6</a> <a href="#field-u-ipv6-source">source</a>;			/* in */
+		} <a href="#field-u-ipv6">ipv6</a>;						/* in */
+	} <a href="#field-u">u</a>;							/* in */
+	int <a href="#field-num_types">num_types</a>;						/* in */
+	struct sm_vmprx_forward_types {
+		int <a href="#field-types-incoming_pt">incoming_pt</a>;				/* in */
+		int <a href="#field-types-outgoing_pt">outgoing_pt</a>;				/* in */
+		<a name="enum-kVMPrxFwdTranscoding">enum kVMPrxFwdTranscoding</a> {
+			<a href="#field-kVMPrxFwdTranscodingNone">kVMPrxFwdTranscodingNone</a>,
+			<a href="#field-kVMPrxFwdTranscodingAlawToMulaw">kVMPrxFwdTranscodingAlawToMulaw</a>,
+			<a href="#field-kVMPrxFwdTranscodingMulawToAlaw">kVMPrxFwdTranscodingMulawToAlaw</a>,
+		} <a href="#field-types-transcoding">transcoding</a>;
+	} <a href="#field-types">types[kVMPrxFwdMaxTypes]</a>;				/* in */
+} SM_VMPRX_CONFIG_FORWARDING_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configure a VMP[rx] to forward packet payloads to another endpoint
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to forward packet payloads
+
+<dt><a name="field-mode">mode</a><dd>The payload forwarding mode
+
+One of these values:
+<dl>
+<dt><a name="field-kVMPrxFwdModeNone">kVMPrxFwdModeNone</a>
+<dd>Forward no packet payloads
+
+<dt><a name="field-kVMPrxFwdModeAll">kVMPrxFwdModeAll</a>
+<dd>Forward all packet payloads
+
+<dt><a name="field-kVMPrxFwdModeTypes">kVMPrxFwdModeTypes</a>
+<dd>Forward only payloads that match the types specified
+
+</dl>
+<dt><a name="field-dest_type">dest_type</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMVMPrxFwdDestTypeIPv4">kSMVMPrxFwdDestTypeIPv4</a>
+<dd>The packet payloads are to be forwarded to an IPv4 destination
+
+<dt><a name="field-kSMVMPrxFwdDestTypeIPv6">kSMVMPrxFwdDestTypeIPv6</a>
+<dd>The packet payloads are to be forwarded to an IPv6 destination
+
+</dl>
+<dt><a name="field-u">u</a><dd>
+
+<dl>
+<dt><a name="field-u-ipv4">ipv4</a><dd>This field is only used if
+<a class=pref href="#field-dest_type">dest_type</a>
+is
+<a class=pref href="#field-kSMVMPrxFwdDestTypeIPv4">kSMVMPrxFwdDestTypeIPv4</a>.
+
+
+<dl>
+<dt><a name="field-u-ipv4-destination">destination</a><dd>The SOCKADDR_IN structure specifying the destination IP address
+and port for the forwarded packet payloads. A struct SOCKADDR_IN 
+must be configured with an address family, an IP address and a port.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+The structure must be correctly cast such that an IP V4 
+address is specified.
+
+<dt><a name="field-u-ipv4-source">source</a><dd>The SOCKADDR_IN structure allows you to specify the source IP
+address and port for the forwarded packets. A struct SOCKADDR_IN must
+be configured with an address family. The IP address may be
+specified, or the value INADDR_ANY may be used to indicate
+that any suitable address may be used. The port number may be
+specified, or the value zero may be used to indicate that a
+suitable port number is to be automatically allocated and
+used.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+The structure must be correctly cast such that an IP V4 
+address is specified.
+
+<dt><a name="field-u-ipv4-TOS">TOS</a><dd>The Type Of Service (TOS) indicator to be sent with payloads
+
+</dl>
+<dt><a name="field-u-ipv6">ipv6</a><dd>This field is only used if
+<a class=pref href="#field-dest_type">dest_type</a>
+is
+<a class=pref href="#field-kSMVMPrxFwdDestTypeIPv6">kSMVMPrxFwdDestTypeIPv6</a>.
+
+
+<dl>
+<dt><a name="field-u-ipv6-destination">destination</a><dd>The SOCKADDR_IN6 structure specifying the destination IP address
+and port for the forwarded packet payloads. A struct SOCKADDR_IN6 
+must be configured with an address family, an IP address and a port.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+
+<dt><a name="field-u-ipv6-source">source</a><dd>The SOCKADDR_IN6 structure allows you to specify the source IP
+address and port for the forwarded packets. A struct SOCKADDR_IN6 must
+be configured with an address family. The IP address may be
+specified, or a value equivalent to in6addr_any may be used to indicate
+that any suitable address may be used. The port number may be
+specified, or the value zero may be used to indicate that a
+suitable port number is to be automatically allocated and
+used.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+
+</dl>
+</dl>
+<dt><a name="field-num_types">num_types</a><dd>
+<dt><a name="field-types">types</a><dd>The payload types to be forwarded
+
+
+<dl>
+<dt><a name="field-types-incoming_pt">incoming_pt</a><dd>The incoming payload type identifier
+
+<dt><a name="field-types-outgoing_pt">outgoing_pt</a><dd>The outgoing payload type identifier to map this payload to
+
+<dt><a name="field-types-transcoding">transcoding</a><dd>The payload data transcoding
+
+One of these values:
+<dl>
+<dt><a name="field-kVMPrxFwdTranscodingNone">kVMPrxFwdTranscodingNone</a>
+<dd>No transcoding
+
+<dt><a name="field-kVMPrxFwdTranscodingAlawToMulaw">kVMPrxFwdTranscodingAlawToMulaw</a>
+<dd>Transcode payload data from A-law to Mu-law
+
+<dt><a name="field-kVMPrxFwdTranscodingMulawToAlaw">kVMPrxFwdTranscodingMulawToAlaw</a>
+<dd>Transcode payload data from Mu-law to A-law
+
+</dl>
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

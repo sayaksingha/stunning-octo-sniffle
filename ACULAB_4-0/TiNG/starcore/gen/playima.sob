@@ -1,0 +1,143 @@
+// DESCRIPTION: IMA Decoder Playback
+// GENTIME: Tue Aug  3 16:20:25 2021
+// VERS: 0x00014910 0x00007490
+// RESHINT: RESTBL 52 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x61 0x6d 0x69 0x70 0x00 0x00 0x00 0x20 0x00 0x00 0x00 0x14 0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x14 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x7d 0x00 0x00 0x01 0x49 0x10 0x00 0x00 0x74 0x90 
+(section
+".default"
+(alignment #0)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::.default" (sym ".default::@start")))
+(data))
+(section
+".data"
+(alignment #3)
+(symtab
+(defsym "_TiNG_ftbl_playima" (sym ".data::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::.data" (sym ".data::@start")))
+(data // Offset:0x0
+{0000000000000000616D697000014910FFFFFFF000000000} // Offset:0x18
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v100")) #FFFFFFE8)) // Offset:0x19
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v100")) #FFFFFFF0)) // Offset:0x1A
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v100")) #FFFFFFF8)) // Offset:0x1B
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v100"))) // Offset:0x1C
+{00000000} // Offset:0x20
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v99")) #FFFFFFE8)) // Offset:0x21
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v99")) #FFFFFFF0)) // Offset:0x22
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v99")) #FFFFFFF8)) // Offset:0x23
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v99"))) // Offset:0x24
+(emit (<< (& #FF000000 (sym "_NullDtor_")) #FFFFFFE8)) // Offset:0x25
+(emit (<< (& #FF0000 (sym "_NullDtor_")) #FFFFFFF0)) // Offset:0x26
+(emit (<< (& #FF00 (sym "_NullDtor_")) #FFFFFFF8)) // Offset:0x27
+(emit (& #FF (sym "_NullDtor_"))) // Offset:0x28
+{00000014} // Offset:0x2C
+(emit (<< (& #FF000000 (sym "_RegisterOneSubtask_")) #FFFFFFE8)) // Offset:0x2D
+(emit (<< (& #FF0000 (sym "_RegisterOneSubtask_")) #FFFFFFF0)) // Offset:0x2E
+(emit (<< (& #FF00 (sym "_RegisterOneSubtask_")) #FFFFFFF8)) // Offset:0x2F
+(emit (& #FF (sym "_RegisterOneSubtask_"))) // Offset:0x30
+{00000000000000000000000000007490}))
+(section
+".rom"
+(alignment #3)
+(symtab
+(defsym "_TiNG_rtbl_playIMA" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::.rom" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v100" (+ #34 (sym ".rom::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v97" (+ #3C (sym ".rom::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v96" (+ #EE (sym ".rom::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v95" (+ #10E (sym ".rom::@start"))))
+(data // Offset:0x0
+{0000000000000000616D69700000002000000014000000010000001400000000000000000000000000007D00000149100000749000000000} // Offset:0x38
+(emit (<< (& #FF000000 (sym "_Msg_try_next_subtask")) #FFFFFFE8)) // Offset:0x39
+(emit (<< (& #FF0000 (sym "_Msg_try_next_subtask")) #FFFFFFF0)) // Offset:0x3A
+(emit (<< (& #FF00 (sym "_Msg_try_next_subtask")) #FFFFFFF8)) // Offset:0x3B
+(emit (& #FF (sym "_Msg_try_next_subtask"))) // Offset:0x3C
+{000700080009000A000B000C000D000E001000110013001500170019001C001F002200250029002D00320037003C00420049005000580061006B00760082008F009D00AD00BE00D100E600FD0117013301510173019801C101EE02200256029202D4031C036C03C30424048E05020583061006AB0756081208E009C30ABD0BD00CFF0E4C0FBA114C130714EE170619541BDC1EA521B6251528CA2CDF315B364B3BB941B248444F7E5771602F69CE74627FFFFFFFFFFFFFFFFFFF0002000400060008FFFFFFFFFFFFFFFF000200040006000800010003000500070009000B000D000F00010003000500070009000B000D000F}))
+(section
+".text"
+(alignment #F)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v98" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::TextStart_playima" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::.text" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::DW_2" (+ #6 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::DW_3" (+ #C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::DW_5" (+ #1E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::L13" (+ #1D8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::L14" (+ #21C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::L68" (+ #260 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::L28" (+ #32A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::L63" (+ #32A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::L18" (+ #372 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::L65" (+ #372 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::L46" (+ #3A4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::L52" (+ #3B0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::L74" (+ #400 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::DW_160" (+ #406 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::DW_161" (+ #40C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::DW_162" (+ #412 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::PL000" (+ #414 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::PL001" (+ #430 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::PL002" (+ #43E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::.align_0" (+ #44A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::FuncEnd_98" (+ #44A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::Fv98_end" (+ #44A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::v99" (+ #450 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::TextEnd_playima" (+ #482 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::FuncEnd_99" (+ #482 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/playima/c/playima.eln::Fv99_end" (+ #482 (sym ".text::@start"))))
+(data // Offset:0x0
+{94C09620972094C09E209F209AC0270E803890C0290B800894C0E7EE9742EAE93640A000FB465A9296C0569B27E99FEC3480A000E8E894C84699569B96C0469127ED9FF01B95F7C53ECA9218D1233820A000FEC6271883B23840A000C082280C80043680A000EE64C5873680A0005396C2F898C065E9C6842C0D800496C0FFC62718838494C0FC47FA4896C053972F0E800C3A60A00030EB8218F849FA4A0397FB4B3640A00057965B943E80A0003ECC8608C35E3EC987C153953820B0007E42D6C6FE4C94C0D641DD0594C0D744F24D7456D44231F8409490C098C7D0DA32} // Offset:0xDF
+(emit (+ #4 (<< (& #C0000000 (sym "_setTiNGKFault")) #FFFFFFE5) (<< (& #E000 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0xE0
+(emit (+ #20 (<< (& #1F00 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0xE1
+(emit (& #FF (sym "_setTiNGKFault"))) // Offset:0xE2
+(emit (+ #80 (<< (& #3F000000 (sym "_setTiNGKFault")) #FFFFFFE8))) // Offset:0xE3
+(emit (<< (& #FF0000 (sym "_setTiNGKFault")) #FFFFFFF0)) // Offset:0xE4
+{9AC364E030C02B0180CBF6413680A000EBEEF2CD36C0A000EB68FACA3680A0004293FAC83640A0004696FECC3680A0005392C5813640A0004392F8C936C0A0004596FB4E5D9290C0EDF13620A0009858995A92C3ED4492C35D9590C092C39D633620A100FACAE9EE3680A000E964CD4736C0A100EA5254913AA0A1012A0D80017E4191BA3AE0A00032CD9782ECEDFBCE38E0A004D645E8EDEFED3800A1046660EC63EDF13600A100E867EF6536C0A0005514FECC3620A000F8C9FAC83600A100FBCB94BD3600A100521053D7241881C23600A100F5425C933A00A00C666974D4C945E1EF96C0E2EE251881AA96C077D2CE57CF56C9486460D020843F3800A8007651C088EFE13E00A202200081F8707C7A686660EEE296C0FAC82518823694C092A4ED6195A496C07EC893BCEC42DE9A77F53ECD9782451B3E00A2096460745177D1CD4C250080583E00A008666067E039} // Offset:0x235
+(emit (+ (<< (& #C0000000 (+ #3C (sym ".rom::@start"))) #FFFFFFE5) (<< (& #E000 (+ #3C (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x236
+(emit (+ #20 (<< (& #1F00 (+ #3C (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x237
+(emit (& #FF (+ #3C (sym ".rom::@start")))) // Offset:0x238
+(emit (+ #80 (<< (& #3F000000 (+ #3C (sym ".rom::@start"))) #FFFFFFE8))) // Offset:0x239
+(emit (<< (& #FF0000 (+ #3C (sym ".rom::@start"))) #FFFFFFF0)) // Offset:0x23A
+{E0ED2C7DCC5026693554CD549CC7251880E4656175F390C074D59AC02B03800C76539B4290C03400A004666990C094C2200381AC3E00A804746876D46C303F} // Offset:0x279
+(emit (+ (<< (& #C0000000 (+ #10E (sym ".rom::@start"))) #FFFFFFE5) (<< (& #E000 (+ #10E (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x27A
+(emit (+ #20 (<< (& #1F00 (+ #10E (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x27B
+(emit (& #FF (+ #10E (sym ".rom::@start")))) // Offset:0x27C
+(emit (+ #80 (<< (& #3F000000 (+ #10E (sym ".rom::@start"))) #FFFFFFE8))) // Offset:0x27D
+(emit (<< (& #FF0000 (+ #10E (sym ".rom::@start"))) #FFFFFFF0)) // Offset:0x27E
+{3E00A004646922609FFF6D7D238080013C00A00876557A613A} // Offset:0x297
+(emit (+ (<< (& #C0000000 (+ #EE (sym ".rom::@start"))) #FFFFFFE5) (<< (& #E000 (+ #EE (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x298
+(emit (+ #20 (<< (& #1F00 (+ #EE (sym ".rom::@start"))) #FFFFFFF8))) // Offset:0x299
+(emit (& #FF (+ #EE (sym ".rom::@start")))) // Offset:0x29A
+(emit (+ #80 (<< (& #3F000000 (+ #EE (sym ".rom::@start"))) #FFFFFFE8))) // Offset:0x29B
+(emit (<< (& #FF0000 (+ #EE (sym ".rom::@start"))) #FFFFFFF0)) // Offset:0x29C
+{3626A00097A46C7C3600A80076D7CE443840A800D6980A00A0043800A0043B1A800FEEFC3800B80C76EA756AEE193A00B00C7EC1351B800855163600A10465E9CD4590C0EF1D3620A0005617ED1A3600A80468BA55153600A0047CE36E553403A00464E43400A800D7C177576E7D77D692D06F7C3ECB9782431B3C00B20175D474D074D7CC58CD5C24602660EDE03A00B00075577651CF44C94096C06660EEE2CF5E94C0ED3FE93F94C0EDF1F94296C0FAC8251880F43400A00466692FFF9E813A00A80076517557FAC8EFE196C06660EEE2CF5ECE5F94C0EDF1F0833880A10060E4919A401494C0421080223680A100949D4317CD489F4090C090C092C8411B069631} // Offset:0x39F
+(emit (+ #4 (<< (& #C0000000 (+ #3B0 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #3B0 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x3A0
+(emit (+ #20 (<< (& #1F00 (+ #3B0 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x3A1
+(emit (& #FF (+ #3B0 (sym ".text::@start")))) // Offset:0x3A2
+(emit (+ #80 (<< (& #3F000000 (+ #3B0 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x3A3
+(emit (<< (& #FF0000 (+ #3B0 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x3A4
+{3480A000589390C0EC384C96C6823680A0004696C15E5D9290C0EDF13640A000995A985892C3ED4492C35B9590C092C39B633620A000FBCEFCC797423880A000549327EB9FEC0494C156549B94C8449F549B449747963480A000479127E89FC8E7E894C09E219F2194C0962197219F713C00B20175D474D074D7CC58CD5C9CC064606660EDE031} // Offset:0x42B
+(emit (+ #4 (<< (& #C0000000 (+ #32A (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #32A (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x42C
+(emit (+ #20 (<< (& #1F00 (+ #32A (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x42D
+(emit (& #FF (+ #32A (sym ".text::@start")))) // Offset:0x42E
+(emit (+ #80 (<< (& #3F000000 (+ #32A (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x42F
+(emit (<< (& #FF0000 (+ #32A (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x430
+(emit #30) // Offset:0x431
+(emit (+ #4 (<< (& #C0000000 (+ #372 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #372 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x432
+(emit (+ #20 (<< (& #1F00 (+ #372 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x433
+(emit (& #FF (+ #372 (sym ".text::@start")))) // Offset:0x434
+(emit (+ #80 (<< (& #3F000000 (+ #372 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x435
+(emit (<< (& #FF0000 (+ #372 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x436
+{96C07557CF5ECE5F30} // Offset:0x43F
+(emit (+ #4 (<< (& #C0000000 (+ #372 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #372 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x440
+(emit (+ #20 (<< (& #1F00 (+ #372 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x441
+(emit (& #FF (+ #372 (sym ".text::@start")))) // Offset:0x442
+(emit (+ #80 (<< (& #3F000000 (+ #372 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x443
+(emit (<< (& #FF0000 (+ #372 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x444
+{94C0EFE1CE5F00000000000098C0E8543A68356FA3745B9090C0EB54589390C0E8485D9090C0EAAD92C26C3098C2E94435} // Offset:0x475
+(emit (+ #1 (<< (& #C0000000 (sym ".text::@start")) #FFFFFFE5) (<< (& #E000 (sym ".text::@start")) #FFFFFFF8))) // Offset:0x476
+(emit (+ #20 (<< (& #1F00 (sym ".text::@start")) #FFFFFFF8))) // Offset:0x477
+(emit (& #FF (sym ".text::@start"))) // Offset:0x478
+(emit (+ #80 (<< (& #3F000000 (sym ".text::@start")) #FFFFFFE8))) // Offset:0x479
+(emit (<< (& #FF0000 (sym ".text::@start")) #FFFFFFF0)) // Offset:0x47A
+{9F7094C1C0814591}))

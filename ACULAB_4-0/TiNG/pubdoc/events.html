@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody events</title>
+</head>
+<body>
+<h1>Prosody events</h1>
+<p>
+An application may use a
+<a href="apitype.html#type-tSMEventId">tSMEventId</a>
+to wait for various events to occur. While the api function
+<a href="gen/apifn-smd_ev_wait.html">smd_ev_wait()</a> is provided,
+this only allows an application to wait for events on a single
+channel. It is possible to wait for any of a variety of events, some
+caused by Prosody and some from other sources, using a function
+provided by the operating system.
+<p>
+A Prosody event is active while the underlying cause remains. This
+means, for example, that a channel performing replay will have its
+event active while there is space to write more data. If you are
+no longer interested in a channel (e.g. the replay has finished) you
+must not include its event in the list of events you are waiting for
+(since it will not wait because the event is already active).
+<p>
+See also these documents:
+<ul>
+<li class="type-LINUX"><a href="events_LINUX.html">Prosody events on Linux</a>
+<li class="type-QNX"><a href="events_QNX.html">Prosody events on QNX</a>
+<li class="type-WINNT"><a href="events_WINNT.html">Prosody events on Windows</a>
+</ul>
+
+</body>
+</html>

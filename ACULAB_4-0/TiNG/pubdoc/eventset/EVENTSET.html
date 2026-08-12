@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<link rel=stylesheet type="text/css" href="evapi.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>EVENTSET structure</title>
+<body>
+<h1>EVENTSET structure</h1>
+
+<p>
+The EVENTSET structure provides the ability to manipulate
+multiple events as a single object.
+
+<h2>Functions provided</h2>
+
+<p>
+This EVENTSET mechanism defines two kinds of object, EVENTSET and
+<a href="ACTIVE_JOB.html">ACTIVE_JOB</a>. The internals of
+EVENTSET are private: EVENTSETs must be created, destroyed and
+manipulated entirely by the functions listed below, without any
+knowledge of its internal structure. On the other hand,
+<a href="ACTIVE_JOB.html">ACTIVE_JOB</a> is a structure whose
+fields you must fill in by hand.
+
+<h2>How to use</h2>
+
+<p>
+Each eventset must be initialised before use by calling
+<a href="eventset_ctor.html"><code>eventset()</code></a>.
+<p>
+For each eventset, you have to create one extra thread, which
+we will refer to as the <strong>worker thread</strong>.
+The <strong>worker thread</strong> doesn't have to do
+very much. In fact, it could do as little as call
+<a href="eventset_wait.html"><code>eventset_wait()</code></a>.
+But it does have to exist, and to do at least that. No other thread may
+can call <a href="eventset_wait.html"><code>eventset_wait()</code></a>
+on the same eventset object.
+<p>
+In principle, the <strong>worker thread</strong> could be the thread
+which calls <a href="eventset_ctor.html"><code>eventset()</code></a>
+but other threads must refer to the EVENTSET in a thread-safe
+manner and, since the EVENTSET itself provides thread-safety
+once constructed, it's much easier to create it before creating the
+<strong>worker thread</strong>.
+<p>
+Once the preparation has been done, you can call these functions:
+
+<ul>
+    <li><a href="eventset_insert.html"><code>eventset_insert()</code></a>
+    <li><a href="eventset_delete.html"><code>eventset_delete()</code></a>
+    <li><a href="eventset_stop.html"><code>eventset_stop()</code></a>
+</ul>
+
+<p>
+Call <a href="eventset_insert.html"><code>eventset_insert()</code></a>
+for each event you want to handle.
+<p>
+When an EVENTSET is to be destroyed,
+<a href="eventset_dtor.html"><code>eventset_dtor()</code></a> must be
+called. This function must not be called until the <strong>worker
+thread</strong> has returned from the call to
+<a href="eventset_wait.html"><code>eventset_wait()</code></a>. You tell the
+<strong>worker thread</strong> to do this by calling
+<a href="eventset_stop.html"><code>eventset_stop()</code></a>, but this
+function does not wait for the <strong>worker thread</strong> (this
+allows you to call it from the <strong>worker thread</strong> itself),
+so you need to guarantee that
+<a href="eventset_wait.html"><code>eventset_wait()</code></a>
+has returned (for example, by calling <code>pthread_join()</code>) before
+destroying the eventset.
+
+<p>
+The order in which functions must be called is illustrated in this
+diagram:
+<p>
+<img src="../gen/eventset.png" alt="eventset function call ordering">
+
+<h2>See also</h2>
+
+<p>
+<a href="ACTIVE_JOB.html">ACTIVE_JOB</a>
+<a href="index.html">EVENTSETs</a>

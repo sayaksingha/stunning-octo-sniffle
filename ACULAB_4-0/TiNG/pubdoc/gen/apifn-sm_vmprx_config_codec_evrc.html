@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_config_codec_evrc</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_config_codec_evrc</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_config_codec_evrc(struct sm_vmprx_codec_evrc_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_codec_evrc_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-post_filter">post_filter</a>;					/* in */
+	<a name="enum-kSMEVRCRTPMode">enum kSMEVRCRTPMode</a> {
+		<a href="#field-kSMEVRCRTPModeHeaderless">kSMEVRCRTPModeHeaderless</a>,
+		<a href="#field-kSMEVRCRTPModeRFC2658">kSMEVRCRTPModeRFC2658</a>,
+		<a href="#field-kSMEVRCRTPModeRFC3558">kSMEVRCRTPModeRFC3558</a>,
+	} <a href="#field-rtp_mode">rtp_mode</a>;						/* in */
+	<a href="apifn-sm_vmprx_config_codec_alaw.html#enum-kSMPLCMode">enum kSMPLCMode</a> <a href="#field-plc_mode">plc_mode</a>;				/* in */
+} SM_VMPRX_CODEC_EVRC_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures the VMP[rx] to use the Enhanced Variable Rate Codec
+(EVRC), setting the
+payload type mapping to
+<a class=pref href="#field-payload_type">payload_type</a>.
+This supersedes any previous mapping that was in effect
+for this codec.
+<p>
+If the call completes successfully, RTP packets arriving at the VMP[rx]
+with a payload type that matches the specified payload type will
+be decoded using this codec.
+<p>
+This requires the module
+<a href="softmodindex.html#evrc">evrc</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to which to add the codec
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type identifer to use with this codec (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13). Supplying a value of
+<code>-1</code> will remove any payload type configuration from the 
+codec preventing its use.
+
+<dt><a name="field-post_filter">post_filter</a><dd>Configures whether or not to use a post-filter. It is used if
+this value is non-zero.
+
+<dt><a name="field-rtp_mode">rtp_mode</a><dd>Selects the RTP format for this codec. There are two commonly-used
+specifications for how to pack the the encoded data into an RTP
+packet.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMEVRCRTPModeHeaderless">kSMEVRCRTPModeHeaderless</a>
+<dd>Encodes the bitstream as raw encoded bytes, with no headers. This
+requires that there is only one frame per packet.
+
+<dt><a name="field-kSMEVRCRTPModeRFC2658">kSMEVRCRTPModeRFC2658</a>
+<dd>Encodes the bitstream as specified in
+<a href="http://www.ietf.org/rfc/rfc2658.txt">IETF RFC 2658</a>. The
+header is one byte. This specification only allows for one frame per
+packet.
+
+<dt><a name="field-kSMEVRCRTPModeRFC3558">kSMEVRCRTPModeRFC3558</a>
+<dd>Encodes the bitstream as specified in
+<a href="http://www.ietf.org/rfc/rfc3558.txt">IETF RFC 3558</a>. The
+header is two bytes, plus one byte for every two frames in the packet.
+
+</dl>
+<dt><a name="field-plc_mode">plc_mode</a><dd>Configures packet loss concealment for this codec.
+Note the codec implementation may not allow PLC to be disabled.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMPLCModeDisabled">kSMPLCModeDisabled</a>
+<dd>PLC Disabled
+
+<dt><a name="field-kSMPLCModeEnabled">kSMPLCModeEnabled</a>
+<dd>PLC Enabled
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

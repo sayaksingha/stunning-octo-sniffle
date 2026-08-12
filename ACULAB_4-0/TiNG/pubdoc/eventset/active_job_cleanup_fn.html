@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<link rel=stylesheet type="text/css" href="evapi.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ACTIVE_JOB::cleanup_fn</title>
+<body>
+
+<h1>ACTIVE_JOB::cleanup_fn - callback for when an event is about
+to be removed</h1>
+
+<h2>Name</h2>
+
+<p>
+Since this is a callback function, you are free to name it whatever you
+want. A pointer to this callback function must be stored in the field
+<a href="ACTIVE_JOB.html"><code>ACTIVE_JOB</code></a><code>::cleanup_fn</code>.
+
+<p>
+For conveniece, we will refer to this function as <code><em>my_cleanup_fn</em>()</code>.
+
+<h2>Synopsis</h2>
+
+<pre>
+#include "eventset.h"
+
+void <em>my_cleanup_fn</em>(ACTIVE_JOB *acp)
+</pre>
+
+<h2>Description</h2>
+
+<p>
+The user-supplied callback function, here called
+<code><em>my_cleanup_fn</em>()</code>, will be called by the
+<a href="EVENTSET.html"><em>worker thread</em></a> whenever the
+corresponding <a href="ACTIVE_JOB.html"><code>ACTIVE_JOB</code></a>
+is about to be removed from its
+<a href="EVENTSET.html"><code>EVENTSET</code></a>.
+
+<h2>Return value</h2>
+
+<p>
+This function has no return value.
+
+<h2>See also</h2>

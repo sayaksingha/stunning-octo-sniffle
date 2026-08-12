@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody Audio Video Format (AVF): API: sm_avfrec_create</title>
+</head>
+<body class=version-deprecated>
+<h1>Prosody Audio Video Format (AVF): API: sm_avfrec_create</h1>
+	<p class="header-deprecated">This function is deprecated.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_avfrec_create(struct sm_avfrec_create_parms *<a href="#field-vcp">vcp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-vcp">*vcp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_avfrec_create_parms {
+	<a href="../apitype.html#type-tSMAVFrecId">tSMAVFrecId</a> <a href="#field-avfrec">avfrec</a>;					/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+} SM_AVFREC_CREATE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Creates a recorder which can record an AVF stream. An AVF recorder is
+a task which accepts as input one of a number of data formats -
+including a raw AVF stream and linear audio - and generates as output
+an AVF stream to the host.
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-deprecated><a name="field-avfrec">avfrec</a>	(Deprecated)
+<dd class=version-deprecated>The created AVF recorder.
+
+<dt class=version-deprecated><a name="field-module">module</a>	(Deprecated)
+<dd class=version-deprecated>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module on which the AVF recorder is to be created.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if no suitable output channel free<li>ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified</ul>
+<hr>
+<p>This function is part of the <a href="../prosvid.html">Prosody Audio Video Format (AVF) API</a>.
+</body>
+</html>

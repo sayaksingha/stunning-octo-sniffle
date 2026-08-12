@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody Guide - how to perform detections</title>
+</head>
+<body>
+<h1>Prosody Guide - how to perform detections</h1>
+<p>
+Prosody can perform several types of detection. The types available
+are:
+<ul>
+<li>tone detection
+<li>call-progress detection
+<li>grunt detection
+<li>detection of live speaker or answering machine
+<li>detection of spoken words
+</ul>
+<p>
+They all report their results through
+<a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a>.
+
+<h2>The basics</h2>
+<p>
+To perform detection you need a Prosody channel which can perform input. This
+means one of the following:
+<ul>
+<li>It is an input channel
+<li>It is a full-duplex channel
+<li>It is a half-duplex channel and not being used for output (but it
+can be performing recording)
+</ul>
+<p>
+The input from the channel must also have been connected
+appropriately. See
+<a href="howto_datafeed.html">Prosody Guide - how to use datafeeds</a> for
+how to do this.
+
+<h2>Starting the detection and getting results</h2>
+<p>
+Firstly, the overall view of detection in general: you need to use a
+Prosody event so that you can wait for results. In principle, you
+could associate this with the channel after starting a detector, or
+disassociate it from the channel while a detector is still running,
+but it is recommended that you associate the event with the channel
+before doing any detection and disassociate it from the channel only
+when all detections have been disabled.
+<p>
+<img src="gen/detflow.png" alt="diagram of functions called for detection">
+<p>
+It is possible to perform more than one kind of detection
+simultaneously on the same channel. The only combination not allowed
+is simultaneous tone and call-progress detection. The different types
+of detection are quite independent of one another. The first type is
+controlled by 
+<a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a>. It
+controls:
+<ul>
+	<li>detection of simple tones
+	<li>detection of call-progress tones
+	<li>detection of signal energy (grunt)
+</ul>
+<p>
+<img src="gen/detmainflow.png" alt="diagram of functions called for sm_listen_for()">
+<p>
+Detection of live speakers and answering machines is controlled with
+<a
+href="gen/apifn-sm_catsig_listen_for.html">sm_catsig_listen_for()</a>.
+See 
+<a href="an-lsd.html">Prosody application note: Live Speaker Detection</a>
+for a description of how it works.
+<p>
+<img src="gen/detcatflow.png" alt="diagram of functions called for sm_catsig_listen_for()">
+<p>
+Detection of spoken words is controlled with
+<a href="gen/apifn-sm_asr_listen_for.html">sm_asr_listen_for()</a>.
+<p>
+<img src="gen/detiwrflow.png" alt="diagram of functions called for sm_asr_listen_for()">
+<p>
+When no detection is in progress, the recognition event associated
+with the channel is permanently signalled, so any thread waiting on it
+will be woken up. This is convenient when the thread which disables a
+form of detection is not the thread which waits for detection results,
+because it provokes the waiting thread into action, when it can take
+into account the change.
+<p>
+If you want to detect a tone that is not in the pre-defined repertoire,
+you can configure your own repertoire of tones. See the documentation for
+<a href="gen/apifn-sm_listen_for.html">sm_listen_for()</a> for details
+of how to do this.

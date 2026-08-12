@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody DTLS processing: API: sm_dtlstx_create</title>
+</head>
+<body>
+<h1>Prosody DTLS processing: API: sm_dtlstx_create</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_dtlstx_create(struct sm_dtlstx_create_parms *<a href="#field-dtlstxp">dtlstxp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-dtlstxp">*dtlstxp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_create_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+} SM_DTLSTX_CREATE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Allocates, on a specific module, a new DTLS[tx] to transmit DTLS packets to a 
+remote device.
+<p>
+If the call completes successfully, the parameter
+<a class=pref href="#field-dtlstx">dtlstx</a>
+will be set to the identifier for that DTLS[tx].
+<p>
+Requires the module
+<a href="softmodindex.html#dtlstx">dtlstx</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>The newly created DTLS[tx].
+
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module where the DTLS[tx] is to be allocated.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources exist to create the DTLS[tx]</ul>
+<hr>
+<p>This function is part of the <a href="../prosdtls.html">Prosody DTLS processing API</a>.
+</body>
+</html>

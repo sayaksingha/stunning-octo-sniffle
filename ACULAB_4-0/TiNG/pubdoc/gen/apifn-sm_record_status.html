@@ -1,0 +1,301 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_record_status</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_record_status</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_record_status(struct sm_record_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_record_status_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* inout */
+	<a name="enum-kSMRecordStatus">enum kSMRecordStatus</a> {
+		<a href="#field-kSMRecordStatusComplete">kSMRecordStatusComplete</a>,
+		<a href="#field-kSMRecordStatusCompleteData">kSMRecordStatusCompleteData</a>,
+		<a href="#field-kSMRecordStatusOverrun">kSMRecordStatusOverrun</a>,
+		<a href="#field-kSMRecordStatusData">kSMRecordStatusData</a>,
+		<a href="#field-kSMRecordStatusNoData">kSMRecordStatusNoData</a>,
+		<a href="#field-kSMRecordStatusRecognition">kSMRecordStatusRecognition</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	<a href="apifn-sm_get_recognised.html#enum-kSMRecognition">enum kSMRecognition</a> <a href="#field-recog_type">recog_type</a>;				/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-param0">param0</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-param1">param1</a>;						/* out */
+	<a name="enum-kSMRecordHowTerminated">enum kSMRecordHowTerminated</a> {
+		<a href="#field-kSMRecordHowTerminatedNotYet">kSMRecordHowTerminatedNotYet</a>,
+		<a href="#field-kSMRecordHowTerminatedLength">kSMRecordHowTerminatedLength</a>,
+		<a href="#field-kSMRecordHowTerminatedMaxTime">kSMRecordHowTerminatedMaxTime</a>,
+		<a href="#field-kSMRecordHowTerminatedSilence">kSMRecordHowTerminatedSilence</a>,
+		<a href="#field-kSMRecordHowTerminatedAborted">kSMRecordHowTerminatedAborted</a>,
+		<a href="#field-kSMRecordHowTerminatedError">kSMRecordHowTerminatedError</a>,
+	} <a href="#field-termination_reason">termination_reason</a>;					/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-termination_octets">termination_octets</a>;				/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-sample_rate">sample_rate</a>;					/* out */
+} SM_RECORD_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This call, typically invoked in response to a read event
+being signalled, allows an application to determine the status of a
+specific on-going record job.
+<p>
+In order to determine the status of a specific record job, the
+application should set
+<a class=pref href="#field-channel">channel</a>
+to specify the job concerned.
+<p>
+This function can also be used for 'any channel' operation. This 
+mode of operation is a legacy feature and is not recommended for 
+new applications. See 
+<a href="../anychan.html">Prosody TiNG: any channel operation</a>
+for more details.
+<p>
+A channel ceases to be recording when this function returns a
+status of
+<a class=pref href="#field-kSMRecordStatusComplete">kSMRecordStatusComplete</a>.
+Until this happens, the channel input is reserved for the
+record and no other recording activity can
+take place on the channel during this time. After this
+happens, the channel input returns to being idle and
+consequently if this function is used again it will return
+the error <code>ERR_SM_NO_RECORD_IN_PROGRESS</code>.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel which is recording.
+
+<dt><a name="field-status">status</a><dd>The channel's status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMRecordStatusComplete">kSMRecordStatusComplete</a>
+<dd>The recording job has completed and all the recorded data has
+been passed to the application.
+
+<dt><a name="field-kSMRecordStatusCompleteData">kSMRecordStatusCompleteData</a>
+<dd>The recording job has completed but there still remains recorded
+data for the application to collect.
+
+<dt><a name="field-kSMRecordStatusOverrun">kSMRecordStatusOverrun</a>
+<dd>Data has not been retrieved sufficiently frequently by the
+application and now some has been lost due to module buffer
+overrun.
+
+<dt><a name="field-kSMRecordStatusData">kSMRecordStatusData</a>
+<dd>The record job is still ongoing and data is available for
+collection by the application.
+
+<dt><a name="field-kSMRecordStatusNoData">kSMRecordStatusNoData</a>
+<dd>The record job is still ongoing however not enough data is
+buffered in the module to justify collection by the application.
+
+<dt><a name="field-kSMRecordStatusRecognition">kSMRecordStatusRecognition</a>
+<dd>A recognition event has occurred in the recording. The
+<a class=pref href="#field-recog_type">recog_type</a>,
+<a class=pref href="#field-param0">param0</a>
+and
+<a class=pref href="#field-param1">param1</a>
+fields contain a report of what was detected. This status
+can occur when
+<a href="apifn-sm_record_start.html">sm_record_start()</a>
+specified an option such as tone elimination.
+
+</dl>
+<dt><a name="field-recog_type">recog_type</a><dd>The recognition event which has occurred.
+This field, with the
+<a class=pref href="#field-param0">param0</a>
+and
+<a class=pref href="#field-param1">param1</a>
+fields, has the same meaning as the <code>type</code> field
+returned by
+<a href="apifn-sm_get_recognised.html">sm_get_recognised()</a>
+with its corresponding <code>param0</code> and
+<code>param1</code> fields. This field is only valid when the
+<a class=pref href="#field-status">status</a>
+field is
+<a class=pref href="#field-kSMRecordStatusRecognition">kSMRecordStatusRecognition</a>.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMRecognisedNothing">kSMRecognisedNothing</a>
+<dd>No digit, simple or call-progress tone has been
+recognised
+
+<dt><a name="field-kSMRecognisedTrainingDigit">kSMRecognisedTrainingDigit</a>
+<dd>
+<dt><a name="field-kSMRecognisedDigit">kSMRecognisedDigit</a>
+<dd>A pulse dialled or DTMF dialled digit has been
+recognised and a character representation for it has
+been stored in
+<a class=pref href="#field-param0">param0</a>.
+In
+<a class=pref href="#field-param1">param1</a>
+will be an indication of the digit type
+(<code>kSMPulseDigits</code> or
+<code>kSMDTMFDigits</code>) unless a tone detection mode
+of type <code>kSMToneLen...</code> was specified in
+which case it will contain the duration in milliseconds
+of the detected DTMF digit.
+
+<dt><a name="field-kSMRecognisedTone">kSMRecognisedTone</a>
+<dd>A simple tone has been recognised from the active
+set of input tones for the channel. The parameter
+<a class=pref href="#field-param0">param0</a>
+and
+<a class=pref href="#field-param1">param1</a>
+are assigned values as described above.
+
+<dt><a name="field-kSMRecognisedCPTone">kSMRecognisedCPTone</a>
+<dd>A call-progress tone has been recognised and the
+corresponding identifier has been stored in
+<a class=pref href="#field-param0">param0</a>.
+
+<dt><a name="field-kSMRecognisedGruntStart">kSMRecognisedGruntStart</a>
+<dd>The beginning of a grunt has been detected.
+<a class=pref href="#field-param0">param0</a>
+is set to the duration of the preceding silence in milliseconds.
+
+<dt><a name="field-kSMRecognisedGruntEnd">kSMRecognisedGruntEnd</a>
+<dd>The end of a grunt has been detected,
+<a class=pref href="#field-param0">param0</a>
+is set to grunt duration in milliseconds, and
+<a class=pref href="#field-param1">param1</a>
+to grunt average energy in negative dBm0 (average is
+calculated only over periods during which signal is present).
+
+<dt><a name="field-kSMRecognisedASRResult">kSMRecognisedASRResult</a>
+<dd>Obsolete
+
+<dt><a name="field-kSMRecognisedASRUncertain">kSMRecognisedASRUncertain</a>
+<dd>Obsolete
+
+<dt><a name="field-kSMRecognisedASRRejected">kSMRecognisedASRRejected</a>
+<dd>Obsolete
+
+<dt><a name="field-kSMRecognisedASRTimeout">kSMRecognisedASRTimeout</a>
+<dd>Obsolete
+
+<dt><a name="field-kSMRecognisedCatSig">kSMRecognisedCatSig</a>
+<dd>A signal has been categorised, the parameter
+<a class=pref href="#field-param0">param0</a>
+indicates the algorithm id (see
+<a href="apifn-sm_catsig_listen_for.html">sm_catsig_listen_for()</a>)
+and
+<a class=pref href="#field-param1">param1</a>
+is a value indicating the signal category with respect
+to this algorithm (eg. live speaker or answer
+machine).
+
+<dt><a name="field-kSMRecognisedOverrun">kSMRecognisedOverrun</a>
+<dd>The recognition FIFO has been overrun because it has
+not been polled frequently enough through calls to
+<a href="apifn-sm_get_recognised.html">sm_get_recognised()</a>.
+
+<dt><a name="field-kSMRecognisedANS">kSMRecognisedANS</a>
+<dd>An ANS or ANSam tone has been detected (see
+<a href="apifn-sm_ans_listen_for.html">sm_ans_listen_for()</a>).
+The parameter
+<a class=pref href="#field-param0">param0</a>
+will describe the tone detected: 0 for end of tone, 1 for an ordinary
+ANS tone, or 2 for the modulated ANSam tone. The parameter
+<a class=pref href="#field-param1">param1</a>
+will be non zero if the ANS or ANSam tone has phase reversals
+
+<dt><a name="field-kSMRecognisedBeep">kSMRecognisedBeep</a>
+<dd>A beep has been recognised
+The parameter
+<a class=pref href="#field-param0">param0</a>
+will be the beep frequency and
+<a class=pref href="#field-param1">param1</a>
+will be zero at the start of the beep and non-zero when the beep ends.
+
+<dt><a name="field-kSMRecognisedOnHook">kSMRecognisedOnHook</a>
+<dd>An 'on-hook' state has been recognised
+
+</dl>
+<dt><a name="field-param0">param0</a><dd>A parameter giving details of what was detected. The
+interpretation of this depends on the
+<a class=pref href="#field-recog_type">recog_type</a>
+field.
+This field is only valid when the
+<a class=pref href="#field-status">status</a>
+field is
+<a class=pref href="#field-kSMRecordStatusRecognition">kSMRecordStatusRecognition</a>.
+
+<dt><a name="field-param1">param1</a><dd>Another parameter giving details of what was detected. The
+interpretation of this also depends on the
+<a class=pref href="#field-recog_type">recog_type</a>
+field.
+This field is only valid when the
+<a class=pref href="#field-status">status</a>
+field is
+<a class=pref href="#field-kSMRecordStatusRecognition">kSMRecordStatusRecognition</a>.
+
+<dt><a name="field-termination_reason">termination_reason</a><dd>The reason why a recording has terminated.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMRecordHowTerminatedNotYet">kSMRecordHowTerminatedNotYet</a>
+<dd>Recording not yet completed.
+
+<dt><a name="field-kSMRecordHowTerminatedLength">kSMRecordHowTerminatedLength</a>
+<dd>The <a href="apifn-sm_record_start.html#field-max_octets">
+max_octets</a> criterion specified to
+<a href="apifn-sm_record_start.html">sm_record_start()</a>
+was satisfied.
+
+<dt><a name="field-kSMRecordHowTerminatedMaxTime">kSMRecordHowTerminatedMaxTime</a>
+<dd>The <a href="apifn-sm_record_start.html#field-max_elapsed_time">
+max_elapsed_time</a> criterion specified to
+<a href="apifn-sm_record_start.html">sm_record_start()</a>
+was satisfied.
+
+<dt><a name="field-kSMRecordHowTerminatedSilence">kSMRecordHowTerminatedSilence</a>
+<dd>The <a href="apifn-sm_record_start.html#field-max_silence">
+max_silence</a> criterion specified to
+<a href="apifn-sm_record_start.html">sm_record_start()</a>
+was satisfied.
+The
+<a class=pref href="#field-termination_octets">termination_octets</a>
+field will indicate approximately how many octets of recorded
+silence were present at the end of the recording.
+
+<dt><a name="field-kSMRecordHowTerminatedAborted">kSMRecordHowTerminatedAborted</a>
+<dd><a href="apifn-sm_record_abort.html">sm_record_abort()</a>
+was invoked.
+
+<dt><a name="field-kSMRecordHowTerminatedError">kSMRecordHowTerminatedError</a>
+<dd>An error occurred.
+
+</dl>
+<dt><a name="field-termination_octets">termination_octets</a><dd>The amount of data representing silence at the end of the
+recording (only valid if the recording has completed and
+<a class=pref href="#field-termination_reason">termination_reason</a>
+was
+<a class=pref href="#field-kSMRecordHowTerminatedSilence">kSMRecordHowTerminatedSilence</a>).
+
+<dt><a name="field-sample_rate">sample_rate</a><dd>The sample rate of data. This is the rate for data not yet
+collected.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RECORD_IN_PROGRESS - no recording in progress (perhaps following abort with discard specified)</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

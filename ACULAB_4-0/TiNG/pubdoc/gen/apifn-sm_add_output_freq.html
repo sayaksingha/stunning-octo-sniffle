@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_add_output_freq</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_add_output_freq</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_add_output_freq(struct sm_output_freq_parms *<a href="#field-freqp">freqp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-freqp">*freqp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_output_freq_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	double <a href="#field-freq">freq</a>;						/* in */
+	double <a href="#field-amplitude">amplitude</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-id">id</a>;						/* out */
+} SM_OUTPUT_FREQ_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This call may be used to add a component frequency to the
+repertoire of those supported by the given module. On return
+<a class=pref href="#field-id">id</a>
+will be set to an identifier for the new component frequency.
+This id may be used as a parameter to
+<a href="apifn-sm_add_output_tone.html">sm_add_output_tone()</a>
+when defining new output tones supported by the module.
+<p>
+The frequency
+<a class=pref href="#field-freq">freq</a>
+must be specified in Hz and be in the range from 150 Hz to 3600
+Hz. The amplitude
+<a class=pref href="#field-amplitude">amplitude</a>
+must be specified in dBm0 (according to CCITT G.711) and be in
+the range from -35 dBm0 to +3 dBm0.
+<p>
+See
+<a href="../prospapi_outtones.html">
+Prosody speech processing: pre-loaded output tones</a>,
+for list of predefined component frequencies.
+<p>
+The database of tones is in the API library which is part of
+the application. Consequently, a very large number of tones
+can usually be added before running out of resources.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-module">module</a><dd>The module whose repertoire is to be modified.
+
+<dt><a name="field-freq">freq</a><dd>The frequency of the frequency component to be added (Hz).
+
+<dt><a name="field-amplitude">amplitude</a><dd>The amplitude of the frequency component to be added (dBm0).
+
+<dt><a name="field-id">id</a><dd>The identifier returned if the frequency component is added.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists<li>ERR_SM_NO_RESOURCES - if no resources to store new frequency component<li>ERR_SM_BAD_PARAMETER - if frequency or amplitude parameter out of range<li>ERR_SM_CHANNEL_ALLOCATED - channel still allocated</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

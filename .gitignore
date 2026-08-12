@@ -1,0 +1,10 @@
+.claude/
+.vscode/
+
+# Logs
+*.log
+log/
+logs/
+
+# Build output
+target/

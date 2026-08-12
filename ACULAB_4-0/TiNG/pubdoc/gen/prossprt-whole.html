@@ -1,0 +1,649 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody SPRT end point: API</title>
+</head>
+<body>
+<h1>Prosody SPRT end point: API</h1>
+<p>
+The following functions are provided by the
+<a href="../prossprt.html">Prosody SPRT end point API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr>
+	<td><a href="#sm_sprt_config">sm_sprt_config()</a>
+	<td>&nbsp;
+	<td>Configure the SPRT end point using IPv4
+
+	<tr>
+	<td><a href="#sm_sprt_config_data_channel">sm_sprt_config_data_channel()</a>
+	<td>&nbsp;
+	<td>Configure which SPRT channel is used for data
+
+	<tr>
+	<td><a href="#sm_sprt_config_data_format">sm_sprt_config_data_format()</a>
+	<td>&nbsp;
+	<td>Configure the SPRT end point data format
+
+	<tr>
+	<td><a href="#sm_sprt_config_ipv6">sm_sprt_config_ipv6()</a>
+	<td>&nbsp;
+	<td>Configure the SPRT end point using IPv6
+
+	<tr>
+	<td><a href="#sm_sprt_config_reliable_channel">sm_sprt_config_reliable_channel()</a>
+	<td>&nbsp;
+	<td>Configure the reliable channels of the SPRT end point
+
+	<tr>
+	<td><a href="#sm_sprt_create">sm_sprt_create()</a>
+	<td>&nbsp;
+	<td>Create an SPRT end point
+
+	<tr>
+	<td><a href="#sm_sprt_datafeed_connect">sm_sprt_datafeed_connect()</a>
+	<td>&nbsp;
+	<td>Connect a datafeed to an SPRT end point
+
+	<tr>
+	<td><a href="#sm_sprt_destroy">sm_sprt_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy an SPRT end point
+
+	<tr>
+	<td><a href="#sm_sprt_get_datafeed">sm_sprt_get_datafeed()</a>
+	<td>&nbsp;
+	<td>Obtain a datafeed from a SPRT end point
+
+	<tr>
+	<td><a href="#sm_sprt_get_event">sm_sprt_get_event()</a>
+	<td>&nbsp;
+	<td>Get an event for the SPRT end point
+
+	<tr>
+	<td><a href="#sm_sprt_read_message">sm_sprt_read_message()</a>
+	<td>&nbsp;
+	<td>Read a message from a SPRT end point
+
+	<tr>
+	<td><a href="#sm_sprt_send_message">sm_sprt_send_message()</a>
+	<td>&nbsp;
+	<td>Send a message via a SPRT end point
+
+	<tr>
+	<td><a href="#sm_sprt_status">sm_sprt_status()</a>
+	<td>&nbsp;
+	<td>Fetch status info on a SPRT end point
+
+</table>
+<p>
+This document is also available as
+<a href="prossprt-index.html">separate pages for each function</a>.
+<hr>
+<h2><a name="sm_sprt_config">Prosody SPRT end point: API: sm_sprt_config</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_config(struct sm_sprt_config_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_config_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN">SOCKADDR_IN</a> <a href="#field-dest">dest</a>;					/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN">SOCKADDR_IN</a> <a href="#field-src">src</a>;					/* in */
+	int <a href="#field-payload_type">payload_type</a>;					/* in */
+} SM_SPRT_CONFIG_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures the destination of the transmitted SPRT packets and the
+payload type identifier to use in those packets.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point to configure.
+
+<dt><a name="field-dest">dest</a><dd>The SOCKADDR_IN structure specifying the destination IP address and port 
+of the remote SPRT end point. A struct SOCKADDR_IN must be configured with 
+an address family, an IP address and a port. Note that most operating 
+systems define this structure such that fields are in network byte order. 
+The structure must be correctly cast such that an IP V4 address is 
+specified. 
+
+<dt><a name="field-src">src</a><dd>The SOCKADDR_IN structure specifying the source IP address and port 
+of the local SPRT end point. A struct SOCKADDR_IN must be configured with 
+an address family, an IP address and a port. Note that most operating 
+systems define this structure such that fields are in network byte order. 
+The structure must be correctly cast such that an IP V4 address is 
+specified. This should match the values returned by the VMP[rx] receiving
+the SPRT packets.
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type of the SPRT packets.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sprt_config_data_channel">Prosody SPRT end point: API: sm_sprt_config_data_channel</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_config_data_channel(struct sm_sprt_config_data_channel_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_config_data_channel_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	int <a href="#field-data_channel">data_channel</a>;					/* in */
+	int <a href="#field-max_payload_length">max_payload_length</a>;					/* in */
+	int <a href="#field-max_latency">max_latency</a>;					/* in */
+} SM_SPRT_CONFIG_DATA_CHANNEL_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures the channel used for data by the SPRT end point. The default
+is channel 3, but can be either 1 or 3.
+<p>
+A packet is filled with the data passed in via the datafeed and is sent 
+when it has reached the
+<a class=pref href="#field-max_payload_length">max_payload_length</a>
+or it has had data for
+<a class=pref href="#field-max_latency">max_latency</a>
+milliseconds.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point to configure.
+
+<dt><a name="field-data_channel">data_channel</a><dd>The channel to use for data
+
+<dt><a name="field-max_payload_length">max_payload_length</a><dd>The maximum length of the payload on the data channel
+
+<dt><a name="field-max_latency">max_latency</a><dd>The data maximum latency
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sprt_config_data_format">Prosody SPRT end point: API: sm_sprt_config_data_format</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_config_data_format(struct sm_sprt_config_data_format_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_config_data_format_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	<a name="enum-kSMSPRTDataDirection">enum kSMSPRTDataDirection</a> {
+		<a href="#field-kSMSPRTDataDirectionTx">kSMSPRTDataDirectionTx</a>,
+		<a href="#field-kSMSPRTDataDirectionRx">kSMSPRTDataDirectionRx</a>,
+	} <a href="#field-direction">direction</a>;						/* in */
+	<a name="enum-kSMSPRTDataFormat">enum kSMSPRTDataFormat</a> {
+		<a href="#field-kSMSPRTDataFormatNone">kSMSPRTDataFormatNone</a>,
+		<a href="#field-kSMSPRTDataFormatIOctet">kSMSPRTDataFormatIOctet</a>,
+		<a href="#field-kSMSPRTDataFormatIOctetCS">kSMSPRTDataFormatIOctetCS</a>,
+		<a href="#field-kSMSPRTDataFormatIRawOctet">kSMSPRTDataFormatIRawOctet</a>,
+	} <a href="#field-format">format</a>;						/* in */
+} SM_SPRT_CONFIG_DATA_FORMAT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures the data formats used.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point to configure.
+
+<dt><a name="field-direction">direction</a><dd>The data direction to configure
+
+One of these values:
+<dl>
+<dt><a name="field-kSMSPRTDataDirectionTx">kSMSPRTDataDirectionTx</a>
+<dd>
+<dt><a name="field-kSMSPRTDataDirectionRx">kSMSPRTDataDirectionRx</a>
+<dd>
+</dl>
+<dt><a name="field-format">format</a><dd>The data format to be used
+
+One of these values:
+<dl>
+<dt><a name="field-kSMSPRTDataFormatNone">kSMSPRTDataFormatNone</a>
+<dd>
+<dt><a name="field-kSMSPRTDataFormatIOctet">kSMSPRTDataFormatIOctet</a>
+<dd>
+<dt><a name="field-kSMSPRTDataFormatIOctetCS">kSMSPRTDataFormatIOctetCS</a>
+<dd>
+<dt><a name="field-kSMSPRTDataFormatIRawOctet">kSMSPRTDataFormatIRawOctet</a>
+<dd>
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sprt_config_ipv6">Prosody SPRT end point: API: sm_sprt_config_ipv6</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_config_ipv6(struct sm_sprt_config_ipv6_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_config_ipv6_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN6">SOCKADDR_IN6</a> <a href="#field-dest">dest</a>;					/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN6">SOCKADDR_IN6</a> <a href="#field-src">src</a>;					/* in */
+	int <a href="#field-payload_type">payload_type</a>;					/* in */
+} SM_SPRT_CONFIG_IPV6_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures the destination of the transmitted SPRT packets and the
+payload type identifier to use in those packets.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point to configure.
+
+<dt><a name="field-dest">dest</a><dd>The SOCKADDR_IN6 structure specifying the destination IPv6 address and port 
+of the remote SPRT end point. A struct SOCKADDR_IN6 must be configured with 
+an address family, an IP address and a port. Note that most operating 
+systems define this structure such that fields are in network byte order. 
+
+<dt><a name="field-src">src</a><dd>The SOCKADDR_IN6 structure specifying the source IPv6 address and port 
+of the local SPRT end point. A struct SOCKADDR_IN6 must be configured with 
+an address family, an IP address and a port. Note that most operating 
+systems define this structure such that fields are in network byte order. 
+This should match the values returned by the VMP[rx] receiving
+the SPRT packets.
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type of the SPRT packets.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sprt_config_reliable_channel">Prosody SPRT end point: API: sm_sprt_config_reliable_channel</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_config_reliable_channel(struct sm_sprt_config_reliable_channel_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_config_reliable_channel_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	int <a href="#field-channel">channel</a>;						/* in */
+	int <a href="#field-window_size">window_size</a>;					/* in */
+	int <a href="#field-timer_TA01">timer_TA01</a>;						/* in */
+	int <a href="#field-timer_TA02">timer_TA02</a>;						/* in */
+	int <a href="#field-timer_TR03">timer_TR03</a>;						/* in */
+} SM_SPRT_CONFIG_RELIABLE_CHANNEL_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures the settings for one of the reliable SPRT channels. Hence
+<a class=pref href="#field-channel">channel</a>
+must be either 1 or 2.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point to configure.
+
+<dt><a name="field-channel">channel</a><dd>The channel to be configured
+
+<dt><a name="field-window_size">window_size</a><dd>The window size for the channel
+
+<dt><a name="field-timer_TA01">timer_TA01</a><dd>The value for timer TA01 in milliseconds
+
+<dt><a name="field-timer_TA02">timer_TA02</a><dd>The value for timer TA02 in milliseconds
+
+<dt><a name="field-timer_TR03">timer_TR03</a><dd>The value for timer TR03 in milliseconds
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sprt_create">Prosody SPRT end point: API: sm_sprt_create</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_create(struct sm_sprt_create_parms *<a href="#field-createp">createp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-createp">*createp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_create_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+} SM_SPRT_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Creates an SPRT end point.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The created SPRT end point.
+
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+Indicates the module on which the SPRT end point is to be created.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if no suitable output channel free<li>ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified</ul>
+<hr>
+<h2><a name="sm_sprt_datafeed_connect">Prosody SPRT end point: API: sm_sprt_datafeed_connect</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_datafeed_connect(struct sm_sprt_datafeed_connect_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_datafeed_connect_parms {
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-data_source">data_source</a>;				/* in */
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+} SM_SPRT_DATAFEED_CONNECT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Connects a datafeed to a SPRT end point.
+<p>
+Requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-data_source">data_source</a><dd>The datafeed acting as a source of data
+
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point that will receive the data
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_sprt_destroy">Prosody SPRT end point: API: sm_sprt_destroy</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_destroy(<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-sprt">sprt</a>
+<dd>
+The SPRT end point to destroy. Must have been previously created by a call to
+<a href="#sm_sprt_create">sm_sprt_create()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys an SPRT end point.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sprt_get_datafeed">Prosody SPRT end point: API: sm_sprt_get_datafeed</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_get_datafeed(struct sm_sprt_get_datafeed_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_get_datafeed_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* out */
+} SM_SPRT_GET_DATAFEED_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Request a datafeed identifier from a SPRT end point.
+It is valid until the SPRT end point is destroyed.
+Datafeed connections can only be made between objects allocated
+on the same <code>tSMModuleId</code>.
+<p>
+Requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point from which to obtain a datafeed
+
+<dt><a name="field-datafeed">datafeed</a><dd>The datafeed object associated with the output channel
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sprt_get_event">Prosody SPRT end point: API: sm_sprt_get_event</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_get_event(struct sm_sprt_get_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_get_event_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_SPRT_GET_EVENT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+the event will be signalled when a status change occurs on the SPRT end point.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point.
+
+<dt><a name="field-event">event</a><dd>The event identifier
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sprt_read_message">Prosody SPRT end point: API: sm_sprt_read_message</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_read_message(struct sm_sprt_read_message_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_read_message_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	char *<a href="#field-message">message</a>;						/* inout */
+	int <a href="#field-max_length">max_length</a>;						/* in */
+	int <a href="#field-length">length</a>;						/* out */
+} SM_SPRT_READ_MESSAGE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Reads a message from a SPRT end point
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point from which to read the message
+
+<dt><a name="field-message">message</a><dd>A pointer to the buffer to store the read message
+
+<dt><a name="field-max_length">max_length</a><dd>The maximum length of the message data
+
+<dt><a name="field-length">length</a><dd>The length of the message data
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sprt_send_message">Prosody SPRT end point: API: sm_sprt_send_message</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_send_message(struct sm_sprt_send_message_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_send_message_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	char *<a href="#field-message">message</a>;						/* in */
+	int <a href="#field-length">length</a>;						/* in */
+} SM_SPRT_SEND_MESSAGE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Send a SPRT packet with the message data as the payload
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point from which to send the message
+
+<dt><a name="field-message">message</a><dd>A pointer to the message to be sent
+
+<dt><a name="field-length">length</a><dd>The length of the message data
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_sprt_status">Prosody SPRT end point: API: sm_sprt_status</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_sprt_status(struct sm_sprt_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_status_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* in */
+	<a name="enum-kSMSPRTStatus">enum kSMSPRTStatus</a> {
+		<a href="#field-kSMSPRTStatusRunning">kSMSPRTStatusRunning</a>,
+		<a href="#field-kSMSPRTStatusStopped">kSMSPRTStatusStopped</a>,
+		<a href="#field-kSMSPRTStatusMessage">kSMSPRTStatusMessage</a>,
+	} <a href="#field-status">status</a>;						/* out */
+} SM_SPRT_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+returns the status of the SPRT end point.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The SPRT end point.
+
+<dt><a name="field-status">status</a><dd>The status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMSPRTStatusRunning">kSMSPRTStatusRunning</a>
+<dd>The SPRT end point is running
+
+<dt><a name="field-kSMSPRTStatusStopped">kSMSPRTStatusStopped</a>
+<dd>The SPRT end point is not running
+
+<dt><a name="field-kSMSPRTStatusMessage">kSMSPRTStatusMessage</a>
+<dd>The SPRT end point has a message to be read
+
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>These functions constitute the
+<a href="../prossprt.html">Prosody SPRT end point API</a>.
+</body>
+</html>

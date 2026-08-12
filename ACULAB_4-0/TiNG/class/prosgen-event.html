@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody with classes - methods provided for a channel</title>
+</head>
+<body>
+<h1>Prosody with classes - methods provided for an event</h1>
+<p>
+<table border>
+<tr><th>method<th>Prosody C API function
+	<tr><td>create<td><a href="../pubdoc/gen/apifn-smd_ev_create.html">smd_ev_create</a> (but see below)
+	<tr><td>wait<td><a href="../pubdoc/gen/apifn-smd_ev_wait.html">smd_ev_wait</a>
+	<tr><td>free<td><a href="../pubdoc/gen/apifn-smd_ev_free.html">smd_ev_free</a>
+</table>
+<p>
+In addition to these methods, a constructor is defined:
+<pre>
+	Prosody::Event(tSMEventId ev);
+</pre>
+<p>
+which uses an existing <code>tSMEventId</code>.
+
+<h2>Event creation</h2>
+<p>
+The C API function
+<a href="../pubdoc/gen/apifn-smd_ev_create.html"><code>smd_ev_create()</code></a>
+does not follow the usual convention of taking a parameter structure.
+Consequently, the C++ version also does not follow the same
+convention as the other C++ functions. Instead, the
+<code>create()</code> method is overloaded as follows:
+<dl>
+<dt><code>Error create(int type, tSMChannelId chan)</code>
+<dd>
+Create a standard channel-specific event. Equivalent to calling
+<a href="../pubdoc/gen/apifn-smd_ev_create.html"><code>smd_ev_create()</code></a>
+with <code>kSMChannelSpecificEvent</code> for the
+<code>eventChannelBinding</code> parameter.
+<dt><code>Error createnonidle(int type, tSMChannelId chan)</code>
+<dd>
+Create a non-idle channel-specific event. Equivalent to calling
+<a href="../pubdoc/gen/apifn-smd_ev_create.html"><code>smd_ev_create()</code></a>
+with <code>kSMChannelSpecificEventNonIdle</code> for the
+<code>eventChannelBinding</code> parameter.
+<dt><code>Error create(int type)</code>
+<dd>
+Create an any-channel event. Equivalent to calling
+<a href="../pubdoc/gen/apifn-smd_ev_create.html"><code>smd_ev_create()</code></a>
+with <code>kSMAnyChannelEvent</code> for the
+<code>eventChannelBinding</code> parameter.
+</dl>
+<p>
+These methods are part of <a href="pwc.html">Prosody with classes</a>.

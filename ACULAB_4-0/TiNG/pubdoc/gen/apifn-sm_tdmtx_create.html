@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_tdmtx_create</title>
+</head>
+<body>
+<h1>Prosody generic: API: sm_tdmtx_create</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_tdmtx_create(struct sm_tdmtx_create_parms *<a href="#field-tdmtxp">tdmtxp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-tdmtxp">*tdmtxp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_tdmtx_create_parms {
+	<a href="../apitype.html#type-tSMTDMtxId">tSMTDMtxId</a> <a href="#field-tdmtx">tdmtx</a>;					/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-stream">stream</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-timeslot">timeslot</a>;					/* in */
+	<a href="apifn-sm_config_module_switching.html#enum-kSMTimeslotType">enum kSMTimeslotType</a> <a href="#field-type">type</a>;				/* in */
+} SM_TDMTX_CREATE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Allocates, on a specific module, a new TDM[tx] to send TDM data. The TDM[tx] will send it's data
+to the specified 
+<a class=pref href="#field-stream">stream</a>
+and
+<a class=pref href="#field-timeslot">timeslot</a>.
+The streams which can be used with this call depend on the type
+of Prosody carrier card being used. They are special internal
+streams which are only accessible to Prosody and the switch
+driver.
+The
+<a class=pref href="#field-tdmtx">tdmtx</a>
+will begin sending data when it has been succesfully connected to a 
+valid datafeed using
+<a href="apifn-sm_tdmtx_datafeed_connect.html">sm_tdmtx_datafeed_connect()</a>.
+<p>
+If the call completes successfully, the parameter
+<a class=pref href="#field-tdmtx">tdmtx</a>
+will be set to the identifier for that tdmtx.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-tdmtx">tdmtx</a><dd>The newly created TDM[tx].
+
+<dt><a name="field-module">module</a><dd>A value obtained from 
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module where the TDM[tx] is to be allocated.
+
+<dt><a name="field-stream">stream</a><dd>The TDM stream to which the TDM[tx] will be attached
+
+<dt><a name="field-timeslot">timeslot</a><dd>The TDM timeslot to which the TDM[tx] will be attached
+
+<dt><a name="field-type">type</a><dd>The data encoding used on this timeslot.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMTimeslotTypeALaw">kSMTimeslotTypeALaw</a>
+<dd>Signals encoded with A-law companding.
+
+<dt><a name="field-kSMTimeslotTypeMuLaw">kSMTimeslotTypeMuLaw</a>
+<dd>Signals encoded with mu-law companding.
+
+<dt><a name="field-kSMTimeslotTypeData">kSMTimeslotTypeData</a>
+<dd>Digital data - no companding used.
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources exist to create the TDM[tx]</ul>
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

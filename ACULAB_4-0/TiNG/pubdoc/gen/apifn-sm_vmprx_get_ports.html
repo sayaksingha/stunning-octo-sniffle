@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_get_ports</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_get_ports</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_get_ports(struct sm_vmprx_port_parms *<a href="#field-portp">portp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-portp">*portp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_port_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	int <a href="#field-RTP_port">RTP_port</a>;						/* out */
+	int <a href="#field-RTCP_port">RTCP_port</a>;						/* out */
+	<a href="../apitype.html#type-in_addr">struct in_addr</a> <a href="#field-address">address</a>;					/* out */
+	<a href="../apitype.html#type-in6_addr">struct in6_addr</a> <a href="#field-ipv6_address">ipv6_address</a>;				/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-nowait">nowait</a>;					/* in */
+} SM_VMPRX_PORT_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Retrieves the RTP and RTCP port numbers which have been allocated by
+this VMP[rx] and on which it is listening.
+<p>
+If the call completes successfully,
+<a class=pref href="#field-RTP_port">RTP_port</a>
+will contain the port number where RTP packets should be directed for 
+this VMP[rx]. Similarly, 
+<a class=pref href="#field-RTCP_port">RTCP_port</a>
+will contain the port number where RTCP packets should be directed.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to be interrogated
+
+<dt><a name="field-RTP_port">RTP_port</a><dd>The UDP port number on which this VMP[rx] is listening for RTP
+
+<dt><a name="field-RTCP_port">RTCP_port</a><dd>The UDP port number on which this VMP[rx] is listening for RTCP
+
+<dt><a name="field-address">address</a><dd>The address on which this VMP[rx] is listening if this is a IPv4 VMP[rx].
+
+<dt><a name="field-ipv6_address">ipv6_address</a><dd>The address on which this VMP[rx] is listening if this is a IPv6 VMP[rx].
+
+<dt><a name="field-nowait">nowait</a><dd>Selects blocking or non-blocking mode for this API call. In non-blocking
+mode the API call may return without the requested information. It is 
+recommended that users wait for
+<a href="apifn-sm_vmprx_status.html">sm_vmprx_status()</a>
+to inform the application that the port and address information
+is available,
+rather than using this API call.
+If the
+<a class=pref href="#field-nowait">nowait</a>
+flag is clear, the API call will block until the desired information is 
+available, otherwise the API call will return immediately.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

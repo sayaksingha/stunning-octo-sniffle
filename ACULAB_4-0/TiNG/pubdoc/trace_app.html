@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="trace.css">
+<title>Prosody guide: application tracing</title>
+</head>
+<body>
+<h1>Prosody guide: application tracing</h1>
+<h2>Summary</h2>
+<ul>
+<li><a href="#levels">Trace levels</a>
+<li><a href="#redir">Redirecting trace output</a>
+<li><a href="#perthread">Separate trace output for each thread</a>
+<li><a href="#remote">Remote tracing</a>
+<li><a href="#tod">Trace on demand</a>
+</ul>
+
+<h2><a name="levels">Trace levels</a></h2>
+<p>
+The <a href="index.html">Prosody</a> API library implements tracing so
+that you can see what an application is doing. Tracing is controlled by
+the global variable <code>TiNGtrace</code> in the application. There are
+at least five possible levels of trace, each of which causes more
+information to be reported while including all information reported by
+lower trace levels:
+<table border>
+<tr>
+	<th>Level<th>Effect
+
+<tr>
+	<td>0<td>(default) No tracing is enabled.
+
+<tr>
+	<td>1<td>Tracing of errors is enabled.
+		Whenever an API function returns an error code, a
+		line of output is printed (on standard error) showing
+		the error and the place where the error was generated
+		(a file name and line number withing the API library
+		itself). Since the API library is supplied as source
+		code, you can see why an error is being returned
+		(this is most useful with an error like
+		<code>ERR_SM_BAD_PARAMETER</code> since you can see
+		which parameter caused it to return the error).
+	
+
+<tr>
+	<td>2<td>Tracing of most API calls is enabled.
+		In addition to the trace produced by level 1, this
+		reports every API function called (except those which
+		read or write data) with the parameters passed and
+		the result returned. This can be used to verify that
+		channels have been set up correctly.
+	
+
+<tr>
+	<td>3<td>Tracing of all API calls is enabled.
+		This is the same as level 2, except that all API
+		functions are reported.
+	
+
+<tr>
+	<td>4<td>Tracing of all API calls is enabled and call-progess
+	detection reports the list of simple tones it has receives and that
+	it is comparing against the cadences in the call progress tone table.
+	
+
+</table>
+<p>
+There may be more levels of trace available, depending on the variant of
+Prosody being used.
+<p>
+There are four ways to turn on tracing:
+<ul>
+	<li>
+	All the test programs supplied with Prosody have a
+	command line option, <code>--TiNGtrace</code> which contols
+	tracing. Specify this option with the desired level of trace.
+	For example, "<code>--TiNGtrace 2</code>".
+	<li>
+	Compile <code>apilib/TiNGtrace.c</code> and link with the
+	application. This changes the default trace level to level 3.
+	<li>
+	Use <code>#include "smdrvr.h"</code> in your source and
+	write some code which assigns the desired trace level to
+	<code>TiNGtrace</code>. This is by far the best method as
+	it allows you to control trace using whatever style of
+	configuration is used for the rest of your application
+	(e.g. configuration file, command line parameters, etc). Ensure
+	that you permit any integer to be assigned to the trace level
+	so that future versions with more control over trace can use
+	the improved trace without having to modify the application.
+	<li>
+	Set the <code>TINGTRACE</code> environment variable to the
+	desired trace level. Note that this merely initialises the
+	<code>TiNGtrace</code> global variable, so an application
+	which overwrites <code>TiNGtrace</code> cannot be traced by
+	this method, which is most useful for using on applications
+	which have made no provision for providing trace.
+</ul>
+<p>
+For example, the command:
+<pre>
+	detraw -x x:172.16.1.118/mykey --TiNGtrace 2 -o1 -t64:0 -m0
+</pre>
+<p>
+produces trace like this:
+<pre class=trace>
+init TiNGlib.o Aculab Telephony Software V2.28.3.m1375. (_REENTRANT defined) (OMIT_ANYCHAN undefined) (TiNG_TRACE=1)
+time calibration = 3192270000
+ticks_per_us = 3192
+@22430839291184:system time UTC 2010/11/01 15:46:12.643
+</pre>
+<p>
+Every trace starts with the version of the API library. This ensures
+that if you are looking at the source code to find errors reported by
+file and line number that you know which version of source to look at.
+<p>Timestamp information is also output in order to allow times reported in this trace to be
+compared with times in other traces and captures. 
+<pre class=trace>
+@24401008127968:sm_open_prosody_x(px_locator='172.16.1.118/mykey', card_id=-1397969748)
+Init card: 172.16.1.118/mykey
+ASSPmon port 2031
+[open X 00035408][ioctl X 00035408 TiNG(38) 104]card 172.16.1.118/mykey: '201378' 'Prosody X cPCI AC5300 1.2'
+[ioctl X 00035408 TiNG(10) 28][close X 00035408]
+ == 0
+</pre>
+<p>
+This traces the opening of the Prosody X card, and logs type and serial number
+of card being opened.
+<pre class=trace>
+@22431275497584:sm_open_module(card_id=-1397969748, module_ix=0)ASSPmon port 2031
+[open X 00035E98][ioctl X 00035E98 TiNG(11) 28] == 0 module_id=00035408
+@22431436317016:sm_channel_alloc_placed(type=0, module=00035408, caps_mask=0)[cl
+one X 00035E98 -> 00036E38][ioctl X 00036E38 TiNG(11) 28] == 0 channel=00036AA8
+</pre>
+<p>
+Here are the first API calls made. Their names are shown, and in brackets the
+parameters which were passed in. Then the return code (the "<code>==
+0</code>") and finally any values returned.
+<pre class=trace>
+@25641718849360:sm_get_recognised(channel=00036AA8)[ioctl X 000387B8 TiNG(6) 84]
+[msg 81110402][ioctl X 000387B8 TiNG(6) 84][msg] == 0 channel=00036AB0, type=0,
+param0=0, param1=0
+</pre>
+<p>
+The "<code>[msg ...]</code>" shows messages arriving from the
+firmware.
+<p>
+It is strongly recommended that when you write your own application you
+provide a suitable mechanism to set the trace level.
+<p>
+Since the trace information is simply written to standard output, if
+a program prints other status information, it will appear in sequence
+with the trace output.
+
+<h2><a name="redir">Redirecting trace output</a></h2>
+<p>
+Some applications run in an environment in which they have no standard
+output. To allow trace to be gathered from these, there is a
+mechanism whereby the trace can be redirected elsewhere. The global
+variable <code>TiNG_showtrace</code>:
+<pre>
+ACUAPI int (*TiNG_showtrace)(const char *fmt, va_list ap);
+</pre>
+<p>
+is a pointer to the function which is called to write out trace. By
+default it points to <code>vprintf</code>.
+<p>
+By writing an alternative function and storing its address in
+<code>TiNG_showtrace</code> you can redirect the trace. Since this
+output function is called any time trace is produced, it will be
+called from any thread which uses Prosody functions, and possibly
+from threads which are internal to the Prosody API library.
+Consequently, any replacement function must be written to be
+appropriately thread-safe.
+<p>
+The implementation of alternative output function might be compiled 
+with newer compiler than that with which TiNG library was built,
+and may have an incompatible layout for the va_list type. The output
+function can use the <code>TiNG_vsnprintf</code> wrapper for vsnprintf:
+<pre>
+ACUAPI int TiNG_vsnprintf (char * s, size_t n, const char * format, va_list arg );
+</pre>
+provided in the TiNG library to avoid this problem.
+<p>
+Note that the ability to obtain <strong>complete,
+unedited trace</strong> is often essential when
+obtaining support from Aculab, so it is important that any
+replacement function does not prevent trace being recorded and does
+not modify the lines being written (e.g. by truncating lines to some
+fixed maximum length).
+
+<h2><a name="perthread">Separate trace output for each thread</a></h2>
+<p>
+Sometimes it can be hard to see what is being described by trace output
+because more than one thread is writing trace at the same time, so the
+trace consists of interleaved fragments of trace. By replacing the trace
+output function, you can put the trace for each thread into a
+separate file, ensuring that each is much easier to underastand.
+<p>
+An experimental, unsupported example of a different trace output
+function to do this can be found in
+<code>$(TiNG)/test/Testlib/perthread_trace.*</code>.
+Separate files make it easier to see the actions of each
+thread, but harder to see the interactions between threads, which are
+more often the cause of problems.
+
+<h2><a name="remote">Remote tracing</a></h2>
+<p>
+Occasionally it may be useful to be able to attach to a running
+application and get trace from it. The trace output can be redirected
+to a TCP socket by replacing the trace output function, but a
+separate thread is required to listen for connections on that socket.
+<p>
+An (experimental, unsupported) example of a different trace output
+function to do this can be found in
+<code>$(TiNG)/test/Testlib/remote_trace.*</code>. To add this remote
+trace facility to an application, create a dedicated thread which
+calls <code>remote_trace()</code> specifying the port on which it is to
+listen (as a string - either a service name or a port number). To
+get remote trace from the application, connect to the port (for
+example, using <code>telnet</code> or <code>netcat</code>), and enter
+the desired trace level as a decimal number. The trace output will
+appear. You can enter a different trace level at any time. If you
+close the connection, trace output reverts to its previous
+destination, but the trace level remains at the last level you set -
+so you may want to set it to zero before closing the connection. If
+the application exits, the connection will get end-of-file after the
+last trace.
+
+<h2><a name="tod">Trace on demand</a></h2>
+<p>
+When debugging some problems, it can be convenient to record only the
+trace generated just before the problem occurred. This may be because
+the problem takes a long time to reproduce and the trace is too big
+if collected continuously. An example of how to produce trace on
+demand is provided in <code>$(TiNG)/test/Testlib/tracehistory.*</code> 
+which provides these functions:
+
+<dl>
+<dt><code>int TiNGtrace_sethistory(size_t len);</code>
+<dd>
+Configures the TiNGtrace mechanism to retain only the last
+<code>len</code> characters of trace. This trace data is kept in a
+buffer in memory, which saves the overhead associated with writing to
+a disk file. Configuring a length of zero disables the trace history
+mechanism and restores the trace system to normal output.
+<dt><code>int TiNGtrace_savehistory(FILE *histfile);</code>
+<dd>
+Writes to the specified file the trace currently retained in the history
+buffer. The maximum amount written is the size of the history buffer
+that was configured with <code>TiNGtrace_sethistory()</code>. It then
+clears the history buffer.
+</dl>
+<p>
+The application must set up the desired size of history buffer as well
+as enabling the appropriate level of trace in the normal way. When the
+application finds the problem has occurred, it can create a file, write
+the trace to it, and write any other information which may be useful,
+such as the time when the problem occurred, its own internal state, or
+trace from other parts of the application. Obviously, the application
+can use a separate file for each trace snapshot it takes, or leave te
+file open and write multiple snapshots into the same file (it must
+write a suitable marker to separate them in this case).
+<p>
+Here is an example of how the trace history might be saved:
+<pre>
+void savetrace(char *why)
+{
+ time_t now = time(0);
+ char filename[64];
+ FILE *tf;
+ sprintf(filename, "trace_%d", now);	// assumes only one trace file per second
+ tf = fopen(filename, "w");
+ if (tf) {
+	fprintf(tf, "Trace saved at %s\n", ctime(now));
+	fprintf(tf, "Reason: %s\n", why);
+	fprintf(tf, "\n");
+	TiNGtrace_savehistory(tf);
+	fprintf(tf, "\n");
+		// save any other trace or relevant information
+	fclose(tf);
+ }
+}
+</pre>
+
+</body>
+</html>

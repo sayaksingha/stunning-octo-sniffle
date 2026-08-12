@@ -57,18 +57,19 @@ BOOLEAN Traffic::Init()
    //Read Configuration
    if(true != this->ReadConfigData())
    {
-      printf("%s: Reading configuration failed \n",gProcessName);
+      TERR(gTrace, printf("%s: Reading configuration failed \n",gProcessName););
       return false;
    }
 
    //Create shared Memory
    if(true != this->CreateSharedMemory())
    {
-      printf("%s: Failed to create shared memory\n",gProcessName);
+      TERR(gTrace, printf("%s: Failed to create shared memory\n",gProcessName););
       return false;
    }
 
-   if(false == mDlgManager.Init())
+   // Ab Change: Pass TCAP_ANSI_CFG down to DlgManager
+   if(false == mDlgManager.Init((TEXT*)TCAP_ANSI_CFG))
    {
       return false;
    }
@@ -90,19 +91,19 @@ BOOLEAN Traffic::ReadConfigData()
    //Reading form file ipc.cfg
    if (false == lCfgRead.CfgInit(SS7_IPC_CFG))
    {
-      printf("Could not open the file %s\n", SS7_IPC_CFG);
+      TERR(gTrace, printf("Could not open the file %s\n", SS7_IPC_CFG););
       return false;
    }
 
    if (CFG_OK != lCfgRead.GetConfigNum("SHM_MIS_PEG_KEY",mShmKey,SHM_MIN,SHM_MAX))
    {
-      printf("SHM_MIS_PEG_KEY not found in the file %s\n", SS7_IPC_CFG);
+      TERR(gTrace, printf("SHM_MIS_PEG_KEY not found in the file %s\n", SS7_IPC_CFG););
       lCfgRead.CfgDeInit();
       return false;
    }
    else
    {
-      printf("%s: SHM_MIS_PEG_KEY = %d\n",gProcessName, mShmKey);
+      T(gTrace, printf("%s: SHM_MIS_PEG_KEY = %d\n",gProcessName, mShmKey););
    }
 
 
@@ -112,20 +113,20 @@ BOOLEAN Traffic::ReadConfigData()
    //Reading from file Peg.cfg
    if (false == lCfgRead.CfgInit(SS7_PEG_CFG))
    {
-      printf("Could not open the file %s\n", SS7_PEG_CFG);
+      TERR(gTrace, printf("Could not open the file %s\n", SS7_PEG_CFG););
       return false;
    }
 
    if (CFG_OK != lCfgRead.GetConfigNum("NUM_OF_EVENTS",mNumOfEvents,1,
             150))
    {
-      printf("NUM_OF_EVENTS Parameter not found in the file %s\n",SS7_PEG_CFG);
+      TERR(gTrace, printf("NUM_OF_EVENTS Parameter not found in the file %s\n",SS7_PEG_CFG););
       lCfgRead.CfgDeInit();
       return false;
    }
    else
    {
-      printf("%s: NUM_OF_EVENTS = %ld\n",gProcessName, mNumOfEvents);
+      T(gTrace, printf("%s: NUM_OF_EVENTS = %ld\n",gProcessName, mNumOfEvents););
    }
 
    //Close peg.cfg
@@ -133,19 +134,19 @@ BOOLEAN Traffic::ReadConfigData()
    //Reading from file kernel.cfg
    if(false == lCfgRead.CfgInit(SS7_KER_CFG))
    {
-      printf("Could not open the file %s\n", SS7_KER_CFG);
+      TERR(gTrace, printf("Could not open the file %s\n", SS7_KER_CFG););
       return false;
    }
    if (CFG_OK != lCfgRead.GetConfigNum("MAX_ACU_TCAP_DLG_SIZE",mMaxDlgSize,
             1,256000))
    {
-      printf("MAX_ACU_TCAP_DLG_SIZE  Parameter not found in the file %s\n",SS7_KER_CFG);
+      TERR(gTrace, printf("MAX_ACU_TCAP_DLG_SIZE  Parameter not found in the file %s\n",SS7_KER_CFG););
       lCfgRead.CfgDeInit();
       return false;
    }
    else
    {
-      printf("%s: MAX_ACU_TCAP_DLG_SIZE = %u\n",gProcessName,mMaxDlgSize);
+      T(gTrace, printf("%s: MAX_ACU_TCAP_DLG_SIZE = %u\n",gProcessName,mMaxDlgSize););
    }
    lCfgRead.CfgDeInit();
    return true;
@@ -164,19 +165,19 @@ void Traffic::ReloadConfig()
    //Open Peg.cfg file
    if(false == lCfgRead.CfgInit(SS7_PEG_CFG))
    {
-      printf("Failed to open the file %s\n", SS7_PEG_CFG);
+      TERR(gTrace, printf("Failed to open the file %s\n", SS7_PEG_CFG););
    }
 
    if(CFG_OK != lCfgRead.GetConfigNum("NUM_OF_EVENTS",mNumOfEvents,1,
             150))
    {
-      printf("NUM_OF_EVENTS Parameter not found in %s\n",SS7_PEG_CFG);
+      TERR(gTrace, printf("NUM_OF_EVENTS Parameter not found in %s\n",SS7_PEG_CFG););
       lCfgRead.CfgDeInit();
    }
 
    else
    {
-      printf("%s: NUM_OF_EVENTS = %ld\n",gProcessName, mNumOfEvents);
+      T(gTrace, printf("%s: NUM_OF_EVENTS = %ld\n",gProcessName, mNumOfEvents););
    }
 
    lCfgRead.CfgDeInit();

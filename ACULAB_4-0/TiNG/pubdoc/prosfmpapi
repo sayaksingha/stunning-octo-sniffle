@@ -1,0 +1,431 @@
+
+	Prosody FMP processing
+secname	sort
+	Create a FMP[rx] endpoint
+apifn	sm_fmprx_create
+params	sm_fmprx_create_parms fmprxp
+	The newly created FMP[rx].
+field	tSMFMPrxId fmprx out
+	A value obtained from
+fnref	sm_open_module
+	which indicates the module where the FMP[rx] is to be allocated.
+field	tSMModuleId module in
+enumstart	kSMFMPrxType
+	The FMP[rx] is to receive IPv4 packets
+enum	kSMFMPrxTypeIPv4
+	The FMP[rx] is to receive IPv6 packets
+enum	kSMFMPrxTypeIPv6
+enumend	type in
+	The address on which this FMP[rx] is to listen if
+ref	type
+	is 
+ref	kSMFMPrxTypeIPv4.
+field	in_addr address in
+	The address on which this FMP[rx] is to listen if
+ref	type
+	is 
+ref	kSMFMPrxTypeIPv6.
+field	in6_addr ipv6_address in
+unstruct
+	Allocates, on a specific module, a new FMP[rx] to receive incoming T.38 data.
+	If the call completes successfully, the parameter
+ref	fmprx
+	will be set to the identifier for that fmprx.
+	<p>
+	A FMP[rx] is automatically allocated a port number for incoming
+	RTP data, this information may be obtained by waiting for
+fnref	sm_fmprx_status
+	to return the port information.
+	The FMP[rx] will discard any incoming packets that do not match it's
+	current configuration settings.
+	<p>
+	Requires the module
+modref  fmprx
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources exist to create the FMP[rx]
+
+	Destroy a previously allocated FMP[rx]
+apifn	sm_fmprx_destroy
+	A tSMFMPrxId that has been prevously created by a call to 
+fnref	sm_fmprx_create.
+param	tSMFMPrxId fmprx
+	Destroys
+ref	fmprx
+	and invalidates the tSMFMPrxId.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Obtain a data feed from a FMP[rx]
+apifn	sm_fmprx_get_datafeed
+params	sm_fmprx_datafeed_parms datafeedp
+	The fmp[rx] from which to obtain a datafeed
+field	tSMFMPrxId fmprx in
+	The datafeed object associated with the FMP[rx]
+field   tSMDatafeedId datafeed out
+unstruct
+	Request a datafeed identifier from a FMP[rx]. This identifer can 
+	subsequently be used in a call to 
+fnref	sm_channel_datafeed_connect
+	or
+fnref	sm_fmptx_datafeed_connect
+	to connect a FMP[rx] to a speech channel (tSMChannelId) or a FMP[tx]
+	respectively. Datafeed connections can only be made between objects
+	allocated on the same <code>tSMModuleId</code>.
+	<p>
+	Requires the modules
+modref  datafeed
+modref  fmprx
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Obtain an event for a FMP[rx]
+apifn	sm_fmprx_get_event
+params	sm_fmprx_event_parms eventp
+	The FMP[rx] 
+field	tSMFMPrxId fmprx in
+	The event identifier
+field	tSMEventId event out
+unstruct
+	If the call completes successfully 
+ref	event
+	will hold a pointer to the tSMEventId belonging to 
+ref	fmprx.
+	The tSMEventId is valid until the FMP[rx] is destroyed using 
+fnref	sm_fmprx_destroy.
+	This event will be signalled when a status change occurs on the FMP[rx].
+	When the event is signalled the user must call 
+fnref	sm_fmprx_status
+	to discover the nature of the status change.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Determine FMP[rx] status
+apifn	sm_fmprx_status
+params	sm_fmprx_status_parms statusp
+	The FMP[rx] to interrogate
+field	tSMFMPrxId fmprx in
+enumstart kSMFMPrxStatus
+	Indicates that there is nothing significant to report
+enum	kSMFMPrxStatusRunning
+	Indicates that the FMP[rx] has stopped processing T.38 and that
+	it can be safely destroyed
+enum	kSMFMPrxStatusStopped
+	Indicates that IPv4 port information is available.
+enum	kSMFMPrxStatusGotPorts
+	Indicates that IPv4 source address and port information is available.
+enum	kSMFMPrxStatusSource
+	Indicates that IPv6 port information is available.
+enum	kSMFMPrxStatusGotPortsIPv6
+	Indicates that IPv6 source address and port information is available.
+enum	kSMFMPrxStatusSourceIPv6
+enumend status out
+union
+	This field is only valid if the status is
+ref	kSMFMPrxStatusGotPorts.
+struct
+	The UDP port number on which this FMP[rx] is listening for T.38 packets
+field	int T38_port out
+	The IPv4 address on which this FMP[rx] is listening
+field	in_addr address out
+unstruct	port
+	This field is only valid if the status is
+ref	kSMFMPrxStatusSource.
+struct
+	The IPv4 address from which the T.38 data is being received.
+field	in_addr address out
+	The UDP port number from which the T.38 data is being received.
+field	int port out
+unstruct	source
+	This field is only valid if the status is
+ref	kSMFMPrxStatusGotPortsIPv6.
+struct
+	The UDP port number on which this FMP[rx] is listening for T.38 packets
+field	int T38_port out
+	The IPv6 address on which this FMP[rx] is listening
+field	in6_addr address out
+unstruct	port_ipv6
+	This field is only valid if the status is
+ref	kSMFMPrxStatusSourceIPv6.
+struct
+	The IPv6 address from which the T.38 data is being received.
+field	in6_addr address out
+	The UDP port number from which the T.38 data is being received.
+field	int port out
+unstruct	source_ipv6
+unstruct	u
+unstruct
+	Returns the current status of the FMP[rx] or an error to indicate that
+	an error has occurred.
+	<p>
+	When the event, obtained from
+fnref	sm_fmprx_get_event,
+	is signalled the user must call this function to determine the nature of
+	the status change. The change in status may indicate that an error occurred
+	whilst processing a user request or it may be notifiying the user of a
+	change to the previous state of the FMP[rx].
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources existed to create the FMP[rx]
+
+	Instructs a FMP[rx] to stop processing T.38
+apifn	sm_fmprx_stop
+params	sm_fmprx_stop_parms stopp
+	A tSMFMPrxId that has been previously created by a call to
+fnref	sm_fmprx_create.
+field	tSMFMPrxId fmprx in
+unstruct
+	Requests that a FMP[rx] stops executing. The user will be notified that
+	a FMP[rx] has terminated by a final status event. Once the final status
+	notification has been received the FMP[rx] can be destroyed using
+fnref	sm_fmprx_destroy.
+	<p>
+	Once the FMP[rx] has stopped the event should no longer be used to wait
+	for status notifications as it will be signalled permanently. The event
+	is invalidated when
+fnref	sm_fmprx_destroy
+	is called.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Configure the basic options for FMP[tx] to use IPv4
+apifn	sm_fmptx_config
+params	sm_fmptx_config_parms configp
+	The FMP[tx] to configure
+field	tSMFMPtxId fmptx in
+	The SOCKADDR_IN structure specifying the destination IP address
+	and port for the T38 data. A struct SOCKADDR_IN must be
+	configured with an address family, an IP address and a port.
+	Note that most operating systems define this structure such that
+	fields are in network byte order.
+	The structure must be correctly cast such that an IP V4 
+	address is specified.
+field	SOCKADDR_IN destination in
+	The SOCKADDR_IN structure allows you to specify the source IP
+	address and port for the T.38 data. A struct SOCKADDR_IN must
+	be configured with an address family. The IP address may be
+	specified, or the value INADDR_ANY may be used to indicate
+	that any suitable address may be used. The port number may be
+	specified, or the value zero may be used to indicate that a
+	suitable port number is to be automatically allocated and
+	used.
+	Note that most operating systems define this structure such that
+	fields are in network byte order.
+	The structure must be correctly cast such that an IP V4 
+	address is specified.
+field	SOCKADDR_IN source in
+	The type of error protection to use
+enumstart kSMFMPRecoveryType
+	Indicates that Redundancy is to be used
+enum	kSMFMPRecoveryTypeRED
+	Indicates that Forward Error Correction is to be used, (not
+	currently supported)
+enum	kSMFMPRecoveryTypeFEC
+	Indicates the Redundancy over RTP is to be used, (not currently
+	supported)
+enum	kSMFMPRecoveryTypeRTP
+enumend	Recovery in
+	Indicates the level of Redundancy to apply to packets. This is the
+	number of secondaries to include in each packet.
+field	tSM_UT32 RecoveryLevel in
+unstruct
+	Configures a FMP[tx] to send T.38 data to a device with the 
+	specified IPv4 address.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Configure the basic options for a FMP[tx] to use IPv6
+apifn	sm_fmptx_config_ipv6
+params	sm_fmptx_config_ipv6_parms configp
+	The FMP[tx] to configure
+field	tSMFMPtxId fmptx in
+	The SOCKADDR_IN6 structure specifying the destination IP address
+	and port for the T38 data. A struct SOCKADDR_IN6 must be
+	configured with an address family, an IPv6 address and a port.
+	Note that most operating systems define this structure such that
+	fields are in network byte order.
+field	SOCKADDR_IN6 destination in
+	The SOCKADDR_IN6 structure allows you to specify the source IPv6
+	address and port for the T.38 data. A struct SOCKADDR_IN6 must
+	be configured with an address family. The IPv6 address may be
+	specified, or the value INADDR_ANY may be used to indicate
+	that any suitable address may be used. The port number may be
+	specified, or the value zero may be used to indicate that a
+	suitable port number is to be automatically allocated and
+	used.
+	Note that most operating systems define this structure such that
+	fields are in network byte order.
+field	SOCKADDR_IN6 source in
+	The type of error protection to use
+enumstart kSMFMPRecoveryType
+	Indicates that Redundancy is to be used
+enum	kSMFMPRecoveryTypeRED
+	Indicates that Forward Error Correction is to be used, (not
+	currently supported)
+enum	kSMFMPRecoveryTypeFEC
+	Indicates the Redundancy over RTP is to be used, (not currently
+	supported)
+enum	kSMFMPRecoveryTypeRTP
+enumend	Recovery in
+	Indicates the level of Redundancy to apply to packets. This is the
+	number of secondaries to include in each packet.
+field	tSM_UT32 RecoveryLevel in
+unstruct
+	Configures a FMP[tx] to send T.38 data to a device with the 
+	specified IPv6 address.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Create a FMP[tx] endpoint
+apifn	sm_fmptx_create
+params	sm_fmptx_create_parms fmptxp
+	The newly created FMP[tx].
+field	tSMFMPtxId fmptx out
+	A value obtained from
+fnref	sm_open_module
+	which indicates the module where the FMP[tx] is to be allocated.
+field	tSMModuleId module in
+unstruct
+	Allocates, on a specific module, a new FMP[tx] to transmit T.38 data to a 
+	remote device.
+	<p>
+	If the call completes successfully, the parameter
+ref	fmptx
+	will be set to the identifier for that FMP[tx].
+	<p>
+	Requires the module
+modref  fmptx
+	to have been downloaded.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources exist to create the FMP[tx]
+
+	Connect a datafeed to an FMP[tx]
+apifn	sm_fmptx_datafeed_connect
+params	sm_fmptx_datafeed_connect_parms datafeedp
+	The datafeed acting as a source of data
+field   tSMDatafeedId data_source in
+	The FMP[tx] that will receive the data
+field	tSMFMPtxId data_dest in
+unstruct
+	Connects a datafeed to a FMP[tx]. The
+ref	data_source
+	must be a datafeed obtained from 
+fnref	sm_channel_get_datafeed
+	or 
+fnref	sm_fmprx_get_datafeed.
+	The channel 
+ref	data_dest
+	will recieve any data that is generated by the output task from which 
+ref	data_source
+	was derived.
+	<p> To disconnect a FMP[tx] from a datafeed, specify 
+	<code>kSMNullDatafeedId</code> as the tSMDatafeedId in
+ref	data_source.
+	<p>
+	Requires the modules
+modref  datafeed
+modref  fmptx
+	to have been downloaded.
+explain
+	0
+retval
+
+	Destroy a previously allocated FMP[tx]
+apifn	sm_fmptx_destroy
+	A tSMFMPtxId that has been prevously created by a call to 
+fnref	sm_fmptx_create.
+param	tSMFMPtxId fmptx
+	Destroys
+ref	fmptx
+	and invalidates the tSMFMPtxId.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Obtain an event for a FMP[tx]
+apifn	sm_fmptx_get_event
+params	sm_fmptx_event_parms eventp
+	The FMP[tx] 
+field	tSMFMPtxId fmptx in
+	The event identifier
+field	tSMEventId event out
+unstruct
+	If the call completes successfully 
+ref	event
+	will hold a pointer to the tSMEventId belonging to 
+ref	fmptx.
+	The tSMEventId is valid until the FMP[tx] is destroyed using 
+fnref	sm_fmptx_destroy.
+	This event will be signalled when a status change occurs on the FMP[tx].
+	When the event is signalled the user must call 
+fnref	sm_fmptx_status
+	to discover the nature of the status change.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Determine FMP[tx] status
+apifn	sm_fmptx_status
+params	sm_fmptx_status_parms statusp
+	The FMP[tx] to interrogate
+field	tSMFMPtxId fmptx in
+enumstart kSMFMPtxStatus
+	Indicates that there is nothing significant to report
+enum	kSMFMPtxStatusRunning
+	Indicates that the FMP[tx] has stopped transmitting T.38 and that it is
+	safe to destroy
+enum	kSMFMPtxStatusStopped
+enumend status out
+unstruct
+	Returns the current status of the FMP[tx] or an error to indicate that
+	a problem occurred during start-up.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+error	ERR_SM_NO_RESOURCES - if insufficient resources existed to create the VMP[tx]
+
+	Instructs a FMP[tx] to stop sending T.38
+apifn	sm_fmptx_stop
+params	sm_fmptx_stop_parms stopp
+	A tSMFMPtxId that has been previously created by a call to
+fnref	sm_fmptx_create.
+field	tSMFMPtxId fmptx in
+unstruct
+	Requests that a FMP[tx] stops executing. The user will be notified that
+	a FMP[tx] has terminated by a final status event. Once the final status
+	notification has been received the FMP[tx] can be destroyed using
+fnref	sm_fmptx_destroy.
+	<p>
+	Once the FMP[tx] has stopped the event should no longer be used to wait
+	for status notifications as it will be signalled permanently. The event
+	is invalidated when
+fnref	sm_fmptx_destroy
+	is called.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error

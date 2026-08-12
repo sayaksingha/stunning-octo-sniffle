@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody DTLS processing: API: sm_dtlstx_config_ipv6</title>
+</head>
+<body>
+<h1>Prosody DTLS processing: API: sm_dtlstx_config_ipv6</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_dtlstx_config_ipv6(struct sm_dtlstx_config_ipv6_parms *<a href="#field-configp">configp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_config_ipv6_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN6">SOCKADDR_IN6</a> <a href="#field-destination">destination</a>;				/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN6">SOCKADDR_IN6</a> <a href="#field-source">source</a>;					/* in */
+} SM_DTLSTX_CONFIG_IPV6_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a DTLS[tx] to send DTLS packets to a device with the 
+specified IPv6 address.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>The DTLS[tx] to configure
+
+<dt><a name="field-destination">destination</a><dd>The SOCKADDR_IN6 structure specifying the destination IP address
+and port for the DTLS packets. A struct SOCKADDR_IN6 must be
+configured with an address family, an IPv6 address and a port.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+
+<dt><a name="field-source">source</a><dd>The SOCKADDR_IN6 structure allows you to specify the source IPv6
+address and port for the DTLS packets. A struct SOCKADDR_IN6 must
+be configured with an address family. The IPv6 address may be
+specified, or the value INADDR_ANY may be used to indicate
+that any suitable address may be used. The port number may be
+specified, or the value zero may be used to indicate that a
+suitable port number is to be automatically allocated and
+used.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosdtls.html">Prosody DTLS processing API</a>.
+</body>
+</html>

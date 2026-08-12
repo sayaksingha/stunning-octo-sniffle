@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_put_audio_data</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_put_audio_data</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_put_audio_data(struct sm_audio_data_parms *<a href="#field-datap">datap</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-datap">*datap</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_audio_data_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	char *<a href="#field-data">data</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_length">max_length</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-done_length">done_length</a>;					/* out */
+} SM_AUDIO_DATA_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Following a call to
+<a href="apifn-sm_channel_set_output_threshold.html">sm_channel_set_output_threshold()</a>
+set up with negative minimum_bits threshold, and a call to
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a>,
+each time
+<a href="apifn-sm_replay_status.html">sm_replay_status()</a>
+indicates that the channel is ready for successive amounts of data,
+the actual data to be replayed is supplied to the module via
+successive invocations of this function. The
+<a class=pref href="#field-data">data</a>
+parameter is a pointer to a buffer of data to replay in the
+appropriate format, and the
+<a class=pref href="#field-max_length">max_length</a>
+parameter gives the number of octets of valid data in the
+buffer.
+<p>
+The data should be presented in lengths which are multiples of
+four bytes because this is more efficiently handled than
+other lengths.
+<p>
+If the module is not yet ready to buffer data, then no data is transferred and the call will return with
+<a class=pref href="#field-done_length">done_length</a>
+set to zero.
+<p>
+The application may be stimulated by a driver
+sent event when capacity on a channel becomes available
+(see <a href="apifn-sm_channel_set_event.html">sm_channel_set_event</a>).
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel which is replaying.
+
+<dt><a name="field-data">data</a><dd>The data being provided.
+
+<dt><a name="field-max_length">max_length</a><dd>The length of the data being provided.
+
+<dt><a name="field-done_length">done_length</a><dd>The amount of data actually written.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_REPLAY_IN_PROGRESS - current replay complete or aborted<li>ERR_SM_BAD_DATA_LENGTH - invalid length parameter</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: build environment </title>
+</head>
+<body>
+<h1>Prosody installation guide: build environment </h1>
+<p>
+After having <a href="install_prerequisites.html">checked the list of
+prerequisites</a> you need to set up the build environment before you
+can build anything.
+<p>
+Setting up the build environment differs slightly depending on the
+operating stystem.
+<div class="type-LINUX">
+<p>
+<em>For Linux only:</em>
+Set the environment variable <code>TiNGTARGET</code> to the value
+<code>LINUX</code>. For example, use the shell commands:
+<pre>
+	TiNGTARGET=LINUX_V6
+	export TiNGTARGET
+</pre>
+</div>
+<div class="type-QNX">
+<p>
+<em>For QNX only:</em>
+Set the environment variable <code>TiNGTARGET</code> to the value
+<code>QNX_PPC</code> or <code>QNX_X86</code> depending on the target
+system type. For example, use the shell
+commands:
+<pre>
+	export TiNGTARGET=QNX_PPC
+</pre>
+</div>
+<div class="type-WINNT">
+<p>
+<em>For Windows NT only:</em>
+Set the environment variable <code>TiNGTARGET</code> to the value
+<code>WINNT</code>. For example, at a DOS prompt, use:
+<pre>
+	set "TiNGTARGET=WINNT_V6"
+</pre>
+Note that <code>TiNGTARGET</code> contains a lowercase
+<code>i</code>, so the quotes are necessary to prevent it being
+converted into a capital letter. It does not appear to be possible to
+set the environment variable from the control panel, because it changes the
+name into all capitals.
+</div>
+<p>
+You're now ready to do the <a href="install_build1.html">first-time
+build</a>.
+</body>
+</html>

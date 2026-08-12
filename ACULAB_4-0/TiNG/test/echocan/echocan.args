@@ -1,0 +1,7 @@
+-TiNGtrace
+o	outtimeslot	timeslot
+r	reftimeslot	timeslot
+s	sigtimeslot	timeslot
+m	module		unsigned
+n	numchan		unsigned
+x	serialnumber	string

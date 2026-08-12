@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_config_tones</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_config_tones</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_config_tones(struct sm_vmprx_tone_parms *<a href="#field-tonep">tonep</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-tonep">*tonep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_tone_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-regen_tones">regen_tones</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-detect_tones">detect_tones</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-enforce_tone_spacing">enforce_tone_spacing</a>;				/* in */
+} SM_VMPRX_TONE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Allows an application to specify the action to be taken upon receipt
+of RFC2833 tones packets in an RTP stream.
+<p>
+Regenerating the tones is a requirement for applications acting as a 
+VoIP to TDM gateway. Applications that need to detect tones from the 
+audio stream will frequently be required to regenerate tones from RFC 
+2833 packets, this is of particular importance when using codecs that 
+cannot adequately encode tones (e.g. G.729). If
+<a class=pref href="#field-regen_tones">regen_tones</a>
+contains a non-zero value, the VMP[rx] will attempt to regenerate tones
+in the audio stream when an RFC2833 packet is received. 
+<p>
+Some nonconformant RTP IP phones can generate RFC 2833 packets with 
+less than the required minimum gap between consecutive tones. If
+<a class=pref href="#field-enforce_tone_spacing">enforce_tone_spacing</a>
+contains a non-zero value, the VMP[rx] will trim the start of any 
+regenerated tone that follows on too early after a previous regenerated
+tone in order to ensure that the minimum gap is always observed.
+<p>
+Applications that terminate a VoIP call may choose not to regenerate
+tones and to rely on the RFC2833 tone notifications. Supplying a
+non-zero value in the
+<a class=pref href="#field-detect_tones">detect_tones</a>
+field instructs the VMP[rx] to notify the user when an RFC 2833 tone
+packet is received in the RTP stream. The VMP[rx]'s event will be set
+when a tone notification is available.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to be configured
+
+<dt><a name="field-regen_tones">regen_tones</a><dd>Indicator of whether RFC2833 tones that are present in the data stream
+should be regenerated as audio data. A non-zero value instructs the 
+VMP[rx] to regenerate these tones (see supported tones from RFC2833). 
+
+<dt><a name="field-detect_tones">detect_tones</a><dd>A non-zero value instructs the VMP[rx] to notify the user when an 
+RFC2833 tone is detected in the RTP stream. 
+
+<dt><a name="field-enforce_tone_spacing">enforce_tone_spacing</a><dd>A non-zero value instructs the VMP[rx] to enforce a minimum silence 
+between regenerated tones.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

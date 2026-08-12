@@ -1,0 +1,807 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody DTLS processing: API</title>
+</head>
+<body>
+<h1>Prosody DTLS processing: API</h1>
+<p>
+The following functions are provided by the
+<a href="../prosdtls.html">Prosody DTLS processing API</a>:
+<table border>
+<tr>
+	<th>API call</th>
+	<th>W</th>
+	<th>Description</th>
+</tr>
+	<tr>
+	<td><a href="#sm_dtlsrx_create">sm_dtlsrx_create()</a>
+	<td>&nbsp;
+	<td>Create a DTLS[rx] endpoint
+
+	<tr>
+	<td><a href="#sm_dtlsrx_destroy">sm_dtlsrx_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy a previously allocated DTLS[rx]
+
+	<tr>
+	<td><a href="#sm_dtlsrx_get_event">sm_dtlsrx_get_event()</a>
+	<td>&nbsp;
+	<td>Obtain an event for a DTLS[rx]
+
+	<tr>
+	<td><a href="#sm_dtlsrx_get_packet">sm_dtlsrx_get_packet()</a>
+	<td>&nbsp;
+	<td>Read a packet from a DTLS[rx]
+
+	<tr>
+	<td><a href="#sm_dtlsrx_status">sm_dtlsrx_status()</a>
+	<td>&nbsp;
+	<td>Determine DTLS[rx] status
+
+	<tr>
+	<td><a href="#sm_dtlsrx_stop">sm_dtlsrx_stop()</a>
+	<td>&nbsp;
+	<td>Instructs a DTLS[rx] to stop processing DTLS
+
+	<tr>
+	<td><a href="#sm_dtlstx_config">sm_dtlstx_config()</a>
+	<td>&nbsp;
+	<td>Configure the basic options for DTLS[tx] to use IPv4
+
+	<tr>
+	<td><a href="#sm_dtlstx_config_ipv6">sm_dtlstx_config_ipv6()</a>
+	<td>&nbsp;
+	<td>Configure the basic options for a DTLS[tx] to use IPv6
+
+	<tr>
+	<td><a href="#sm_dtlstx_config_notify">sm_dtlstx_config_notify()</a>
+	<td>&nbsp;
+	<td>Configure the packet cpapcity notifications for a  DTLS[tx]
+
+	<tr>
+	<td><a href="#sm_dtlstx_create">sm_dtlstx_create()</a>
+	<td>&nbsp;
+	<td>Create a DTLS[tx] endpoint
+
+	<tr>
+	<td><a href="#sm_dtlstx_destroy">sm_dtlstx_destroy()</a>
+	<td>&nbsp;
+	<td>Destroy a previously allocated DTLS[tx]
+
+	<tr>
+	<td><a href="#sm_dtlstx_get_event">sm_dtlstx_get_event()</a>
+	<td>&nbsp;
+	<td>Obtain an event for a DTLS[tx]
+
+	<tr>
+	<td><a href="#sm_dtlstx_send_packet">sm_dtlstx_send_packet()</a>
+	<td>&nbsp;
+	<td>Pass a packet to a DTLS[tx] for sending
+
+	<tr>
+	<td><a href="#sm_dtlstx_status">sm_dtlstx_status()</a>
+	<td>&nbsp;
+	<td>Determine DTLS[tx] status
+
+	<tr>
+	<td><a href="#sm_dtlstx_stop">sm_dtlstx_stop()</a>
+	<td>&nbsp;
+	<td>Instructs a DTLS[tx] to stop sending DTLS
+
+	<tr>
+	<td><a href="#sm_vmprx_config_dtls">sm_vmprx_config_dtls()</a>
+	<td>&nbsp;
+	<td>Configure a VMP[rx] to pass DTLS packets to a DTLS[rx]
+
+</table>
+<p>
+This document is also available as
+<a href="prosdtls-index.html">separate pages for each function</a>.
+<hr>
+<h2><a name="sm_dtlsrx_create">Prosody DTLS processing: API: sm_dtlsrx_create</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlsrx_create(struct sm_dtlsrx_create_parms *<a href="#field-dtlsrxp">dtlsrxp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-dtlsrxp">*dtlsrxp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlsrx_create_parms {
+	<a href="../apitype.html#type-tSMDTLSrxId">tSMDTLSrxId</a> <a href="#field-dtlsrx">dtlsrx</a>;					/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+} SM_DTLSRX_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Allocates, on a specific module, a new DTLS[rx] to process incoming DTLS packets.
+If the call completes successfully, the parameter
+<a class=pref href="#field-dtlsrx">dtlsrx</a>
+will be set to the identifier for that dtlsrx.
+<p>
+Requires the module
+<a href="softmodindex.html#dtlsrx">dtlsrx</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlsrx">dtlsrx</a><dd>The newly created DTLS[rx].
+
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module where the DTLS[rx] is to be allocated.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources exist to create the DTLS[rx]</ul>
+<hr>
+<h2><a name="sm_dtlsrx_destroy">Prosody DTLS processing: API: sm_dtlsrx_destroy</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlsrx_destroy(<a href="../apitype.html#type-tSMDTLSrxId">tSMDTLSrxId</a> <a href="#field-dtlsrx">dtlsrx</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-dtlsrx">dtlsrx</a>
+<dd>
+A tSMDTLSrxId that has been prevously created by a call to 
+<a href="#sm_dtlsrx_create">sm_dtlsrx_create()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys
+<a class=pref href="#field-dtlsrx">dtlsrx</a>
+and invalidates the tSMDTLSrxId.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_dtlsrx_get_event">Prosody DTLS processing: API: sm_dtlsrx_get_event</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlsrx_get_event(struct sm_dtlsrx_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlsrx_event_parms {
+	<a href="../apitype.html#type-tSMDTLSrxId">tSMDTLSrxId</a> <a href="#field-dtlsrx">dtlsrx</a>;					/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_DTLSRX_EVENT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+If the call completes successfully 
+<a class=pref href="#field-event">event</a>
+will hold a pointer to the tSMEventId belonging to 
+<a class=pref href="#field-dtlsrx">dtlsrx</a>.
+The tSMEventId is valid until the DTLS[rx] is destroyed using 
+<a href="#sm_dtlsrx_destroy">sm_dtlsrx_destroy()</a>.
+This event will be signalled when a status change occurs on the DTLS[rx].
+When the event is signalled the user must call 
+<a href="#sm_dtlsrx_status">sm_dtlsrx_status()</a>
+to discover the nature of the status change.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlsrx">dtlsrx</a><dd>The DTLS[rx] 
+
+<dt><a name="field-event">event</a><dd>The event identifier
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_dtlsrx_get_packet">Prosody DTLS processing: API: sm_dtlsrx_get_packet</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlsrx_get_packet(struct sm_dtlsrx_get_packet_parms *<a href="#field-readp">readp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-readp">*readp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlsrx_get_packet_parms {
+	<a href="../apitype.html#type-tSMDTLSrxId">tSMDTLSrxId</a> <a href="#field-dtlsrx">dtlsrx</a>;					/* in */
+	char *<a href="#field-data">data</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_length">max_length</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-packet_length">packet_length</a>;					/* out */
+} SM_DTLSRX_GET_PACKET_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Attempt to read a packet from a DTLS[rx].
+<p>
+Requires the module
+<a href="softmodindex.html#dtlsrx">dtlsrx</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlsrx">dtlsrx</a><dd>The dtls[rx] from which to read a packet
+
+<dt><a name="field-data">data</a><dd>A pointer to the buffer into which packet should be read.
+
+<dt><a name="field-max_length">max_length</a><dd>The amount of space in the buffer.
+
+<dt><a name="field-packet_length">packet_length</a><dd>The length of the read packet.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_dtlsrx_status">Prosody DTLS processing: API: sm_dtlsrx_status</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlsrx_status(struct sm_dtlsrx_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlsrx_status_parms {
+	<a href="../apitype.html#type-tSMDTLSrxId">tSMDTLSrxId</a> <a href="#field-dtlsrx">dtlsrx</a>;					/* in */
+	<a name="enum-kSMDTLSrxStatus">enum kSMDTLSrxStatus</a> {
+		<a href="#field-kSMDTLSrxStatusRunning">kSMDTLSrxStatusRunning</a>,
+		<a href="#field-kSMDTLSrxStatusStopped">kSMDTLSrxStatusStopped</a>,
+		<a href="#field-kSMDTLSrxStatusHasPacket">kSMDTLSrxStatusHasPacket</a>,
+		<a href="#field-kSMDTLSrxStatusOverrun">kSMDTLSrxStatusOverrun</a>,
+	} <a href="#field-status">status</a>;						/* out */
+} SM_DTLSRX_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Returns the current status of the DTLS[rx] or an error to indicate that
+an error has occurred.
+<p>
+When the event, obtained from
+<a href="#sm_dtlsrx_get_event">sm_dtlsrx_get_event()</a>,
+is signalled the user must call this function to determine the nature of
+the status change. The change in status may indicate that an error occurred
+whilst processing a user request or it may be notifiying the user of a
+change to the previous state of the DTLS[rx].
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlsrx">dtlsrx</a><dd>The DTLS[rx] to interrogate
+
+<dt><a name="field-status">status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMDTLSrxStatusRunning">kSMDTLSrxStatusRunning</a>
+<dd>Indicates that there is nothing significant to report
+
+<dt><a name="field-kSMDTLSrxStatusStopped">kSMDTLSrxStatusStopped</a>
+<dd>Indicates that the DTLS[rx] has stopped processing DTLS and that
+it can be safely destroyed
+
+<dt><a name="field-kSMDTLSrxStatusHasPacket">kSMDTLSrxStatusHasPacket</a>
+<dd>Indicates that a DTLS packet is available to be read.
+
+<dt><a name="field-kSMDTLSrxStatusOverrun">kSMDTLSrxStatusOverrun</a>
+<dd>Data has been lost because the packet buffer has overflowed.
+
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources existed to create the DTLS[rx]</ul>
+<hr>
+<h2><a name="sm_dtlsrx_stop">Prosody DTLS processing: API: sm_dtlsrx_stop</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlsrx_stop(struct sm_dtlsrx_stop_parms *<a href="#field-stopp">stopp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-stopp">*stopp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlsrx_stop_parms {
+	<a href="../apitype.html#type-tSMDTLSrxId">tSMDTLSrxId</a> <a href="#field-dtlsrx">dtlsrx</a>;					/* in */
+} SM_DTLSRX_STOP_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Requests that a DTLS[rx] stops executing. The user will be notified that
+a DTLS[rx] has terminated by a final status event. Once the final status
+notification has been received the DTLS[rx] can be destroyed using
+<a href="#sm_dtlsrx_destroy">sm_dtlsrx_destroy()</a>.
+<p>
+Once the DTLS[rx] has stopped the event should no longer be used to wait
+for status notifications as it will be signalled permanently. The event
+is invalidated when
+<a href="#sm_dtlsrx_destroy">sm_dtlsrx_destroy()</a>
+is called.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlsrx">dtlsrx</a><dd>A tSMDTLSrxId that has been previously created by a call to
+<a href="#sm_dtlsrx_create">sm_dtlsrx_create()</a>.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_dtlstx_config">Prosody DTLS processing: API: sm_dtlstx_config</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlstx_config(struct sm_dtlstx_config_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_config_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN">SOCKADDR_IN</a> <a href="#field-destination">destination</a>;				/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN">SOCKADDR_IN</a> <a href="#field-source">source</a>;					/* in */
+} SM_DTLSTX_CONFIG_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures a DTLS[tx] to send DTLS packets to a device with the 
+specified IPv4 address.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>The DTLS[tx] to configure
+
+<dt><a name="field-destination">destination</a><dd>The SOCKADDR_IN structure specifying the destination IP address
+and port for the DTLS packets. A struct SOCKADDR_IN must be
+configured with an address family, an IP address and a port.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+The structure must be correctly cast such that an IP V4 
+address is specified.
+
+<dt><a name="field-source">source</a><dd>The SOCKADDR_IN structure allows you to specify the source IP
+address and port for the DTLS data. A struct SOCKADDR_IN must
+be configured with an address family. The IP address may be
+specified, or the value INADDR_ANY may be used to indicate
+that any suitable address may be used. The port number may be
+specified, or the value zero may be used to indicate that a
+suitable port number is to be automatically allocated and
+used.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+The structure must be correctly cast such that an IP V4 
+address is specified.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_dtlstx_config_ipv6">Prosody DTLS processing: API: sm_dtlstx_config_ipv6</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlstx_config_ipv6(struct sm_dtlstx_config_ipv6_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_config_ipv6_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN6">SOCKADDR_IN6</a> <a href="#field-destination">destination</a>;				/* in */
+	<a href="../apitype.html#type-SOCKADDR_IN6">SOCKADDR_IN6</a> <a href="#field-source">source</a>;					/* in */
+} SM_DTLSTX_CONFIG_IPV6_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures a DTLS[tx] to send DTLS packets to a device with the 
+specified IPv6 address.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>The DTLS[tx] to configure
+
+<dt><a name="field-destination">destination</a><dd>The SOCKADDR_IN6 structure specifying the destination IP address
+and port for the DTLS packets. A struct SOCKADDR_IN6 must be
+configured with an address family, an IPv6 address and a port.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+
+<dt><a name="field-source">source</a><dd>The SOCKADDR_IN6 structure allows you to specify the source IPv6
+address and port for the DTLS packets. A struct SOCKADDR_IN6 must
+be configured with an address family. The IPv6 address may be
+specified, or the value INADDR_ANY may be used to indicate
+that any suitable address may be used. The port number may be
+specified, or the value zero may be used to indicate that a
+suitable port number is to be automatically allocated and
+used.
+Note that most operating systems define this structure such that
+fields are in network byte order.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_dtlstx_config_notify">Prosody DTLS processing: API: sm_dtlstx_config_notify</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlstx_config_notify(struct sm_dtlstx_config_notify_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_config_notify_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-packet_length">packet_length</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-no_capacity_event">no_capacity_event</a>;				/* in */
+} SM_DTLSTX_CONFIG_NOTIFY_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures when a DTLS[tx] reports capacity for another packet 
+to be queued. It also configures whether the event should be set 
+when there is capacity for another packet.
+<p>
+When
+<a class=pref href="#field-no_capacity_event">no_capacity_event</a>
+is zero, the event is set when 
+<a href="#sm_dtlstx_status">sm_dtlstx_status()</a>
+will report <code>kSMDTLStxStatusHasCapacity</code>. If it
+is non-zero, the event will not be set unless a different status 
+will be reported.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>The DTLS[tx] to configure.
+
+<dt><a name="field-packet_length">packet_length</a><dd>The amount of capacity that must be available before
+<a href="#sm_dtlstx_status">sm_dtlstx_status()</a>
+reports <code>kSMDTLStxStatusHasCapacity</code>.
+
+<dt><a name="field-no_capacity_event">no_capacity_event</a><dd>An indicator of whether the DTLS[tx] event should be set when 
+there is space for another packet to be queued.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_dtlstx_create">Prosody DTLS processing: API: sm_dtlstx_create</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlstx_create(struct sm_dtlstx_create_parms *<a href="#field-dtlstxp">dtlstxp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-dtlstxp">*dtlstxp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_create_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+} SM_DTLSTX_CREATE_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Allocates, on a specific module, a new DTLS[tx] to transmit DTLS packets to a 
+remote device.
+<p>
+If the call completes successfully, the parameter
+<a class=pref href="#field-dtlstx">dtlstx</a>
+will be set to the identifier for that DTLS[tx].
+<p>
+Requires the module
+<a href="softmodindex.html#dtlstx">dtlstx</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>The newly created DTLS[tx].
+
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+which indicates the module where the DTLS[tx] is to be allocated.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources exist to create the DTLS[tx]</ul>
+<hr>
+<h2><a name="sm_dtlstx_destroy">Prosody DTLS processing: API: sm_dtlstx_destroy</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlstx_destroy(<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a>
+<dd>
+A tSMDTLStxId that has been prevously created by a call to 
+<a href="#sm_dtlstx_create">sm_dtlstx_create()</a>.
+</dl>
+<h3>Description</h3>
+<p>
+Destroys
+<a class=pref href="#field-dtlstx">dtlstx</a>
+and invalidates the tSMDTLStxId.
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_dtlstx_get_event">Prosody DTLS processing: API: sm_dtlstx_get_event</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlstx_get_event(struct sm_dtlstx_event_parms *<a href="#field-eventp">eventp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-eventp">*eventp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_event_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* in */
+	<a href="../apitype.html#type-tSMEventId">tSMEventId</a> <a href="#field-event">event</a>;					/* out */
+} SM_DTLSTX_EVENT_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+If the call completes successfully 
+<a class=pref href="#field-event">event</a>
+will hold a pointer to the tSMEventId belonging to 
+<a class=pref href="#field-dtlstx">dtlstx</a>.
+The tSMEventId is valid until the DTLS[tx] is destroyed using 
+<a href="#sm_dtlstx_destroy">sm_dtlstx_destroy()</a>.
+This event will be signalled when a status change occurs on the DTLS[tx].
+When the event is signalled the user must call 
+<a href="#sm_dtlstx_status">sm_dtlstx_status()</a>
+to discover the nature of the status change.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>The DTLS[tx] 
+
+<dt><a name="field-event">event</a><dd>The event identifier
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_dtlstx_send_packet">Prosody DTLS processing: API: sm_dtlstx_send_packet</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlstx_send_packet(struct sm_dtlstx_send_packet_parms *<a href="#field-packetp">packetp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-packetp">*packetp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_send_packet_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* in */
+	char *<a href="#field-data">data</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-packet_length">packet_length</a>;					/* in */
+} SM_DTLSTX_SEND_PACKET_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Sends a packet using a DTLS[tx].
+<p>
+Requires the module
+<a href="softmodindex.html#dtlstx">dtlstx</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>The DTLS[tx] that will send the packet
+
+<dt><a name="field-data">data</a><dd>A pointer to the packet to be sent.
+
+<dt><a name="field-packet_length">packet_length</a><dd>The length of the packet to be sent.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a>.
+<hr>
+<h2><a name="sm_dtlstx_status">Prosody DTLS processing: API: sm_dtlstx_status</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlstx_status(struct sm_dtlstx_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_status_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* in */
+	<a name="enum-kSMDTLStxStatus">enum kSMDTLStxStatus</a> {
+		<a href="#field-kSMDTLStxStatusRunning">kSMDTLStxStatusRunning</a>,
+		<a href="#field-kSMDTLStxStatusStopped">kSMDTLStxStatusStopped</a>,
+		<a href="#field-kSMDTLStxStatusHasCapacity">kSMDTLStxStatusHasCapacity</a>,
+	} <a href="#field-status">status</a>;						/* out */
+} SM_DTLSTX_STATUS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Returns the current status of the DTLS[tx] or an error to indicate that
+a problem occurred during start-up.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>The DTLS[tx] to interrogate
+
+<dt><a name="field-status">status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMDTLStxStatusRunning">kSMDTLStxStatusRunning</a>
+<dd>Indicates that there is nothing significant to report
+
+<dt><a name="field-kSMDTLStxStatusStopped">kSMDTLStxStatusStopped</a>
+<dd>Indicates that the DTLS[tx] has stopped transmitting DTLS and that it is
+safe to destroy
+
+<dt><a name="field-kSMDTLStxStatusHasCapacity">kSMDTLStxStatusHasCapacity</a>
+<dd>The DTLS[tx] has capacity to buffer another packet.
+
+</dl>
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources existed to create the DTLS[tx]</ul>
+<hr>
+<h2><a name="sm_dtlstx_stop">Prosody DTLS processing: API: sm_dtlstx_stop</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_dtlstx_stop(struct sm_dtlstx_stop_parms *<a href="#field-stopp">stopp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-stopp">*stopp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlstx_stop_parms {
+	<a href="../apitype.html#type-tSMDTLStxId">tSMDTLStxId</a> <a href="#field-dtlstx">dtlstx</a>;					/* in */
+} SM_DTLSTX_STOP_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Requests that a DTLS[tx] stops executing. The user will be notified that
+a DTLS[tx] has terminated by a final status event. Once the final status
+notification has been received the DTLS[tx] can be destroyed using
+<a href="#sm_dtlstx_destroy">sm_dtlstx_destroy()</a>.
+<p>
+Once the DTLS[tx] has stopped the event should no longer be used to wait
+for status notifications as it will be signalled permanently. The event
+is invalidated when
+<a href="#sm_dtlstx_destroy">sm_dtlstx_destroy()</a>
+is called.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-dtlstx">dtlstx</a><dd>A tSMDTLStxId that has been previously created by a call to
+<a href="#sm_dtlstx_create">sm_dtlstx_create()</a>.
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<h2><a name="sm_vmprx_config_dtls">Prosody DTLS processing: API: sm_vmprx_config_dtls</a></h2>
+<h3>Prototype Definition</h3>
+<p class="prototype">
+int sm_vmprx_config_dtls(struct sm_vmprx_config_dtls_parms *<a href="#field-configp">configp</a>)
+<p>
+<h3>Parameters</h3>
+<dl>
+<dt><a name="field-configp">*configp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_config_dtls_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSMDTLSrxId">tSMDTLSrxId</a> <a href="#field-dtlsrx">dtlsrx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-use_RTCP_port">use_RTCP_port</a>;					/* in */
+} SM_VMPRX_CONFIG_DTLS_PARMS;
+</pre>
+</dl>
+<h3>Description</h3>
+<p>
+Configures a VMP[rx] to pass incoming DTLS packets to a DTLS[rx].
+<p>
+Requires the modules
+<a href="softmodindex.html#dtlsrx">dtlsrx</a>
+and
+<a href="softmodindex.html#vmprx">vmprx</a>
+to have been downloaded.
+<h3>Fields</h3>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] which will received the DTLS packets.
+
+<dt><a name="field-dtlsrx">dtlsrx</a><dd>The DTLS[rx] to pass the packets to. If this is <code>kSMNullDTLSrxId</code> 
+then the VMP[rx] will no longer pass on DTLS packets.
+
+<dt><a name="field-use_RTCP_port">use_RTCP_port</a><dd>Which port will receive the DTLS packets. When non-zero, use the RTCP port. Otherwise, the RTP port is used 
+
+</dl>
+<h3>Returns</h3>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>These functions constitute the
+<a href="../prosdtls.html">Prosody DTLS processing API</a>.
+</body>
+</html>

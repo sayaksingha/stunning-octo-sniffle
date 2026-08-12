@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_get_card_info</title>
+</head>
+<body>
+<h1>Prosody generic: API: sm_get_card_info</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_get_card_info(struct sm_card_info_parms *<a href="#field-cardinfop">cardinfop</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-cardinfop">*cardinfop</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_card_info_parms {
+	<a href="../apitype.html#type-tSMCardId">tSMCardId</a> <a href="#field-card">card</a>;						/* in */
+	<a name="enum-kSMCarrierCardType">enum kSMCarrierCardType</a> {
+		<a href="#field-kSMCarrierCardTypeYetUnknown">kSMCarrierCardTypeYetUnknown</a>,
+		<a href="#field-kSMCarrierCardTypeISAS2">kSMCarrierCardTypeISAS2</a>,
+		<a href="#field-kSMCarrierCardTypeBR4">kSMCarrierCardTypeBR4</a>,
+		<a href="#field-kSMCarrierCardTypeBR8">kSMCarrierCardTypeBR8</a>,
+		<a href="#field-kSMCarrierCardTypePCIP1">kSMCarrierCardTypePCIP1</a>,
+		<a href="#field-kSMCarrierCardTypePCIC1">kSMCarrierCardTypePCIC1</a>,
+		<a href="#field-kSMCarrierCardTypePS">kSMCarrierCardTypePS</a>,
+		<a href="#field-kSMCarrierCardTypePX">kSMCarrierCardTypePX</a>,
+	} <a href="#field-card_type">card_type</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-card_detected">card_detected</a>;					/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-module_count">module_count</a>;					/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-physical_address">physical_address</a>;				/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-io_address">io_address</a>;					/* out */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-physical_irq">physical_irq</a>;					/* out */
+	char <a href="#field-serial_no">serial_no[kSMMaxSerialNoText]</a>;			/* out */
+} SM_CARD_INFO_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Retrieves information about card hosting Prosody modules
+installed in system. 
+<p>
+On return,
+<a class=pref href="#field-card_type">card_type</a>
+will be set to one of the following values:
+<p>
+<table border cellpadding=5>
+<tr> <th>Card Type</th> <th>Use</th> </tr>
+<tr>
+	<td>kSMCarrierCardTypeYetUnknown</td>
+	<td>Card type not yet determined by driver.</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypeISAS2</td>
+	<td>Obsolete card.</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypeBR4</td>
+	<td>Obsolete card.</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypeBR8</td>
+	<td>Obsolete card.</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypePCIP1</td>
+	<td>Obsolete card.</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypePCIC1</td>
+	<td>Obsolete card.</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypePS</td>
+	<td>Prosody S virtual 'card'</td>
+</tr>
+<tr>
+	<td>kSMCarrierCardTypePX</td>
+	<td>Prosody X card</td>
+</tr>
+</table>
+<p>
+The parameter 
+<a class=pref href="#field-card_detected">card_detected</a>
+is obsolete.
+<p>
+The number of modules detected on the card is returned in
+<a class=pref href="#field-module_count">module_count</a>.
+<p>
+The parameters
+<a class=pref href="#field-physical_address">physical_address</a>
+, 
+<a class=pref href="#field-io_address">io_address</a>
+, and
+<a class=pref href="#field-physical_irq">physical_irq</a>
+are obsolete.
+<p>
+Some carrier cards have a machine readable serial number. For
+such cards the serial number is returned as a zero terminated
+text string in the character array
+<a class=pref href="#field-serial_no">serial_no</a>.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-card">card</a><dd>The card about which information is required
+
+<dt><a name="field-card_type">card_type</a><dd>The type of the card
+
+One of these values:
+<dl>
+<dt><a name="field-kSMCarrierCardTypeYetUnknown">kSMCarrierCardTypeYetUnknown</a>
+<dd>The card type has not been determined.
+
+<dt><a name="field-kSMCarrierCardTypeISAS2">kSMCarrierCardTypeISAS2</a>
+<dd>Obsolete card type.
+
+<dt><a name="field-kSMCarrierCardTypeBR4">kSMCarrierCardTypeBR4</a>
+<dd>Obsolete card type.
+
+<dt><a name="field-kSMCarrierCardTypeBR8">kSMCarrierCardTypeBR8</a>
+<dd>Obsolete card type.
+
+<dt><a name="field-kSMCarrierCardTypePCIP1">kSMCarrierCardTypePCIP1</a>
+<dd>Obsolete card type.
+
+<dt><a name="field-kSMCarrierCardTypePCIC1">kSMCarrierCardTypePCIC1</a>
+<dd>Obsolete card type.
+
+<dt><a name="field-kSMCarrierCardTypePS">kSMCarrierCardTypePS</a>
+<dd>A Prosody S virtual 'card'. This is a software entity which
+emulates a digital access card and provides a number of channels
+of telephony via the host's IP (Internet Protocol) communications.
+
+<dt><a name="field-kSMCarrierCardTypePX">kSMCarrierCardTypePX</a>
+<dd>A Prosody X card. This is a card which is controlled by IP
+(Internet Protocol).
+
+</dl>
+<dt><a name="field-card_detected">card_detected</a><dd>Obsolete parameter.
+
+<dt><a name="field-module_count">module_count</a><dd>The number of modules on this card.
+
+<dt><a name="field-physical_address">physical_address</a><dd>Obsolete parameter.
+
+<dt><a name="field-io_address">io_address</a><dd>Obsolete parameter.
+
+<dt><a name="field-physical_irq">physical_irq</a><dd>Obsolete parameter.
+
+<dt><a name="field-serial_no">serial_no</a><dd>The serial number of this card.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - if no such card exists</ul>
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

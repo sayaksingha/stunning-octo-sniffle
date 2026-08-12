@@ -1,0 +1,7 @@
+sm_framer_create	iPsFRtMt_
+sm_framer_datafeed_connect	iPsDtFRti_
+sm_framer_datafeed_disconnect	iPsFRti_
+sm_framer_destroy	iFRt
+sm_framer_get_datafeed	iPsFRtiDt_
+sm_framer_get_event	iPsFRtEt_
+sm_framer_status	iPsFRte1_3_i_

@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody data communications: API: smdc_line_status</title>
+</head>
+<body>
+<h1>Prosody data communications: API: smdc_line_status</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int smdc_line_status(struct smdc_line_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_line_status_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCLinkStatus">enum kSMDCLinkStatus</a> {
+		<a href="#field-kSMDCLinkStatusNotConnected">kSMDCLinkStatusNotConnected</a>,
+		<a href="#field-kSMDCLinkStatusConnecting">kSMDCLinkStatusConnecting</a>,
+		<a href="#field-kSMDCLinkStatusConnected">kSMDCLinkStatusConnected</a>,
+		<a href="#field-kSMDCLinkStatusDisconnecting">kSMDCLinkStatusDisconnecting</a>,
+	} <a href="#field-link_status">link_status</a>;						/* out */
+	<a name="enum-kSMDCLineRxStatus">enum kSMDCLineRxStatus</a> {
+		<a href="#field-kSMDCRxStatusNoCarrier">kSMDCRxStatusNoCarrier</a>,
+		<a href="#field-kSMDCRxStatusCarrierPresent">kSMDCRxStatusCarrierPresent</a>,
+		<a href="#field-kSMDCRxStatusReceivingData">kSMDCRxStatusReceivingData</a>,
+	} <a href="#field-rx_status">rx_status</a>;						/* out */
+	<a name="enum-kSMDCLineTxStatus">enum kSMDCLineTxStatus</a> {
+		<a href="#field-kSMDCTxStatusSilent">kSMDCTxStatusSilent</a>,
+		<a href="#field-kSMDCTxStatusSendingCarrier">kSMDCTxStatusSendingCarrier</a>,
+		<a href="#field-kSMDCTxStatusSendingData">kSMDCTxStatusSendingData</a>,
+	} <a href="#field-tx_status">tx_status</a>;						/* out */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-tx_cts">tx_cts</a>;						/* out */
+} SMDC_LINE_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This function is deprecated in favour of using
+<a href="apifn-smdc_rx_status.html">smdc_rx_status()</a>
+and
+<a href="apifn-smdc_tx_status.html">smdc_tx_status()</a>.
+<p>
+Reports the status of a channel used for data communications.
+If its input half has not been configured for data
+communications, then the field
+<a class=pref href="#field-rx_status">rx_status</a>
+will contain the value
+<a class=pref href="#field-kSMDCRxStatusNoCarrier">kSMDCRxStatusNoCarrier</a>,
+otherwise it indicates status of the input half of the channel.
+Note that it is not normally appropriate to distinguish between
+<a class=pref href="#field-kSMDCRxStatusCarrierPresent">kSMDCRxStatusCarrierPresent</a>
+and
+<a class=pref href="#field-kSMDCRxStatusReceivingData">kSMDCRxStatusReceivingData</a>
+since protocols can typically switch between them very
+quickly and the system only reports approximately to avoid
+the status changing very rapidly.
+<p>
+If the channel's output half has not been configured for data
+communications, then the field
+<a class=pref href="#field-tx_status">tx_status</a>
+will contain the value
+<a class=pref href="#field-kSMDCTxStatusSilent">kSMDCTxStatusSilent</a>,
+otherwise it indicates the output half status. Note that it is
+not normally appropriate to distinguish between
+<a class=pref href="#field-kSMDCTxStatusSendingCarrier">kSMDCTxStatusSendingCarrier</a>
+and
+<a class=pref href="#field-kSMDCTxStatusSendingData">kSMDCTxStatusSendingData</a>
+since protocols can typically switch between them very
+quickly and the system only reports approximately to avoid
+the status changing very rapidly.
+<p>
+The overall channel status is reported in
+<a class=pref href="#field-link_status">link_status</a>.
+Where the input half and output half have been configured
+with independent protocols, the status is reported as
+<a class=pref href="#field-kSMDCLinkStatusConnected">kSMDCLinkStatusConnected</a>
+if either is connected. The status
+<a class=pref href="#field-kSMDCLinkStatusNotConnected">kSMDCLinkStatusNotConnected</a>
+is reported only if both have finished data communications.
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel which has been configured for data communications.
+
+<dt><a name="field-link_status">link_status</a><dd>The channel status.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCLinkStatusNotConnected">kSMDCLinkStatusNotConnected</a>
+<dd>The channel has finished with data communications. When this
+status is reported, the channel reverts to the idle state
+that it was in before
+<a href="apifn-smdc_channel_config.html">smdc_channel_config()</a>
+was used. Therefore it can be re-configured or used for
+another purpose and a subsequent call to
+<a href="apifn-smdc_line_status.html">smdc_line_status()</a>
+will report the error <code>ERR_SM_WRONG_CHANNEL_STATE</code>.
+
+<dt><a name="field-kSMDCLinkStatusConnecting">kSMDCLinkStatusConnecting</a>
+<dd>Channel is waiting to connect. Either the appropriate command
+(<a href="apifn-smdc_line_control.html#field-kSMDCLineCtlCmdInitiatorConnect">kSMDCLineCtlCmdInitiatorConnect</a>
+or
+<a href="apifn-smdc_line_control.html#field-kSMDCLineCtlCmdResponderConnect">kSMDCLineCtlCmdResponderConnect</a>)
+has not yet been used in a call to
+<a href="apifn-smdc_line_control.html">smdc_line_control()</a>
+or the connection handshake procedures have not yet completed.
+
+<dt><a name="field-kSMDCLinkStatusConnected">kSMDCLinkStatusConnected</a>
+<dd>Connection handshake procedures have been completed or are not
+applicable.
+
+<dt><a name="field-kSMDCLinkStatusDisconnecting">kSMDCLinkStatusDisconnecting</a>
+<dd>The channel is in the process of disconnecting.
+
+</dl>
+<dt><a name="field-rx_status">rx_status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMDCRxStatusNoCarrier">kSMDCRxStatusNoCarrier</a>
+<dd>The input half is not receiving a meaningful signal.
+
+<dt><a name="field-kSMDCRxStatusCarrierPresent">kSMDCRxStatusCarrierPresent</a>
+<dd>The input half is receiving a meaningful signal, but it does
+not contain data.
+
+<dt><a name="field-kSMDCRxStatusReceivingData">kSMDCRxStatusReceivingData</a>
+<dd>The input half is receiving a meaningful signal, and it contains
+data.
+
+</dl>
+<dt><a name="field-tx_status">tx_status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMDCTxStatusSilent">kSMDCTxStatusSilent</a>
+<dd>The output half is not sending any signal.
+
+<dt><a name="field-kSMDCTxStatusSendingCarrier">kSMDCTxStatusSendingCarrier</a>
+<dd>The output half is sending a signal which does not contain
+data (e.g. a carrier or framing pattern).
+
+<dt><a name="field-kSMDCTxStatusSendingData">kSMDCTxStatusSendingData</a>
+<dd>The output half is sending a signal which contains data.
+
+</dl>
+<dt><a name="field-tx_cts">tx_cts</a><dd>Indicator of whether the transmitter is ready to transmit
+(non-zero) or not (zero).
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosdc.html">Prosody data communications API</a>.
+</body>
+</html>

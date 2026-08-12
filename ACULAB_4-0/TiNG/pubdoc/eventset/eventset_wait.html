@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<link rel=stylesheet type="text/css" href="evapi.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>eventset_wait</title>
+<body>
+
+<h1>EVENTSET: eventset_wait() - handle events</h1>
+
+<h2>Name</h2>
+
+<p>
+eventset_wait()
+
+<h2>Synopsis</h2>
+
+<pre>#include &quot;eventset.h&quot;</pre>
+
+<pre>err_t eventset_wait(EVENTSET *evs)</pre>
+
+<h2>Description</h2>
+
+<p>
+This function implements a &quot;main loop&quot; which
+intercepts all events and calls the appropriate handlers. <code>event_wait()</code> should be run in the
+context of the <a href="EVENTSET.html"><em>worker thread</em></a>.
+Note that this function will not return until the <a href="EVENTSET.html"><em>management thread</em></a> calls <a href="eventset_stop.html">eventset_stop()</a>.
+
+<h2>Return value</h2>
+
+<p>
+<code>eventset_wait()</code> returns NULL
+if successful, or non-NULL otherwise. If non-NULL, the <code>err_t</code> object contains error strings
+which may be printed or otherwise communicated to the user.
+
+<h2>See also</h2>
+
+<p>
+<a href="eventset_stop.html">eventset_stop()</a>

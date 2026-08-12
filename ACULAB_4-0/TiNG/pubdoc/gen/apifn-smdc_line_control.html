@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody data communications: API: smdc_line_control</title>
+</head>
+<body>
+<h1>Prosody data communications: API: smdc_line_control</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int smdc_line_control(struct smdc_line_control_parms *<a href="#field-controlp">controlp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-controlp">*controlp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_line_control_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a name="enum-kSMDCLineCtlCmd">enum kSMDCLineCtlCmd</a> {
+		<a href="#field-kSMDCLineCtlCmdInitiatorConnect">kSMDCLineCtlCmdInitiatorConnect</a>,
+		<a href="#field-kSMDCLineCtlCmdResponderConnect">kSMDCLineCtlCmdResponderConnect</a>,
+		<a href="#field-kSMDCLineCtlCmdDisconnect">kSMDCLineCtlCmdDisconnect</a>,
+		<a href="#field-kSMDCLineCtlCmdAssertRTS">kSMDCLineCtlCmdAssertRTS</a>,
+		<a href="#field-kSMDCLineCtlCmdUnassertRTS">kSMDCLineCtlCmdUnassertRTS</a>,
+		<a href="#field-kSMDCLineCtlCmdSetAux">kSMDCLineCtlCmdSetAux</a>,
+		<a href="#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>,
+		<a href="#field-kSMDCLineCtlCmdSuspend">kSMDCLineCtlCmdSuspend</a>,
+		<a href="#field-kSMDCLineCtlCmdResume">kSMDCLineCtlCmdResume</a>,
+		<a href="#field-kSMDCLineCtlCmdResumeMonitorCarrier">kSMDCLineCtlCmdResumeMonitorCarrier</a>,
+		<a href="#field-kSMDCLineCtlCmdRetrain">kSMDCLineCtlCmdRetrain</a>,
+	} <a href="#field-cmd">cmd</a>;							/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-aux_mask">aux_mask</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-aux_toggle">aux_toggle</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-shorttrain">shorttrain</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-tep">tep</a>;						/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-prefix_bitlength">prefix_bitlength</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-prefix_data">*prefix_data</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-suffix_bitlength">suffix_bitlength</a>;				/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-suffix_data">*suffix_data</a>;					/* in */
+	<a href="../apitype.html#type-tSM_UT32">tSM_UT32</a> <a href="#field-retrain_speed">retrain_speed</a>;					/* in */
+} SMDC_LINE_CONTROL_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Perform a command on the halves of a channel which have been
+configured for data communications. If the channel has been
+configured with independent input and output halves, the
+operation requested by
+<a class=pref href="#field-cmd">cmd</a>
+is performed separately on both. It is an error to attempt to
+perform a command on a protocol which does not implement it.
+<p>
+If a protocol has an auxiliary configuration value, the
+<a class=pref href="#field-aux_mask">aux_mask</a>
+and
+<a class=pref href="#field-aux_toggle">aux_toggle</a>
+fields are used by the
+<a class=pref href="#field-kSMDCLineCtlCmdSetAux">kSMDCLineCtlCmdSetAux</a>
+command to modify this value as shown in this table:
+<table border>
+<tr>
+	<th>bit in aux_mask</th>
+	<th>bit in aux_toggle</th>
+	<th>effect on configuration bit</th>
+</tr>
+<tr>	<td>0</td> <td>0</td> <td>clear it</td>	</tr>
+<tr>	<td>0</td> <td>1</td> <td>set it</td>	</tr>
+<tr>	<td>1</td> <td>0</td> <td>leave it unchanged</td>	</tr>
+<tr>	<td>1</td> <td>1</td> <td>invert it</td>	</tr>
+</table>
+<p>
+See also the document <a href="../prosdc_config.html">Prosody
+Data Communcations Protocols and Encodings</a>
+for details of behaviour specific to individual protocols and
+encodings.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel which has been configured for data communications.
+
+<dt><a name="field-cmd">cmd</a><dd>The control operation to perform.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCLineCtlCmdInitiatorConnect">kSMDCLineCtlCmdInitiatorConnect</a>
+<dd>Initiate the connection handshake required by the configured
+protocol. If the protocol distinguishes between an originator
+(or caller) and a responder (or answerer), then act as the
+originator.
+
+<dt><a name="field-kSMDCLineCtlCmdResponderConnect">kSMDCLineCtlCmdResponderConnect</a>
+<dd>For a protocol which distinguishes between an originator
+(or caller) and a responder (or answerer), initiate the
+connection handshake acting as responder.
+
+<dt><a name="field-kSMDCLineCtlCmdDisconnect">kSMDCLineCtlCmdDisconnect</a>
+<dd>Initiate the disconnection procedures for the configured
+protocol.
+
+<dt><a name="field-kSMDCLineCtlCmdAssertRTS">kSMDCLineCtlCmdAssertRTS</a>
+<dd>For a protocol which uses a carrier or equivalent mechanism,
+turn on the carrier. If there is more than one way to do this
+(e.g. a long or a short training sequence) then the field
+<a class=pref href="#field-shorttrain">shorttrain</a>
+selects the one to use. If a protocol specification requires RTS
+to be used, the Prosody implementation may provide automatic
+RTS. Automatic RTS control is triggered when data is presented
+for transmission without RTS being asserted. The protocol acts
+as if RTS had been asserted, sends the data, and acts as if RTS
+was then deasserted.
+
+<dt><a name="field-kSMDCLineCtlCmdUnassertRTS">kSMDCLineCtlCmdUnassertRTS</a>
+<dd>For a protocol which uses a carrier or equivalent mechanism,
+turn off the carrier. The effect of this command is delayed
+while the transmitter sends data which is queued.
+
+<dt><a name="field-kSMDCLineCtlCmdSetAux">kSMDCLineCtlCmdSetAux</a>
+<dd>For a protocol which has auxiliary configuration, modify the
+current configuration value by ANDing with
+<a class=pref href="#field-aux_mask">aux_mask</a>
+and XORing
+<a class=pref href="#field-aux_toggle">aux_toggle</a>.
+
+<dt><a name="field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>
+<dd>Set the bit patterns to be used as a prefix and a suffix on
+transmissions.
+The prefix is set to
+<a class=pref href="#field-prefix_bitlength">prefix_bitlength</a>
+bits of data at
+<a class=pref href="#field-prefix_data">prefix_data</a>
+and the suffix is set to
+<a class=pref href="#field-suffix_bitlength">suffix_bitlength</a>
+bits of data at
+<a class=pref href="#field-suffix_data">suffix_data</a>.
+These are arbitrary sequences
+of bits which are added when the normal data has
+been encoded and, therefore, are not affected by the
+type of encoding in use. The prefix is sent as soon as the
+protocol is ready to transmit (which is typically when the
+<a class=pref href="#field-kSMDCLineCtlCmdAssertRTS">kSMDCLineCtlCmdAssertRTS</a>
+command is issued), and the suffix is sent just before the
+carrier is turned off (which is typically when the
+<a class=pref href="#field-kSMDCLineCtlCmdUnassertRTS">kSMDCLineCtlCmdUnassertRTS</a>
+command is issued). If a protocol has no RTS control, the
+prefix is sent as soon as possible, and the suffix is never
+sent. If the protocol permits RTS to be turned on
+automatically when data is ready to be sent, then the prefix
+is sent as soon as there is data ready to be sent and the suffix
+is sent when there is no remaining data to be sent. See the
+documentation for each protocol to determine which protocols
+support this feature.
+Requires the module
+<a href="softmodindex.html#prefsuf">prefsuf</a>.
+
+<dt><a name="field-kSMDCLineCtlCmdSuspend">kSMDCLineCtlCmdSuspend</a>
+<dd>Suspend modem receiver. The modem no longer processes the incoming
+signal. This command is only valid for the modem types which
+state they support it.
+
+<dt><a name="field-kSMDCLineCtlCmdResume">kSMDCLineCtlCmdResume</a>
+<dd>Resume modem receiver. The modem must have been suspended with
+<a class=pref href="#field-kSMDCLineCtlCmdSuspend">kSMDCLineCtlCmdSuspend</a>
+and it now resumes processing the incoming
+signal. Typically, this allows the modem to make use of a shorter
+training sequence as some of the signal analysis saved when the
+modem was suspended can be re-used.
+
+<dt><a name="field-kSMDCLineCtlCmdResumeMonitorCarrier">kSMDCLineCtlCmdResumeMonitorCarrier</a>
+<dd>Resume modem receiver but only for purposes of monitoring signal 
+following a previous loss of synchronisation. The modem must have 
+been suspended with 
+<a class=pref href="#field-kSMDCLineCtlCmdSuspend">kSMDCLineCtlCmdSuspend</a>
+when the previous loss of carrier occurred and it is now resumed 
+but solely to monitor the nature/energy of following signal. The 
+application will notified with a carrier on and carrier off 
+notification if what looks like an additional segment of modem 
+modulated signal is present - so an application can determine where 
+modem modulated signal ended following any dropout. Demodulated data 
+will not be supplied. Typically, this allows the application to avoid 
+a timeout following a fax modem dropout.
+The modem must be suspended again, using
+<a class=pref href="#field-kSMDCLineCtlCmdSuspend">kSMDCLineCtlCmdSuspend</a>,
+before 
+<a class=pref href="#field-kSMDCLineCtlCmdResume">kSMDCLineCtlCmdResume</a>
+is used to resume wait for a shorter training sequence.
+
+<dt><a name="field-kSMDCLineCtlCmdRetrain">kSMDCLineCtlCmdRetrain</a>
+<dd>Initiate a modem retrain. This command is only valid for the modem types 
+which state they support it.
+
+</dl>
+<dt><a name="field-aux_mask">aux_mask</a><dd>A bitmask used with the
+<a class=pref href="#field-kSMDCLineCtlCmdSetAux">kSMDCLineCtlCmdSetAux</a>
+command.
+
+<dt><a name="field-aux_toggle">aux_toggle</a><dd>A bitmask used with the
+<a class=pref href="#field-kSMDCLineCtlCmdSetAux">kSMDCLineCtlCmdSetAux</a>
+command.
+
+<dt><a name="field-shorttrain">shorttrain</a><dd>Select whether the protocol should use short training
+(non-zero) or long training (zero). Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdAssertRTS">kSMDCLineCtlCmdAssertRTS</a>.
+
+<dt><a name="field-tep">tep</a><dd>Indicator of whether the transmitter should use <em>Talker
+Echo Protection</em> tone (non-zero) or not (zero). Only valid
+when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdAssertRTS">kSMDCLineCtlCmdAssertRTS</a>.
+
+<dt><a name="field-prefix_bitlength">prefix_bitlength</a><dd>The number of bits in the prefix. Must be zero or a multiple of 8.
+Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>.
+
+<dt><a name="field-prefix_data">prefix_data</a><dd>The prefix to be used with transmission.
+Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>.
+The data is sent least significant bit first, and any extra
+bits in the last word are ignored.
+
+<dt><a name="field-suffix_bitlength">suffix_bitlength</a><dd>The number of bits in the suffix. Must be zero or a multiple of 8.
+Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>.
+
+<dt><a name="field-suffix_data">suffix_data</a><dd>The suffix to be used with transmission.
+Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdSetPrefixSuffix">kSMDCLineCtlCmdSetPrefixSuffix</a>.
+The data is sent least significant bit first, and any extra
+bits in the last word are ignored.
+
+<dt><a name="field-retrain_speed">retrain_speed</a><dd>The speed to retrain to.
+Only valid when the
+<a class=pref href="#field-cmd">cmd</a>
+field is
+<a class=pref href="#field-kSMDCLineCtlCmdRetrain">kSMDCLineCtlCmdRetrain</a>.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - configured protocol does not support this command</ul>
+<hr>
+<p>This function is part of the <a href="../prosdc.html">Prosody data communications API</a>.
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody FMP processing: API: sm_fmptx_stop</title>
+</head>
+<body>
+<h1>Prosody FMP processing: API: sm_fmptx_stop</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_fmptx_stop(struct sm_fmptx_stop_parms *<a href="#field-stopp">stopp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-stopp">*stopp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_fmptx_stop_parms {
+	<a href="../apitype.html#type-tSMFMPtxId">tSMFMPtxId</a> <a href="#field-fmptx">fmptx</a>;					/* in */
+} SM_FMPTX_STOP_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Requests that a FMP[tx] stops executing. The user will be notified that
+a FMP[tx] has terminated by a final status event. Once the final status
+notification has been received the FMP[tx] can be destroyed using
+<a href="apifn-sm_fmptx_destroy.html">sm_fmptx_destroy()</a>.
+<p>
+Once the FMP[tx] has stopped the event should no longer be used to wait
+for status notifications as it will be signalled permanently. The event
+is invalidated when
+<a href="apifn-sm_fmptx_destroy.html">sm_fmptx_destroy()</a>
+is called.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-fmptx">fmptx</a><dd>A tSMFMPtxId that has been previously created by a call to
+<a href="apifn-sm_fmptx_create.html">sm_fmptx_create()</a>.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosfmpapi.html">Prosody FMP processing API</a>.
+</body>
+</html>

@@ -1,0 +1,3 @@
+A module which permits an incoming signal to be directed to
+an output. This is used by echo cancellation to save the
+processed signal.

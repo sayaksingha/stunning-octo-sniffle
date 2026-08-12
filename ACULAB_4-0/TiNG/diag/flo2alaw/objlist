@@ -1,0 +1,3 @@
+libutil	alaw.o
+.	flo2alaw.o
+libutil	floio.o

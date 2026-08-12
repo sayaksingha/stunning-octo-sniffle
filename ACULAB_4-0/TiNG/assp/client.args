@@ -1,0 +1,5 @@
+b	rcvbuf		unsigned
+c	cid		unsigned
+r	repwait		unsigned
+l	logfile		string
+T	trace		unsigned

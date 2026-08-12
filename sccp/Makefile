@@ -101,10 +101,10 @@ OBJS4 = SccpAculabHandler.o SccpAculabHandlerMain.o
 OBJS4 := $(OBJS4:%=$(OBJDIR)/%)
 
 # list of libraries.
-LIBS4 = $(PROJ_HOME)/Aculab/sccp/lib/libSccpAculabUtil.a\
-        $(PROJ_HOME)/Aculab/sccp/lib/libSccpAculabApi.a\
+LIBS4 = $(PROJ_HOME)/Aculab/sccp_ansi/lib/libSccpAculabUtil.a\
+        $(PROJ_HOME)/Aculab/sccp_ansi/lib/libSccpAculabApi.a\
 
-OFILE4 = SCCP_Handler_ACULAB
+OFILE4 = SccpAnsiHandler
 
 # Program dependencies
 $(OFILE4): $(LIBDIR)/$(OFILE4)

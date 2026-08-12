@@ -1,0 +1,363 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>ProsodyS AI AMD</title>
+</head>
+<body>
+<h1>ProsodyS AI AMD</h1>
+<h2>Contents</h2>
+<ul>
+<li><a href="#intro">Introduction</a>
+<li><a href="#overview">AI AMD Overview</a>
+<li><a href="#deps">Aculab software version requirements</a>
+<li><a href="#install">Installation and licensing</a>
+<li><a href="#api">Using AI AMD with TiNG API</a>
+<li><a href="#sapm">Standard announcement prefix matching</a>
+<li><a href="#config">Plugin configuration</a>
+<li><a href="#provision">Provisioning classification CPU resources</a>
+<li><a href="#diag">Diagnosing classification problems</a>
+</ul>
+<h2><a name="intro">Introduction</a></h2>
+<p>
+This note describes the additional functionality provided by ProsodyS AI AMD (AI-Driven Answering Machine Detection), how ProsodyS AI AMD is installed and configured,
+and how an application accesses it through the TiNG API.
+<p>
+A standard installation of ProsodyS, among other functions, allows an application
+to categorise (or classify) signals as live speakers or answer machines using a simple duration based algorithm. 
+ProsodyS can be augmented with a more complex AI assisted classification algorithm through installation of the ProsodyS
+AI AMD plugin package using the Aculab Installation Tool (AIT). 
+<p>
+In order for this functionality to be available to applications, AI AMD specific ProsodyS feature 
+licences must be installed . Contact your Aculab account 
+manager for more information on obtaining the ProsodyS
+AI AMD plugin AIT package together with enabling licences.
+<p>
+<h2><a name="overview">AI AMD Overview</a></h2>
+The signal classification algorithm analyses an 8KHz sampled signal fed to a Prosody channel input passing over any call progress tones
+until start of speech is detected. It then acquires as much of the subsequent signal as is required for the AI AMD model set
+in use, and then invokes classification processing on the acquired signal. Currently, two model sets are provided in the AI AMD
+package:
+<ul>
+<li>us_1750 - requires 1.75s segment of post start of speech signal
+<li>us_1500 - requires 1.5s segment of post start of speech signal 
+</ul>
+The AI AMD algorithm limits the amount of speech it requires in order to be able to rapidly notify 
+the application of the classification outcome (allowing the classification response time 
+measured from start of speech to notified outcome to be under 2s).
+<p>
+Selection of the 1.75s model gives more accurate results but has a longer classification response time. 
+<p>
+Normally a three way classification occurs:
+<ul>
+<li>signal is considered to be live speaker
+<li>signal is considered to be a machine response
+<li>signal does not contain any speech (optional timeout)
+</ul>
+An option exists to request live speaker signal to be &quot;best effort&quot; subclassified into:
+<ul>
+<li>likely to have come from residential live speaker
+<li>likely to have come from business live speaker
+</ul>
+The AI AMDs algorithm's ability to distinguish between residential and business speakers is limited to what it
+can achieve with the 1.5s or 1.75s length signal segments that it uses.
+<p>
+Further options enable classifier to report a signal as coming from a fax machine, or starting with 
+a special information tone (SIT) sequence, or busy tone sequence, or matching a <a href="#sapm">standard announcement prefix</a>.
+<p>
+There is an option for classification to generate a timeout event if an input signal does not contain any speech. The timeout
+is reset each time a call progress or ringing signal is detected in the signal prior to start of speech, restarting at the end of such a tone. An application
+may choose to implement its own additional overall timeout and cancel classification if that expires (for example if a 
+call is not answered).
+<p>
+Detection of beginning and end of tones will be notified to application as signal is processed up to the point where speech is first detected.
+<p>
+Accuracy of classification can be improved with additional contextual information linked to
+signalling, in particular the length of the &quot;ring time&quot; delay which occurs before a call is answered. If this
+information is available to the application (for example by analysis of &quot;SIP 180 Ringing&quot; notifications), it 
+should be passed into the algorithm using the signalling hint mechanism described <a href="#api">below</a>.
+<p>
+ProsodyS requires additional CPU resources to run the AI AMD signal classification algorithm, these
+need to be configured to meet the classification capacity required - see <a href="#provision">below</a> for details.
+<p>
+<h2><a name="deps">Aculab software version requirements</a></h2>
+<p>
+Support for ProsodyS AI AMD plugin requires TiNG library 2.52.18 (m1495) or later.
+<p>
+Support for AI AMD timeout requires TiNG library 2.53.0 (m1496) or later.
+<p>
+Support for additional AI AMD configuration data requires TiNG library 2.53.6 (m1502) or later.
+<p>
+<h2><a name="install">Installation and licensing</a></h2>
+<p>
+The AI AMD software is distributed in the AIT package &quot;ProsodyS_AIAMD_Plugin&quot;, once your AIT account
+has had this package added, it may be installed in the normal way using the Aculab Installation Tool (AIT).
+<p>
+The resulting installed ProsodyS Plugin will be located in the usual ProsodyS &quot;<code><a name="dirloc">ps_plugins</a></code>&quot;
+subdirectory under <code>$ACULAB_ROOT/bin64</code> (Linux) or <code>%ACULAB_ROOT%\bin\amd64</code> (Windows).
+<p>
+A ProsodyS AI AMD feature licence key must be obtained from Aculab. Once the feature licence key has been obtained 
+it can be installed using the Aculab configuration tool (ACT) or the command line LicenceAdmin tool and will 
+supply the purchased number of AI AMD licence instances. Each licence instance permits 
+an addition AI AMD task to run concurrently.
+<p>
+ProsodyS AI AMD licences have a &quot;Feature ID&quot; of 3, you can check the number of feature licences installed using
+the LicenceAdmin&apos;s tool &quot;Display licence information&quot; option. 
+<p>
+There is also the option of purchasing an uncapped licence for AI AMD where the number of AI AMD tasks 
+that may be run concurrently is not licence limited - contact Aculab for details.
+<p>
+<h2><a name="api">Using AI AMD with TiNG API</a></h2>
+<p>
+Three API calls in the TiNG API are used to interact with the ProsodyS AI AMD plugin to categorise signals:
+<ul>
+<li><a href="gen/apifn-sm_catsig_listen_for.html">sm_catsig_listen_for()</a>
+<li><a href="gen/apifn-sm_catsig_signalling_hint.html">sm_catsig_signalling_hint()</a>
+<li><a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a>
+</ul>
+<p>
+The first two calls set up an ongoing categorisation task. Once the signal has been categorised, 
+a channel recognition event (<code>kSMEventTypeRecog</code>)
+will occur and the result may then be obtained using <a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a>. 
+
+<h3>Setting up a categorisation task</h3>
+The function <a href="gen/apifn-sm_catsig_listen_for.html">sm_catsig_listen_for()</a>
+must be invoked with <code>catsig_alg_id</code> parameter set to <code>kBESPCatSigAlgLiveSpeakerPlugin</code> in order
+for AI AMD plugin algorithm to be used for categorisation.
+<p>
+The parameters <code>catsig_config_data</code> and <code>catsig_config_length</code> may be used to
+specify an optional text buffer of specified length containing a comma separated list of additional 
+classification parameters as follows:
+<ul>
+<li><b>model=&lt;model&gt;</b> - explicitly specify model set to be used for classification (must be one of models explicitly or implicitly configured in aculab.config)
+<li><b>business</b> - request classifier to try and distinguish live responses as being from business or from residential responders
+<li><b>fax</b> - enable classification of signals as fax machines
+<li><b>sit</b> - enable classification of signals as starting with special information tone (SIT)
+<li><b>sam</b>  - enable classification of signals as starting with standard announcement prefix
+<li><b>busy</b>  - enable classification of signals as starting with busy or fast busy tone sequence
+</ul>
+See also <a href="#diag">Diagnosing classification problems</a> for additional parameter items that can be specified for classification diagnosis.
+<p>
+Example parameter text buffers:
+<pre>
+  model=us_1500
+  model=us_1500,business,fax,sit
+</pre>
+The initial hint (<a href="gen/apifn-sm_catsig_listen_for.html">sm_catsig_listen_for()</a> parameter <code>catsig_hint_param</code>) and the
+subsequent hint (API call <a href="gen/apifn-sm_catsig_signalling_hint.html">sm_catsig_signalling_hint()</a>) are 
+used to notify availability of contextual &quot;ring time&quot; information
+to the classification algorithm (see <a href="#overview">algorithm overview</a>).
+<p>
+If no reliable ring time information is going to be available, then the initial hint parameter <code>catsig_hint_param</code> should be set to zero and <a href="gen/apifn-sm_catsig_signalling_hint.html">sm_catsig_signalling_hint()</a> 
+should not be called.
+<p>
+If ring time information is immediately available from signalling, then the initial hint parameter <code>catsig_hint_param</code> should be set 
+with that value, specified in milliseconds.
+<p>
+If it is known ring time information will subsequently be available from signalling, then the initial hint parameter <code>catsig_hint_param</code> should be set to -2
+and when the ring time information becomes available, it should be supplied as a millisecond value using <a href="gen/apifn-sm_catsig_signalling_hint.html">sm_catsig_signalling_hint()</a>.
+<p>
+If it is uncertain ring time information will subsequently be available from signalling, then 
+the initial hint parameter <code>catsig_hint_param</code> should be set to -1 and subsequently:
+<ul>
+<li>if it becomes apparent explicit ring time information will not be available, a subsequent hint value of zero should be provided - the algorithm will then try and infer ring time from observed input signal
+<li>if it becomes apparent ring time information will be available, a subsequent hint value of -2 should be provided, and then when available, ring time should be supplied as millisecond value in subsequent hint
+</ul>
+For applications using the Aculab call control API the following sequences illustrate use of initial and subsequent hint parameter being invoked as signalling events occur:
+<ol>
+<li>No ringing before 200 OK<ul><li>EV_MEDIA (initial hint -1)</li><li>EV_CALL_CONNECTED (subsequent hint 0)</li></ul></li>
+<li>Ringing before 200 OK<ul><li>EV_OUTGOING_RINGING (initial hint -2)</li><li>EV_MEDIA</li><li>EV_CALL_CONNECTED (subsequent hint RT in ms)</li></ul></li>
+<li>Ringing after media event<ul><li>EV_MEDIA (initial hint -1)</li><li>EV_OUTGOING_RINGING or EV_PROGRESS (subsequent hint -2)</li><li>EV_CALL_CONNECTED (subsequent hint RT in ms)</li></ul></li>
+</ol>
+In sequence 1, it is initially not certain what will follow EV_MEDIA (so initial hint is -1), then when subsequent EV_CALL_CONNECTED occurs it is apparent that explicit ring time information 
+will not be available through analysis of signalling (so subsequent hint of 0 is set).
+<p>
+In sequence 2, given the initial EV_OUTGOING_RINGING event, it is immediately apparent it will be possible to supply ring 
+time information (so initial hint is -2), 
+and then when EV_CALL_CONNECTED occurs, the time difference between this and the occurrence of EV_OUTGOING_RINGING should be 
+supplied in milliseconds as a subsequent hint.
+<p>
+In sequence 3, it is initially not certain what will follow EV_MEDIA (so initial hint is -1), then subsequent EV_OUTGOING_RINGING or EV_PROGRESS indicates it will be possible to supply 
+explicit ring time information (so subsequent hint of -2 is set), and when EV_CALL_CONNECTED eventually occurs, the time 
+difference can be supplied as in sequence 2 (time between EV_OUTGOING_RINGING and EV_CALL_CONNECTED).
+
+<h3>Cancelling a classification task</h3>
+An ongoing categorisation task can be cancelled by invoking <a href="gen/apifn-sm_catsig_listen_for.html">sm_catsig_listen_for()</a> 
+with the <code>catsig_alg_id</code> parameter set to <code>kBESPCatSigAlgLiveSpeakerPlugin</code> and <code>abort_catsig_alg</code> 
+set to non-zero value.
+<p>
+<h3>Obtaining classification outcome</h3>
+
+<p>
+A channel recognition event <a href="gen/apifn-sm_channel_set_event.html"><code>kSMEventTypeRecog</code></a> occurs 
+when the AI AMD algorithm has classified a signal or a timeout has occurred. A subsequent call 
+to <a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a> will return <code>kSMRecognisedCatSig</code> set in <code>type</code> 
+field, the algorithm id set in <code>param0</code> and a classification code in <code>param1</code> field. The following
+classification codes are defined:
+<ul>
+<li>0 - Machine response
+<li>1 - Live speaker
+<li>2 - Start of tone
+<li>3 - End of tone
+<li>4 - Timeout
+<li>5 - Live business speaker
+<li>6 - Fax machine
+<li>7 - SIT
+<li>8 - Busy or Fast Busy
+</ul>
+If <a href="#sapm">standard announcement prefix</a> matching is configured, then <a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a> can also return
+a classification code starting from 100, indicating matching of an announcement in ProsodyS configured SAM file. 
+<p>
+
+<h2><a name="sapm">Standard announcement prefix matching</a></h2>
+It can be useful to identify a signal as starting with audio that exactly matches the beginning of a known recording of a standard announcement message
+(with matching relying on the waveform uniqueness of even a short segment of an announcement and the end-to-end fidelity of automatic digitally 
+recorded announcement signals). For this kind of matching, ProsodyS can be configured with a standard announcement model (or SAM) file prepared 
+from recorded audio of a small number (up to 16) of standard announcements. If the signal being classified has an almost exactly identical waveform
+prefix to one of the signals compiled into the SAM file, then the signal will be considered classified and a classification code
+reflecting the announcement matched will be returned by <a href="gen/apifn-sm_get_recognised.html">sm_get_recognised()</a>.
+<p>
+SAM files are created using tool <code>samfilegen</code>.
+<p>
+<pre>
+    samfilegen [flags] <samfile>
+</pre>
+Running the tool without any flags lists the contents of an existing SAM file.
+<p>
+Running the tool with <code>-c</code> flag creates a new SAM file.
+<pre>
+    samfilegen -c myannouncements.sam
+</pre>
+<p>
+Running tool with <code>-a</code> flag adds an announcement prefix to existing SAM file with parameters as follows:
+<pre>
+    samfilegen -a &lt;wav&gt; &lt;offset&gt; &lt;count&gt; &lt;min-score&gt; &lt;sam-file&gt;
+</pre>
+where:
+<pre>
+    &lt;wav&gt; - is WAV (A-Law, mu-law or 16-bit 8Khz sampled) file containing announcement audio
+    &lt;offset&gt; - is numeric offset in samples indication where announcement starts in file
+    &lt;count&gt; - is number of samples that need to be exactly matched (must be multiple of 256)
+    &lt;min-score&gt; - is numeric score on how exact the match needs to be to trigger classify event
+</pre>
+The offset specified should be a sample position just before first speech utterance in the specified WAV file
+and the count should be between 2048 and 8192 samples long (256ms to 1024ms), with longer lengths
+improving matching selectivity but costing more CPU to compute.  Typically a length of 4096 samples (512ms) gives good results.
+<p>
+The min-score parameter specifies how exact the matching needs to be
+to trigger classification, the higher the value, the more strict the match must be. For typical use a min-score value of 50 is suggested. 
+For call environments where some missing prefix samples or other damage might be present in match candidate signals a lower min-score 
+may be appropriate. Selection of too low a min-score value can cause false matches to occur, using a min-score value below 30 is unlikely
+to result in a useful level of selectivity.
+<p>
+Level 3 tracing (see <a href="#diag">Diagnosing classification problems</a>) can be used to view the 
+match scores obtained for specimem signals and help selection of a suitable min-score. 
+<p>
+The name of the generated SAM file needs to be specified as a  <a href="#config">plugin configuration</a> attribute.
+<p>
+The SAM file used by ProsodyS can be updated while ProsodyS is running by using the samfilegen tool with the <code>-u</code> flag. For example
+the following command will copy &quot;myannouncements.sam&quot; to <a href="#dirloc">ps_plugins</a> psaiaimd/models subdirectory, update <a href="#config">plugin configuration</a> to specify new SAM file, and stimulate
+ProsodyS instance having IP address 127.0.0.1 and security key &quot;mykey&quot; into using updated SAM.
+<pre>
+    samfilegen -u 127.0.0.1 mykey myannouncements.sam
+</pre>
+
+<h2><a name="config">Plugin configuration</a></h2>
+<p>
+Attributes for the classification algorithm may be set in an &quot;aiamd&quot; section in &quot;aculab.config&quot; XML configuration file (see MAN1170 ProsodyS User guide section 4.6):
+<pre>
+    &lt;card type=&quot;prosodys_v3&quot;&gt;
+       ...
+       &lt;aiamd&gt;
+          ... AI AMD attributes
+       &lt;/aiamd&gt;
+       ...
+    &lt;/card&gt;
+</pre>
+If no attributes are set, then the default configuration of:
+<ul>
+<li>default and only <a href="#overview">model</a> available is &quot;us_1750&quot;
+<li>ProsodyS is provisioned with 2 classification worker threads
+</ul>
+
+The following attributes may be set:
+<ul>
+<li><b>model</b> - specifies comma separated list of available models - with default (used on zero length catsig_config_data) being first in list
+<li><b><a name="classcnt">classifiers</b></a> - number of classifier threads (see <a href="#provision">Provisioning classification CPU resources</a>)
+<li><b>verbose</b> - cause classifier information to be dumped into ProsodyS log for <a href="#diag">diagnosis</a> purposes
+<li><b>samfile</b> - specify a SAM file containing a set of <a href="#sapm">standard announcements</a> located in <a href="#dirloc">ps_plugins</a> psaiaimd/models subdirectory.
+<li><b><a name="sensitivity">sensitivity</a></b> - adjust classifier threshold (lower value biases classification of uncertain cases to err more toward machine, higher value to err more toward live) - default 0.5
+</ul>
+
+A simple configuration just setting classifier thread count and model list would be:
+<pre>
+    &lt;aiamd model=&quot;us_1500,us_1750&quot; classifiers=&quot;3&quot;/&gt;
+</pre>
+
+
+<h2><a name="provision">Provisioning classification CPU resources</a></h2>
+<p>
+ProsodyS must dedicate a number of threads for running classification jobs, a suitable
+number of these need to be created for the system capacity required. The default is to assign 2
+such threads, this number can be adjusted through setting the <a href="#classcnt">classifiers</a> plugin configuration attribute.
+<p>
+Selection of the number of threads will depend on platform performance and CPU cores available. Aculab 
+support can give advice on determining provision for a given system scenario.
+<p>
+
+<h2><a name="diag">Diagnosing classification problems</a></h2>
+<p>
+For diagnosing individual classification tasks, extra items may be included in the comma separated parameter string
+specified when <a href="gen/apifn-sm_catsig_listen_for.html">sm_catsig_listen_for()</a> is invoked. The additional
+parameters will cause classification related information to be logged to the ProsodyS log and (when requested) recordings
+of the initial speech utterance to which classification was applied to be created in the ProsodyS log directory.
+<p>
+The additional items that may be specified in the <a href="gen/apifn-sm_catsig_listen_for.html">sm_catsig_listen_for()</a> comma 
+separated parameter string are:
+<ul>
+<li><b>id=&lt;idname&gt;</b> - when records created in ProsodyS log, they will include specified identifier, for example id=call2239
+<li><b>record</b> - create recordings of initial speech - 16 bit PCM little endian samples - in directory where ProsodyS log is located, file name will include &lt;idname&gt; if id was specified
+<li><b>trace=&lt;level-digit&gt;</b> - show more detailed information about classification signal processing, the level-digit (0-5) controls amount of detail (levels 3 and over can create large amounts of trace affecting system performance under load)
+<li><b>sensitivity=&lt;frac&gt;</b> - set <a href="#sensitivity">sensitivity</a> for this task to be value between 0.1 and 0.9
+</ul>
+<table border="1">
+  <tr>
+    <th>Level</th>
+    <th>Detail</th>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>No classification information logged</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Only successful standard announcement matches logged</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>As 1 and also AMD/live classification outcomes</td>
+  </tr>
+  <tr>
+    <td><a name="tracelev3">3</a></td>
+    <td>As 2 but also include scores for all standard announcement matches (failed matches too)</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>As 3 but show more detailed information regarding AMD/live classification</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>As 4 with some extra plugin activity logging</td>
+  </tr>
+  <tr>
+</table>
+
+<p>
+If the AI AMD plugin configuration attribute &quot;verbose&quot is set non-zero in the ProsodyS configuration file, then
+recording and level 5 tracing will occur for every classification task (irrespective of comma separated string settings used in <a href="gen/apifn-sm_catsig_listen_for.html">sm_catsig_listen_for</a>).
+<p>
+
+</body>
+</html>
+

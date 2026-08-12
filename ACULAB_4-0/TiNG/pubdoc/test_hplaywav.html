@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: test programs: hplaywav</title>
+</head>
+<body>
+<h1>Prosody installation guide: test programs: hplaywav</h1>
+<p>
+This is a very simple play application which plays a file in WAV
+format to a local timeslot.
+It normally keeps repeating the file until told to stop.
+<p>
+Go to directory $(TiNG)/test.
+<p>
+You must have downloaded firmware modules as listed below.
+<p>
+Run <code>hplaywav</code> with the appropriate options (the program is
+<span class="type-LINUX">gen-LINUX_V6/hplaywav</span> or
+<span class="type-WINNT"> gen-WINNT_V6/hplaywav</span>
+depending on which operating system you are using).
+<p>
+Command line options are:
+<table border>
+<tr>
+	<td><code>-a 1</code>
+		<td>use AGC
+
+<tr>
+	<td><code>-m</code> &lt;module&gt;
+		<td>The Prosody module to use. This is the number of the
+		module on the card.
+
+<tr>
+	<td><code>-s</code> &lt;speed&gt;
+		<td>play faster or slower (as a percentage)
+
+<tr>
+	<td><code>-t</code> &lt;timeslot&gt;
+		<td>timeslot to use (see
+			<a href="test_timeslots.html">Test program
+		timeslots</a>).
+		
+
+<tr>
+	<td><code>-v</code> &lt;volume&gt;
+		<td>adjust volume of the playback by this (in dB)
+
+<tr>
+	<td><code>-x</code> &lt;cardspec&gt;
+		<td>Use a Prosody processor module on this card, specified as
+		described in
+		<a href="test_modspec.html">Test programs: Specifying Prosody Processor modules</a>
+
+<tr>
+	<td>&lt;file&gt;
+		<td>name of file from which data is to be played.
+		
+
+</table>
+<p>
+For example,
+<pre>
+	gen-WINNT_V6/hplaywav -x x:1.2.3.4/mykey -t 64:0 foo.wav
+</pre>
+<p>
+would play data from
+<code>foo.wav</code> to timeslot <code>64:0</code>.
+<p>
+The firmware modules that are required depend on the format of the
+data in the WAV file, the options you specify, and the commands you
+use while it is running. Here are the details:
+<p>
+<table border>
+<tr>
+	<th class=bg>Module<th class=bg>When needed
+
+<tr>
+	<td><a href="gen/softmodindex.html#datafeed">datafeed</a>
+		<td>always on Prosody X
+
+<tr>
+	<td><a href="gen/softmodindex.html#gainbg">gainbg</a>
+		<td>If you use '<code>-a 1</code>' for AGC
+		or '<code>-v</code>' to adjust the volume
+
+<tr>
+	<td><a href="gen/softmodindex.html#fast">fast</a>
+		<td>If you use '<code>-s</code>' to play the file
+		faster than normal
+
+<tr>
+	<td><a href="gen/softmodindex.html#slow">slow</a>
+		<td>If you use '<code>-s</code>' to play the file
+		slower than normal
+
+<tr>
+	<td><a href="gen/softmodindex.html#outchan">outchan</a>
+		<td>always
+
+<tr>
+	<td><a href="gen/softmodindex.html#sixkin">sixkout</a>
+		<td>when the file format is ACUBLKPCM@6000,
+		ALawPCM@6000, OKIADPCM@6000, or ULawPCM@6000 
+
+<tr>
+	<td><a href="gen/softmodindex.html#playA">playA</a>
+		<td>when the file format is
+		ALawPCM@6000 or ALawPCM@8000
+
+<tr>
+	<td><a href="gen/softmodindex.html#playima">playima</a>
+		<td>when the file format is IMAADPCM
+
+<tr>
+	<td><a href="gen/softmodindex.html#playmu">playmu</a>
+		<td>when the file format is
+		ULawPCM@6000 or ULawPCM@8000
+
+<tr>
+	<td><a href="gen/softmodindex.html#playoki">playoki</a>
+		<td>when the file format is
+		OKIADPCM@6000 or OKIADPCM@8000
+
+</table>
+<p>
+When this program starts, it starts playing the file and also reads
+commands. The commands available are:
+<table border>
+<tr>
+	<th class=bg>Character<th class=bg>Meaning
+
+<tr>
+	<td><td>(i.e. blank line - no command) Print status
+
+<tr>
+	<td><code>?</code><td>Print summary of possible commands
+
+<tr>
+	<td><code>a</code> N<td>Change AGC to <em>N</em>
+
+<tr>
+	<td><code>q</code><td>Quit - exit without waiting for channel
+	to finish.
+
+<tr>
+	<td><code>s</code> N<td>Set speed to <em>N</em>
+
+<tr>
+	<td><code>v</code> N<td>Set volume to <em>N</em>
+
+<tr>
+	<td>EOF<td>Wait for channel to finish and quit
+
+</table>
+<p>
+The source code for this program is provided (hplaywav.c).
+<hr>
+<p>
+This is one of the <a href="howto_test.html">Prosody test
+programs </a>.
+</body>
+</html>

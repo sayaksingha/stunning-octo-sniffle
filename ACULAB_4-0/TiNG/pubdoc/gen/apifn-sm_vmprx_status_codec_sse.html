@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_status_codec_sse</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_status_codec_sse</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_status_codec_sse(struct sm_vmprx_status_codec_sse_parms *<a href="#field-ssep">ssep</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-ssep">*ssep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_status_codec_sse_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a name="enum-kSMVMPrxSSEStatus">enum kSMVMPrxSSEStatus</a> {
+		<a href="#field-kSMVMPrxSSEStatusNone">kSMVMPrxSSEStatusNone</a>,
+		<a href="#field-kSMVMPrxSSEStatusMessage">kSMVMPrxSSEStatusMessage</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	char *<a href="#field-payload">payload</a>;						/* inout */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_length">max_length</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-length">length</a>;						/* out */
+} SM_VMPRX_STATUS_CODEC_SSE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This requires the module
+<a href="softmodindex.html#sse">sse</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to query
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type which is configured as SSE
+
+<dt><a name="field-status">status</a><dd>The SSE status
+
+One of these values:
+<dl>
+<dt><a name="field-kSMVMPrxSSEStatusNone">kSMVMPrxSSEStatusNone</a>
+<dd>No SSE status to report
+
+<dt><a name="field-kSMVMPrxSSEStatusMessage">kSMVMPrxSSEStatusMessage</a>
+<dd>A SSE message has been received
+
+</dl>
+<dt><a name="field-payload">payload</a><dd>A pointer to a buffer to receive the SSE message payload
+
+<dt><a name="field-max_length">max_length</a><dd>The length of the buffer
+
+<dt><a name="field-length">length</a><dd>The length of data written to the buffer
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>BFILE library: bfread() - buffered file read</title>
+</head>
+<body>
+<h1>BFILE library: bfread() - buffered file read</h1>
+<h2>Name</h2>
+<p>
+bfread() - buffered file read
+
+<h2>Synopsis</h2>
+<p>
+<pre>
+#include "bfile.h"
+
+int bfread(BFILE *<a name="bfp">bfp</a>,
+	size_t *<a name="nread">nread</a>,
+	void *<a name="ptr">ptr</a>,
+	size_t <a name="size">size</a>);
+</pre>
+
+<h2>Decription</h2>
+<p>
+The <code>bfread()</code> function reads data from an open file. The
+<code>BFILE</code> must have been set up with
+<a href="bfile_bfsetup.html">bfsetup()</a>
+and must not be in an error condition. Up to
+<a href="#size">size</a> bytes are read and stored at
+the memory area pointed to by <a href="#ptr">ptr</a>. The number of
+bytes actually read is stored at <a href="#nread">*nread</a>. If the
+end-of-file has already been reached, no data will be read, so
+<a href="#nread">*nread</a> will be zero. This is not
+an error. If <code>bfread()</code> is called again,
+another attempt will be made to read data. Note that the number of bytes
+read is independent of whether or not an error occurred, since some data
+may have been read before the error occurred. If an error occurs, the 
+<code>BFILE</code> is put into an error condition, which
+can only be cleared by <a href="bfile_bferror.html">bferror()</a>.
+
+<h2>Return value</h2>
+<p>
+Returns <code>0</code> if successful, or an <code>errno</code> value otherwise.
+
+<h2>See also</h2>
+<p>
+<a href="bfile_ctor.html">bfile(), bfile_dtor()</a>,
+<a href="bfile_bferror.html">bferror()</a>,
+<a href="bfile_bfsetup.html">bfsetup()</a>.
+
+<hr>
+<p>
+This function is part of the <a href="bfile.html">BFILE library</a>.
+</body>
+</html>

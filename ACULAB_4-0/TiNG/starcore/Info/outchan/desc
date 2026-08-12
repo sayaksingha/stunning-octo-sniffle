@@ -1,0 +1,6 @@
+Generic companded output. This is required to produce
+nearly any form of speech or analogue output
+signal. The only outputs which do not need it are tone
+generation and  digital data
+communications. If this module has not been downloaded,
+no replay or conferencing will work.

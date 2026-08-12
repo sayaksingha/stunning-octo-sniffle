@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody data communications: considerations for data transfer thresholds</title>
+</head>
+<body>
+<h1>Prosody data communications: considerations for data transfer thresholds</h1>
+<p>
+Prosody provides the facility to set the thresholds for triggering
+data transfer. When the threshold is reached, the associated event
+becomes set, notifying the application to transfer data. For
+reception, the threshold is reached when a specified amount of data,
+<code>T</code> bits, is available for collection, while for
+transmission it is reached when a specified amount of space,
+<code>T</code> bits, is available to be filled. Since applications and
+operating systems deal in whole octets, we will assume that
+<code>T</code> is a multiple of 8 such that <code>N * 8 = T</code>,
+and refer to <code>N</code> octets instead of <code>T</code> bits.
+<p>
+In some cases you may want to set this threshold based on the buffer
+size. For reception this means that you want to trigger a transfer
+when the empty space falls below a particular level, <code>P</code>
+octets of space instead of <code>N</code> octets of data; or for
+transmission that you want to trigger when the transmitter has
+less than <code>P</code> octets of data remaining in its buffer,
+We will call this a <em>reversed threshold</em>.
+<p>
+Obviously a reversed threshold can be set by merely calculating
+<code>N = B - P</code> where <code>B</code> is the size of the
+buffer. However the buffer size is not part of the published API
+(and, in fact, buffers are dynamically created, so in principle it can
+vary from time to time, though the current implementation always uses a
+single size). Therefore there are two ways to specify the thresholds: a
+positive value is <code>N</code>, while a negative value is
+<code>-P</code>. This system also allows Prosody to optimise the two
+cases.
+<h2>Batching</h2>
+<p>
+The obvious behaviour you might expect when setting a threshold is
+that the application is notified at exactly that threshold. In fact,
+notification may occur slightly later. Normally this is not
+noticeable since there is no way to prove it is happening. If an
+application sees the notification of received data, it cannot tell
+whether this occurred above the expected threshold or whether more
+data arrived before it had time to check the amount of data
+available. However, as we will see later, for negative thresholds
+you may need to be aware of why this happens and its side effects.
+<p>
+Many methods of transmitting or receiving data operate on batches of
+data. For example, raw <a href="protocol_rawtx.html">transmit</a>
+and <a href="protocol_rawrx.html">receive</a> of
+<a href="encoding_sync.html">synchronous data</a> is handled in the
+current implementation in batches of 80 octets. This means that it
+receives data in multiples of 80 octets so, for
+example, if you set a receive threshold to 500 octets you will get
+notified when there is 560 octets available. If you then read only 500
+octets, the next notification occurs after a further 480 octets arrive,
+when 540 await collection, and the next after a further 480, when 520
+are available. Obviously the notification can never be more than 79
+octets after where you would expect it, and since a synchronous
+receiver runs continuously, you will never notice such a small
+difference. Similarly the transmitter will consume data in batches, so
+there may be a little more space available than you expect when
+notification occurs.
+<p>
+Furthermore, some methods of processing data which use batches will
+refuse to operate on partial batches. For example, the
+<a href="protocol_v110rlprx.html">V.110 RLP receiver</a> will only
+process whole RLP frames. Before attempting to process a frame, it
+checks that there is sufficient space to hold a whole frame, so it
+may never fill the buffer completely. Similarly if the
+<a href="protocol_v110rlptx.html">V.110 RLP transmitter</a> is given
+a partial frame it will not send it until the remainder has been
+supplied.
+<p>
+When using a normal threshold, Prosody enforces a safe limit on the
+threshold values you can select. This means that you should not be in
+danger of overrun or underrun under normal circumstances. However
+reversed thresholds are normally used with transmission to minimise
+the amount of data buffered and therefore limit the latency. Prosody
+relies on you to balance the danger of underrun against the latency
+and consequently does not enforce any limit on reversed thresholds.
+There are two dangers to be aware of: simple underrun and deadlock.
+If you set a transmit threshold which is less than the transmitter batch
+size you are guaranteed to get underruns, since you won't ever be
+supplying enough data for a whole batch. You may also experience
+deadlock. If the transmitter is not willing to process a partial
+batch, it will never consume any of it so the amount of data
+buffered will never fall below the threshold again. You can safely
+assume that you can use a threshold as low as 512 octets unless a
+particular protocol or encoding states otherwise.
+<p>
+In principle, you can encounter the same dangers with reversed
+thresholds on reception as on transmision, but since there is no
+reason to want to fill a buffer to within a small amount of being
+full, it would be very unusual to want a threshold of less than 512
+octets of available space. Additionally, an application will
+be stimulated to collect data by the occurrence of overrun, so it
+cannot deadlock unless it incorrectly refuses to read data when less
+than the desired amount of data is available (which will also fail in
+other circumstances).
+<h2>Thesholds for lower latency audio replay</h2>
+<p>
+A similar reversed threshold configuration facility for audio replay
+is provided in the speech processing API through the ability to set
+a negative minimum bits value for the output threshold of a channel. This
+allows an application to limit the delay between putting replay audio data and it
+appearing on TDMTx or VMPTx.
+<hr>
+<p>
+<small>Document reference: AN 1385</small>
+
+</body>
+</html>

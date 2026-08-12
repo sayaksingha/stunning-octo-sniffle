@@ -1,0 +1,8 @@
+-TiNGtrace
+B	maxbatch	unsigned
+T	threads	unsigned
+m	module	unsigned
+n	numchan	unsigned
+x	serialnumber	string
+E	allocevents	unsigned
+t	timeslot	bool

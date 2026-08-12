@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_csrc_list_set</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_csrc_list_set</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_csrc_list_set(struct sm_vmptx_csrc_list_set_parms *<a href="#field-csrcp">csrcp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-csrcp">*csrcp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_csrc_list_set_parms {
+	<a href="../apitype.html#type-tSMVMPTxCSRCListId">tSMVMPTxCSRCListId</a> <a href="#field-csrc_list">csrc_list</a>;				/* in */
+	int <a href="#field-num_csrc">num_csrc</a>;						/* in */
+	int *<a href="#field-csrc">csrc</a>;						/* in */
+} SM_VMPTX_CSRC_LIST_SET_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Sets the CSRC list contents. Any VMP[tx] using this list will use
+the specified CSRC list contents.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-csrc_list">csrc_list</a><dd>The CSRC list.
+
+<dt><a name="field-num_csrc">num_csrc</a><dd>The number of CSRCs in the array
+
+<dt><a name="field-csrc">csrc</a><dd>A pointer to an array of CSRCs
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_conf_prim_start</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_conf_prim_start</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_conf_prim_start(struct sm_conf_prim_start_parms *<a href="#field-confp">confp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-confp">*confp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_conf_prim_start_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-volume">volume</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-agc">agc</a>;						/* in */
+	<a name="enum-kSMConfType">enum kSMConfType</a> {
+		<a href="#field-kSMConfTypeStandard">kSMConfTypeStandard</a>,
+		<a href="#field-kSMConfTypeIndividualVolume">kSMConfTypeIndividualVolume</a>,
+	} <a href="#field-conf_type">conf_type</a>;						/* in */
+} SM_CONF_PRIM_START_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Sets up an output channel
+<a class=pref href="#field-channel">channel</a>
+on which will be output the conferenced sum of all participating
+input channels (each participant is added to the conference
+through a call to
+<a href="apifn-sm_conf_prim_add.html">sm_conf_prim_add()</a>).
+The
+<a class=pref href="#field-volume">volume</a>
+and
+<a class=pref href="#field-agc">agc</a>
+parameters control the output level, and are specified as for
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a>.
+<p>
+The
+<a class=pref href="#field-channel">channel</a>
+and all the participating input channels will all need to be
+processed by the same module. This can be ensured by using
+<a href="apifn-sm_channel_alloc_placed.html">sm_channel_alloc_placed()</a>.
+<p>
+This requires the module
+<a href="softmodindex.html#conf">conf</a>
+to have been downloaded.
+<p>
+The channel output is reserved for conferencing until
+<a href="apifn-sm_conf_prim_abort.html">sm_conf_prim_abort()</a>
+or
+<a href="apifn-sm_conf_prim_stop.html">sm_conf_prim_stop()</a>
+stops the channel output from being used.
+No other output activity can
+take place on the channel during this time.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The channel on which a conference output is to be started.
+
+<dt><a name="field-volume">volume</a><dd>The volume adjustment (in dB).
+
+<dt><a name="field-agc">agc</a><dd>Indicator of whether automatic gain control is to be
+enabled (non-zero) or not (zero).
+
+<dt><a name="field-conf_type">conf_type</a><dd>The type of conferencing that will be used.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMConfTypeStandard">kSMConfTypeStandard</a>
+<dd>Standard conferencing.
+
+<dt><a name="field-kSMConfTypeIndividualVolume">kSMConfTypeIndividualVolume</a>
+<dd>
+<span class="version-deprecated">
+	<span class=header-deprecated>Deprecated:</span>
+Obsolete mode that permited individual adjustment of the volume
+of each participant's contribution to each output.
+
+</span>
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_BAD_PARAMETER - illegal volume/agc value<li>ERR_SM_WRONG_CHANNEL_STATE - if already in use</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

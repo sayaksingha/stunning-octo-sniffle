@@ -1,0 +1,7 @@
+sm_i460mux_create	iPsIMtMt_
+sm_i460mux_datafeed_connect	iPsDtIMtIPt_
+sm_i460mux_datafeed_disconnect	iPsIMtIPt_
+sm_i460mux_destroy	iIMt
+sm_i460mux_get_datafeed	iPsIMtDt_
+sm_i460mux_get_event	iPsIMtEt_
+sm_i460mux_status	iPsIMte1_2__

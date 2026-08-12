@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody H.223 Mux: API: sm_h223mux_close_lc</title>
+</head>
+<body class=version-Prel>
+<h1>Prosody H.223 Mux: API: sm_h223mux_close_lc</h1>
+	<p class="header-Prel">This function is under development. It could be changed or withdrawn, and may not be implemented in this release.</p>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_h223mux_close_lc(struct sm_h223mux_close_lc_parms *<a href="#field-close_lcp">close_lcp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-close_lcp">*close_lcp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_h223mux_close_lc_parms {
+	<a href="../apitype.html#type-tSMH223muxId">tSMH223muxId</a> <a href="#field-h223mux">h223mux</a>;					/* in */
+	<a name="enum-kSMH223muxChannelDirection">enum kSMH223muxChannelDirection</a> {
+		<a href="#field-kSMH223muxChannelDirectionTransmit">kSMH223muxChannelDirectionTransmit</a>,
+		<a href="#field-kSMH223muxChannelDirectionReceive">kSMH223muxChannelDirectionReceive</a>,
+	} <a href="#field-direction">direction</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-lcn">lcn</a>;						/* in */
+} SM_H223MUX_CLOSE_LC_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This function will close a specific logical channel.
+<h2>Fields</h2>
+
+<dl>
+<dt class=version-Prel><a name="field-h223mux">h223mux</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>The mux to close the logical channel on.
+
+<dt class=version-Prel><a name="field-direction">direction</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>
+<div class=version-Prel>
+One of these values:
+<dl>
+<dt><a name="field-kSMH223muxChannelDirectionTransmit">kSMH223muxChannelDirectionTransmit</a>
+<dd>logical channel transmit
+
+<dt><a name="field-kSMH223muxChannelDirectionReceive">kSMH223muxChannelDirectionReceive</a>
+<dd>logical channel receive
+
+</dl>
+</div>
+<dt class=version-Prel><a name="field-lcn">lcn</a>	(Only in Preliminary Documentation)
+<dd class=version-Prel>logical channel number
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosh223api.html">Prosody H.223 Mux API</a>.
+</body>
+</html>

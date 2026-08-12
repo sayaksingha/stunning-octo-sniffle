@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody FMP processing: API: sm_fmprx_status</title>
+</head>
+<body>
+<h1>Prosody FMP processing: API: sm_fmprx_status</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_fmprx_status(struct sm_fmprx_status_parms *<a href="#field-statusp">statusp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-statusp">*statusp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_fmprx_status_parms {
+	<a href="../apitype.html#type-tSMFMPrxId">tSMFMPrxId</a> <a href="#field-fmprx">fmprx</a>;					/* in */
+	<a name="enum-kSMFMPrxStatus">enum kSMFMPrxStatus</a> {
+		<a href="#field-kSMFMPrxStatusRunning">kSMFMPrxStatusRunning</a>,
+		<a href="#field-kSMFMPrxStatusStopped">kSMFMPrxStatusStopped</a>,
+		<a href="#field-kSMFMPrxStatusGotPorts">kSMFMPrxStatusGotPorts</a>,
+		<a href="#field-kSMFMPrxStatusSource">kSMFMPrxStatusSource</a>,
+		<a href="#field-kSMFMPrxStatusGotPortsIPv6">kSMFMPrxStatusGotPortsIPv6</a>,
+		<a href="#field-kSMFMPrxStatusSourceIPv6">kSMFMPrxStatusSourceIPv6</a>,
+	} <a href="#field-status">status</a>;						/* out */
+	union {
+		struct {
+			int <a href="#field-u-port-T38_port">T38_port</a>;				/* out */
+			<a href="../apitype.html#type-in_addr">struct in_addr</a> <a href="#field-u-port-address">address</a>;			/* out */
+		} <a href="#field-u-port">port</a>;						/* out */
+		struct {
+			<a href="../apitype.html#type-in_addr">struct in_addr</a> <a href="#field-u-source-address">address</a>;			/* out */
+			int <a href="#field-u-source-port">port</a>;				/* out */
+		} <a href="#field-u-source">source</a>;					/* out */
+		struct {
+			int <a href="#field-u-port_ipv6-T38_port">T38_port</a>;				/* out */
+			<a href="../apitype.html#type-in6_addr">struct in6_addr</a> <a href="#field-u-port_ipv6-address">address</a>;		/* out */
+		} <a href="#field-u-port_ipv6">port_ipv6</a>;					/* out */
+		struct {
+			<a href="../apitype.html#type-in6_addr">struct in6_addr</a> <a href="#field-u-source_ipv6-address">address</a>;		/* out */
+			int <a href="#field-u-source_ipv6-port">port</a>;				/* out */
+		} <a href="#field-u-source_ipv6">source_ipv6</a>;					/* out */
+	} <a href="#field-u">u</a>;							/* out */
+} SM_FMPRX_STATUS_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Returns the current status of the FMP[rx] or an error to indicate that
+an error has occurred.
+<p>
+When the event, obtained from
+<a href="apifn-sm_fmprx_get_event.html">sm_fmprx_get_event()</a>,
+is signalled the user must call this function to determine the nature of
+the status change. The change in status may indicate that an error occurred
+whilst processing a user request or it may be notifiying the user of a
+change to the previous state of the FMP[rx].
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-fmprx">fmprx</a><dd>The FMP[rx] to interrogate
+
+<dt><a name="field-status">status</a><dd>
+One of these values:
+<dl>
+<dt><a name="field-kSMFMPrxStatusRunning">kSMFMPrxStatusRunning</a>
+<dd>Indicates that there is nothing significant to report
+
+<dt><a name="field-kSMFMPrxStatusStopped">kSMFMPrxStatusStopped</a>
+<dd>Indicates that the FMP[rx] has stopped processing T.38 and that
+it can be safely destroyed
+
+<dt><a name="field-kSMFMPrxStatusGotPorts">kSMFMPrxStatusGotPorts</a>
+<dd>Indicates that IPv4 port information is available.
+
+<dt><a name="field-kSMFMPrxStatusSource">kSMFMPrxStatusSource</a>
+<dd>Indicates that IPv4 source address and port information is available.
+
+<dt><a name="field-kSMFMPrxStatusGotPortsIPv6">kSMFMPrxStatusGotPortsIPv6</a>
+<dd>Indicates that IPv6 port information is available.
+
+<dt><a name="field-kSMFMPrxStatusSourceIPv6">kSMFMPrxStatusSourceIPv6</a>
+<dd>Indicates that IPv6 source address and port information is available.
+
+</dl>
+<dt><a name="field-u">u</a><dd>
+
+<dl>
+<dt><a name="field-u-port">port</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMFMPrxStatusGotPorts">kSMFMPrxStatusGotPorts</a>.
+
+
+<dl>
+<dt><a name="field-u-port-T38_port">T38_port</a><dd>The UDP port number on which this FMP[rx] is listening for T.38 packets
+
+<dt><a name="field-u-port-address">address</a><dd>The IPv4 address on which this FMP[rx] is listening
+
+</dl>
+<dt><a name="field-u-source">source</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMFMPrxStatusSource">kSMFMPrxStatusSource</a>.
+
+
+<dl>
+<dt><a name="field-u-source-address">address</a><dd>The IPv4 address from which the T.38 data is being received.
+
+<dt><a name="field-u-source-port">port</a><dd>The UDP port number from which the T.38 data is being received.
+
+</dl>
+<dt><a name="field-u-port_ipv6">port_ipv6</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMFMPrxStatusGotPortsIPv6">kSMFMPrxStatusGotPortsIPv6</a>.
+
+
+<dl>
+<dt><a name="field-u-port_ipv6-T38_port">T38_port</a><dd>The UDP port number on which this FMP[rx] is listening for T.38 packets
+
+<dt><a name="field-u-port_ipv6-address">address</a><dd>The IPv6 address on which this FMP[rx] is listening
+
+</dl>
+<dt><a name="field-u-source_ipv6">source_ipv6</a><dd>This field is only valid if the status is
+<a class=pref href="#field-kSMFMPrxStatusSourceIPv6">kSMFMPrxStatusSourceIPv6</a>.
+
+
+<dl>
+<dt><a name="field-u-source_ipv6-address">address</a><dd>The IPv6 address from which the T.38 data is being received.
+
+<dt><a name="field-u-source_ipv6-port">port</a><dd>The UDP port number from which the T.38 data is being received.
+
+</dl>
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if insufficient resources existed to create the FMP[rx]</ul>
+<hr>
+<p>This function is part of the <a href="../prosfmpapi.html">Prosody FMP processing API</a>.
+</body>
+</html>

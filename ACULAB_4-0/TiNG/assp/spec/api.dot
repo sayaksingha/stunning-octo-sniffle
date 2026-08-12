@@ -1,0 +1,37 @@
+digraph D {
+node [fontname="TimesNewRoman"];
+
+concentrate=true;
+
+assp_init [label="assp_init()"];
+assp_fini [label="assp_fini()"];
+
+assp_init -> assp_tcb_init;
+assp_tcb_dtor -> assp_fini;
+assp_tcb_init -> assp_tcb_dtor [weight=0.0001];
+
+subgraph cluster_tcb {
+	label = " each TCB";
+
+	started [label="", style=invis];
+	ready [label="", style=invis];
+	done [label="", style=invis];
+	assp_tcb_init [label="assp_tcb_init()"];
+	sof [label="incoming accepted by sof()"];
+	assp_connect [label="assp_connect()"];
+	assp_abort [label="assp_abort()"];
+	assp_tcb_dtor [label="assp_tcb_dtor()"];
+}
+
+assp_tcb_init -> ready;
+ready -> sof;
+ready -> assp_connect;
+sof -> assp_abort;
+sof -> done;
+assp_connect -> assp_abort;
+assp_connect -> done;
+assp_abort -> done;
+done -> assp_tcb_dtor;
+done -> ready [style=dashed];
+
+}

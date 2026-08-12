@@ -1,0 +1,651 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+<title>Prosody software modules</title>
+</head>
+<body>
+<h1>Prosody software modules</h1>
+<p>
+Prosody uses modular firmware, with each module performing a function.
+This allows the exact mix of desired functionality to be provided. See
+<a href="../howto_download.html">Prosody Guide - how to download firmware</a>
+for how to download firmware.
+
+<h2>Basic functionality</h2>
+<p>
+<table border>
+<tr>
+	<th colspan=2>Basic functionality
+
+<tr>
+	<th>Module <th>Purpose
+<tr><td><a name="datafeed">datafeed</a>
+<td>
+Allows data to be passed between the downloadable modules.
+Always required for Prosody X.
+<tr><td><a name="hbuf2d">hbuf2d</a>
+<td>
+Allows data to be passed to the Prosody DSP from an application running
+on the controlling host. This module is needed for nearly all types of
+play and data communications reception. On Prosody X it is linked into the 
+kernel image and thus always loaded for you when the kernel is loaded.
+<tr><td><a name="hbuf2h">hbuf2h</a>
+<td>
+Allows data to be passed to an application running on the
+controlling host. This module is needed for nearly all types
+of record and data communications transmission. On Prosody X it 
+is linked into the kernel image and thus always loaded for you 
+when the kernel is loaded.
+
+</table>
+
+<h2>Data communications</h2>
+<p>
+<table border>
+<tr>
+	<th colspan=2>Data Communications modules
+
+<tr>
+	<th>Module <th>Purpose
+<tr><td><a name="asyrx">asyrx</a>
+<td>
+Async receive. This is used to implement the async encoding
+in a receive protocol. It decodes a stream of digital data
+into a sequence of characters.
+<tr><td><a name="asytx">asytx</a>
+<td>
+Async transmit. This is used to implement the async encoding
+in a transmit protocol. It encodes a sequence of characters
+as a stream of digital data.
+<tr><td><a name="cwrx">cwrx</a>
+<td>
+CW modem receiver. This decodes an incoming signal from a CW
+modem. However it does not convert it to digital data, so either
+<a href="#fskpll">fskpll</a> or <a href="#fskasyrx">fskasyrx</a>
+must be used, depending on how the data is encoded, to complete
+the decoding.
+<tr><td><a name="cwtx">cwtx</a>
+<td>
+CW modem transmitter.
+<tr><td><a name="datarx">datarx</a>
+<td>
+Raw data receiver. This is used to run a protocols directly
+on a digital bearer channel (in contrast to speech and modems
+which encode the data as sounds).
+<tr><td><a name="datatx">datatx</a>
+<td>
+Raw data transmitter. This is used to run a protocols directly
+on a digital bearer channel (in contrast to speech and modems
+which encode the data as sounds).
+<tr><td><a name="fmprx">fmprx</a>
+<td>
+Handles incoming T.38 frames.
+
+<tr><td><a name="fmptx">fmptx</a>
+<td>
+Generates outgoing T.38 frames.
+
+<tr><td><a name="fskasyrx">fskasyrx</a>
+<td>
+Async receiver for FSK modems. This decodes a sequence of
+characters from the data received by an FSK modem receiver.
+This is different from running async on other received data
+streams because there is no clock.
+<tr><td><a name="fskpll">fskpll</a>
+<td>
+Reconstruct a clock from a received FSK data stream. If the
+output of an FSK modem receiver is to be interpreted as a
+synchronous encoding, then the data must be divided into bits
+using a clock recovered from the signal. This module does this,
+converting the received signal into a digital data signal
+suitable for decoding by HDLC or sync.
+<tr><td><a name="fskrx">fskrx</a>
+<td>
+FSK modem receiver. This decodes an incoming signal from an FSK
+modem. However it does not convert it to digital data, so either
+<a href="#fskpll">fskpll</a> or <a href="#fskasyrx">fskasyrx</a>
+must be used, depending on how the data is encoded, to complete
+the decoding.
+<tr><td><a name="fsktx">fsktx</a>
+<td>
+FSK modem transmitter.
+<tr><td><a name="hdlcrx">hdlcrx</a>
+<td>
+HDLC receiver.
+<tr><td><a name="hdlctx">hdlctx</a>
+<td>
+HDLC transmitter.
+<tr><td><a name="i460rx">i460rx</a>
+<td>
+i.460 multiplexing
+<tr><td><a name="i460tx">i460tx</a>
+<td>
+i.460 multiplexing
+
+<tr><td><a name="ifprx">ifprx</a>
+<td>
+ASN.1 decoding for T.38 fax transmission.
+<tr><td><a name="ifptx">ifptx</a>
+<td>
+ASN.1 encoding for T.38 fax transmission.
+
+<tr><td><a name="prefsuf">prefsuf</a>
+<td>
+Prefix/suffix provider.
+	Adds a prefix and a suffix to each transmission. The
+	prefix and suffix can by any number if bits in
+	length.
+<tr><td><a name="six2five">six2five</a>
+<td>
+A helper module used by the modem transmitters V.27ter,
+V.29, and V.17.
+<tr><td><a name="sprt">sprt</a>
+<td>
+Simple Packet Relay Transport
+<tr><td><a name="sse">sse</a>
+<td>
+State Signaling Event (SSE) handler
+<tr><td><a name="syncrx">syncrx</a>
+<td>
+Synchronous data receiver.
+<tr><td><a name="synctx">synctx</a>
+<td>
+Synchronous data transmitter.
+<tr><td><a name="ttyasyrx">ttyasyrx</a>
+<td>
+Receiver for ITU V.18 Annex A compatible TTYs. This decodes 
+a sequence of characters from the data received.
+<tr><td><a name="v110">v110</a>
+<td>
+The protocol as defined in
+<a href="http://www.itu.int/rec/T-REC-V.110/">V.110</a>.
+<tr><td><a name="v110rlpr">v110rlpr</a>
+<td>
+The V.110 RLP receiver.
+<tr><td><a name="v110rlpt">v110rlpt</a>
+<td>
+The V.110 RLP transmitter.
+<tr><td><a name="v17rx">v17rx</a>
+<td>
+The modem receiver defined in
+<a href="http://www.itu.int/rec/T-REC-V.17/">V.17</a>.
+
+<tr><td><a name="v17tx">v17tx</a>
+<td>
+The modem transmitter defined in
+<a href="http://www.itu.int/rec/T-REC-V.17/">V.17</a>.
+Also requires <a href="#six2five">six2five</a>
+<tr><td><a name="v27rx">v27rx</a>
+<td>
+The modem receiver defined in
+<a href="http://www.itu.int/rec/T-REC-V.27ter/">V.27ter</a>.
+<tr><td><a name="v27tx">v27tx</a>
+<td>
+The modem transmitter defined in
+<a href="http://www.itu.int/rec/T-REC-V.27ter/">V.27ter</a>.
+Also requires <a href="#six2five">six2five</a>
+<tr><td><a name="v29rx">v29rx</a>
+<td>
+The modem receiver defined in
+<a href="http://www.itu.int/rec/T-REC-V.29ter/">V.29ter</a>.
+<tr><td><a name="v29tx">v29tx</a>
+<td>
+The modem transmitter defined in
+<a href="http://www.itu.int/rec/T-REC-V.29/">V.29</a>.
+Also requires <a href="#six2five">six2five</a>
+<tr><td><a name="v32">v32</a>
+<td>
+The modem defined in
+<a href="http://www.itu.int/rec/T-REC-V.32/">V.32</a>.
+
+<tr><td><a name="v34">v34</a>
+<td>
+The modem operating in half duplex mode (for fax use) defined in
+<a href="http://www.itu.int/rec/T-REC-V.34/">V.34</a>.
+
+<tr><td><a name="v34fdx">v34fdx</a>
+<td>
+The modem operating in full duplex mode defined in
+<a href="http://www.itu.int/rec/T-REC-V.34/">V.34</a>.
+
+
+</table>
+<p>
+Data communications modules must be used in the combinations
+described in <a href="../prosdc_config.html">Prosody data communcations
+Protocols and Encodings</a>.
+
+<h2>Speech recording</h2>
+<p>
+This diagram shows the
+relationship between the modules needed for recording. Those shaded are
+optional. One of the <code>rec...</code> modules is always needed.
+<p>
+<img src="record.png" alt="diagram of record modules">
+<p>
+<table border>
+<tr>
+	<th colspan=2>Speech and Video input modules
+
+<tr>
+	<th>Module <th>Purpose
+<tr><td><a name="inchan">inchan</a>
+<td>
+Generic companded input. This is required for any form of
+processing on incoming data which is a speech or analogue
+signal. The only input which does not need it is digital data
+communications. If this module has not been downloaded,
+no recording, conferencing or detection will work.
+<tr><td><a name="invid">invid</a>
+<td>
+AVF recorder video (to host) input task.
+
+</table>
+<p>
+<table border>
+<tr>
+	<th colspan=2>Speech recording modules
+
+<tr>
+	<th>Module <th>Purpose
+
+<tr><td><a name="8_to_11">8_to_11</a>
+<td>
+Converter to allow recording at 11kHz sampling rate instead
+of 8kHz. This is used in conjunction with a recording format to
+record at a speed useful for playing directly though typical PC
+soundcards.
+<tr><td><a name="gainbg">gainbg</a>
+<td>
+Volume control, automatic gain control, and addition of
+a background signal. These can all be used with
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a>,
+<a href="apifn-sm_replay_adjust.html">sm_replay_adjust()</a> or
+<a href="apifn-sm_record_start.html">sm_record_start()</a>.
+<tr><td><a name="rec16b">rec16b</a>
+<td>
+Record 16-bit linear data.
+<tr><td><a name="rec8b">rec8b</a>
+<td>
+Record 8-bit linear data.
+<tr><td><a name="recA">recA</a>
+<td>
+Record A-law companded data.
+<tr><td><a name="recAVF">recAVF</a>
+<td>
+Record Audio/Visual streams.
+
+<tr><td><a name="recablk">recablk</a>
+<td>
+Record data encoded in ACUBLK format.
+<tr><td><a name="recima">recima</a>
+<td>
+Record data encoded in IMA format.
+<tr><td><a name="recms8b">recms8b</a>
+<td>
+Record 8-bit linear data with offset of 128 (Microsoft .WAV
+8-bit).
+<tr><td><a name="recmu">recmu</a>
+<td>
+Record mu-law companded data.
+<tr><td><a name="recoki">recoki</a>
+<td>
+Record data encoded in OKI format.
+<tr><td><a name="sixkin">sixkin</a>
+<td>
+Converter to allow recording at 6kHz instead of 8kHz. This is
+used in conjunction with a recording format to reduce the size
+of the recorded data by 25%.
+<tr><td><a name="speexrp">speexrp</a>
+<td>
+Play and record data in Speex format.
+
+<tr><td><a name="timerx">timerx</a>
+<td>
+Timer to provide a limit on recording duration.
+</table>
+<p>
+Note: all speech recording modules require
+<a href="#inchan">inchan</a> as well.
+
+<h2>Speech playing</h2>
+<p>
+This diagram shows the
+relationship between the modules needed for playing. Those shaded are
+optional (and you would never have both <code>fast</code> and
+<code>slow</code> in use at the same time). One of the
+<code>play...</code> modules is always needed. <p>
+<img src="play.png" alt="diagram of play modules">
+<p>
+<table border>
+<tr>
+	<th colspan=2>Speech and Video output modules
+
+<tr>
+	<th>Module <th>Purpose
+
+<tr><td><a name="outchan">outchan</a>
+<td>
+Generic companded output. This is required to produce
+nearly any form of speech or analogue output
+signal. The only outputs which do not need it are tone
+generation and  digital data
+communications. If this module has not been downloaded,
+no replay or conferencing will work.
+<tr><td><a name="outvid">outvid</a>
+<td>
+AVF player video (from host) output task.
+
+<tr><td><a name="tonegen">tonegen</a>
+<td>
+Tone generation. This is used by
+<a href="apifn-sm_play_tone.html">sm_play_tone()</a>,
+<a href="apifn-sm_play_cptone.html">sm_play_cptone()</a>,
+and
+<a href="apifn-sm_play_digits.html">sm_play_digits()</a>.
+</table>
+<p>
+<table border>
+<tr>
+	<th colspan=2>Speech playing modules
+
+<tr>
+	<th>Module <th>Purpose
+<tr><td><a name="11_to_8">11_to_8</a>
+<td>
+Converter to allow playing of signals which have a sampling
+rate of 11kHz (at the 8kHz rate used by telephony timeslots). This is
+used in conjunction with a replay to play data that was recorded
+at a sampling rate often used when recording from a PC
+soundcard.
+<tr><td><a name="fast">fast</a>
+<td>
+Replay at speeds over 100%. The speed is selected by
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a> or
+<a href="apifn-sm_replay_adjust.html">sm_replay_adjust()</a>.
+If this module has not been downloaded, the replay will play
+at normal speed.
+<tr><td><a name="gainbg">gainbg</a>
+<td>
+Volume control, automatic gain control, and addition of
+a background signal. These can all be used with
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a>,
+<a href="apifn-sm_replay_adjust.html">sm_replay_adjust()</a> or
+<a href="apifn-sm_record_start.html">sm_record_start()</a>.
+<tr><td><a name="play16b">play16b</a>
+<td>
+Play 16-bit linear data.
+<tr><td><a name="play8b">play8b</a>
+<td>
+Play 8-bit linear data.
+<tr><td><a name="playA">playA</a>
+<td>
+Play A-law companded data.
+<tr><td><a name="playAVF">playAVF</a>
+<td>
+Play Audio/Visual streams.
+<tr><td><a name="playablk">playablk</a>
+<td>
+Play data encoded in ACUBLK format.
+<tr><td><a name="playima">playima</a>
+<td>
+Play data encoded in IMA format.
+<tr><td><a name="playms8b">playms8b</a>
+<td>
+Play 8-bit linear data with offset of 128 (Microsoft .WAV
+8-bit).
+<tr><td><a name="playmu">playmu</a>
+<td>
+Play mu-law companded data.
+<tr><td><a name="playoki">playoki</a>
+<td>
+Play data encoded in OKI format.
+<tr><td><a name="sixkout">sixkout</a>
+<td>
+Converter to allow playing of 6kHz signals at 8kHz. This is
+used in conjunction with a replay to play data which was
+recorded as a 6kHz variant of a format normally used at 8kHz.
+Such a variant is used to reduce the size of the recorded data
+by 25%.
+<tr><td><a name="slow">slow</a>
+<td>
+Replay at speeds below 100%. The speed is selected by
+<a href="apifn-sm_replay_start.html">sm_replay_start()</a> or
+<a href="apifn-sm_replay_adjust.html">sm_replay_adjust()</a>.
+If this module has not been downloaded, the replay will play
+at normal speed.
+<tr><td><a name="speexrp">speexrp</a>
+<td>
+Play and record data in Speex format.
+
+</table>
+<p>
+Note: all speech playing modules require
+<a href="#outchan">outchan</a> as well.
+
+<h2>Detection</h2>
+<p>
+<table border>
+<tr>
+	<th colspan=2>Detection modules
+
+<tr>
+	<th>Module <th>Purpose
+<tr><td><a name="ansam">ansam</a>
+<td>
+ANS and AMSam detection
+Used by <a href="apifn-sm_ans_listen_for.html">
+sm_ans_listen_for()</a> to detect ANS and AMSam tones.
+<tr><td><a name="ansdet">ansdet</a>
+<td>
+Answering machine detection.
+Used by <a href="apifn-sm_catsig_listen_for.html">
+sm_catsig_listen_for()</a> to distinguish between a live
+speaker and an answering machine.
+<tr><td><a name="beepdet">beepdet</a>
+<td>
+Beep detection.
+Used by <a href="apifn-sm_beep_listen_for.html">
+sm_beep_listen_for()</a> to detect beeps.
+<tr><td><a name="grunt">grunt</a>
+<td>
+Grunt detection and silence elimination. Used by
+<a href="apifn-sm_record_start.html">sm_record_start()</a> for
+silence elimination in recordings and by
+<a href="apifn-sm_listen_for.html">sm_listen_for()</a>. If
+this module has not been downloaded, no grunt will be detected
+and recordings will not have silences removed.
+<tr><td><a name="td">td</a>
+<td>
+Tone detection. Used by
+<a href="apifn-sm_listen_for.html">sm_listen_for()</a>
+for tone detection and by
+<a href="apifn-sm_record_start.html">sm_record_start()</a>
+for tone suppression in recordings.
+If this module has not been downloaded, no tones will be
+detected and tones will remain in recordings.
+</table>
+
+<h2>Conferencing</h2>
+<p>
+<table border>
+<tr>
+	<th colspan=2>Conferencing modules
+
+<tr>
+	<th>Module <th>Purpose
+<tr><td><a name="conf">conf</a>
+<td>
+Conferencing. This is required if you want to start a
+standard conference (which is done using
+<a href="apifn-sm_conf_prim_start.html">sm_conf_prim_start()</a>).
+If this module has not been downloaded, any attempt to start
+such a conference will produce an error.
+</table>
+
+<h2>Echo cancellation and signal paths</h2>
+<p>
+<table border>
+<tr>
+	<th colspan=2>Echo cancellation and signal path modules
+
+<tr>
+	<th>Module <th>Purpose
+<tr><td><a name="delay">delay</a>
+<td>
+Signal path delay processing.
+
+<tr><td><a name="echocan">echocan</a>
+<td>
+Echo cancellation.
+If this module has not been downloaded, an attempt to use
+echo cancellation will use an unmodified signal.
+<tr><td><a name="emph">emph</a>
+<td>
+Signal path emphasis processing.
+
+<tr><td><a name="passthru">passthru</a>
+<td>
+A module which permits an incoming signal to be directed to
+an output. This is used by echo cancellation to save the
+processed signal.
+<tr><td><a name="pitchshift">pitchshift</a>
+<td>
+Used in signal paths to raise or lower pitch of speech signal.
+
+<tr><td><a name="resample">resample</a>
+<td>
+Used in signal paths to resample wideband to narrow band and vica-versa.
+
+</table>
+
+<h2>IP codecs</h2>
+<p>
+<table border>
+<tr>
+	<th colspan=2>IP codecs
+
+<tr>
+	<th>Module <th>Purpose
+<tr><td><a name="amr-nb">amr-nb</a>
+<td>
+AMR (Adaptive Multi Rate) narrowband codec for audio only.
+<tr><td><a name="amr-nb-all">amr-nb-all</a>
+<td>
+AMR (Adaptive Multi Rate) narrowband codecs both for AVF player/recorder and for audio.
+<tr><td><a name="amr-nb-prs">amr-nb-prs</a>
+<td>
+AMR (Adaptive Multi Rate) narrowband codec for AVF player/recorder.
+<tr><td><a name="amr-wb">amr-wb</a>
+<td>
+G.722.2 (AMR-WB) wideband codec.
+<tr><td><a name="evrc">evrc</a>
+<td>
+EVRC (Enhanced Variable Rate CODEC) codec.
+<tr><td><a name="g722">g722</a>
+<td>
+G.722 Codec
+
+<tr><td><a name="g722-1">g722-1</a>
+<td>
+G.722-1 Codec
+
+<tr><td><a name="g7231a">g7231a</a>
+<td>
+G.723.1 codec.
+<tr><td><a name="g726">g726</a>
+<td>
+G.726 codec.
+<tr><td><a name="g728">g728</a>
+<td>
+G.728 codec.
+<tr><td><a name="g729ab">g729ab</a>
+<td>
+G.729A codec.
+<tr><td><a name="g729i">g729i</a>
+<td>
+G.729i codec.
+
+<tr><td><a name="gsm-efr">gsm-efr</a>
+<td>
+GSM-EFR (Enhanced Full Rate) codec.
+<tr><td><a name="gsm-fr">gsm-fr</a>
+<td>
+GSM-FR (Full Rate) codec.
+<tr><td><a name="iSAC">iSAC</a>
+<td>
+internet Speech Audio Codec
+<tr><td><a name="ilbc">ilbc</a>
+<td>
+iLBC (Internet Low Bit Rate Codec) codec.
+<tr><td><a name="melpe">melpe</a>
+<td>
+Mixed-Excitation Linear Predictive enhanced codec.
+
+<tr><td><a name="speex-vmp">speex-vmp</a>
+<td>
+RTP Codec for Speex
+<tr><td><a name="tetra">tetra</a>
+<td>
+RTP Tetra Codec.
+
+</table>
+
+<h2>IP general functionality</h2>
+<p>
+<table border>
+<tr>
+	<th colspan=2>IP general functionslity
+
+<tr>
+	<th>Module <th>Purpose
+<tr><td><a name="dtlsrx">dtlsrx</a>
+<td>
+Passes incoming DTLS packets to the host application.
+
+<tr><td><a name="dtlstx">dtlstx</a>
+<td>
+Sends the DTLS packets supplied by the host application.
+<tr><td><a name="fromudp">fromudp</a>
+<td>
+UDP collector. Allows data to be collected from a UDP port instead of being
+supplied by the host application.
+<tr><td><a name="rtcp">rtcp</a>
+<td>
+RTCP.
+<tr><td><a name="securertp">securertp</a>
+<td>
+Secure RTP.
+<tr><td><a name="toudp">toudp</a>
+<td>
+UDP dispatcher. Allows data to be sent to a UDP port instead of being
+given to the host application.
+<tr><td><a name="vmprx">vmprx</a>
+<td>
+RTP receiver.
+<tr><td><a name="vmptx">vmptx</a>
+<td>
+RTP transmitter.
+<tr><td><a name="vtdet">vtdet</a>
+<td>
+Replacement of in-band tones with RFC 2833 tones.
+</table>
+
+<h2>Test and debug</h2>
+<p>
+<table border>
+<tr>
+	<th colspan=2>Test and debug modules
+
+<tr>
+	<th>Module <th>Purpose
+<tr><td><a name="cpumon">cpumon</a>
+<td>
+Cpu usage monitor.
+<tr><td><a name="heapmon">heapmon</a>
+<td>
+Heap usage monitor.
+
+</table>

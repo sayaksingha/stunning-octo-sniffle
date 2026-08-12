@@ -1,0 +1,7 @@
+.	tonedet.o
+libutil	generic_io.o
+apilib
+Testlib cardlist.o
+Testlib modlist.o
+Testlib error.o
+Testlib errcode_sm.o

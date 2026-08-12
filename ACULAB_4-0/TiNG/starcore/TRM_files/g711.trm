@@ -1,0 +1,8 @@
+WARNING: AUTOMATICALLY GENERATED FILE - DO NOT EDIT
+
+VERSION: 1
+DESCRIPTION: VoIP gateway supporting G.711
+
+Modules: datafeed inchan passthru vmpplc vmprx vmptx rtcp
+
+Resources: acu+g711 60 tdm_in tdm_out

@@ -1,0 +1,2 @@
+.	tstats.o
+libutil	generic_io.o

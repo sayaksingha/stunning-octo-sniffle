@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody installation guide: first time build</title>
+</head>
+<body>
+<h1>Prosody installation guide: first time build</h1>
+<p class="type-WINNT">If you are using Windows with Visual Studio,
+you can use the <a href="vsproj.html">Visual Studio project
+files</a>, or you can build from the command line as described here.
+<p>
+Go to the $(TiNG)/libutil directory and build the program '<code>t0</code>'.
+For example, run:
+<pre>
+	$ make gen-$TiNGTARGET/t0
+</pre>
+<p>
+Note: unlike everything else which gets built, the t0 program is run
+while building parts of Prosody. If you are cross-compiling (common
+with QNX), you need to build t0 for your host system - not for the
+target on which you intend to run Prosody. For example, if you are
+running on Linux but building for QNX you need to use:
+<pre>
+	$ TiNGTARGET=LINUX_V6 make gen-LINUX_V6/t0
+</pre>
+<p>
+If you don't want to use 'make', build as described in
+<a href="build_cconly.html">Prosody installation guide: building without
+using the Makefiles</a>.
+<p>
+If make complains that <code>/Makefile</code> cannot be found, for
+example, like this:
+<pre>
+	Makefile:12: /Makefile: No such file or directory
+	find: gen-: No such file or directory
+	Makefile:19: no file name for `-include'
+	make: *** No rule to make target `/Makefile'.  Stop.
+</pre>
+<p>
+then the environment variable TiNGTARGET has not been set as
+described in <a href="install_environ.html">set up the build
+environment</a>. Check that it has a lower case 'i'.
+<p>
+The errors:
+<pre>
+	Makefile:19: no file name for `-include'
+</pre>
+<p>
+is normal and can be ignored. <span class=QNX>On QNX, there may be further
+errors, which can also be ignored as long as the t0 program is built</span>.
+
+<p>
+All generated files (i.e. object files, executables and suchlike) are
+put in subdirectories. Directories with names like 'gen-WINNT_V6' and
+'gen-LINUX_V6' are used for files generated for specific builds, while
+'gen' holds files which are used by all builds. Any errors produced
+while generating a file are saved under 'errs'. For example, when making
+the file <code>gen-WINNT_V6/foo.x</code> any errors are put into
+<code>errs/gen-WINNT_V6/foo.x</code>. The layout is described in detail
+in <a href="layout.html"> Prosody: layout of the distribution</a>.
+
+<div class="type-WINNT">
+<em>For Windows:</em> note that the above command will build using
+the gcc compiler - not the Microsoft one. To build using the
+Microsoft compiler use:
+<pre>
+	$ make gen-$TiNGTARGET/t0.exe
+</pre>
+</div>
+
+<p>
+When the t0 program has been built, copy it into a directory in your path.
+For example:
+
+<div class="type-LINUX">
+<em>For Linux:</em>
+<pre>
+	cp gen-LINUX_V6/t0 /usr/local/bin/
+</pre>
+</div>
+
+<div class="type-WINNT">
+<em>For Windows:</em>
+<pre>
+	cp gen-WINNT_V6/t0.exe /bin/
+</pre>
+</div>
+
+<p>
+Later stages of building will use this program, so it is important
+that it is put in a suitable directory. Check this with:
+
+<pre>
+	echo hello | t0 foo
+</pre>
+
+<p>
+This should print <code>hello</code> and create a file called
+<code>foo</code> which also contains <code>hello</code>.
+
+<p>
+If you install another version of the package, you need not worry
+about which version of t0 to use as they're all the same.
+
+<p>
+If you cannot build t0, it is possible to replace it with the
+standard utility <code>tee</code> (which reads input and writes one
+copy to the specified file and another to its output). The difference is
+that when the input is empty, t0 removes the output file while tee
+leaves a zero- length file. However if you can't build t0 it is
+highly unlikely that you'll be able to build anything else, so it's
+better to fix any problem at this point. The only circumstance in
+which it's worth using tee is if you're using a cross-compiler and
+cannot run programs on the system which is doing the build.
+
+<p>
+You are now ready to finish <a href="install_buildrest.html">building
+software components</a>.
+</body>
+</html>

@@ -1,0 +1,37 @@
+GCC_COMPILE=$(CFLAGS_LINUX_V6) -g -O2 -c -MD -o "$@" $< 2>&1 | t0 errs/$@; perl ../libutil/fixdep.pl $@
+
+CFLAGS_LINUX_V6= \
+	$(CFLAGS_CPU) \
+	-fPIC \
+	$(CC_DEFINES) \
+	-DTiNGTYPE_LINUX \
+	$(INCLUDES) \
+	-I../../include \
+	-Wall \
+	-W \
+	-Wshadow \
+	-Wpointer-arith \
+	-Wstrict-prototypes \
+	-Wmissing-prototypes \
+	-O2
+
+# objects for LINUX_V6 variant
+
+OBJS= \
+	$(GEN)/smbfhlib.o \
+	$(GEN)/smbfwavlib.o \
+	$(GEN)/smclib.o \
+	$(GEN)/smhlib.o \
+	$(GEN)/smwavlib.o
+
+# dummy targets
+
+all-$(TiNGTARGET): $(OBJS)
+
+dist-$(TiNGTARGET): $(OBJS)
+
+
+# static rules
+
+$(OBJS): $(GEN)/%.o: %.c $(GEN)/.exists errs/$(GEN)/.exists
+	gcc $(GCC_COMPILE)

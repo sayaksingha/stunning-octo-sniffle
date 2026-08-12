@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Encodings: async</title>
+</head>
+<body>
+<h1>Prosody data communications Encodings: async</h1>
+<p>
+ASYNC is an encoding which runs in conjunction with an underlying
+protocol. It is very similar to the ITU standard V.14 with three exceptions:
+<ul>
+<li>there is no provision for continuous start polarity (break signals)
+<li>the transmitter never deletes stop bits
+<li>the receiver permits deletion of all stop bits
+</ul>
+<p>
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic data communications
+documentation.
+
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_async.h"</code> to get the
+	appropriate declarations.
+<p>
+	The encoding type is <code>kSMDCConfigEncodingAsync</code>.
+<p>
+	The encoding_config_data pointer must point to one of these structs:
+<pre>
+	typedef struct smdc_async_format_parms {
+		tSM_UT32 <a name="stopbits">stopbits</a>;
+		tSM_UT32 <a name="databits">databits</a>;
+	} SMDC_ASYNC_FORMAT_PARMS;
+</pre>
+<p>
+	<a href="#stopbits">stopbits</a> is the number of
+	<strong>extra</strong> stop bits to send. i.e. the value
+	<code>0</code> means one stop bit. This setting has no effect
+	on the receiver.
+<p>
+	<a href="#databits">databits</a> is the number of data bits per
+	character unless the value <code>0</code> is specified, when
+	eight (8) data bits are used.
+<p>
+	No parity bit is added on transmission or checked on
+	reception. However, since the data is passed transparently,
+	an applicaton can supply transmit data with parity included
+	and check received data for correct parity.
+<p>
+	The firmware module <a href="gen/softmodindex.html#asyrx">asyrx</a> (or
+	<a href="gen/softmodindex.html#fskasyrx">fskasyrx</a> if the protocol is FSK)
+	must have been downloaded to
+	receive, and <a href="gen/softmodindex.html#asytx">asytx</a>
+	is required to transmit.
+
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+<p>
+	Bytes are in order of reception and within a byte the least
+	significant bit is the first that was received. The receiver
+	permits stop bits to be deleted, like in V.14 except there is
+	no restriction on which stop bits may be deleted.
+	Consequently, the receiver does not recognise any bit
+	sequence as representing a break. If the
+	<a href="#databits">databits</a> configured is eight or less,
+	then each character received occupies one byte in the buffer.
+	If more than eight bits per character has been configured,
+	each character occupies two bytes, with the first being
+	filled with the first eight bits received and the second
+	contining the remaining bits. For example, if nine bit
+	characters are used, the second byte contains the ninth bit
+	in its least significant bit.
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+<p>
+	Within a byte the least significant bit is the first
+	transmitted. There is no mechanism for sending a break. If the
+	<a href="#databits">databits</a> configured is eight or less,
+	then each byte represents a character to send, so, for example,
+	if the configuration is for seven bit characters, the most
+	significant bit of each byte is ignored. If more than eight bits
+	per character has been configured, each character occupies two
+	bytes, with the first being the first eight bits to be
+	transmitted and the second holding the remaining bits. For
+	example, if nine bit characters are used, the second byte
+	contains the ninth bit in its least significant bit and its
+	other bits are ignored.
+</body>

@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody Guide - how to record data</title>
+</head>
+<body>
+<h1>Prosody Guide - how to record data</h1>
+<p>
+The easiest way to record data with Prosody is to use the
+<a href="highapi_playrec.html">Prosody high level FILE play/record</a>
+API. This is very convenient when you want to record data into
+a file. However, for complete control over the recording process, you can
+use the low level primitives which are part of the
+<a href="prospapi.html">Prosody speech processing</a> API. All of the
+methods are described here.
+
+<h2>The basics</h2>
+<p>
+To record data you need a Prosody channel which can perform input. This
+means one of the following:
+<ul>
+<li>It is an input channel
+<li>It is a full-duplex channel
+<li>It is a half-duplex channel and not being used for output (but it
+can be performing detection)
+</ul>
+<p>
+The input from the channel must also have been connected
+appropriately. See
+<a href="howto_datafeed.html">Prosody Guide - how to use datafeeds</a> for
+how to do this.
+
+<h2>Using the high-level API - simplest form</h2>
+<p>
+The easiest way to play data is to use
+<a href="gen/apifn-sm_record_file_start.html">sm_record_file_start()</a> and
+<a href="gen/apifn-sm_record_file_complete.html">sm_record_file_complete()</a>.
+<p>
+<img src="gen/highrecflow.png" alt="diagram of function calls with high-level record">
+
+<h2>Using the high-level API - getting the termination status</h2>
+<p>
+Sometimes it is useful to get the termination status of the recording.
+The function
+<a href="gen/apifn-sm_record_file_complete_tstatus.html">sm_record_file_complete_tstatus()</a>
+takes an extra parameter which is the address of a status area in which
+the final record status can be found after the recording completes. It is
+used in exactly the same way as
+<a href="gen/apifn-sm_record_file_complete.html">sm_record_file_complete()</a>.
+
+<h2>Using the high-level API - allowing multiple simultaneous records</h2>
+<p>
+Since
+<a href="gen/apifn-sm_record_file_complete.html">sm_record_file_complete()</a>
+does not return until the whole of the record has finished, you will
+need a separate thread for each record. You can avoid this by using
+<a href="gen/apifn-sm_record_file_progress.html">sm_record_file_progress()</a>
+instead. This only does the processing immediately necessary, so you can
+have a single thread which does a mixture of processing - calling
+<a href="gen/apifn-sm_record_file_progress.html">sm_record_file_progress()</a>
+as necessary for each channel which is recording. Of course, this means
+you need to know when a channel needs servicing, so you need to use a
+Prosody event. You create the event and associate it with the channel.
+Then you can perform as many records as you like, before dissociating
+the event from the channel and freeing the event.
+<p>
+<img src="gen/evrecflow.png" alt="diagram of function calls with high-level record and events">
+
+<h2>Using the high-level API - checking status yourself</h2>
+<p>
+Since
+<a href="gen/apifn-sm_record_file_progress.html">sm_record_file_progress()</a>
+performs all the processing for a record, you cannot find out the
+status yourself. (Don't be tempted to try calling
+<a href="gen/apifn-sm_record_status.html">sm_record_status()</a>
+before or after calling
+<a href="gen/apifn-sm_record_file_progress.html">sm_record_file_progress()</a>
+as this can confuse the high-level API library and make it return
+errors). To allow you to find out the status safely, Prosody provides
+an alternative to
+<a href="gen/apifn-sm_record_file_progress.html">sm_record_file_progress()</a>
+which merely uses the status you supply. This function is
+<a href="gen/apifn-sm_record_file_progress_istatus.html">sm_record_file_progress_istatus()</a>.
+To use it, you fetch the status yourself with
+<a href="gen/apifn-sm_record_status.html">sm_record_status()</a> and
+then call
+<a href="gen/apifn-sm_record_file_progress_istatus.html">sm_record_file_progress_istatus()</a>.
+This allows you, for example, to handle detection of tones which are
+being eliminated from the recording.
+<p>
+<img src="gen/evrecisflow.png" alt="diagram of function calls with high-level record, events, and istatus">
+
+<h2>Using the high-level API - stopping a record</h2>
+<p>
+A recording is normally stopped by calling
+<a href="gen/apifn-sm_record_file_stop.html">sm_record_file_stop()</a>.
+which requests that the record stop. <strong>Note!</strong> Even when
+you stop a record like this, you must wait for the completion of the
+record to be reported in the usual way (such as by
+<a href="gen/apifn-sm_record_file_complete.html">sm_record_file_complete()</a>
+returning).
+
+<h2>Using the low-level API</h2>
+<p>
+There are several reasons why the high level API may not be powerful
+enough for an application. For example, you may want to use a feature
+not supported by the high-level API or the data may not be going to a
+file. The use of the low-level API is reasonably straightforward:
+<ul>
+<li>Start the record with
+	<a href="gen/apifn-sm_record_start.html">sm_record_start()</a>.
+<li>Use events to wait until the channel is worth checking.
+<li>Check the status with
+	<a href="gen/apifn-sm_record_status.html">sm_record_status()</a>.
+<li>If the status reported is <code>kSMRecordStatusComplete</code>
+	then the record has finished.
+<li>If the status reported is <code>kSMrecordStatusData</code>
+	there is data ready for collection. Call
+	<a href="gen/apifn-sm_get_recorded_data.html">sm_get_recorded_data()</a>
+	to collect it.
+</ul>
+<p>
+You can stop the record in several ways. You can specify various
+termination conditions when you call
+<a href="gen/apifn-sm_record_start.html">sm_record_start()</a>, or you
+can call
+<a href="gen/apifn-sm_record_abort.html">sm_record_abort()</a> to
+request that it stop. Note that in all cases you still must wait for 
+<a href="gen/apifn-sm_record_status.html">sm_record_status()</a> to
+indicate completion.
+<p>
+<img src="gen/lowrecflow.png" alt="diagram of functions called for low level record">
+<p>
+Note that all forms of recording can only record a single source at a
+time, but see also
+<a href="an-record-2way.html">Prosody application note: recording
+2-party conversations</a> for how to use the Prosody conferencing
+features to record a mixture of two signals.

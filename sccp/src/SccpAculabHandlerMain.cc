@@ -65,6 +65,12 @@ void * TxThread (void *lPtr)
 
       if (true == lSccpAculabHandler->RxMsgFromApplication (lSccpMsg))
       {
+         // Block until Aculab SSAP is fully connected before sending to stack
+         while (true != lSccpAculabHandler->GetSsapStatus() && AculabUtil::KeepRunning())
+         {
+            sleep(1);
+         }
+         
          lSccpAculabHandler->ProcessTxMsgToStack (lSccpMsg);
       }
    }
@@ -87,8 +93,8 @@ BOOLEAN HandleThreads(SccpAculabHandler *sccpAculabHandlerObj)
          pthread_create (&lThreadId, NULL, &TxThread, sccpAculabHandlerObj);
       if (0 == lRetVal)
       {
-         printf ("%s: Tid:%lu Tx Thread Creation success\n",
-               gProcessName, lThreadId);
+         T(gTrace, printf ("%s: Tid:%lu Tx Thread Creation success\n",
+               gProcessName, lThreadId););
 
          pthread_detach (lThreadId);
          gTxThreadId[0] = lThreadId;
@@ -97,7 +103,7 @@ BOOLEAN HandleThreads(SccpAculabHandler *sccpAculabHandlerObj)
       {
          snprintf (lLogText, MAX_LOG_TEXT_LEN,
                "Error Tx Thread Creation failed. ErrCode:%d)", lRetVal);
-         printf ("%s:\33[31m %s Exiting...\33[0m\n", gProcessName, lLogText);
+         TERR(gTrace, printf ("%s:\33[31m %s Exiting...\33[0m\n", gProcessName, lLogText););
 
          return false;
       }
@@ -108,8 +114,8 @@ BOOLEAN HandleThreads(SccpAculabHandler *sccpAculabHandlerObj)
          pthread_create (&lThreadId, NULL, &RxThread, sccpAculabHandlerObj);
       if (0 == lRetVal)
       {
-         printf ("%s: Tid:%lu Rx Thread Creation success\n",
-               gProcessName, lThreadId);
+         T(gTrace, printf ("%s: Tid:%lu Rx Thread Creation success\n",
+               gProcessName, lThreadId););
 
          pthread_detach (lThreadId);
          gRxThreadId[0] = lThreadId;
@@ -118,7 +124,7 @@ BOOLEAN HandleThreads(SccpAculabHandler *sccpAculabHandlerObj)
       {
          snprintf (lLogText, MAX_LOG_TEXT_LEN,
                "ErrCode:%d Rx Thread Creation failed", lRetVal);
-         printf ("%s:\33[31m %s. Exiting...\33[0m\n", gProcessName, lLogText);
+         TERR(gTrace, printf ("%s:\33[31m %s. Exiting...\33[0m\n", gProcessName, lLogText););
 
          return false;
       }
@@ -137,12 +143,52 @@ int main (int argc, char *argv[])
    ProcessLock lProcessLock;
    TEXT lLogText[MAX_LOG_TEXT_LEN + 1] = "";
    TEXT lCfgFile[MAX_LOG_TEXT_LEN + 1] = "";
-
+/*
    if (argc != 2)
    {
       printf ("Usage: %s <ssn>\n",
             basename (argv[0]));
       printf ("export %s=1\n", TRACE_ACU_SCCP_HDLR_ENV);
+
+      return 1;
+   }
+*/
+
+      if (argc != 2)
+   {
+      // Modern ASCII Art Banner (SCCP)
+      printf("\n");
+      printf("  ███████╗ ██████╗ ██████╗ ██████╗ \n");
+      printf("  ██╔════╝██╔════╝██╔════╝ ██╔══██╗\n");
+      printf("  ███████╗██║     ██║      ██████╔╝\n");
+      printf("  ╚════██║██║     ██║      ██╔═══╝ \n");
+      printf("  ███████║╚██████╗╚██████╗ ██║     \n");
+      printf("  ╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     \n");
+      printf("  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+      
+      // Product Name & Version
+      printf("  \033[1;36mProduct     :\033[0m Aculab ANSI SCCP Handler\n");
+      printf("  \033[1;36mVersion     :\033[0m %s \n",ANSI_PRODUCT_VER);
+      
+      // Description (What it does)
+      printf("  \033[1;36mDescription :\033[0m Facilitates Signalling Connection Control Part\n");
+      printf("                (SCCP) routing over SS7 networks. It provides\n");
+      printf("                extended routing, flow control,\n");
+      printf("                and Global Title Translation (GTT) capabilities.\n\n");
+      
+      // ANSI Standard Info
+      printf("  \033[1;36mCompliance  :\033[0m Implements the ANSI (American National Standards\n");
+      printf("                Institute) SS7 specification for SCCP. It ensures\n");
+      printf("                reliable connectionless and connection-oriented\n");
+      printf("                network services for North American telecom nodes.\n");
+      printf("  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n");
+
+      // Usage Instructions
+      printf("  \033[1;33mUsage:\033[0m %s <ssn>\n\n", basename(argv[0]));
+      
+      // Environment variables (Updated for SCCP as an example)
+      printf("  \033[1;31mEnvironment Requirement:\033[0m\n");
+      printf("  export %s=1\n\n", "TRACE_ACU_SCCP_HDLR_ENV"); // Replace with your actual SCCP ENV macro
 
       return 1;
    }
@@ -170,13 +216,13 @@ int main (int argc, char *argv[])
    strcpy(gCfgFile, lCfgFile);
 
    gLog.SetProcessName (gProcessName);
-   printf ("%s:\33[32m Starting...\33[0m\n", gProcessName);
+   T(gTrace, printf ("%s:\33[32m Starting...\33[0m\n", gProcessName););
 
    // Initialize log object
    if (true != gLog.Init())
    {
-      printf ("%s:\33[31m Log object Init Failed. Exiting...\33[0m\n",
-            gProcessName);
+      TERR(gTrace, printf ("%s:\33[31m Log object Init Failed. Exiting...\33[0m\n",
+            gProcessName););
 
       return 1;
    }
@@ -188,8 +234,8 @@ int main (int argc, char *argv[])
    if (LOCK_SUCCESS != lProcessLock.Lock ())
    {
       gLog.GenerateLog (GSYS16);
-      printf ("%s:\33[31m Process already running. Exiting...\33[0m\n",
-            gProcessName);
+      TERR(gTrace, printf ("%s:\33[31m Process already running. Exiting...\33[0m\n",
+            gProcessName););
 
       return 1;
    }
@@ -200,8 +246,8 @@ int main (int argc, char *argv[])
    if (true != gPeg.Init ("SHM_SCCP_PEG_KEY"))
    {
       gLog.GenerateLog (GSYS04, "PegApi object Init Failed");
-      printf ("%s:\33[31m PegApi object Init Failed. Exiting...\33[0m\n",
-            gProcessName);
+      TERR(gTrace, printf ("%s:\33[31m PegApi object Init Failed. Exiting...\33[0m\n",
+            gProcessName););
 
       return 1;
    }
@@ -209,8 +255,8 @@ int main (int argc, char *argv[])
    if (true != lSccpAculabHandler.Init (lCfgFile, lSsn))
    {
       gLog.GenerateLog (GSYS04, "Handler object Init Failed");
-      printf ("%s:\33[31m Handler object Init Failed. Exiting...\33[0m\n",
-            gProcessName);
+      TERR(gTrace, printf ("%s:\33[31m Handler object Init Failed. Exiting...\33[0m\n",
+            gProcessName););
 
       return 1;
    }
@@ -220,14 +266,14 @@ int main (int argc, char *argv[])
    if(false == HandleThreads(&lSccpAculabHandler))
    {
       gLog.GenerateLog (GSYS04, "Failed Creating Threads");
-      printf ("%s:\33[31m Failed Created Threads. Exiting...\33[0m\n",
-            gProcessName);
+      TERR(gTrace, printf ("%s:\33[31m Failed Created Threads. Exiting...\33[0m\n",
+            gProcessName););
 
       return 1;
    }
 
    gLog.GenerateLog (GSYS03);
-   printf ("%s:\33[32m Initialization Okay...\33[0m\n", gProcessName);
+   T(gTrace, printf ("%s:\33[32m Initialization Okay...\33[0m\n", gProcessName););
 
    AculabUtil::ResetConfigFlag();
 
@@ -250,7 +296,7 @@ int main (int argc, char *argv[])
       {
          snprintf (lLogText, MAX_LOG_TEXT_LEN,
                "Error Ssap instance running status false");
-         printf ("%s:\33[31m %s Reconnecting SSAP\33[0m\n", gProcessName, lLogText);
+         TERR(gTrace, printf ("%s:\33[31m %s Reconnecting SSAP\33[0m\n", gProcessName, lLogText););
 
          //pthread_kill (gRxThreadId[0], 30);
          //pthread_kill (gTxThreadId[0], 30);
@@ -273,7 +319,7 @@ int main (int argc, char *argv[])
    }
 
    gLog.GenerateLog (GSYS02);
-   printf ("%s:\33[32m Shutting down...\33[0m\n", gProcessName);
+   T(gTrace, printf ("%s:\33[32m Shutting down...\33[0m\n", gProcessName););
 
    return 0;
 }

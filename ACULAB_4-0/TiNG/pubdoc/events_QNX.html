@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody events on QNX</title>
+</head>
+<body>
+<h1>Prosody events on QNX</h1>
+<p>
+A Prosody event is described in <a href="events.html">Prosody events</a>.
+
+<h2 class="type-QNX">Events on QNX:</h2>
+<div class="type-QNX">
+<p>
+The <code>poll()</code> function can be used with Prosody events. A
+tSMEventId is a structure with the following fields:
+<ul>
+<li>fd - a file descriptor
+<li>mode - an event mask
+</ul>
+<p>
+These can be used to construct a <code>struct pollfd</code> for use with
+<code>poll()</code> as follows:
+<pre>
+void event_to_pollfd(struct pollfd *pfd, tSMEventId ev)
+{
+	pfd->fd = ev.fd;
+	pfd->events = ev.mode;
+}
+</pre>
+<p>
+When <code>poll()</code> returns, it indicates that the event is set
+by a non-zero value in the <code>revents</code> field. An application
+should not rely on particular bits, since that makes it harder to
+port the application to Microsoft Windows, which does not return any
+equivalent detail from WaitForMultipleObjects().
+
+However, for debugging purposes, it is useful to know exactly what the 
+<code>revents</code> field can indicate. The following bits may be set in the
+<code>revents</code> field:
+<dl>
+<dt>POLLIN
+<dd>
+The channel has data ready to be read. This can only occur if the
+type of the tSMEventId is kSMEventTypeReadData.
+<dt>POLLOUT
+<dd>
+The channel has space for more data to be written. This can only occur
+if the type of the tSMEventId is kSMEventTypeWriteData.
+<dt>POLLPRI
+<dd>
+The channel may have a status change to report. The appropriate API
+function (e.g.
+<a href="gen/apifn-sm_replay_status.html">sm_replay_status()</a>)
+should be called. This is also the value used to report events such as
+the detection of a digit.
+<dt>POLLHUP
+<dd>
+The channel does not have any operation in progress.
+</dl>
+</div>
+
+</body>
+</html>

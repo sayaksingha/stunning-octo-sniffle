@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody generic: API: sm_dispatcher_destroy</title>
+</head>
+<body>
+<h1>Prosody generic: API: sm_dispatcher_destroy</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_dispatcher_destroy(<a href="../apitype.html#type-tSMDispatcherId">tSMDispatcherId</a> <a href="#field-dispatcher">dispatcher</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-dispatcher">dispatcher</a>
+<dd>
+A tSMDispatcherId that has been prevously created by a call to 
+<a href="apifn-sm_udp_dispatcher_create.html">sm_udp_dispatcher_create()</a>.
+</dl>
+<h2>Description</h2>
+<p>
+Destroys
+<a class=pref href="#field-dispatcher">dispatcher</a>
+invalidating the tSMDispatcherId.
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosgen.html">Prosody generic API</a>.
+</body>
+</html>

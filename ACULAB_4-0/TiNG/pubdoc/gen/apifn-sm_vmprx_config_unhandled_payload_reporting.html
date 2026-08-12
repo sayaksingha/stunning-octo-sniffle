@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_config_unhandled_payload_reporting</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_config_unhandled_payload_reporting</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_config_unhandled_payload_reporting(struct sm_vmprx_unhandled_payload_reporting_parms *<a href="#field-pp">pp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-pp">*pp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_unhandled_payload_reporting_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-delay">delay</a>;						/* in */
+} SM_VMPRX_UNHANDLED_PAYLOAD_REPORTING_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a VMP[rx] to report when packets arrive with a payload type it 
+is not configured to handle. The delay prevents repeat notifications from 
+being sent too often. A zero delay will cause every packet with an 
+unhandled payload type to be reported. A negative delay disables reporting 
+of unhandled payload types.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to be configured
+
+<dt><a name="field-delay">delay</a><dd>The minimum delay between reports of unhandled payload types (in ms).
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

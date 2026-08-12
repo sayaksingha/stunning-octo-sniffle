@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody DTLS processing: API: sm_dtlsrx_get_packet</title>
+</head>
+<body>
+<h1>Prosody DTLS processing: API: sm_dtlsrx_get_packet</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_dtlsrx_get_packet(struct sm_dtlsrx_get_packet_parms *<a href="#field-readp">readp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-readp">*readp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_dtlsrx_get_packet_parms {
+	<a href="../apitype.html#type-tSMDTLSrxId">tSMDTLSrxId</a> <a href="#field-dtlsrx">dtlsrx</a>;					/* in */
+	char *<a href="#field-data">data</a>;						/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-max_length">max_length</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-packet_length">packet_length</a>;					/* out */
+} SM_DTLSRX_GET_PACKET_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Attempt to read a packet from a DTLS[rx].
+<p>
+Requires the module
+<a href="softmodindex.html#dtlsrx">dtlsrx</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-dtlsrx">dtlsrx</a><dd>The dtls[rx] from which to read a packet
+
+<dt><a name="field-data">data</a><dd>A pointer to the buffer into which packet should be read.
+
+<dt><a name="field-max_length">max_length</a><dd>The amount of space in the buffer.
+
+<dt><a name="field-packet_length">packet_length</a><dd>The length of the read packet.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosdtls.html">Prosody DTLS processing API</a>.
+</body>
+</html>

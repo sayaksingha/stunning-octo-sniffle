@@ -1,0 +1,9 @@
+WARNING: AUTOMATICALLY GENERATED FILE - DO NOT EDIT
+
+VERSION: 1
+DESCRIPTION: VoIP gateway G711  echocan 
+
+Modules:vmprx vmptx datafeed echocan outchan inchan tonegen vmpplc passthru rtcp
+
+Resources: ACU+G711+ECHO  60 tdm_in tdm_out 
+

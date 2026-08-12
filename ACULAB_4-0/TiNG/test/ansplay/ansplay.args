@@ -1,0 +1,9 @@
+-TiNGtrace
+a	agc		unsigned
+F	format		string
+O	once		bool
+P	per_mod		unsigned
+s	speed		signed
+t	timeslot	timeslot
+v	volume		signed
+x	serialnumber	string

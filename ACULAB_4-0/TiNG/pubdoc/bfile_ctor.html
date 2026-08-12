@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>BFILE library: bfile(), bfile_dtor() - create and destroy a BFILE</title>
+</head>
+<body>
+<h1>BFILE library: bfile(), bfile_dtor() - create and destroy a BFILE</h1>
+<h2>Name</h2>
+<p>
+bfile(), bfile_dtor() - create and destroy a BFILE
+
+<h2>Synopsis</h2>
+<p>
+<pre>
+#include "bfile.h"
+
+int bfile(BFILE **<a name="bfilepp">bfilepp</a>);
+int bfile_dtor(BFILE *<a name="bfp">bfp</a>);
+</pre>
+
+<h2>Decription</h2>
+<p>
+The <code>bfile()</code> function creates a <code>BFILE</code> object.
+If it is successfully created, it must eventually be destroyed by
+calling the <code>bfile_dtor()</code> function which destroys a
+<code>BFILE</code> object, closing the related file, if any. If the
+<code>bfile()</code> function indicates an error, no object has been
+created. The <code>bfile_dtor()</code> function always succeeds.
+
+<h2>Return value</h2>
+<p>
+<code>bfile()</code> returns <code>0</code> if successful, or an
+<code>errno</code> value otherwise.
+<p>
+<code>bfile_dtor()</code> returns the error status of the destroyed
+<code>BFILE</code> object, which is closed by the destruction of the
+<code>BFILE</code>.
+
+<h2>See also</h2>
+<p>
+<a href="bfile_bfsetup.html">bfsetup()</a>,
+<a href="bfile_bfopenhandle.html">bfopenhandle()</a>,
+<a href="bfile_bfopen.html">bfopen()</a>,
+<a href="bfile_bfread.html">bfread()</a>,
+<a href="bfile_bfseek.html">bfseek()</a>,
+<a href="bfile_bfwrite.html">bfwrite()</a>,
+<a href="bfile_bfflush.html">bfflush()</a>,
+<a href="bfile_bferror.html">bferror()</a>.
+
+<hr>
+<p>
+This function is part of the <a href="bfile.html">BFILE library</a>.
+</body>
+</html>

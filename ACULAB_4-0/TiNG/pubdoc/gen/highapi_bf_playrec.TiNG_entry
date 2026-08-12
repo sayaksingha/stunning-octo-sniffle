@@ -1,0 +1,12 @@
+sm_replay_bfile_start	iPsPBtUiRPtiUiiicr2048_
+sm_replay_bfile_progress_istatus	iPBPPti
+sm_replay_bfile_progress	iPBPPt
+sm_replay_bfile_complete	iPBPPt
+sm_replay_bfile_stop	iPBPPti
+sm_record_bfile_start	iPsPBtRCtiUiicr2048_
+sm_record_bfile_progress_istatus	iPBCPti
+sm_record_bfile_progress_ostatus	iPBCPtPRSPt
+sm_record_bfile_progress	iPBCPt
+sm_record_bfile_complete	iPBCPt
+sm_record_bfile_stop	iPBCPti
+sm_record_bfile_complete_tstatus	iPBCPtPRSPt

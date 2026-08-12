@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="api.css">
+<title>Prosody high level FILE play/record</title>
+</head>
+<body>
+<h1>Prosody high level FILE play/record</h1>
+<p>
+High level play and record
+<a href="gen/highapi_playrec-index.html">functions</a> provide a way
+to play and record directly using files rather than having to copy the
+data between the file and the Prosody channel.
+<p>
+The library which provides this API is equivalent to the
+<a href="highapi_bf_playrec.html">Prosody high level BFILE play/record API
+library</a> except that instead of using the <a href="bfile.html">bfile
+library</a>, it uses the C standard library, <cite>stdio</cite>.
+<p>
+Under Windows, there can be problems when the application uses a different 
+C runtime library from the TiNG dll. This occurs when using 
+<a href="gen/apifn-sm_replay_file_start.html">sm_replay_file_start()</a> or 
+<a href="gen/apifn-sm_record_file_start.html">sm_record_file_start()</a> as 
+they pass a FILE* across the dll boundry. Since the C runtime library used by 
+the TiNG dll may change in future versions, <strong>these functions are 
+deprecated when using the TiNG dll.</strong>
+<p>
+On other systems, there is no particular need to use either in preference to 
+the other.
+<p>
+The high level play/record library provides a simple way to play from
+and record into files. For example, an application could play a file
+by merely invoking
+<a href="gen/apifn-sm_replay_file_start.html">sm_replay_file_start()</a>
+and
+<a href="gen/apifn-sm_replay_file_complete.html">sm_replay_file_complete()</a>.
+<p>
+Alternatively if the application requires replay of a file as a
+background task, it might invoke
+<a href="gen/apifn-sm_replay_file_start.html">sm_replay_file_start()</a>
+and then
+spawn a thread that invokes
+<a href="gen/apifn-sm_replay_file_complete.html">sm_replay_file_complete()</a>.
+If the replay had to be prematurely aborted, the main thread of the
+application could call
+<a href="gen/apifn-sm_replay_file_stop.html">sm_replay_file_stop()</a>.
+to abort the replay thread.
+<p>
+If an application had its own replay scheduling method, (perhaps in a
+multi-threaded application), it could initiate a file replay using
+<a href="gen/apifn-sm_replay_file_start.html">sm_replay_file_start()</a>
+and then periodically call
+<a href="gen/apifn-sm_replay_file_progress.html">sm_replay_file_progress()</a>
+and when finishing the replay call
+<a href="gen/apifn-sm_replay_file_complete.html">sm_replay_file_complete()</a>.
+
+<p>
+Recording of data into a file is done in a similar manner using the
+calls:
+<a href="gen/apifn-sm_record_file_start.html">sm_record_file_start()</a>,
+<a href="gen/apifn-sm_record_file_progress.html">sm_record_file_progress()</a>,
+<a href="gen/apifn-sm_record_file_complete.html">sm_record_file_complete()</a>
+and <a href="gen/apifn-sm_record_file_stop.html">sm_record_file_stop()</a>.
+
+<p>
+The declarations for this API are in <code>highapi/smhlib.h</code>
+and applications using this API must be linked with the
+appropriate library - see <a href="howto_buildapp.html#linking">Linking an application with the TiNG library</a>
+
+<p>
+See also the <a href="highapi_wavfile.html">Prosody WAV file API</a>.
+
+<h2>Initialisation</h2>
+<p>
+	From time to time new features are added to this API. This may
+	require new fields to be added to structures. A mechanism is
+	available to ensure that this does not cause any problems for
+	code developed prior to the addition. This is achieved by
+	defining all new fields such that the value zero selects
+	backward compatible behaviour. To take advantage of this,
+	structures should be cleared before use. For example,
+
+<pre>
+	SM_FILE_REPLAY_PARMS ap;
+	memset(&amp;ap, 0, sizeof(ap));
+	ap.fd = file;
+		... etc
+</pre>
+<p>
+	This ensures that if a new field is ever added to this
+	structure the new field is not left uninitialised.
+
+<h2>Return values</h2>
+<p>
+	The list of error codes that a function can return is only a
+	list of typical errors. If a function is described as returning
+	a <a href="gen/error.html">standard error</a> then it can return
+	any such error. Also, when the description of a function says
+	that it can return a particular error code (for example,
+	ERR_SM_FIRMWARE_NOT_RUNNING), this does not mean that the
+	function guarantees to detect this error condition in all
+	circumstances. It merely means that if it does detect this
+	error condition, then this is the code it will return.
+<p>
+	There are situations where a successful call to a function causes
+	an error condition to occur on a Prosody module, such as a request 
+	that requires a firmware module which has not been loaded. In these 
+	cases, the error condition is reported through a subsequent function 
+	call. This is usually a status function that is associated with 
+	the object which has caused the error. Some error conditions are 
+	more general. For example, a failure in communication with a 
+	Prosody module can be reported though any function call which 
+	refers to objects on that module.
+
+<h2>Details</h2>
+<p><a href="gen/highapi_playrec-index.html">API details by function</a>
+<hr>
+<p>
+This API is part of <a href="index.html">Prosody</a>.
+</body>
+</html>

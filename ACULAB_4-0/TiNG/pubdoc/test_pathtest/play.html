@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>pathtest play</title>
+</head>
+<body>
+<h1>pathtest play</h1>
+
+<h2>Status codes</h2>
+<p>
+The status codes printed by play operations are:
+<table>
+<tr><th><code>.</code><td>Idle
+<tr><th><code>S</code><td>Starting
+<tr><th><code>N</code><td>No capacity
+<tr><th><code>L</code><td>Put last, not yet completed
+<tr><th><code>D</code><td>Complete, sending remaining data
+<tr><th><code>*</code><td>Put data
+<tr><th><code>u</code><td>Underrun
+<tr><th><code>-</code><td>Completed
+</table>
+
+<h2>Settings</h2>
+<p>
+These are the settings used by <code>play</code>:
+
+<h3><code>agc</code> N</h3>
+<p>
+Enables (non-zero) or disables (zero) AGC.
+
+<h3><code>file</code> NAME</h3>
+<p>
+Specifies a file from which the data will be read for play operations.
+Each play reads the file independently. The name may be specified as
+the value zero, to indicate that no file is to be used, or as a
+string in double-quotes ("). A quoted string is interpreted as in C.
+
+<h3><code>format</code> FMT</h3>
+<p>
+The format of the replay data. A list of the formats is printed if
+a question-mark (?) is given for the format.
+
+<h3><code>once</code> X</h3>
+<p>
+Controls what happens at the end of the file. X is a single character:
+<table border>
+<tr><th>c<td>Perform continuous play by repeating the file from the start
+<tr><th>o<td>Play once only and then stop
+<tr><th>r<td>Stop the play and repeat with the same file
+</table>
+
+<h3><code>rate</code> N</h3>
+<p>
+The data sampling rate of the replay data.
+
+<h3><code>speed</code> N</h3>
+<p>
+The speed of the replay.
+
+<h3><code>threshold</code> N</h3>
+<p>
+The transfer threshold to use.
+
+<h3><code>vol</code> N</h3>
+<p>
+The volume adjustment to use.
+<hr>
+<p>
+This is a command understood by the <a href="pathtest.html">pathtest</a>
+test program.

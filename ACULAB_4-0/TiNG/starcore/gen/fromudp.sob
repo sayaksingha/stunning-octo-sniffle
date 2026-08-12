@@ -1,0 +1,663 @@
+// DESCRIPTION: receive data from UDP
+// GENTIME: Tue Aug  3 16:19:04 2021
+// VERS: 0x00014910 0x00007490
+// RESHINT: RESTBL 52 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x70 0x64 0x75 0x34 0x00 0x00 0x00 0x20 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x49 0x10 0x00 0x00 0x74 0x90 
+(section
+".default"
+(alignment #0)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.default" (sym ".default::@start")))
+(data))
+(section
+".data"
+(alignment #3)
+(symtab
+(defsym "_ftbl_fromudp_sub" (sym ".data::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.data" (sym ".data::@start"))
+(defsym "_TiNG_ftbl_fromudp_task" (+ #40 (sym ".data::@start"))))
+(data // Offset:0x0
+{00000000000000007064753400014910FFFFFFFF00000000} // Offset:0x18
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v141")) #FFFFFFE8)) // Offset:0x19
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v141")) #FFFFFFF0)) // Offset:0x1A
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v141")) #FFFFFFF8)) // Offset:0x1B
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v141"))) // Offset:0x1C
+{00000000} // Offset:0x20
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v135")) #FFFFFFE8)) // Offset:0x21
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v135")) #FFFFFFF0)) // Offset:0x22
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v135")) #FFFFFFF8)) // Offset:0x23
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v135"))) // Offset:0x24
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v136")) #FFFFFFE8)) // Offset:0x25
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v136")) #FFFFFFF0)) // Offset:0x26
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v136")) #FFFFFFF8)) // Offset:0x27
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v136"))) // Offset:0x28
+{00000010} // Offset:0x2C
+(emit (<< (& #FF000000 (sym "_RegisterOneSubtask_")) #FFFFFFE8)) // Offset:0x2D
+(emit (<< (& #FF0000 (sym "_RegisterOneSubtask_")) #FFFFFFF0)) // Offset:0x2E
+(emit (<< (& #FF00 (sym "_RegisterOneSubtask_")) #FFFFFFF8)) // Offset:0x2F
+(emit (& #FF (sym "_RegisterOneSubtask_"))) // Offset:0x30
+{00000000000000000000000000007490000000000000000064756F63000149108000000000000000} // Offset:0x58
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v142")) #FFFFFFE8)) // Offset:0x59
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v142")) #FFFFFFF0)) // Offset:0x5A
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v142")) #FFFFFFF8)) // Offset:0x5B
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v142"))) // Offset:0x5C
+{00000000} // Offset:0x60
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v139")) #FFFFFFE8)) // Offset:0x61
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v139")) #FFFFFFF0)) // Offset:0x62
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v139")) #FFFFFFF8)) // Offset:0x63
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v139"))) // Offset:0x64
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v140")) #FFFFFFE8)) // Offset:0x65
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v140")) #FFFFFFF0)) // Offset:0x66
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v140")) #FFFFFFF8)) // Offset:0x67
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v140"))) // Offset:0x68
+{000000E4} // Offset:0x6C
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v143")) #FFFFFFE8)) // Offset:0x6D
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v143")) #FFFFFFF0)) // Offset:0x6E
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v143")) #FFFFFFF8)) // Offset:0x6F
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v143"))) // Offset:0x70
+{00000000000000000000000000007490}))
+(section
+".rom"
+(alignment #3)
+(symtab
+(defsym "_TiNG_rtbl_fromudp_task" (sym ".rom::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.rom" (sym ".rom::@start"))
+(defsym "_TiNG_rtbl_fromudp_sub" (+ #34 (sym ".rom::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v142" (+ #68 (sym ".rom::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v141" (+ #88 (sym ".rom::@start"))))
+(data // Offset:0x0
+{000000000000000164756F6300000100000000000000000100000000000000000000000000000000000000000001491000007490000000000000000070647534000000200000000000000001000000000000000000000000000000000000000000014910000074900000CC02} // Offset:0x6C
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v130")) #FFFFFFE8)) // Offset:0x6D
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v130")) #FFFFFFF0)) // Offset:0x6E
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v130")) #FFFFFFF8)) // Offset:0x6F
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v130"))) // Offset:0x70
+{0000D055} // Offset:0x74
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v131")) #FFFFFFE8)) // Offset:0x75
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v131")) #FFFFFFF0)) // Offset:0x76
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v131")) #FFFFFFF8)) // Offset:0x77
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v131"))) // Offset:0x78
+{00008031} // Offset:0x7C
+(emit (<< (& #FF000000 (sym "_Msg_dead")) #FFFFFFE8)) // Offset:0x7D
+(emit (<< (& #FF0000 (sym "_Msg_dead")) #FFFFFFF0)) // Offset:0x7E
+(emit (<< (& #FF00 (sym "_Msg_dead")) #FFFFFFF8)) // Offset:0x7F
+(emit (& #FF (sym "_Msg_dead"))) // Offset:0x80
+{00000000} // Offset:0x84
+(emit (<< (& #FF000000 (sym "_ReplyBadMsg")) #FFFFFFE8)) // Offset:0x85
+(emit (<< (& #FF0000 (sym "_ReplyBadMsg")) #FFFFFFF0)) // Offset:0x86
+(emit (<< (& #FF00 (sym "_ReplyBadMsg")) #FFFFFFF8)) // Offset:0x87
+(emit (& #FF (sym "_ReplyBadMsg"))) // Offset:0x88
+{00008093} // Offset:0x8C
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v132")) #FFFFFFE8)) // Offset:0x8D
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v132")) #FFFFFFF0)) // Offset:0x8E
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v132")) #FFFFFFF8)) // Offset:0x8F
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v132"))) // Offset:0x90
+{0000E001} // Offset:0x94
+(emit (<< (& #FF000000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v134")) #FFFFFFE8)) // Offset:0x95
+(emit (<< (& #FF0000 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v134")) #FFFFFFF0)) // Offset:0x96
+(emit (<< (& #FF00 (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v134")) #FFFFFFF8)) // Offset:0x97
+(emit (& #FF (sym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v134"))) // Offset:0x98
+{00000000} // Offset:0x9C
+(emit (<< (& #FF000000 (sym "_Msg_try_next_subtask")) #FFFFFFE8)) // Offset:0x9D
+(emit (<< (& #FF0000 (sym "_Msg_try_next_subtask")) #FFFFFFF0)) // Offset:0x9E
+(emit (<< (& #FF00 (sym "_Msg_try_next_subtask")) #FFFFFFF8)) // Offset:0x9F
+(emit (& #FF (sym "_Msg_try_next_subtask")))))
+(section
+".text"
+(alignment #F)
+(symtab
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v124" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::TextStart_fromudp" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.text" (sym ".text::@start"))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_0" (+ #4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_124" (+ #4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv124_end" (+ #4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v122" (+ #10 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_1" (+ #24 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_122" (+ #24 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv122_end" (+ #24 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v126" (+ #30 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_14" (+ #36 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_15" (+ #3C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_17" (+ #52 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L1" (+ #D2 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L7" (+ #F0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L175" (+ #F0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L14" (+ #174 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L19" (+ #1C2 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L28" (+ #22E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L174" (+ #24A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L10" (+ #254 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L198" (+ #2E6 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_141" (+ #2EC (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_142" (+ #2F2 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_143" (+ #2F8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L31" (+ #2FA (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_2" (+ #304 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_126" (+ #304 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv126_end" (+ #304 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v123" (+ #310 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v127" (+ #320 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_123" (+ #320 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv123_end" (+ #320 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_155" (+ #32A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_158" (+ #336 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_159" (+ #33E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L52" (+ #416 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L53" (+ #424 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L54" (+ #446 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L43" (+ #46C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L199" (+ #46E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_226" (+ #470 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_227" (+ #476 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_228" (+ #47C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_3" (+ #47E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_127" (+ #47E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv127_end" (+ #47E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v129" (+ #480 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_231" (+ #486 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_232" (+ #48C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_234" (+ #498 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L67" (+ #4B6 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L169" (+ #550 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L77" (+ #5FC (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L80" (+ #65C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L182" (+ #65C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L69" (+ #66C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L87" (+ #678 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L183" (+ #69E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L95" (+ #6B4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L100" (+ #6F4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L104" (+ #742 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L106" (+ #794 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L184" (+ #7B2 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L111" (+ #7C4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L89" (+ #7DC (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_430" (+ #7E2 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_431" (+ #7E8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_432" (+ #7EE (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L171" (+ #7F0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::PL006" (+ #81C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::PL007" (+ #830 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_4" (+ #83A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_129" (+ #83A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv129_end" (+ #83A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v130" (+ #840 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_446" (+ #846 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_447" (+ #84C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_456" (+ #86E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_457" (+ #870 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_5" (+ #872 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_130" (+ #872 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv130_end" (+ #872 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v131" (+ #880 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_460" (+ #886 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_461" (+ #88C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_463" (+ #896 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L116" (+ #946 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L201" (+ #94E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_502" (+ #954 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_503" (+ #95A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_504" (+ #960 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_6" (+ #962 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_131" (+ #962 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv131_end" (+ #962 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v132" (+ #970 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_507" (+ #976 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_508" (+ #97C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_509" (+ #982 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L120" (+ #9D4 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L126" (+ #A26 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L124" (+ #A34 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L122" (+ #A46 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L132" (+ #A60 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_553" (+ #A62 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_554" (+ #A68 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_555" (+ #A6E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v133" (+ #A70 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_132" (+ #A70 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv132_end" (+ #A70 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_7" (+ #A72 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_133" (+ #A72 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv133_end" (+ #A72 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v134" (+ #A80 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_560" (+ #A8A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_561" (+ #A90 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_568" (+ #ABE (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_569" (+ #AC0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_8" (+ #AC2 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_134" (+ #AC2 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv134_end" (+ #AC2 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v135" (+ #AD0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L136" (+ #AFC (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L204" (+ #B0A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_9" (+ #B0C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_135" (+ #B0C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv135_end" (+ #B0C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v136" (+ #B10 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_a" (+ #B28 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_136" (+ #B28 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv136_end" (+ #B28 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v137" (+ #B30 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_b" (+ #B32 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_137" (+ #B32 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv137_end" (+ #B32 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v138" (+ #B40 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_600" (+ #B46 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_601" (+ #B4C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_605" (+ #B6A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L148" (+ #C24 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L150" (+ #C28 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L146" (+ #C34 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L152" (+ #C58 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::L141" (+ #C76 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_656" (+ #C7C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_657" (+ #C82 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_658" (+ #C88 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_c" (+ #C8A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_138" (+ #C8A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv138_end" (+ #C8A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v139" (+ #C90 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_661" (+ #C98 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_675" (+ #CE6 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_d" (+ #CE8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_139" (+ #CE8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv139_end" (+ #CE8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v140" (+ #CF0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_678" (+ #CF8 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_680" (+ #D00 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_708" (+ #D7A (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_709" (+ #D7C (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::.align_e" (+ #D7E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_140" (+ #D7E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv140_end" (+ #D7E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::v143" (+ #D80 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_712" (+ #D82 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::DW_716" (+ #D9E (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::TextEnd_fromudp" (+ #DA0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::FuncEnd_143" (+ #DA0 (sym ".text::@start")))
+(defsym "../../../../../prosodyxting/starcore/gen/algos/fromudp/c/fromudp.eln::Fv143_end" (+ #DA0 (sym ".text::@start"))))
+(data // Offset:0x0
+{9F706C300000000000000000000000009F7D1608A00190C098C29F7C33} // Offset:0x1D
+(emit (+ #4 (<< (& #C0000000 (sym "_isr_mutex_lock_slow")) #FFFFFFE5) (<< (& #E000 (sym "_isr_mutex_lock_slow")) #FFFFFFF8))) // Offset:0x1E
+(emit (+ #20 (<< (& #1F00 (sym "_isr_mutex_lock_slow")) #FFFFFFF8))) // Offset:0x1F
+(emit (& #FF (sym "_isr_mutex_lock_slow"))) // Offset:0x20
+(emit (+ #80 (<< (& #3F000000 (sym "_isr_mutex_lock_slow")) #FFFFFFE8))) // Offset:0x21
+(emit (<< (& #FF0000 (sym "_isr_mutex_lock_slow")) #FFFFFFF0)) // Offset:0x22
+{9F7100000000000000000000000094C09620972094C09E209F203C00A100270B803090C0280E80383640A100E7EB599698C0FFD438102000800090C02F0E801494C0EBEEEDEE94C0EB6CED641A935C963420A0005D953480A000EBEA36E0A000EB39EC3D3620A000E88BCC4B3680A000E8ECF3443680A000E81A803D3480A000E93A3660A000EC89EA193640A000985FEC3998C72618823290C0F0D392C340970A93FC445C9590C03420A000EC194C95F7C4D3A0985798C62418820E90C0F5D392C245973840A000FD45F84690C01D9134122000800090C096C0EDF12D0C800892C260E494C24197F8D398C6251881DA90C04F913620A0005994EC4C3680A000EFEC589436C0A100EF64EAE936A0A0005E97EBE83480A000EA3A3660A100EB3EEC8A3600A100CB4CEEEB261881083840A1007454EE19F44396C04D972E0B80043620A000F8C6FB470F91FF483420A000ECE93A40A000391020008000EBE898C0EB3C3A1020008000E98B94C0E9EC84BF3840A0006460E938CB4C96C06660EA89CB4098C02D0980106C7D801F1391CF44D5C40391EC1F94C0E968EB3F0C91FB431B96F9C794C0FD49CC4E599190C0E93BC94F67E03617880090C096C2F7412100807196C232} // Offset:0x1E7
+(emit (+ #4 (<< (& #C0000000 (sym "_setTiNGKFault")) #FFFFFFE5) (<< (& #E000 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x1E8
+(emit (+ #20 (<< (& #1F00 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x1E9
+(emit (& #FF (sym "_setTiNGKFault"))) // Offset:0x1EA
+(emit (+ #80 (<< (& #3F000000 (sym "_setTiNGKFault")) #FFFFFFE8))) // Offset:0x1EB
+(emit (<< (& #FF0000 (sym "_setTiNGKFault")) #FFFFFFF0)) // Offset:0x1EC
+{96C230682F63A4753820A00067E0F0C3F8C696C0707FFDC9CC4680459AC0646977D058962D09801094C05991801B32} // Offset:0x21B
+(emit (+ #4 (<< (& #C0000000 (sym "_memcpy")) #FFFFFFE5) (<< (& #E000 (sym "_memcpy")) #FFFFFFF8))) // Offset:0x21C
+(emit (+ #20 (<< (& #1F00 (sym "_memcpy")) #FFFFFFF8))) // Offset:0x21D
+(emit (& #FF (sym "_memcpy"))) // Offset:0x21E
+(emit (+ #80 (<< (& #3F000000 (sym "_memcpy")) #FFFFFFE8))) // Offset:0x21F
+(emit (<< (& #FF0000 (sym "_memcpy")) #FFFFFFF0)) // Offset:0x220
+{F0413840A0007457F8C6FDC9CC461696FBC896C0D740F5D3FD5346965495449345955D9390C0EDF1852D98C0F8D331} // Offset:0x24F
+(emit (+ #4 (<< (& #C0000000 (+ #2E6 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #2E6 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x250
+(emit (+ #20 (<< (& #1F00 (+ #2E6 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x251
+(emit (& #FF (+ #2E6 (sym ".text::@start")))) // Offset:0x252
+(emit (+ #80 (<< (& #3F000000 (+ #2E6 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x253
+(emit (<< (& #FF0000 (+ #2E6 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x254
+{3480A000EE3A34A0A000EC8E849B3420A000EB8E90C094C35495F3D394C34491FD5398C72FFF9E7B90C043953820A000E83E2C0B80040894FA4A1993FD49FC4BE938C94E67603616880090C096C2FD412100808B96C232} // Offset:0x2AB
+(emit (+ #4 (<< (& #C0000000 (sym "_setTiNGKFault")) #FFFFFFE5) (<< (& #E000 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x2AC
+(emit (+ #20 (<< (& #1F00 (sym "_setTiNGKFault")) #FFFFFFF8))) // Offset:0x2AD
+(emit (& #FF (sym "_setTiNGKFault"))) // Offset:0x2AE
+(emit (+ #80 (<< (& #3F000000 (sym "_setTiNGKFault")) #FFFFFFE8))) // Offset:0x2AF
+(emit (<< (& #FF0000 (sym "_setTiNGKFault")) #FFFFFFF0)) // Offset:0x2B0
+{96C230682F63A47596C073FEFDC9FCCB94C0FACA803B1894FDC598C0F74132} // Offset:0x2CF
+(emit (+ #4 (<< (& #C0000000 (sym "_memcpy")) #FFFFFFE5) (<< (& #E000 (sym "_memcpy")) #FFFFFFF8))) // Offset:0x2D0
+(emit (+ #20 (<< (& #1F00 (sym "_memcpy")) #FFFFFFF8))) // Offset:0x2D1
+(emit (& #FF (sym "_memcpy"))) // Offset:0x2D2
+(emit (+ #80 (<< (& #3F000000 (sym "_memcpy")) #FFFFFFE8))) // Offset:0x2D3
+(emit (<< (& #FF0000 (sym "_memcpy")) #FFFFFFF0)) // Offset:0x2D4
+{599594C0FCCBF1D3E8EF5094D7C04794419727EF9FD0E7EF94C09E219F2194C0962197219F7198C0E9ED31} // Offset:0x2FF
+(emit (+ #4 (<< (& #C0000000 (+ #F0 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #F0 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x300
+(emit (+ #20 (<< (& #1F00 (+ #F0 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x301
+(emit (& #FF (+ #F0 (sym ".text::@start")))) // Offset:0x302
+(emit (+ #80 (<< (& #3F000000 (+ #F0 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x303
+(emit (<< (& #FF0000 (+ #F0 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x304
+{00000000000000000000000000E73F8080F096C09F7C1908A0009F711D91EBE894C0962097202D0980105C9194C09E209F2096C0E748290F800494C05A9793BC3413806196C0EA3C27188124EC4194C095BCEC4196C03415807390BC2718810C9AC02C0E800190C03410807996C092BE271880FC96C034128063CF88271880EC94C0EF8AEC4596C094BC251880E294C0E8ECEAEC94C0E863EA6294C096B8EFEC96C07F5895BAEF6198C0D995676190BFEEE99AC07C482B0F804065E1EE6896C06FCEEC41E8EF2F430C91CD4F2C56CB4E40969F7D1608A00190C098C29F7C33} // Offset:0x3E3
+(emit (+ #4 (<< (& #C0000000 (sym "_isr_mutex_lock_slow")) #FFFFFFE5) (<< (& #E000 (sym "_isr_mutex_lock_slow")) #FFFFFFF8))) // Offset:0x3E4
+(emit (+ #20 (<< (& #1F00 (sym "_isr_mutex_lock_slow")) #FFFFFFF8))) // Offset:0x3E5
+(emit (& #FF (sym "_isr_mutex_lock_slow"))) // Offset:0x3E6
+(emit (+ #80 (<< (& #3F000000 (sym "_isr_mutex_lock_slow")) #FFFFFFE8))) // Offset:0x3E7
+(emit (<< (& #FF0000 (sym "_isr_mutex_lock_slow")) #FFFFFFF0)) // Offset:0x3E8
+{96C060E4CB46CD4796C0F1412F0E809894C0FD42E9EE32} // Offset:0x3FF
+(emit (+ #4 (<< (& #C0000000 (+ #30 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #30 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x400
+(emit (+ #20 (<< (& #1F00 (+ #30 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x401
+(emit (& #FF (+ #30 (sym ".text::@start")))) // Offset:0x402
+(emit (+ #80 (<< (& #3F000000 (+ #30 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x403
+(emit (<< (& #FF0000 (+ #30 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x404
+{E8EB94C0E8F1EBE894C0ECE880192E0A800457927BC147925C9490C0ECF185F596C059962E0D8004539539E1D5A094C043958015529142964B911395EBE979C14395E8EF00E73F8080F096C09F7C1908A000EBF1985B96C333} // Offset:0x45D
+(emit (+ #4 (<< (& #C0000000 (sym "_assp_server_free_packet_chain")) #FFFFFFE5) (<< (& #E000 (sym "_assp_server_free_packet_chain")) #FFFFFFF8))) // Offset:0x45E
+(emit (+ #20 (<< (& #1F00 (sym "_assp_server_free_packet_chain")) #FFFFFFF8))) // Offset:0x45F
+(emit (& #FF (sym "_assp_server_free_packet_chain"))) // Offset:0x460
+(emit (+ #80 (<< (& #3F000000 (sym "_assp_server_free_packet_chain")) #FFFFFFE8))) // Offset:0x461
+(emit (<< (& #FF0000 (sym "_assp_server_free_packet_chain")) #FFFFFFF0)) // Offset:0x462
+{98C0C08131} // Offset:0x467
+(emit (+ #4 (<< (& #C0000000 (+ #46E (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #46E (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x468
+(emit (+ #20 (<< (& #1F00 (+ #46E (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x469
+(emit (& #FF (+ #46E (sym ".text::@start")))) // Offset:0x46A
+(emit (+ #80 (<< (& #3F000000 (+ #46E (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x46B
+(emit (<< (& #FF0000 (+ #46E (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x46C
+{6C30E76894C09E219F2194C0962197219F71000094C09620972094C09E209F2096C0EFE9270C80501E97E7EC94C0ECE8EF441797EE4C5B9690C0EBF12518833467E98009D3A1271881BA3C00A1002F0D80046F3E2B0880403A80A0002D0980046E34FC4838C0A0005E91290A80081792F4473620A000E8E8F74494C0FB49FD4A3620A000F94BFA4C3420A000F84D9F7D1608A00190C098C29F7C33} // Offset:0x507
+(emit (+ #4 (<< (& #C0000000 (sym "_isr_mutex_lock_slow")) #FFFFFFE5) (<< (& #E000 (sym "_isr_mutex_lock_slow")) #FFFFFFF8))) // Offset:0x508
+(emit (+ #20 (<< (& #1F00 (sym "_isr_mutex_lock_slow")) #FFFFFFF8))) // Offset:0x509
+(emit (& #FF (sym "_isr_mutex_lock_slow"))) // Offset:0x50A
+(emit (+ #80 (<< (& #3F000000 (sym "_isr_mutex_lock_slow")) #FFFFFFE8))) // Offset:0x50B
+(emit (<< (& #FF0000 (sym "_isr_mutex_lock_slow")) #FFFFFFF0)) // Offset:0x50C
+{3840A0006D3CF8CDFBC990C03860A100E8E8280E809836A0A1005B96429600E73F8080F096C09F7C1908A00036A0A000ECE8F4C736C0A000EC64FE4E3620A000FC4F90C036C0A000EBF1E8EB38A0A0005B93271882983620A000F8CDF44790C03420A000E8E89F7D1608A00190C098C29F7C33} // Offset:0x57F
+(emit (+ #4 (<< (& #C0000000 (sym "_isr_mutex_lock_slow")) #FFFFFFE5) (<< (& #E000 (sym "_isr_mutex_lock_slow")) #FFFFFFF8))) // Offset:0x580
+(emit (+ #20 (<< (& #1F00 (sym "_isr_mutex_lock_slow")) #FFFFFFF8))) // Offset:0x581
+(emit (& #FF (sym "_isr_mutex_lock_slow"))) // Offset:0x582
+(emit (+ #80 (<< (& #3F000000 (sym "_isr_mutex_lock_slow")) #FFFFFFE8))) // Offset:0x583
+(emit (<< (& #FF0000 (sym "_isr_mutex_lock_slow")) #FFFFFFF0)) // Offset:0x584
+{3660A000FECEF8CD94C0F4C7FCC836C0A000EE44E8E83480A00052966DC83480A000439600E73F8080F096C09F7C1908A0002761F646676990C098C7985C32} // Offset:0x5C3
+(emit (+ #4 (<< (& #C0000000 (sym "_pass_packet_chain_to_context")) #FFFFFFE5) (<< (& #E000 (sym "_pass_packet_chain_to_context")) #FFFFFFF8))) // Offset:0x5C4
+(emit (+ #20 (<< (& #1F00 (sym "_pass_packet_chain_to_context")) #FFFFFFF8))) // Offset:0x5C5
+(emit (& #FF (sym "_pass_packet_chain_to_context"))) // Offset:0x5C6
+(emit (+ #80 (<< (& #3F000000 (sym "_pass_packet_chain_to_context")) #FFFFFFE8))) // Offset:0x5C7
+(emit (<< (& #FF0000 (sym "_pass_packet_chain_to_context")) #FFFFFFF0)) // Offset:0x5C8
+{94C327E99FE83640A000FDCAFCCF94C0FCC8FBC93640A0005695F9CB3A00A1003CC99218FACC5D94D0A2271881EA27E9FD468063EDF19AC02D0D801490C02518821E188DF6C4599590C0E839C84A317ECD4290C092C2CD46CD4FEDF190C098C7985E32} // Offset:0x62B
+(emit (+ #4 (<< (& #C0000000 (sym "_memcpy")) #FFFFFFE5) (<< (& #E000 (sym "_memcpy")) #FFFFFFF8))) // Offset:0x62C
+(emit (+ #20 (<< (& #1F00 (sym "_memcpy")) #FFFFFFF8))) // Offset:0x62D
+(emit (& #FF (sym "_memcpy"))) // Offset:0x62E
+(emit (+ #80 (<< (& #3F000000 (sym "_memcpy")) #FFFFFFE8))) // Offset:0x62F
+(emit (<< (& #FF0000 (sym "_memcpy")) #FFFFFFF0)) // Offset:0x630
+{92C3FD4194C0CD47C846F9C694C0E83DEE1D1D91E8F185B694C0FD46F8443620A000F9CBFACC94C0FCC8FBC990C03680A0005D91EA6490C0EE3D4E92569767698009D322271881689AC0676963E7EF502B08803810975E9094C0F04384171297EF6450973178F04390C092C2C78196C0FC48280F800496C0F8512F0D80042D0B809CFB501A9739102000800094C0FA45F8D196C0EAF12A0C800896C05B942518816690C0EAEBEA3EE98A94C0EAEE801BEA3BEB1A4B94F9C590C0E9505C9190C0EA1C4A913620A000FEC5EEAB94C0F6C39E5B3847A000C7812E0C8014598C5A9490C0E93A94C0C94AC9463880A000717EF252529694C0EA19841F0A94EB1994C0FAC5F95290C098C0EA4830} // Offset:0x73B
+(emit (+ #4 (<< (& #C0000000 (+ #794 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #794 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x73C
+(emit (+ #20 (<< (& #1F00 (+ #794 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x73D
+(emit (& #FF (+ #794 (sym ".text::@start")))) // Offset:0x73E
+(emit (+ #80 (<< (& #3F000000 (+ #794 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x73F
+(emit (<< (& #FF0000 (+ #794 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x740
+{4B920297F8C894C0F2C5FD53656990C096C332} // Offset:0x753
+(emit (+ #4 (<< (& #C0000000 (sym "_pass_packet_to_context")) #FFFFFFE5) (<< (& #E000 (sym "_pass_packet_to_context")) #FFFFFFF8))) // Offset:0x754
+(emit (+ #20 (<< (& #1F00 (sym "_pass_packet_to_context")) #FFFFFFF8))) // Offset:0x755
+(emit (& #FF (sym "_pass_packet_to_context"))) // Offset:0x756
+(emit (+ #80 (<< (& #3F000000 (sym "_pass_packet_to_context")) #FFFFFFE8))) // Offset:0x757
+(emit (<< (& #FF0000 (sym "_pass_packet_to_context")) #FFFFFFF0)) // Offset:0x758
+{94C327E99FECFDD390C0E8ED9F7D1608A00190C098C29F7C33} // Offset:0x771
+(emit (+ #4 (<< (& #C0000000 (sym "_isr_mutex_lock_slow")) #FFFFFFE5) (<< (& #E000 (sym "_isr_mutex_lock_slow")) #FFFFFFF8))) // Offset:0x772
+(emit (+ #20 (<< (& #1F00 (sym "_isr_mutex_lock_slow")) #FFFFFFF8))) // Offset:0x773
+(emit (& #FF (sym "_isr_mutex_lock_slow"))) // Offset:0x774
+(emit (+ #80 (<< (& #3F000000 (sym "_isr_mutex_lock_slow")) #FFFFFFE8))) // Offset:0x775
+(emit (<< (& #FF0000 (sym "_isr_mutex_lock_slow")) #FFFFFFF0)) // Offset:0x776
+{94C0F9D0FDD390C01391E8ED79C1439100E73F8080F096C09F7C1908A00094C0CB46F9D290C094C0EB39EE1994C0EBF1FB432FFF9F0D94C0FCC8F8D127E9FDC390C094C0EE1D840C4E90EDF1801B96C0E9EC2C0D8014189534192000801132} // Offset:0x7D5
+(emit (+ #4 (<< (& #C0000000 (sym "_SendMsg_")) #FFFFFFE5) (<< (& #E000 (sym "_SendMsg_")) #FFFFFFF8))) // Offset:0x7D6
+(emit (+ #20 (<< (& #1F00 (sym "_SendMsg_")) #FFFFFFF8))) // Offset:0x7D7
+(emit (& #FF (sym "_SendMsg_"))) // Offset:0x7D8
+(emit (+ #80 (<< (& #3F000000 (sym "_SendMsg_")) #FFFFFFE8))) // Offset:0x7D9
+(emit (<< (& #FF0000 (sym "_SendMsg_")) #FFFFFFF0)) // Offset:0x7DA
+{F44127ED9FB0E7ED94C09E219F2194C0962197219F7194C0F842F64194C0F9CFE8EB32} // Offset:0x7FD
+(emit (+ #4 (<< (& #C0000000 (+ #30 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #30 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x7FE
+(emit (+ #20 (<< (& #1F00 (+ #30 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x7FF
+(emit (& #FF (+ #30 (sym ".text::@start")))) // Offset:0x800
+(emit (+ #80 (<< (& #3F000000 (+ #30 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x801
+(emit (<< (& #FF0000 (+ #30 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x802
+{94C0F447C35E94C0F4C7C35630} // Offset:0x80F
+(emit (+ #4 (<< (& #C0000000 (+ #550 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #550 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x810
+(emit (+ #20 (<< (& #1F00 (+ #550 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x811
+(emit (& #FF (+ #550 (sym ".text::@start")))) // Offset:0x812
+(emit (+ #80 (<< (& #3F000000 (+ #550 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x813
+(emit (<< (& #FF0000 (+ #550 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x814
+{96C07A41FBC9C84E94C0FCC8FBC930} // Offset:0x823
+(emit (+ #4 (<< (& #C0000000 (+ #65C (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #65C (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x824
+(emit (+ #20 (<< (& #1F00 (+ #65C (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x825
+(emit (& #FF (+ #65C (sym ".text::@start")))) // Offset:0x826
+(emit (+ #80 (<< (& #3F000000 (+ #65C (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x827
+(emit (<< (& #FF0000 (+ #65C (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x828
+{3620A000F9CBFACC98C0FCC831} // Offset:0x835
+(emit (+ #4 (<< (& #C0000000 (+ #7B2 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #7B2 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x836
+(emit (+ #20 (<< (& #1F00 (+ #7B2 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x837
+(emit (& #FF (+ #7B2 (sym ".text::@start")))) // Offset:0x838
+(emit (+ #80 (<< (& #3F000000 (+ #7B2 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x839
+(emit (<< (& #FF0000 (+ #7B2 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x83A
+{00000000000094C060E49E2094C0E750EEE832} // Offset:0x84D
+(emit (+ #4 (<< (& #C0000000 (sym "_ipaddr_set_ipv4")) #FFFFFFE5) (<< (& #E000 (sym "_ipaddr_set_ipv4")) #FFFFFFF8))) // Offset:0x84E
+(emit (+ #20 (<< (& #1F00 (sym "_ipaddr_set_ipv4")) #FFFFFFF8))) // Offset:0x84F
+(emit (& #FF (sym "_ipaddr_set_ipv4"))) // Offset:0x850
+(emit (+ #80 (<< (& #3F000000 (sym "_ipaddr_set_ipv4")) #FFFFFFE8))) // Offset:0x851
+(emit (<< (& #FF0000 (sym "_ipaddr_set_ipv4")) #FFFFFFF0)) // Offset:0x852
+{27E89FF0EE5494C05996974427EC9FF0290D802492D0519C419DE7709E219F71000000000000000000000000000094C09620972094C09E209F2096C0EFE827098020E7E9F9CFC94E290C800432} // Offset:0x89F
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x8A0
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x8A1
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x8A2
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x8A3
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x8A4
+{94C0E8ECCC4F94C0CC47F04890C098C0EC4432} // Offset:0x8B7
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x8B8
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x8B9
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x8BA
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x8BB
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x8BC
+{94C0E8ECCC4F96C0CC4727EE9FE4409698C0EC4432} // Offset:0x8D1
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x8D2
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x8D3
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x8D4
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x8D5
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x8D6
+{94C0E8ECCC4F94C0CC47EE44409698C0EC4432} // Offset:0x8E9
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x8EA
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x8EB
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x8EC
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x8ED
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x8EE
+{E8EC974496C0EE4427ED9FF096C0409627EB9FE092D0509B409D33} // Offset:0x909
+(emit (+ #4 (<< (& #C0000000 (sym "_validLocalInterface")) #FFFFFFE5) (<< (& #E000 (sym "_validLocalInterface")) #FFFFFFF8))) // Offset:0x90A
+(emit (+ #20 (<< (& #1F00 (sym "_validLocalInterface")) #FFFFFFF8))) // Offset:0x90B
+(emit (& #FF (sym "_validLocalInterface"))) // Offset:0x90C
+(emit (+ #80 (<< (& #3F000000 (sym "_validLocalInterface")) #FFFFFFE8))) // Offset:0x90D
+(emit (<< (& #FF0000 (sym "_validLocalInterface")) #FFFFFFF0)) // Offset:0x90E
+{98C06469C94627E89FE0802F33} // Offset:0x91B
+(emit (+ #4 (<< (& #C0000000 (sym "_ipaddr_is_ipv4")) #FFFFFFE5) (<< (& #E000 (sym "_ipaddr_is_ipv4")) #FFFFFFF8))) // Offset:0x91C
+(emit (+ #20 (<< (& #1F00 (sym "_ipaddr_is_ipv4")) #FFFFFFF8))) // Offset:0x91D
+(emit (& #FF (sym "_ipaddr_is_ipv4"))) // Offset:0x91E
+(emit (+ #80 (<< (& #3F000000 (sym "_ipaddr_is_ipv4")) #FFFFFFE8))) // Offset:0x91F
+(emit (<< (& #FF0000 (sym "_ipaddr_is_ipv4")) #FFFFFFF0)) // Offset:0x920
+{98C06469C94627ED9FE0841DEF5494C05897974490C0280F802492D0509D409F31} // Offset:0x941
+(emit (+ #4 (<< (& #C0000000 (+ #94E (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #94E (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x942
+(emit (+ #20 (<< (& #1F00 (+ #94E (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x943
+(emit (& #FF (+ #94E (sym ".text::@start")))) // Offset:0x944
+(emit (+ #80 (<< (& #3F000000 (+ #94E (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x945
+(emit (<< (& #FF0000 (+ #94E (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x946
+(emit #32) // Offset:0x947
+(emit (+ #4 (<< (& #C0000000 (sym "_ReplyBadMsgRange")) #FFFFFFE5) (<< (& #E000 (sym "_ReplyBadMsgRange")) #FFFFFFF8))) // Offset:0x948
+(emit (+ #20 (<< (& #1F00 (sym "_ReplyBadMsgRange")) #FFFFFFF8))) // Offset:0x949
+(emit (& #FF (sym "_ReplyBadMsgRange"))) // Offset:0x94A
+(emit (+ #80 (<< (& #3F000000 (sym "_ReplyBadMsgRange")) #FFFFFFE8))) // Offset:0x94B
+(emit (<< (& #FF0000 (sym "_ReplyBadMsgRange")) #FFFFFFF0)) // Offset:0x94C
+{E8EF27EE9FE0E7EE94C09E219F2194C0962197219F71000000000000000000000000000094C09620972094C09E209F2094C0E750EFE994C0F9CCEEE8C94F290A800432} // Offset:0x98F
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x990
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x991
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x992
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x993
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x994
+{94C0E8EACA4E3750CA4690C098C0EA4432} // Offset:0x9A5
+(emit (+ #4 (<< (& #C0000000 (sym "_convert_uint")) #FFFFFFE5) (<< (& #E000 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x9A6
+(emit (+ #20 (<< (& #1F00 (sym "_convert_uint")) #FFFFFFF8))) // Offset:0x9A7
+(emit (& #FF (sym "_convert_uint"))) // Offset:0x9A8
+(emit (+ #80 (<< (& #3F000000 (sym "_convert_uint")) #FFFFFFE8))) // Offset:0x9A9
+(emit (<< (& #FF0000 (sym "_convert_uint")) #FFFFFFF0)) // Offset:0x9AA
+{E8EA9AC0341080406760C947E8EE94C0F2CD801D94C0F1CBF24232} // Offset:0x9C5
+(emit (+ #4 (<< (& #C0000000 (sym "_Msg_try_subtasks")) #FFFFFFE5) (<< (& #E000 (sym "_Msg_try_subtasks")) #FFFFFFF8))) // Offset:0x9C6
+(emit (+ #20 (<< (& #1F00 (sym "_Msg_try_subtasks")) #FFFFFFF8))) // Offset:0x9C7
+(emit (& #FF (sym "_Msg_try_subtasks"))) // Offset:0x9C8
+(emit (+ #80 (<< (& #3F000000 (sym "_Msg_try_subtasks")) #FFFFFFE8))) // Offset:0x9C9
+(emit (<< (& #FF0000 (sym "_Msg_try_subtasks")) #FFFFFFF0)) // Offset:0x9CA
+{24E0F94131} // Offset:0x9CF
+(emit (+ #4 (<< (& #C0000000 (+ #A60 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #A60 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x9D0
+(emit (+ #20 (<< (& #1F00 (+ #A60 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0x9D1
+(emit (& #FF (+ #A60 (sym ".text::@start")))) // Offset:0x9D2
+(emit (+ #80 (<< (& #3F000000 (+ #A60 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0x9D3
+(emit (<< (& #FF0000 (+ #A60 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0x9D4
+{98C02E0A80146769E8EE94C05D92806998C033692F63A475F64294C0ED5CF343599D98C095BD32} // Offset:0x9FB
+(emit (+ #4 (<< (& #C0000000 (sym "_LookupFriend_")) #FFFFFFE5) (<< (& #E000 (sym "_LookupFriend_")) #FFFFFFF8))) // Offset:0x9FC
+(emit (+ #20 (<< (& #1F00 (sym "_LookupFriend_")) #FFFFFFF8))) // Offset:0x9FD
+(emit (& #FF (sym "_LookupFriend_"))) // Offset:0x9FE
+(emit (+ #80 (<< (& #3F000000 (sym "_LookupFriend_")) #FFFFFFE8))) // Offset:0x9FF
+(emit (<< (& #FF0000 (sym "_LookupFriend_")) #FFFFFFF0)) // Offset:0xA00
+{F54196C0E8F1280980E094C05591802B66E9801532} // Offset:0xA15
+(emit (+ #4 (<< (& #C0000000 (sym "_ReplyBadMsgRange")) #FFFFFFE5) (<< (& #E000 (sym "_ReplyBadMsgRange")) #FFFFFFF8))) // Offset:0xA16
+(emit (+ #20 (<< (& #1F00 (sym "_ReplyBadMsgRange")) #FFFFFFF8))) // Offset:0xA17
+(emit (& #FF (sym "_ReplyBadMsgRange"))) // Offset:0xA18
+(emit (+ #80 (<< (& #3F000000 (sym "_ReplyBadMsgRange")) #FFFFFFE8))) // Offset:0xA19
+(emit (<< (& #FF0000 (sym "_ReplyBadMsgRange")) #FFFFFFF0)) // Offset:0xA1A
+{94C0C947E8EE31} // Offset:0xA21
+(emit (+ #4 (<< (& #C0000000 (+ #A60 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #A60 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xA22
+(emit (+ #20 (<< (& #1F00 (+ #A60 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xA23
+(emit (& #FF (+ #A60 (sym ".text::@start")))) // Offset:0xA24
+(emit (+ #80 (<< (& #3F000000 (+ #A60 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0xA25
+(emit (<< (& #FF0000 (+ #A60 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0xA26
+{4F9198C0EF4C30} // Offset:0xA2D
+(emit (+ #4 (<< (& #C0000000 (+ #A60 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #A60 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xA2E
+(emit (+ #20 (<< (& #1F00 (+ #A60 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xA2F
+(emit (& #FF (+ #A60 (sym ".text::@start")))) // Offset:0xA30
+(emit (+ #80 (<< (& #3F000000 (+ #A60 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0xA31
+(emit (<< (& #FF0000 (+ #A60 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0xA32
+{489732} // Offset:0xA35
+(emit (+ #4 (<< (& #C0000000 (sym "_ReplyBadMsgNoTask")) #FFFFFFE5) (<< (& #E000 (sym "_ReplyBadMsgNoTask")) #FFFFFFF8))) // Offset:0xA36
+(emit (+ #20 (<< (& #1F00 (sym "_ReplyBadMsgNoTask")) #FFFFFFF8))) // Offset:0xA37
+(emit (& #FF (sym "_ReplyBadMsgNoTask"))) // Offset:0xA38
+(emit (+ #80 (<< (& #3F000000 (sym "_ReplyBadMsgNoTask")) #FFFFFFE8))) // Offset:0xA39
+(emit (<< (& #FF0000 (sym "_ReplyBadMsgNoTask")) #FFFFFFF0)) // Offset:0xA3A
+{94C0C947E8EE31} // Offset:0xA41
+(emit (+ #4 (<< (& #C0000000 (+ #A60 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #A60 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xA42
+(emit (+ #20 (<< (& #1F00 (+ #A60 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xA43
+(emit (& #FF (+ #A60 (sym ".text::@start")))) // Offset:0xA44
+(emit (+ #80 (<< (& #3F000000 (+ #A60 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0xA45
+(emit (<< (& #FF0000 (+ #A60 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0xA46
+{EF4C5C9790C0ECF192C36E3496C760E42C0D80E092C344954197E77094C09E219F2194C0962197219F719F71000000000000000000000000000098C06D3C9F20280B801494C0E750EFE994C0E9E8F24496C0589327ED9FF098C031192000A002FD4232} // Offset:0xAA9
+(emit (+ #4 (<< (& #C0000000 (sym "_SendMsgAndParms")) #FFFFFFE5) (<< (& #E000 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0xAAA
+(emit (+ #20 (<< (& #1F00 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0xAAB
+(emit (& #FF (sym "_SendMsgAndParms"))) // Offset:0xAAC
+(emit (+ #80 (<< (& #3F000000 (sym "_SendMsgAndParms")) #FFFFFFE8))) // Offset:0xAAD
+(emit (<< (& #FF0000 (sym "_SendMsgAndParms")) #FFFFFFF0)) // Offset:0xAAE
+{F14198C0EF4430} // Offset:0xAB5
+(emit (+ #1 (<< (& #C0000000 (+ #A70 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #A70 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xAB6
+(emit (+ #20 (<< (& #1F00 (+ #A70 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xAB7
+(emit (& #FF (+ #A70 (sym ".text::@start")))) // Offset:0xAB8
+(emit (+ #80 (<< (& #3F000000 (+ #A70 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0xAB9
+(emit (<< (& #FF0000 (+ #A70 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0xABA
+{0097E7709F219F71000000000000000000000000000098C0E8543C68356FA374589090C0E8541A9038682474B46190C0EA485D9290C0ECAD800BE8AD841492C3C0819AC06C30E94431} // Offset:0xB03
+(emit (+ #1 (<< (& #C0000000 (+ #480 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #480 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xB04
+(emit (+ #20 (<< (& #1F00 (+ #480 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xB05
+(emit (& #FF (+ #480 (sym ".text::@start")))) // Offset:0xB06
+(emit (+ #80 (<< (& #3F000000 (+ #480 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0xB07
+(emit (<< (& #FF0000 (+ #480 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0xB08
+{41919F7100000000E94C599190C0E9F192C36E3496C79F70290A80E092C3449200000000000000009F71000000000000000000000000000094C09620972094C09E209F203800A100EFE8280980243680A1005E91E9703880A0005891270A8038E7EA96C0F84D280D802498C0CD4E32} // Offset:0xB77
+(emit (+ #4 (<< (& #C0000000 (sym "_ipaddr_is_invalid")) #FFFFFFE5) (<< (& #E000 (sym "_ipaddr_is_invalid")) #FFFFFFF8))) // Offset:0xB78
+(emit (+ #20 (<< (& #1F00 (sym "_ipaddr_is_invalid")) #FFFFFFF8))) // Offset:0xB79
+(emit (& #FF (sym "_ipaddr_is_invalid"))) // Offset:0xB7A
+(emit (+ #80 (<< (& #3F000000 (sym "_ipaddr_is_invalid")) #FFFFFFE8))) // Offset:0xB7B
+(emit (<< (& #FF0000 (sym "_ipaddr_is_invalid")) #FFFFFFF0)) // Offset:0xB7C
+{94C0FD47E8ED2469CD46271880F09AC02D0C801090C027EA9FF0129439} // Offset:0xB99
+(emit (+ (<< (& #C0000000 (+ #320 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #320 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xB9A
+(emit (+ #20 (<< (& #1F00 (+ #320 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xB9B
+(emit (& #FF (+ #320 (sym ".text::@start")))) // Offset:0xB9C
+(emit (+ #80 (<< (& #3F000000 (+ #320 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0xB9D
+(emit (<< (& #FF0000 (+ #320 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0xB9E
+{256932} // Offset:0xBA1
+(emit (+ #1 (<< (& #C0000000 (sym ".text::@start")) #FFFFFFE5) (<< (& #E000 (sym ".text::@start")) #FFFFFFF8))) // Offset:0xBA2
+(emit (+ #20 (<< (& #1F00 (sym ".text::@start")) #FFFFFFF8))) // Offset:0xBA3
+(emit (& #FF (sym ".text::@start"))) // Offset:0xBA4
+(emit (+ #80 (<< (& #3F000000 (sym ".text::@start")) #FFFFFFE8))) // Offset:0xBA5
+(emit (<< (& #FF0000 (sym ".text::@start")) #FFFFFFF0)) // Offset:0xBA6
+{94C0F8CD84D1974494C0F846F24592D0569D469A98C0CC4E33} // Offset:0xBBF
+(emit (+ #4 (<< (& #C0000000 (sym "_bindUDPGetPortPair")) #FFFFFFE5) (<< (& #E000 (sym "_bindUDPGetPortPair")) #FFFFFFF8))) // Offset:0xBC0
+(emit (+ #20 (<< (& #1F00 (sym "_bindUDPGetPortPair")) #FFFFFFF8))) // Offset:0xBC1
+(emit (& #FF (sym "_bindUDPGetPortPair"))) // Offset:0xBC2
+(emit (+ #80 (<< (& #3F000000 (sym "_bindUDPGetPortPair")) #FFFFFFE8))) // Offset:0xBC3
+(emit (<< (& #FF0000 (sym "_bindUDPGetPortPair")) #FFFFFFF0)) // Offset:0xBC4
+{94C0E8F1CC4680AD32} // Offset:0xBCD
+(emit (+ #4 (<< (& #C0000000 (sym "_ipaddr_is_ipv4")) #FFFFFFE5) (<< (& #E000 (sym "_ipaddr_is_ipv4")) #FFFFFFF8))) // Offset:0xBCE
+(emit (+ #20 (<< (& #1F00 (sym "_ipaddr_is_ipv4")) #FFFFFFF8))) // Offset:0xBCF
+(emit (& #FF (sym "_ipaddr_is_ipv4"))) // Offset:0xBD0
+(emit (+ #80 (<< (& #3F000000 (sym "_ipaddr_is_ipv4")) #FFFFFFE8))) // Offset:0xBD1
+(emit (<< (& #FF0000 (sym "_ipaddr_is_ipv4")) #FFFFFFF0)) // Offset:0xBD2
+{0894F8C798C06469CC462E0A829C96C0805527EB9FD41492EA4796C0D224EDEAE8EA94C096BA843196C07F58EA62ED6194C092BAE86396C07D4895BD93B894C0DD1BDA15DD1C98C0DD1E30} // Offset:0xC1D
+(emit (+ #4 (<< (& #C0000000 (+ #C28 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #C28 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xC1E
+(emit (+ #20 (<< (& #1F00 (+ #C28 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xC1F
+(emit (& #FF (+ #C28 (sym ".text::@start")))) // Offset:0xC20
+(emit (+ #80 (<< (& #3F000000 (+ #C28 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0xC21
+(emit (<< (& #FF0000 (+ #C28 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0xC22
+{42936E34449330} // Offset:0xC29
+(emit (+ #4 (<< (& #C0000000 (+ #C58 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #C58 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xC2A
+(emit (+ #20 (<< (& #1F00 (+ #C58 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xC2B
+(emit (& #FF (+ #C58 (sym ".text::@start")))) // Offset:0xC2C
+(emit (+ #80 (<< (& #3F000000 (+ #C58 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0xC2D
+(emit (<< (& #FF0000 (+ #C58 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0xC2E
+{301920008CB396C0FAC727EB9FD498C0E8EC301920008CB61792E86C479B5398439B5598459B5390439396C05C9427EB9FD094C0FB42F04116D4E9EF32} // Offset:0xC6B
+(emit (+ #4 (<< (& #C0000000 (sym "_SendMsgAndParms")) #FFFFFFE5) (<< (& #E000 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0xC6C
+(emit (+ #20 (<< (& #1F00 (sym "_SendMsgAndParms")) #FFFFFFF8))) // Offset:0xC6D
+(emit (& #FF (sym "_SendMsgAndParms"))) // Offset:0xC6E
+(emit (+ #80 (<< (& #3F000000 (sym "_SendMsgAndParms")) #FFFFFFE8))) // Offset:0xC6F
+(emit (<< (& #FF0000 (sym "_SendMsgAndParms")) #FFFFFFF0)) // Offset:0xC70
+{94C0F64CF8CD27EA9FC8E7EA94C09E219F2194C0962197219F7100000000000096C060E4E8549E201B9035} // Offset:0xC9B
+(emit (+ #1 (<< (& #C0000000 (+ #B30 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #B30 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xC9C
+(emit (+ #20 (<< (& #1F00 (+ #B30 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xC9D
+(emit (& #FF (+ #B30 (sym ".text::@start")))) // Offset:0xC9E
+(emit (+ #80 (<< (& #3F000000 (+ #B30 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0xC9F
+(emit (<< (& #FF0000 (+ #B30 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0xCA0
+(emit #34) // Offset:0xCA1
+(emit (+ #1 (<< (& #C0000000 (+ #B40 (sym ".text::@start"))) #FFFFFFE5) (<< (& #E000 (+ #B40 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xCA2
+(emit (+ #20 (<< (& #1F00 (+ #B40 (sym ".text::@start"))) #FFFFFFF8))) // Offset:0xCA3
+(emit (& #FF (+ #B40 (sym ".text::@start")))) // Offset:0xCA4
+(emit (+ #80 (<< (& #3F000000 (+ #B40 (sym ".text::@start"))) #FFFFFFE8))) // Offset:0xCA5
+(emit (<< (& #FF0000 (+ #B40 (sym ".text::@start"))) #FFFFFFF0)) // Offset:0xCA6
+{2B0E802394C0E9EEEDEE94C0919EED7394C0E977EE410491E8EE32} // Offset:0xCC1
+(emit (+ #4 (<< (& #C0000000 (sym "_ipaddr_set_invalid")) #FFFFFFE5) (<< (& #E000 (sym "_ipaddr_set_invalid")) #FFFFFFF8))) // Offset:0xCC2
+(emit (+ #20 (<< (& #1F00 (sym "_ipaddr_set_invalid")) #FFFFFFF8))) // Offset:0xCC3
+(emit (& #FF (sym "_ipaddr_set_invalid"))) // Offset:0xCC4
+(emit (+ #80 (<< (& #3F000000 (sym "_ipaddr_set_invalid")) #FFFFFFE8))) // Offset:0xCC5
+(emit (<< (& #FF0000 (sym "_ipaddr_set_invalid")) #FFFFFFF0)) // Offset:0xCC6
+{45959AC02900809C90C02E0880B8C184019032} // Offset:0xCD9
+(emit (+ #4 (<< (& #C0000000 (sym "_mutex_init")) #FFFFFFE5) (<< (& #E000 (sym "_mutex_init")) #FFFFFFF8))) // Offset:0xCDA
+(emit (+ #20 (<< (& #1F00 (sym "_mutex_init")) #FFFFFFF8))) // Offset:0xCDB
+(emit (& #FF (sym "_mutex_init"))) // Offset:0xCDC
+(emit (+ #80 (<< (& #3F000000 (sym "_mutex_init")) #FFFFFFE8))) // Offset:0xCDD
+(emit (<< (& #FF0000 (sym "_mutex_init")) #FFFFFFF0)) // Offset:0xCDE
+{E83994C06C309E219F71000000000000000096C09620280D80145C9594C09E209F2096C0EFE82C0E8034589690C0E8F190C096C333} // Offset:0xD13
+(emit (+ #4 (<< (& #C0000000 (sym "_bindUDPResetPort")) #FFFFFFE5) (<< (& #E000 (sym "_bindUDPResetPort")) #FFFFFFF8))) // Offset:0xD14
+(emit (+ #20 (<< (& #1F00 (sym "_bindUDPResetPort")) #FFFFFFF8))) // Offset:0xD15
+(emit (& #FF (sym "_bindUDPResetPort"))) // Offset:0xD16
+(emit (+ #80 (<< (& #3F000000 (sym "_bindUDPResetPort")) #FFFFFFE8))) // Offset:0xD17
+(emit (<< (& #FF0000 (sym "_bindUDPResetPort")) #FFFFFFF0)) // Offset:0xD18
+{9AC02E0E80AC90C0290080A01D96EAEEEA3994C0EDF1E8EA94C7CA4E6D3C98C732} // Offset:0xD39
+(emit (+ #4 (<< (& #C0000000 (sym "_mutex_dtor")) #FFFFFFE5) (<< (& #E000 (sym "_mutex_dtor")) #FFFFFFF8))) // Offset:0xD3A
+(emit (+ #20 (<< (& #1F00 (sym "_mutex_dtor")) #FFFFFFF8))) // Offset:0xD3B
+(emit (& #FF (sym "_mutex_dtor"))) // Offset:0xD3C
+(emit (+ #80 (<< (& #3F000000 (sym "_mutex_dtor")) #FFFFFFE8))) // Offset:0xD3D
+(emit (<< (& #FF0000 (sym "_mutex_dtor")) #FFFFFFF0)) // Offset:0xD3E
+{ED4C92C34295CA4690C02A09809850916469985F96C333} // Offset:0xD55
+(emit (+ #4 (<< (& #C0000000 (sym "_pass_packet_chain_to_context")) #FFFFFFE5) (<< (& #E000 (sym "_pass_packet_chain_to_context")) #FFFFFFF8))) // Offset:0xD56
+(emit (+ #20 (<< (& #1F00 (sym "_pass_packet_chain_to_context")) #FFFFFFF8))) // Offset:0xD57
+(emit (& #FF (sym "_pass_packet_chain_to_context"))) // Offset:0xD58
+(emit (+ #80 (<< (& #3F000000 (sym "_pass_packet_chain_to_context")) #FFFFFFE8))) // Offset:0xD59
+(emit (<< (& #FF0000 (sym "_pass_packet_chain_to_context")) #FFFFFFF0)) // Offset:0xD5A
+{290080A490C0EE395496666994C0995E985F96C333} // Offset:0xD6F
+(emit (+ #4 (<< (& #C0000000 (sym "_pass_packet_chain_to_context")) #FFFFFFE5) (<< (& #E000 (sym "_pass_packet_chain_to_context")) #FFFFFFF8))) // Offset:0xD70
+(emit (+ #20 (<< (& #1F00 (sym "_pass_packet_chain_to_context")) #FFFFFFF8))) // Offset:0xD71
+(emit (& #FF (sym "_pass_packet_chain_to_context"))) // Offset:0xD72
+(emit (+ #80 (<< (& #3F000000 (sym "_pass_packet_chain_to_context")) #FFFFFFE8))) // Offset:0xD73
+(emit (<< (& #FF0000 (sym "_pass_packet_chain_to_context")) #FFFFFFF0)) // Offset:0xD74
+{94C09E219F2196219F7100009E2098C0EEE833} // Offset:0xD87
+(emit (+ #4 (<< (& #C0000000 (sym "_RegisterOneFtbl_")) #FFFFFFE5) (<< (& #E000 (sym "_RegisterOneFtbl_")) #FFFFFFF8))) // Offset:0xD88
+(emit (+ #20 (<< (& #1F00 (sym "_RegisterOneFtbl_")) #FFFFFFF8))) // Offset:0xD89
+(emit (& #FF (sym "_RegisterOneFtbl_"))) // Offset:0xD8A
+(emit (+ #80 (<< (& #3F000000 (sym "_RegisterOneFtbl_")) #FFFFFFE8))) // Offset:0xD8B
+(emit (<< (& #FF0000 (sym "_RegisterOneFtbl_")) #FFFFFFF0)) // Offset:0xD8C
+(emit #32) // Offset:0xD8D
+(emit (+ #4 (<< (& #C0000000 (sym "_RegisterOneSubtask_")) #FFFFFFE5) (<< (& #E000 (sym "_RegisterOneSubtask_")) #FFFFFFF8))) // Offset:0xD8E
+(emit (+ #20 (<< (& #1F00 (sym "_RegisterOneSubtask_")) #FFFFFFF8))) // Offset:0xD8F
+(emit (& #FF (sym "_RegisterOneSubtask_"))) // Offset:0xD90
+(emit (+ #80 (<< (& #3F000000 (sym "_RegisterOneSubtask_")) #FFFFFFE8))) // Offset:0xD91
+(emit (<< (& #FF0000 (sym "_RegisterOneSubtask_")) #FFFFFFF0)) // Offset:0xD92
+{98C039} // Offset:0xD95
+(emit (+ (<< (& #C0000000 (sym ".data::@start")) #FFFFFFE5) (<< (& #E000 (sym ".data::@start")) #FFFFFFF8))) // Offset:0xD96
+(emit (+ #20 (<< (& #1F00 (sym ".data::@start")) #FFFFFFF8))) // Offset:0xD97
+(emit (& #FF (sym ".data::@start"))) // Offset:0xD98
+(emit (+ #80 (<< (& #3F000000 (sym ".data::@start")) #FFFFFFE8))) // Offset:0xD99
+(emit (<< (& #FF0000 (sym ".data::@start")) #FFFFFFF0)) // Offset:0xD9A
+{E8EE9E219F71}))

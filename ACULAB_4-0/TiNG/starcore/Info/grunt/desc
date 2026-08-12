@@ -1,0 +1,6 @@
+Grunt detection and silence elimination. Used by
+<a href="apifn-sm_record_start.html">sm_record_start()</a> for
+silence elimination in recordings and by
+<a href="apifn-sm_listen_for.html">sm_listen_for()</a>. If
+this module has not been downloaded, no grunt will be detected
+and recordings will not have silences removed.

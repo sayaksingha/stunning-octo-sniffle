@@ -1,0 +1,5 @@
+FSK modem receiver. This decodes an incoming signal from an FSK
+modem. However it does not convert it to digital data, so either
+<a href="#fskpll">fskpll</a> or <a href="#fskasyrx">fskasyrx</a>
+must be used, depending on how the data is encoded, to complete
+the decoding.

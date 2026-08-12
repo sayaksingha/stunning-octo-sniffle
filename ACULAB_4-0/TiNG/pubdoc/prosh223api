@@ -1,0 +1,557 @@
+	Prosody H.223 Mux
+secname sort
+
+version	Prel
+
+	Create an H.223 Mux
+apifn	sm_h223mux_create
+params	sm_h223mux_create_parms createp
+	The created mux.
+field	tSMH223muxId h223mux out
+	A value obtained from
+fnref   sm_open_module
+	which indicates the module on which the mux is to be created.
+field   tSMModuleId module in
+unstruct
+	Creates an H.223 Mux.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+error   ERR_SM_NO_RESOURCES - if no suitable output channel free
+error   ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified
+
+	Destroy an H.223 Mux
+apifn	sm_h223mux_destroy
+	The mux to destroy. Must have been previously created by a call to
+fnref	sm_h223mux_create
+	.
+param	tSMH223muxId mux
+	Destroys an H.223 Mux.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Connect datafeed to an H.223 MUX.
+apifn	sm_h223mux_datafeed_connect
+params	sm_h223mux_datafeed_connect_parms datafeedp
+	The datafeed object to be connected. 
+field	tSMDatafeedId datafeed in
+	Which input of the mux to connect the datafeed to.
+enumstart kSMH223muxInputType
+	Indicates that the datafeed should be connected to the H.245 input
+enum    kSMH223muxInputTypeH245Ctl
+	Indicates that the datafeed should be connected to the audio input
+enum    kSMH223muxInputTypeAudio
+	Indicates that the datafeed should be connected to the video input
+enum    kSMH223muxInputTypeVideo
+	Indicates that the datafeed should be connected to the muxed data input
+enum    kSMH223muxInputTypeMux
+enumend port in
+	The mux to connect the datafeed to.
+field	tSMH223muxId h223mux in
+unstruct
+	Connect a datafeed to one of the three inputs of the H.223 mux.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+	
+	Create new session for the H.223 mux
+apifn	sm_h223mux_new_session
+params	sm_h223mux_new_session_parms sessionp
+	The mux to create the new session on.
+field	tSMH223muxId h223mux in
+	The mobile startup level for the new session.
+field	tSM_INT level in	
+	Network bit order for transmission of H.223 data.
+enumstart	kSMH223muxTransmissionBitOrder
+	The output bytes from the H.223 session to the network will be sent LSB first.
+enum	kSMH223muxTransmissionBitOrderLSBFirst
+	The output bytes from the H.223 session to the network will be sent MSB first.
+enum	kSMH223muxTransmissionBitOrderMSBFirst
+enumend	bit_order in
+unstruct
+	This function will create and initialise an H.223 session.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Reconfigure the H.223 multiplex
+apifn	sm_h223mux_reconfig
+params	sm_h223mux_reconfig_parms reconfigp
+	The mux to reconfigure.
+field	tSMH223muxId h223mux in
+	The direction of dynamic level change request.
+enumstart	kSMH223muxReconfigLevelChangeDirection
+	Indicates that the transmitter side shall change from current to new level ie. H.245 command
+	h223ModeChange was received from the remote end.
+enum	kSMH223muxReconfigLevelChangeDirectionTransmit
+	Indicates that the receiver side shall change from current to new level ie. H.245 command
+	h223ModeChange was sent to the remote end.
+enum	kSMH223muxReconfigLevelChangeDirectionReceive
+enumend	direction in
+struct	
+	Reconfiguration options.
+enumstart	kSMH223muxReconfigChoice
+	Change the level of multiplex mode as described in Annex C/H.324 to level 0, level 1, level 2
+	or level 2 with Annex B/H.223 optional header.
+enum	kSMH223muxReconfigModeChange
+	Start or stop the use of double-flag mode of Annex A/H.223.
+enum	kSMH223muxReconfigAnnexADoubleFlag
+enumend	choice
+union
+	This parameter is only valid if reconfiguration choice is
+ref	kSMH223muxReconfigModeChange.
+enumstart	kSMH223muxReconfigModeChange
+enum	kSMH223muxReconfigModeChangeToLevel0
+enum	kSMH223muxReconfigModeChangeToLevel1
+enum	kSMH223muxReconfigModeChangeToLevel2
+enum	kSMH223muxReconfigModeChangeToLevel2WithOptionalHeader
+enumend	mode_change
+	This parameter is only valid if reconfiguration choice is
+ref	kSMH223muxReconfigAnnexADoubleFlag	
+enumstart	kSMH223muxReconfigAnnexADoubleFlag
+enum	kSMH223muxReconfigAnnexADoubleFlagStart
+enum	kSMH223muxReconfigAnnexADoubleFlagStop
+enumend	annex_a_double_flag
+unstruct	u
+unstruct	multiplex_reconfiguration
+unstruct
+	Reconfigure the H.223 multiplex ie changing to another level, or adopting double flag mode vs.
+	basic flag.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+	
+	Set the multiplex capabilities for a specific terminal 
+apifn	sm_h223mux_set_caps
+params	sm_h223mux_set_caps_parms capsp
+	The mux to send the capabilities to.
+field	tSMH223muxId h223mux in
+	Indicates what terminal these capabilities apply to.
+enumstart	kSMH223muxSetCapsRole
+	Capabilities relate to the local terminal.
+enum	kSMH223muxSetCapsRoleLocal
+	Capabilities relate to the remote terminal.
+enum	kSMH223muxSetCapsRoleRemote
+enumend	role in
+	A bitmap field, representing the optional fields (_o) that will be present in this structure.  The
+	bit values for each field are as follows :
+	H223MUX_H245_CAP_O_MOBILE_OPERATION_TRANSMIT_CAP 0x04, H223MUX_H245_CAP_O_ANNEX_C 0x08, 
+	H223MUX_H245_CAP_O_BIT_RATE 0x10, H223MUX_H245_CAP_O_MOBILE_MULTILINK_FRAME_CAP 0x20
+field	tSM_INT optional_ext in
+	When set to non-zero, indicates that the terminal is capable of sending and receiving
+	control channel messages using LAPM I-frames as defined in ITU-T Recommendation V.42 (2002).
+field	tSM_UT32 transport_with_i_frames in	
+	When set to non-zero, indicates the capability to receive video using AL1.
+field	tSM_UT32 video_with_AL1 in	
+	When set to non-zero, indicates the capability to receive video using AL2.
+field	tSM_UT32 video_with_AL2 in
+	When set to non-zero, indicates the capability to receive video using AL3.
+field	tSM_UT32 video_with_AL3 in
+	When set to non-zero, indicates the capability to receive audio using AL1.
+field	tSM_UT32 audio_with_AL1 in	
+	When set to non-zero, indicates the capability to receive audio using AL2.
+field	tSM_UT32 audio_with_AL2 in
+	When set to non-zero, indicates the capability to receive audio using AL3.
+field	tSM_UT32 audio_with_AL3 in
+	When set to non-zero, indicates the capability to receive data using AL1.
+field	tSM_UT32 data_with_AL1 in	
+	When set to non-zero, indicates the capability to receive data using AL2.
+field	tSM_UT32 data_with_AL2 in
+	When set to non-zero, indicates the capability to receive data using AL3.
+field	tSM_UT32 data_with_AL3 in
+	Indicates the maximum number of octets in each SDU that the terminal can receive when
+	using adaptation layer type 2.
+field	tSM_INT maximum_AL2_sdu_size in
+	Indicates the maximum number of octets in each SDU that the terminal can receive when
+	using adaptation layer type 3.
+field	tSM_INT maximum_AL3_sdu_size in
+	Indicates the maximum peak-to-peak multiplexing jitter that the transmitter shall cause.
+	Measured in milliseconds.
+field	tSM_INT maximum_delay_jitter in	
+	When set to non-zero, indicates that the transmitter is able to restrict the size of the
+	H.223 MUX-PDUs that it transmits.  Has no meaning when part of a receive capability.
+field	tSM_UT32 max_MUX_PDU_size_capability in
+	When set to non-zero, indicates support of the Annex A/H.324 NSRP mode.
+field	tSM_UT32 nsrp_support in
+	Indicates the bit rate to transmit the bitstream output from the H.223 multiplexer.  Please
+	note that this parameter is optional.
+field	tSM_INT bit_rate_o in	
+
+	The parameters in this structure indicate the capability to transmit the multiplex layers
+	described in Annex A/H.223 and Annex B/H.223.  Please note that this structure is optional.
+struct
+	When set to non-zero, indicates the terminal has the capability to change H.223 multiplex levels
+	or options during a session.  The levels and options supported are listed below.  If set to zero
+	the remainder of the structure will be ignored.
+field	tSM_UT32 mode_change_capability in	
+	When set to non-zero, indicates the terminal can transmit the MUX-PDUs as defined in Annex A/H.223.  
+field	tSM_UT32 h223_AnnexA in
+	When set to non-zero, indicates the terminal can transmit the MUX-PDUs as defined in Annex A/H.223
+	with it's optional double-flag mode.
+field	tSM_UT32 h223_AnnexA_double_flag in	
+	When set to non-zero, indicates the terminal can transmit the MUX-PDUs as defined in AnnexB/H.223.
+field	tSM_UT32 h223_AnnexB in
+	When set to non-zero, indicates the terminal can transmit the MUX-PDUs as defined in AnnexB/H.223
+	with its optional header field.
+field	tSM_UT32 h223_AnnexB_with_header in	
+unstruct	mobile_operation_transmit_capability_o
+
+	The parameters in this structure indicate the capability to receive and process mobile multilink
+	frames.  Please note that this structure is optional.
+struct
+	Indicates the maximum number of octets in each sample that the terminal can process.
+field	tSM_INT maximum_sample_size in
+	Indicates the maximum length of frames in octets that the terminal can process.
+field	tSM_INT maximum_payload_length in	
+unstruct	mobile_multilink_frame_capability_o
+
+	The parameters in this structure indicate the capability to receive and process AL-PDUs as described
+	in Annex C/H.223.  Please note that this structure is optional.
+struct
+	When set to non-zero, indicates the capability to receive video using AL1M.
+field 	tSM_UT32 video_with_AL1M in
+	When set to non-zero, indicates the capability to receive video using AL2M.
+field 	tSM_UT32 video_with_AL2M in
+	When set to non-zero, indicates the capability to receive video using AL3M.
+field 	tSM_UT32 video_with_AL3M in
+	When set to non-zero, indicates the capability to receive audio using AL1M.
+field 	tSM_UT32 audio_with_AL1M in
+	When set to non-zero, indicates the capability to receive audio using AL2M.
+field 	tSM_UT32 audio_with_AL2M in	
+	When set to non-zero, indicates the capability to receive audio using AL3M.
+field 	tSM_UT32 audio_with_AL3M in
+	When set to non-zero, indicates the capability to receive data using AL1M.
+field 	tSM_UT32 data_with_AL1M in
+	When set to non-zero, indicates the capability to receive data using AL2M.
+field 	tSM_UT32 data_with_AL2M in
+	When set to non-zero, indicates the capability to receive data using AL3M.
+field 	tSM_UT32 data_with_AL3M in
+	When set to non-zero, indicates the capability to receive and process AL-PDUs for which interleaving
+	is applied.
+field	tSM_UT32 alpdu_interleaving in
+	Indicates the maximum number of octets in each PDU that the terminal can receive when using
+	adaptation layer AL1M.
+field	tSM_INT maximum_AL1M_pdu_size in
+	Indicates the maximum number of octets in each PDU that the terminal can receive when using
+	adaptation layer AL2M.
+field	tSM_INT maximum_AL2M_pdu_size in	
+	Indicates the maximum number of octets in each PDU that the terminal can receive when using
+	adaptation layer AL3M.
+field	tSM_INT maximum_AL3M_pdu_size in
+	When set to non-zero, indicates the capability to receive the AL-PDUs for which Reed-Solomon coding
+	is indicated.
+field	tSM_UT32 rs_code_capability in	
+unstruct	H223_AnnexC_capability_o
+unstruct
+	This function will set the negotiated capabilities on the H.223 multiplexer.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Add mux entry
+apifn	sm_h223mux_add_entry
+params	sm_h223mux_add_entry_parms entryp
+	The mux to add the table entry to.
+field	tSMH223muxId h223mux in
+	The logical channel direction.
+enumstart	kSMH223muxTableEntryDirection
+	Table entry relates to transmit direction.
+enum	kSMH223muxTableEntryDirectionTransmit
+	Table entry relates to receive direction.
+enum	kSMH223muxTableEntryDirectionReceive
+enumend	direction in
+	The multiplex table entry number
+field	tSM_INT entry_number in
+	The length of the descriptor in octets.
+field	tSM_INT descriptor_len in
+	The multiplex entry descriptor as defined in ITU-T H.223 Table 2.
+field	char* descriptor in
+unstruct
+	This function will add an entry to the multiplex table.  The entry may be transmit or receive.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Open logical channel
+apifn	sm_h223mux_open_lc
+params	sm_h223mux_open_lc_parms open_lcp
+	The mux to open the logical channel on.
+field	tSMH223muxId h223mux in
+	When set to non-zero indicates that the channel is designated to be segmentable,
+	and when equal to zero indicates that the channel is designated to be non-segmentable.
+field	tSM_UT32 segmentable_flag in
+	The type of logical channel to be opened.
+enumstart	kSMH223muxLogicalChannelType
+	Unidirectional channel.
+enum	kSMH223muxLogicalChannelTypeUnidirectional
+	Bidirectional channel.
+enum	kSMH223muxLogicalChannelTypeBidirectional
+enumend	type in
+struct
+	The logical channel number.
+field	tSM_INT lcn in
+	The logical channel direction.
+enumstart	kSMH223muxLogicalChannelDirection
+	Logical channel is to be opened for transmission.
+enum	kSMH223muxLogicalChannelDirectionTransmit
+	Logical channel is to be opened for receive.
+enum	kSMH223muxLogicalChannelDirectionReceive
+enumend	direction in
+	This structure is only valid if direction is
+ref	kSMH223muxLogicalChannelDirectionTransmit.
+struct
+enumstart	kSMH223muxMarkUnit
+	Unit of measurement is in bytes.
+enum	kSMH223muxMarkUnitBytes
+	Unit of measurement is in AL-SDUs
+enum	kSMH223muxMarkUnitALSDU	
+enumend	mark_unit
+	Higher level threshold.  Represents bytes or AL-SDUs depending on value of mark_unit.	
+field	tSM_INT hi_mark in
+	Lower level threshold.  Represents bytes or AL-SDUs depending on value of mark_unit.	
+field	tSM_INT lo_mark in
+unstruct	transmit_lc
+enumstart	kSMH223muxAdaptationLayerType
+	Non standard.  Please note that this is currently unsupported.
+enum	kSMH223muxAdaptationLayerTypeNonStandard	
+	AL1 framed mode.
+enum	kSMH223muxAdaptationLayerTypeAL1Framed
+	AL1 unframed mode.
+enum	kSMH223muxAdaptationLayerTypeAL1NotFramed
+	AL2 with no sequence numbers present.
+enum	kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers
+	AL2 with sequence numbers present.
+enum	kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers
+	AL3 with the specified parameters. See below. 
+enum	kSMH223muxAdaptationLayerTypeAL3	
+enumend	adaptation_layer_type
+union
+	This structure is only valid if adaptation_layer_type is
+ref	kSMH223muxAdaptationLayerTypeAL3
+struct
+	Number of control field octets
+field	tSM_INT control_field_octets in	
+	Size of the send buffer that will be used.  The size being measured in octets.
+field	tSM_INT send_buffer_size in
+unstruct	al3
+unstruct	u_al
+unstruct	forward_channel
+	This structure is only valid if type is
+ref	kSMH223muxLogicalChannelTypeBidirectional.
+struct
+	The logical channel number.
+field	tSM_INT lcn in
+	The logical channel direction.
+enumstart	kSMH223muxLogicalChannelDirection
+	Logical channel is to be opened for transmission.
+enum	kSMH223muxLogicalChannelDirectionTransmit
+	Logical channel is to be opened for receive.
+enum	kSMH223muxLogicalChannelDirectionReceive
+enumend	direction in
+	This structure is only valid if direction is
+ref	kSMH223muxLogicalChannelDirectionTransmit.
+struct
+enumstart	kSMH223muxMarkUnit
+	Unit of measurement is in bytes.
+enum	kSMH223muxMarkUnitBytes
+	Unit of measurement is in AL-SDUs
+enum	kSMH223muxMarkUnitALSDU	
+enumend	mark_unit
+	Higher level threshold.  Represents bytes or AL-SDUs depending on value of mark_unit.	
+field	tSM_INT hi_mark in
+	Lower level threshold.  Represents bytes or AL-SDUs depending on value of mark_unit.	
+field	tSM_INT lo_mark in
+unstruct	transmit_lc
+enumstart	kSMH223muxAdaptationLayerType
+	Non standard.  Please note that this is currently unsupported.
+enum	kSMH223muxAdaptationLayerTypeNonStandard	
+	AL1 framed mode.
+enum	kSMH223muxAdaptationLayerTypeAL1Framed
+	AL1 unframed mode.
+enum	kSMH223muxAdaptationLayerTypeAL1NotFramed
+	AL2 with no sequence numbers present.
+enum	kSMH223muxAdaptationLayerTypeAL2WithoutSequenceNumbers
+	AL2 with sequence numbers present.
+enum	kSMH223muxAdaptationLayerTypeAL2WithSequenceNumbers
+	AL3 with the specified parameters. See below. 
+enum	kSMH223muxAdaptationLayerTypeAL3	
+enumend	adaptation_layer_type
+union
+	This structure is only valid if adaptation_layer_type is
+ref	kSMH223muxAdaptationLayerTypeAL3
+struct
+	Number of control field octets
+field	tSM_INT control_field_octets in	
+	Size of the send buffer that will be used.  The size being measured in octets.
+field	tSM_INT send_buffer_size in
+unstruct	al3
+unstruct	u_al
+unstruct	reverse_channel
+unstruct
+	This function will open a new logical channel.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Close logical channel
+apifn	sm_h223mux_close_lc
+params	sm_h223mux_close_lc_parms close_lcp
+	The mux to close the logical channel on.
+field	tSMH223muxId h223mux in
+enumstart	kSMH223muxChannelDirection
+	logical channel transmit
+enum	kSMH223muxChannelDirectionTransmit
+	logical channel receive
+enum	kSMH223muxChannelDirectionReceive
+enumend	direction in
+	logical channel number
+field	tSM_INT lcn in
+unstruct
+	This function will close a specific logical channel.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+	Delete the H.223 session
+apifn	sm_h223mux_delete_session
+params	sm_h223mux_delete_session_parms sessionp
+	The mux to delete the session on.
+field	tSMH223muxId h223mux in
+unstruct
+	This function will delete the H.223 session previously created by sm_h223mux_new_session.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+	
+	Get an event for the H.223 mux
+apifn	sm_h223mux_get_event
+params	sm_h223mux_event_parms eventp
+	The mux.
+field	tSMH223muxId h223mux in
+	The aevent identifier
+field	tSMEventId event out
+unstruct
+	the event will be signalled when a status change occurs on the mux.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Fetch status info on H.223 mux
+apifn	sm_h223mux_status
+params	sm_h223mux_status_parms statusp
+	The mux.
+field	tSMH223muxId h223mux in
+enumstart kSMH223muxStatus
+	The H.223 session is running.
+enum	kSMH223muxStatusRunning
+	The H.223 session has stopped and it is now safe to destroy.
+enum	kSMH223muxStatusStopped
+	H.223 session has started and the setup level has been negotiated successfully.
+enum	kSMH223muxStatusSessionStarted
+	H.223 session creation has failed.
+enum	kSMH223muxStatusCreateSessionFailed
+	H.223 session deletion has failed.
+enum	kSMH223muxStatusDeleteSessionFailed
+	The setting of terminal capabilities has failed.
+enum	kSMH223muxStatusSetCapsFailed
+	Multiplex table entry addition has failed.
+enum	kSMH223muxStatusAddEntryFailed	
+	Open logical channel request has failed.
+enum	kSMH223muxStatusOpenLCFailed
+	Close logical channel request has failed.
+enum	kSMH223muxStatusCloseLCFailed	
+	Level has changed as a result of a reconfiguration request.
+enum	kSMH223muxStatusReconfigLevelChange	
+	Multiplex reconfiguration request has failed.
+enum	kSMH223muxStatusReconfigFailed	
+	The H.223 session encountered one or more internal errors during processing.  These
+	errors are likely to result in missing data.  Note that such errors are not fatal
+	and the H.223 session will continue to run.  These status reports are throttled in 
+	order to maintain a sensibly low rate of reporting even in the event of a high rate
+	of errors.
+enum	kSMH223muxStatusInternalError	
+	The video logical channel has entered a busy situation and will now drop all subsequent
+	P-frames added to the transmit queue until an I-frame is received.
+enum	kSMH223muxStatusVideoPFrameDrop
+	An I-frame has been received on the video channel queue after entering a busy situation,
+	so subsequent P-frames will now be sent.
+enum	kSMH223muxStatusVideoPFrameSend	
+enumend status out
+	Additional information relating to the current status of the H.223 mux.
+union	
+	This field is only valid if the status is
+ref	kSMH223muxStatusSessionStarted
+	or
+ref	kSMH223muxStatusReconfigLevelChange.
+struct
+	The H.223 transport level negotiated for the session.
+field	tSM_INT level out
+unstruct	session_transport
+	This field is only valid if the status is
+ref	kSMH223muxStatusInternalError.	
+struct
+	The number of internal errors encountered by the H.223 session covered
+	by this status report.
+field	tSM_INT num_errors out
+unstruct	internal_error
+unstruct	u
+unstruct
+	returns the status of the H.223 mux.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Get datafeed from H.223 MUX.
+apifn	sm_h223mux_get_datafeed
+params	sm_h223mux_datafeed_parms datafeedp
+	The mux from which to obtain a datafeed.
+field	tSMH223muxId h223mux in
+	Which output of the mux to get the datafeed for.
+enumstart kSMH223muxOutputType
+	Indicates that the datafeed should be connected to the H.245 output
+enum    kSMH223muxOutputTypeH245Ctl
+	Indicates that the datafeed should be connected to the audio output
+enum    kSMH223muxOutputTypeAudio
+	Indicates that the datafeed should be connected to the video output
+enum    kSMH223muxOutputTypeVideo
+	Indicates that the datafeed should be connected to the muxed data output
+enum    kSMH223muxOutputTypeMux
+enumend port in
+	The datafeed object associated with the H.223 mux.
+field	tSMDatafeedId datafeed out
+unstruct
+	Request a datafeed identifier from an H.223 mux.
+	This identifier can subsequently used in a call to 
+fnref	sm_channel_datafeed_connect
+	.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Stop H.223 mux
+apifn	sm_h223mux_stop
+params	sm_h223mux_stop_parms stopp
+	the mux
+field	tSMH223muxId h223mux in
+unstruct
+	Stops the H.223 Mux.
+explain
+	0
+retval
+error	ERR_SM_DEVERR - device error
+
+version +

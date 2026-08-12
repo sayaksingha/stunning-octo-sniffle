@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody data communications: API: smdc_tx_v34_indicator_t38</title>
+</head>
+<body>
+<h1>Prosody data communications: API: smdc_tx_v34_indicator_t38</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int smdc_tx_v34_indicator_t38(struct smdc_tx_v34_indicator_t38_parms *<a href="#field-tonep">tonep</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-tonep">*tonep</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct smdc_tx_v34_indicator_t38_parms {
+	<a href="../apitype.html#type-tSMChannelId">tSMChannelId</a> <a href="#field-channel">channel</a>;					/* in */
+	<a href="apifn-smdc_rx_status_t38.html#enum-kSMDCT38_V34Type">enum kSMDCT38_V34Type</a> <a href="#field-v34_type">v34_type</a>;				/* int */
+} SMDC_TX_V34_INDICATOR_T38_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Sends a T.38 v34 indicator on the output half of a T.38 data
+communication channel.
+<p>
+The T.38 V34_CC_1200 indicator is sent when a switch from primary 
+channel to control channel is requested.
+<p>
+The T.38 V34_PRI_CHAN indicator is sent when a switch from control 
+channel to primary channel is requested.
+<p>
+The T.38 V34_CC_RETRAIN indicator is sent when a new primary 
+channel datarate is requested. This is usually followed by a
+T.38 data element with a field set to v34-pri-rate and the
+specific datarate.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-channel">channel</a><dd>The T.38 data communications channel
+
+<dt><a name="field-v34_type">v34_type</a><dd>The type of v34 indicator to send
+
+One of these values:
+<dl>
+<dt><a name="field-kSMDCT38_V34Type_V34_CC_1200">kSMDCT38_V34Type_V34_CC_1200</a>
+<dd>A Control Channel 
+
+<dt><a name="field-kSMDCT38_V34Type_V34_PRI_CHAN">kSMDCT38_V34Type_V34_PRI_CHAN</a>
+<dd>A Primary Channel
+
+<dt><a name="field-kSMDCT38_V34Type_V34_CC_RETRAIN">kSMDCT38_V34Type_V34_CC_RETRAIN</a>
+<dd>A Control Channel Retrain
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosdc.html">Prosody data communications API</a>.
+</body>
+</html>

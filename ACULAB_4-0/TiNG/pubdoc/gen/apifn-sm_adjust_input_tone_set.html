@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody speech processing: API: sm_adjust_input_tone_set</title>
+</head>
+<body>
+<h1>Prosody speech processing: API: sm_adjust_input_tone_set</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_adjust_input_tone_set(struct sm_adjust_tone_set_parms *<a href="#field-tonesetp">tonesetp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-tonesetp">*tonesetp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_adjust_tone_set_parms {
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-tone_set_id">tone_set_id</a>;					/* in */
+	<a name="enum-kAdjustToneSet">enum kAdjustToneSet</a> {
+		<a href="#field-kAdjustToneSetFPParamId3rdPeak">kAdjustToneSetFPParamId3rdPeak</a>,
+		<a href="#field-kAdjustToneSetFPParamIdSNRatio">kAdjustToneSetFPParamIdSNRatio</a>,
+		<a href="#field-kAdjustToneSetFPParamIdMinPower">kAdjustToneSetFPParamIdMinPower</a>,
+		<a href="#field-kAdjustToneSetFPParamIdTwist">kAdjustToneSetFPParamIdTwist</a>,
+		<a href="#field-kAdjustToneSetIntParamIdMinOnTime">kAdjustToneSetIntParamIdMinOnTime</a>,
+		<a href="#field-kAdjustToneSetIntParamIdMinOffTime">kAdjustToneSetIntParamIdMinOffTime</a>,
+		<a href="#field-kAdjustToneSetFPParamIdStartFreq">kAdjustToneSetFPParamIdStartFreq</a>,
+		<a href="#field-kAdjustToneSetFPParamIdStopFreq">kAdjustToneSetFPParamIdStopFreq</a>,
+	} <a href="#field-parameter_id">parameter_id</a>;						/* in */
+	union {
+		double <a href="#field-parameter_value-fp_value">fp_value</a>;				/* in */
+		<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-parameter_value-int_value">int_value</a>;				/* in */
+	} <a href="#field-parameter_value">parameter_value</a>;					/* in */
+} SM_ADJUST_TONE_SET_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+This call may be used to alter the tone detection
+characteristics of a pre-loaded or user defined (through
+<a href="apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>)
+input tone set for the specified module
+<a class=pref href="#field-module">module</a>.
+<p>
+The tone set to be modified is identified through the
+<a class=pref href="#field-tone_set_id">tone_set_id</a>
+parameter, this must either be the identifier for one of the
+pre-loaded input tone sets (see
+<a href="../prospapi_intones.html">
+Prosody speech processing: pre-loaded input tones</a>),
+or an identifier returned by
+<a href="apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>.
+<p>
+Invoking the call will change a single input tone set parameter,
+that parameter being identified by the value supplied
+<a class=pref href="#field-parameter_id">parameter_id</a>.
+<p>
+The new parameter value must be set in either the
+<a class=pref href="#field-parameter_value-fp_value">fp_value</a>
+or
+<a class=pref href="#field-parameter_value-int_value">int_value</a>
+element of the parameter_value union according to the parameter
+type.
+<p>
+See
+<a href="../tonedet.html">Prosody - Details of Tone Detection Algorithm</a>
+for more
+details on how adjusting these input tone set parameters affects
+tone recognition.
+<p>
+In previous versions, the values of 
+<a class=pref href="#field-kAdjustToneSetIntParamIdMinOnTime">kAdjustToneSetIntParamIdMinOnTime</a>
+and
+<a class=pref href="#field-kAdjustToneSetIntParamIdMinOffTime">kAdjustToneSetIntParamIdMinOffTime</a>
+were not independent, that is setting one value also set the other. These values 
+are now independent. However, if only one value is &gt;= 64 then that value is used 
+for both the on and off times in order to retain compatibility with applications that 
+only set one value.
+<p>
+For firmware versions where the on and off times are not independent, the 
+<a class=pref href="#field-kAdjustToneSetIntParamIdMinOnTime">kAdjustToneSetIntParamIdMinOnTime</a>
+is used (subject the the above compatibility constraint).
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-module">module</a><dd>The module containing the tone set to be adjusted.
+
+<dt><a name="field-tone_set_id">tone_set_id</a><dd>The tone set to adjust.
+
+<dt><a name="field-parameter_id">parameter_id</a><dd>An indicator of which parameter to adjust.
+
+One of these values:
+<dl>
+<dt><a name="field-kAdjustToneSetFPParamId3rdPeak">kAdjustToneSetFPParamId3rdPeak</a>
+<dd>The value initially set by the 
+<a href="apifn-sm_add_input_tone_set.html#field-req_third_peak">req_third_peak</a>
+field of
+<a href="apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>
+is replaced with the value of the
+<a class=pref href="#field-parameter_value-fp_value">fp_value</a>
+field.
+
+<dt><a name="field-kAdjustToneSetFPParamIdSNRatio">kAdjustToneSetFPParamIdSNRatio</a>
+<dd>The value initially set by the 
+<a href="apifn-sm_add_input_tone_set.html#field-req_signal_to_noise_ratio">req_signal_to_noise_ratio</a>
+field of
+<a href="apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>
+is replaced with the value of the
+<a class=pref href="#field-parameter_value-fp_value">fp_value</a>
+field.
+
+<dt><a name="field-kAdjustToneSetFPParamIdMinPower">kAdjustToneSetFPParamIdMinPower</a>
+<dd>The value initially set by the 
+<a href="apifn-sm_add_input_tone_set.html#field-req_minimum_power">req_minimum_power</a>
+field of
+<a href="apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>
+is replaced with the value of the
+<a class=pref href="#field-parameter_value-fp_value">fp_value</a>
+field.
+
+<dt><a name="field-kAdjustToneSetFPParamIdTwist">kAdjustToneSetFPParamIdTwist</a>
+<dd>The value initially set by the 
+<a href="apifn-sm_add_input_tone_set.html#field-req_twist_for_dual_tone">req_twist_for_dual_tone</a>
+field of
+<a href="apifn-sm_add_input_tone_set.html">sm_add_input_tone_set()</a>
+is replaced with the value of the
+<a class=pref href="#field-parameter_value-fp_value">fp_value</a>
+field.
+
+<dt><a name="field-kAdjustToneSetIntParamIdMinOnTime">kAdjustToneSetIntParamIdMinOnTime</a>
+<dd>The minimum time (in mS, &gt;= 64) for which a tone must persist
+before it is considered to be valid is set to the value of the
+<a class=pref href="#field-parameter_value-int_value">int_value</a>
+field. This value is used to increase the minimum tone
+duration when the tone detection mode is
+<a href="apifn-sm_listen_for.html#field-kSMToneDetectionMinDuration64">
+kSMToneDetectionMinDuration64</a> or another of the
+<code>...MinDuration64</code> detection modes.
+
+<dt><a name="field-kAdjustToneSetIntParamIdMinOffTime">kAdjustToneSetIntParamIdMinOffTime</a>
+<dd>The minimum time (in mS, &gt;= 64) for which a tone must cease
+before it is considered to have ended is set to the value
+of the
+<a class=pref href="#field-parameter_value-int_value">int_value</a>
+field.
+This value is used to increase the minimum silence
+duration when the tone detection mode is
+<a href="apifn-sm_listen_for.html#field-kSMToneDetectionMinDuration64">
+kSMToneDetectionMinDuration64</a> or another of the
+<code>...MinDuration64</code> detection modes.
+
+<dt><a name="field-kAdjustToneSetFPParamIdStartFreq">kAdjustToneSetFPParamIdStartFreq</a>
+<dd>The minimum frequency to consider when listening for tones.
+Any signal at a lower frequency will be ignored (even when
+checking signal to noise ratio). The value (in Hz) is
+specified in the
+<a class=pref href="#field-parameter_value-fp_value">fp_value</a>
+field.
+
+<dt><a name="field-kAdjustToneSetFPParamIdStopFreq">kAdjustToneSetFPParamIdStopFreq</a>
+<dd>The maximum frequency to consider when listening for tones.
+Any signal at a higher frequency will be ignored (even when
+checking signal to noise ratio). The value (in Hz) is
+specified in the
+<a class=pref href="#field-parameter_value-fp_value">fp_value</a>
+field.
+
+</dl>
+<dt><a name="field-parameter_value">parameter_value</a><dd>The parameter value.
+
+
+<dl>
+<dt><a name="field-parameter_value-fp_value">fp_value</a><dd>A floating point parameter value.
+
+<dt><a name="field-parameter_value-int_value">int_value</a><dd>An integer parameter value.
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_SUCH_MODULE - if no such module exists<li>ERR_SM_BAD_PARAMETER - a parameter is out of range</ul>
+<hr>
+<p>This function is part of the <a href="../prospapi.html">Prosody speech processing API</a>.
+</body>
+</html>

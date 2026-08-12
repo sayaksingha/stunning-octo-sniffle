@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody SPRT end point: API: sm_sprt_create</title>
+</head>
+<body>
+<h1>Prosody SPRT end point: API: sm_sprt_create</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_sprt_create(struct sm_sprt_create_parms *<a href="#field-createp">createp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-createp">*createp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_sprt_create_parms {
+	<a href="../apitype.html#type-tSMSPRTId">tSMSPRTId</a> <a href="#field-sprt">sprt</a>;						/* out */
+	<a href="../apitype.html#type-tSMModuleId">tSMModuleId</a> <a href="#field-module">module</a>;					/* in */
+} SM_SPRT_CREATE_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Creates an SPRT end point.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-sprt">sprt</a><dd>The created SPRT end point.
+
+<dt><a name="field-module">module</a><dd>A value obtained from
+<a href="apifn-sm_open_module.html">sm_open_module()</a>
+Indicates the module on which the SPRT end point is to be created.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - if no suitable output channel free<li>ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified</ul>
+<hr>
+<p>This function is part of the <a href="../prossprt.html">Prosody SPRT end point API</a>.
+</body>
+</html>

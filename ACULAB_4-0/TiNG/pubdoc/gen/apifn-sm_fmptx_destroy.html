@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody FMP processing: API: sm_fmptx_destroy</title>
+</head>
+<body>
+<h1>Prosody FMP processing: API: sm_fmptx_destroy</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_fmptx_destroy(<a href="../apitype.html#type-tSMFMPtxId">tSMFMPtxId</a> <a href="#field-fmptx">fmptx</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-fmptx">fmptx</a>
+<dd>
+A tSMFMPtxId that has been prevously created by a call to 
+<a href="apifn-sm_fmptx_create.html">sm_fmptx_create()</a>.
+</dl>
+<h2>Description</h2>
+<p>
+Destroys
+<a class=pref href="#field-fmptx">fmptx</a>
+and invalidates the tSMFMPtxId.
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosfmpapi.html">Prosody FMP processing API</a>.
+</body>
+</html>

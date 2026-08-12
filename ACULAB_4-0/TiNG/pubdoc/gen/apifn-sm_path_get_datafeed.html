@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody signal path processing: API: sm_path_get_datafeed</title>
+</head>
+<body>
+<h1>Prosody signal path processing: API: sm_path_get_datafeed</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_path_get_datafeed(struct sm_path_datafeed_parms *<a href="#field-datafeedp">datafeedp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-datafeedp">*datafeedp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_path_datafeed_parms {
+	<a href="../apitype.html#type-tSMPathId">tSMPathId</a> <a href="#field-path">path</a>;						/* in */
+	<a href="../apitype.html#type-tSMDatafeedId">tSMDatafeedId</a> <a href="#field-datafeed">datafeed</a>;					/* out */
+} SM_PATH_DATAFEED_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Request a datafeed identifier from a signal path. This identifer
+can subsequently be used in a call to 
+<a href="apifn-sm_channel_datafeed_connect.html">sm_channel_datafeed_connect()</a>,
+<a href="apifn-sm_tdmtx_datafeed_connect.html">sm_tdmtx_datafeed_connect()</a>
+or
+<a href="apifn-sm_vmptx_datafeed_connect.html">sm_vmptx_datafeed_connect()</a>
+to connect the result of the signal path procesing to a speech
+channel (tSMChannelId), TDM[tx], or a VMP[tx]
+respectively. It is valid until the path is destroyed.
+Datafeed connections can only be made between objects allocated
+on the same <code>tSMModuleId</code>.
+<p>
+Requires the module
+<a href="softmodindex.html#datafeed">datafeed</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-path">path</a><dd>The signal path from which to obtain a datafeed
+
+<dt><a name="field-datafeed">datafeed</a><dd>The datafeed object representing the processed signal from
+the signal path
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prospath.html">Prosody signal path processing API</a>.
+</body>
+</html>

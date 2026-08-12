@@ -1,0 +1,147 @@
+	Prosody SNTP Client
+secname sort
+
+	Create an SNTP Client
+apifn	sm_sntp_create
+params	sm_sntp_create_parms createp
+	The created SNTP client.
+field	tSMSNTPId sntp out
+	A value obtained from
+fnref   sm_open_module
+	Indicates the module on which the SNTP client is to be created.
+field   tSMModuleId module in
+enumstart	kSMSNTPType
+	The SNTP client is to receive IPv4 packets
+enum	kSMSNTPTypeIPv4
+	The SNTP client is to receive IPv6 packets
+enum	kSMSNTPTypeIPv6
+enumend	type in
+	The address on which the SNTP client listens for replies if
+ref	type
+	is 
+ref	kSMSNTPTypeIPv4.
+field	in_addr address in
+	The address on which the SNTP client listens for replies if
+ref	type
+	is 
+ref	kSMSNTPTypeIPv6.
+field	in6_addr ipv6_address in
+unstruct
+	Creates an SNTP Client.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+error   ERR_SM_NO_RESOURCES - if no suitable output channel free
+error   ERR_SM_NO_SUCH_MODULE - if invalid module identifier specified
+
+	Destroy an SNTP Client
+apifn	sm_sntp_destroy
+	The SNTP client to destroy. Must have been previously created by a call to
+fnref	sm_sntp_create.
+param	tSMSNTPId sntp
+	Destroys an SNTP Client.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Configure the SNTP client to send IPv4 requests
+apifn	sm_sntp_config
+params	sm_sntp_config_parms configp
+	The SNTP client to configure.
+field	tSMSNTPId sntp in
+	The SOCKADDR_IN structure specifying the destination IP address and port 
+	of the NTP server to use. A struct SOCKADDR_IN must be configured with an 
+	address family, an IP address and a port. Note that most operating systems 
+	define this structure such that fields are in network byte order. The 
+	structure must be correctly cast such that an IP V4 address is specified. 
+field	SOCKADDR_IN server in
+	The Type Of Service (TOS) indicator to be sent in the NTP packets.
+field	int TOS in
+	The delay, in ms, between requests when no reply has been received.
+field	tSM_UT32 no_reply_delay in
+	The delay, in ms, between requests when a reply has been received.
+field	tSM_UT32 had_reply_delay in
+unstruct
+	This function configures the NTP server used by the SNTP client. If the 
+	reply to a NTP request is not received within
+ref	no_reply_delay
+	then the next request is sent. Otherwise the next NTP request is sent
+ref had_reply_delay
+	after the previous request.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Configure the SNTP client to send IPv6 requests
+apifn	sm_sntp_config_ipv6
+params	sm_sntp_config_ipv6_parms configp
+	The SNTP client to configure.
+field	tSMSNTPId sntp in
+	The SOCKADDR_IN6 structure specifying the destination IP address and port 
+	of the NTP server to use. A struct SOCKADDR_IN6 must be configured with an 
+	address family, an IPv6 address and a port. Note that most operating systems 
+	define this structure such that fields are in network byte order.
+field	SOCKADDR_IN6 server in
+	The delay, in ms, between requests when no reply has been received.
+field	tSM_UT32 no_reply_delay in
+	The delay, in ms, between requests when a reply has been received.
+field	tSM_UT32 had_reply_delay in
+unstruct
+	This function configures the NTP server used by the SNTP client. If the 
+	reply to a NTP request is not received within
+ref	no_reply_delay
+	then the next request is sent. Otherwise the next NTP request is sent
+ref had_reply_delay
+	after the previous request.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Get an event for the SNTP client
+apifn	sm_sntp_get_event
+params	sm_sntp_event_parms eventp
+	The SNTP client.
+field	tSMSNTPId sntp in
+	The event identifier
+field	tSMEventId event out
+unstruct
+	the event will be signalled when a status change occurs on the SNTP client.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+
+	Fetch status info on a SNTP client
+apifn	sm_sntp_status
+params	sm_sntp_status_parms statusp
+	The SNTP client.
+field	tSMSNTPId sntp in
+	The status.
+enumstart kSMSNTPStatus
+	The SNTP client is running
+enum	kSMSNTPStatusRunning
+	The SNTP client is not running
+enum	kSMSNTPStatusStopped
+	The SNTP client synchronisation state has changed
+enum	kSMSNTPStatusSync
+enumend status out
+	Additional information relating to the current status of the SNTP client
+union
+	This field is only valid if the status is
+ref	kSMSNTPStatusSync.
+struct
+	An indicator of whether the SNTP client is synchronised with the NTP server
+field	int has_sync out
+unstruct	sync
+unstruct	u
+unstruct
+	returns the status of the SNTP client.
+explain
+	0
+retval
+error   ERR_SM_DEVERR - device error
+

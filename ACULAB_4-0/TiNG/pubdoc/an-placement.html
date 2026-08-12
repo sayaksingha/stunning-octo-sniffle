@@ -1,0 +1,347 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="install.css">
+<title>Prosody application note: ProsodyX TiNG Algorithm Placement</title>
+</head>
+<body>
+<h1>Prosody application note: ProsodyX TiNG Algorithm Placement</h1>
+
+<h2>Introduction</h2>
+<p>
+This document provides guidance on the placement of ProsodyX TiNG algorithm 
+firmware modules into DSP memory. Algorithms (encapsulated in .sob files) are 
+downloaded using the <a href="prog_modload.html">modload</a> utility. For 
+simple applications using only a small set of firmware modules, the default 
+modload placement behaviour is usually appropriate. However, with more complex 
+scenarios that require an extensive set of firmware modules to be loaded, 
+a more elaborate placement scheme taking into account application specific factors 
+can permit a higher channel count to be obtained before resource problems such 
+as ERR_SM_NO_RESOURCES API errors, or TiNG DSP CPU overload occur. 
+Note also that a firmware placement scheme that gave satisfactory results for an application 
+with a given release of ProsodyX TiNG firmware may occasionally need to be modified when 
+TiNG firmware is updated as the code size of kernel and algorithms can vary 
+from release to release.
+<p>
+Note only firmware modules that are actually required by an application should
+be loaded onto DSP, loading other firmware modules will use up DSP memory and 
+may needlessly limit the channel count for an application.
+
+<h2>Types of Memory</h2>
+<p>
+There are three areas of memory in a ProsodyX TiNG DSP module into which 
+firmware can be loaded.
+<p>
+M1 memory is the default location for most firmware. This is the highest speed 
+memory, but is limited in size.  The high speed leads to reduced DSP CPU usage 
+when running instances of an algorithm located in this type of memory.
+<p>
+M2 memory is the next fastest memory, offering only a small penalty compared to 
+execution of code from M1. It is also limited in size. Additionally, M2 memory 
+is also used for TiNG task working memory and TDM buffers, so care must be 
+taken to leave enough free space in this memory area.
+<p>
+SDRAM memory is the slowest area of memory, but also the largest. Tasks based 
+on algorithms loaded here will put a much more heavy load on DSP CPU especially 
+if computationally complex.
+<p>
+Some idea of the relative speed of the different memory types can be seen by 
+looking at $ACULAB_ROOT/TiNG/starcore/gen/pxcalctbl.html (this page only
+available when ProsodyX TiNG firmware package installed on a system).
+
+
+<h2>Strategies</h2>
+<p>
+All available M1 memory should be exploited.  If there is not sufficient space 
+in M1 for all required TiNG algorithms, preference should be given to the most 
+computationally intensive algorithms, or those which may potentially have 
+the maximum number of associated tasks. Profiling the DSP CPU usage using CPUMON or 
+pxdiagutil will help determine which algorithms should be selected for M1 
+placement.
+<p>
+One possible strategy might be to prioritise loading the most frequently used 
+firmware to M1. E.g. if in normal operation, your application will be handling 
+99.9% of calls using one codec, and only 0.1% of calls in a second codec, then 
+the first codec should be the priority for loading into M1 memory. The second 
+codec may well be a candidate to load into M2 or even SDRAM, if you are short 
+of M1 space.
+<p>
+The effects of being loaded into M2 or SDRAM can be mitigated for some codecs 
+by loading some critical code/data segments for these codecs into faster 
+memory. For a few codecs, leaving the bulk of code in SDRAM but placing critical code
+in M1 (sdram-fast-m1 operation) is almost as fast as having all code in M1.
+<p>
+For more information on how DSP CPU usage varies with loading and placement see the
+section below <a href="#Guid1">More Guidance on algorithm placement and DSP CPU usage</a>.
+<p>
+Note some algorithms require so much code space that they are always placed 
+(automatically) in SDRAM (with speed critical elements placed in M1).  The 
+v34hd algorithm is a current example.
+<p>
+<h2>Available M1/M2 Space and Algorithm code memory usage </h2>
+<p>
+Once the ProsodyX TiNG kernel has been loaded using kloadx, 
+<a href="prog_pxdiagutil.html">pxdiagutil</a> may thereafter be used to 
+determine remaining amount of M1 and M2 memory.
+<p>
+pxdiagutil -m 0 -i 172.16.1.118 -k sitekey m1left<p>
+<i>Remaining M1 Code space: module 0 on card 172.16.1.118
+0x0000ed50
+</i>
+<p>
+pxdiagutil -m 0 -i 172.16.1.118 -k sitekey heap<p>
+<i>Heap: module 0 on card 172.16.1.118
+M2 Remaining:    0x00061f40
+SDRAM Remaining: 0x00dfc000
+</i>
+<p>
+The modload utility reports, for each algorithm loaded, the amount of space in 
+each area that has been consumed.
+<p><i>
+Algorithm td.sob downloaded successfully to module 0 (M1=13280,M2=256,SD=0)
+</i>
+<p>
+<h2>Establishing required M2 working space  </h2>
+<p>
+The pxdiagutil heap command mentioned in previous section can be used to 
+profile remaining M2 space during lifetime of an application, and this can give 
+an idea of the amount that should be left available following algorithm download.  If 
+not enough space is left available, an application is likely to encounter TiNG 
+API errors, such as ERR_SM_NO_RESOURCES. 
+<p>
+As an alternative to using the pxdiagutil heap command, HEAPMON firmware can be loaded to
+the DSP and the data that this outputs to a data channel captured thus allowing the remaining space 
+on M2 heap to be monitored continuously.  Note running this firmware will impose
+some additional CPU overhead on the DSP.
+<p>
+It should be noted that each group of 3 DSP TDM timeslots used consumes 1K of M2 
+memory so allowance should be made for the maximum number of these timeslots that 
+may be used.  TDM usage may be observed using the following pxdiagutil command.
+<p>
+pxdiagutil -m 0 -i 172.16.1.118 -k sitekey tdmmem<p>
+<i>TDM: module 0 on card 172.16.1.118
+TDM usage:    RxTS 3 0x00000400 : TxTS 3 0x00000400 : Total 0x00000800
+</i><p>
+Further guidance on working space for particular application scenarios may be 
+obtained from Aculab technical support.
+<p>
+<h2>Using options to modload to control placement of firmware</h2>
+<p>
+By default, <a href="prog_modload.html">modload</a> will attempt to load 
+firmware into M1 memory (apart from some tables placed in M2) and spill 
+remaining firmwares into M2. Note firmwares spilled into M2 will not be 
+efficiently packed into that space.  This can be overridden by using the -p 
+option to control placement. The -f option can then be used to control fast 
+segment placement.
+<table border>
+<tr><th>Options<th>Placement
+<tr><td>none<td>Default (M1) placement, excess to M2 (not efficiently packed)
+<tr><td>-p m2 -f m1<td> Load mainly to M2 (efficiently packed), but fast 
+segments to M1
+<tr><td>-p m2<td>Load all to M2 (efficiently packed)
+<tr><td>-p sdram -f m1<td>Load mainly to SDRAM, but fast segments to M1
+<tr><td>-p sdram -f m2<td>Load mainly to SDRAM, but fast segments to M2
+<tr><td>-p sdram<td>Load all to SDRAM
+</table>
+
+<h2>Using layout files to control placement of firmware</h2>
+<p>
+If you have multiple firmwares to load to different areas of memory, a 
+<a href="prog_modload_layout.html">layout file</a> can be used to specify how 
+to place each firmware. Layout files are passed to modload using the -l option.
+Each line of the file consists of a placement tag followed by a list of 
+firmwares. 
+<p>
+Valid placement tags are:
+<table border>
+<tr><th>Tag<th>Meaning
+<tr><td>default:<td>load all to M1
+<tr><td>m2-fast-m1:<td>load mainly to M2, with fast segments to M1
+<tr><td>m2:<td>load all to M2
+<tr><td>sdram-fast-m1:<td>load mainly to SDRAM, with fast segments to M1
+<tr><td>sdram-fast-m2:<td>load mainly to SDRAM, with fast segments to M2
+<tr><td>sdram:<td>load all to SDRAM
+</table>
+<p>
+Layout files may be specified in ".cfg" files used by the config tool
+to set up cards on card start-up. The "[Speech]" section will need to be edited
+with a text editor (note the ACT tool does not support creation of layout files).
+For example to use a layout file "app.lyt" for all 4 DSPs on a card,
+edit its ".cfg" file to have a speech section as follows:
+<p>
+[Speech]<br />
+Module=0<br />
+Firmware=app.lyt<br />
+Module=1<br />
+Firmware=app.lyt<br />
+Module=2<br />
+Firmware=app.lyt<br />
+Module=3<br />
+Firmware=app.lyt<br />
+[EndSpeech]<br />
+<p>
+Later versions of config tool will accept LYTFile=app.lyt as an alternative to Firmware=app.lyt
+<p>
+The config tool will expect to find the ".lyt" file in the same directory
+(normally $ACULAB_ROOT/cfg) as the ".cfg" file within which it is specified.
+<p>
+<h2>Notable code size changes between v2 and v3 TiNG firmware</h2>
+<p>
+Note that, as with v2 firmware, these figures can vary with each v3 firmware release.
+<p>
+After the kernel has loaded, with v3 firmware there is
+about 10k more M1 space available, and about 22k less M2 
+space available.
+<p>
+Most individually loadable algorithms (.sob files) have 
+substantially the same code size as for v2, a few have modestly 
+shrunk in size whereas some others have grown significantly or 
+changed in their use of M1 and M2. The algorithms falling into the 
+last category are listed here.
+<p> 
+The vmprx.sob code size has grown by about 40% as it now caters for
+wideband signals, it also now includes the functionality previously
+included in vmpplc.sob, so if both were required then the code size 
+growth is only 25% (8k additional memory required). By contrast, the
+vmptx.sob firmware has shrunk by about 30% (6k less memory required).
+<p>
+The conf.sob code size has grown (4k additional memory required).
+<p>
+The code in iLBC.sob has grown (10k more memory required).
+<p>
+The code size for inchan.sob and outchan.sob has doubled (these were 
+small anyway so only 1k memory extra required for each).
+<p>
+The code size for rtcp.sob has increased by 4k, and that for securertp.sob 
+by 6k.
+<p>
+The code in g729ab.sob has been re-arranged so more of it loads into M2 
+memory (M1 use 10k less, M2 use 10k more).
+<p>
+The code in v17rx has been re-arranged so more of it loads into M2 
+memory (M1 use 26k less, M2 use 26k more).
+<p>
+<h2><a name="Guid1">More Guidance on algorithm placement and DSP CPU usage</a></h2>
+<p>
+As previously mentioned, DSP CPU usage will vary with placement used
+for a given algorithm, in general the more computationally intensive 
+algorithms will show greater variation. 
+<p>
+Performance information with respect to placement for RTP codecs can be found
+in the file $ACULAB_ROOT/TiNG/starcore/gen/pxcalctbl.html. 
+<p>
+Here, the placement dependency of other algorithms where DSP CPU usage varies 
+significantly with placement is illustrated with some examples. 
+Actual DSP CPU loading may change between TiNG firmware releases.
+<p>
+To illustrate how placement affects non-codec specific RTP and associated firmwares, 
+starting with a 60 channel vmp/tdm gateway configuration with all firmwares placed in M1 we 
+have a base DSP load of 28% usage, then moving:
+<UL>
+<LI>vmprx only to M2: raises usage to 36%
+<LI>vmprx only to SDRAM: raises usage to 71%
+<LI>vmptx only to M2: raises usage to 30%
+<LI>vmptx only to SDRAM: raises usage to 45%
+<LI>td only to SDRAM: raises usage to 35%
+<LI>vtdet only to SDRAM: raises usage to 50%
+<LI>rtcp only to SDRAM: raises usage to 32%
+<LI>vmprx vmptx td vtdet to M2: raises usage to 42%
+<LI>vmprx vmptx td vtdet to SDRAM: raises usage to 97%
+</UL>
+<p>
+With same configuration as above but now with secure RTP enabled we have a base DSP load of 68% usage, then moving:
+<UL>
+<LI>securertp only to M2: does not noticeably affect usage
+<LI>securertp only to SDRAM: raises usage to 87%
+</UL>
+<p>
+To illustrate how placement affects fax modems, we have setup for transmission of 30 concurrent V.29 faxes, 
+the base load for fax receivers being 39% and for transmitters being 10%, then moving:
+<UL>
+<LI>v29rx only to M2: raises usage to 42%
+<LI>v29rx only to SDRAM: raises usage to 50%
+<LI>six2five only to SDRAM: does not noticeably affect usage
+<LI>v29tx only to M2: raises usage to 13%
+<LI>v29tx only to SDRAM: raises usage to 18%
+</UL>
+<p>
+Similarly with setup for transmission of 16 concurrent V.17 faxes, 
+the base load for fax receivers being 42% and for transmitters being 7%, then moving:
+<UL>
+<LI>v17rx only to M2: does not noticeably affect usage
+<LI>v17rx only to SDRAM: raises usage to 58%
+<LI>v17tx only to M2: does not noticeably affect usage
+<LI>v17tx only to SDRAM: raises usage to 10%
+</UL>
+<p>
+The DSP CPU usage does not noticeably vary with placement of T.38 firmware modules ifptx ifprx fmprx fmptx
+<p>
+
+To illustrate how placement affects echo cancellation, we have setup for 100 RTP/TDM gateways with
+echo cancellation span of 72ms,  the base load for these gateways being 50%, then moving:
+<UL>
+<LI>echocan only to M2: raises usage to 53%
+<LI>echocan only to SDRAM: raises usage to 66%
+</UL>
+
+<p>
+<h2>An example layout file</h2>
+<p>
+The figures shown in this section are for illustration only and may 
+vary between releases.
+<p>
+Suppose an application needs to implement a VoIP/TDM gateway including
+echo cancellation, fax, G.711, G.729ab and secure RTP, the following
+firmware modules would be required:
+<UL>
+<LI>outchan inchan cpumon datafeed passthru
+<LI>g729ab vmprx  vmptx vtdet securertp rtcp
+<LI>echocan td tonegen gainbg
+<LI>fsktx fskrx fskpll
+<LI>v29rx v27rx six2five
+<LI>v29tx v27tx  
+<LI>ifprx ifptx fmprx fmptx
+<LI>synctx syncrx hdlctx hdlcrx prefsuf 
+</UL>
+<p>
+If these firmware modules were loaded using default placement
+then the remaining M2 memory (0x1a710 reported by pxdiagutil heap command)
+would only be sufficient to support a modest number of channels.  If all 
+the firmware modules were instead loaded into SDRAM, the M2 space would 
+not be a limiting factor but the increased DSP CPU consumption certainly 
+would be. The best solution is to devise an initial layout placing speed 
+critical modules in M1/M2 and non speed critical elements in SDRAM, and 
+then perfect the layout by profiling DSP CPU and memory usage and adjusting 
+it where required.
+<p>
+Some idea of the required M2 working space for the application is
+needed as a guide to how much M2 space can be used to store algorithm code
+and how much is required for TDM and task workspace.  Assume that we have
+determined with pxdiagutil that we must leave 0x2A000 of M2 space free in
+order to leave enough task and TDM space for 60 gateway sets.  Then we need 
+to save 0xf8f0 of space from M2 memory by moving code from M2 to SDRAM
+and by packing code into M2 by placing it there explicitly.
+<p>
+Using knowledge that modem transmitters are much less CPU intensive than
+receivers, and that T.38 operation and FSK operation are very CPU light,
+a layout file similar to one below can be devised.
+<p>
+# following algorithms in fastest memory<br />
+default: g729ab td vmprx  vtdet datafeed echocan inchan<br />
+#<br />
+# slower M2 memory<br />
+m2: rtcp tonegen cpumon securertp v29rx syncrx six2five vmptx passthru gainbg<br />
+#<br />
+# put modem transmitters and other non critical components in large slowest memory<br />
+sdram: ifprx ifptx fmprx fmptx  v29tx v27tx v27rx synctx hdlctx hdlcrx prefsuf fsktx fskrx fskpll outchan<br />
+<p>
+With this layout pxdiagutil m1left command reports 0x700 remaining in M1 and heap command reports 0x3f2f0
+remaining in M2, so we have used the M1 space almost to capacity and have more than enough M2 for application TDM 
+and task workspace.  Now by profiling application with CPUMON we can check that
+SDRAM placement hasn't increased DSP CPU usage excessively, and if it has we can try moving some SDRAM placed
+modules back to M2 (as we have some extra space), or try swapping some of those in M2 with those in SDRAM.
+We could also see if there are a few small firmware modules that could be moved to the remaining M1 space.
+</body>
+</html>
+

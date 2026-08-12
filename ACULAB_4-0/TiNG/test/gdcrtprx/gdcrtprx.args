@@ -1,0 +1,54 @@
+-TiNGtrace
+Id	dest_ip		string
+Is	source_ip	string
+Ip	dest_port	unsigned
+Iq	source_port	unsigned
+
+m	module		unsigned
+o	outfile		string
+f	format		string
+U	useevent	bool
+
+p	patlen		unsigned
+
+e	encoding	string
+u	modulation	string
+
+d	databits	unsigned
+C	crcsize		unsigned
+c	crc		unsigned
+l	min_flags	unsigned
+O	min_ones	unsigned
+
+Ans	answer		bool
+s	standard	string
+M	markfreq	float
+S	spacefreq	float
+B	bitrate		unsigned
+x	serialnumber	string
+Fon	carrier_on	unsigned
+Foff	carrier_off	unsigned
+
+Tb	xferbits	signed
+Tt	xfertimeout	unsigned
+
+R6	use_ipv6	bool
+RCF	frame_len	unsigned
+RCNe	comfort_noise	bool
+RCNm	comfort_noise_payload_mapping	unsigned
+RCP	plc		bool
+RCV	variant		unsigned
+RCb	codec_bitrate		unsigned
+RAt	ad_target_delay unsigned
+RAu	ad_freq_upper_tolerance float
+RAl	ad_freq_lower_tolerance float
+RJ	jitter_max_ms		unsigned
+RL	local_ip	string
+Rc	codec			string
+Rd	detect_tones		bool
+Rg	regen_tones		bool
+Rj	jitter_initial_ms	unsigned
+Rm	payloadmapping		unsigned
+Rr	rfc2833tones		unsigned
+Rs	enforce_tone_spacing	unsigned
+RE	use_srtp	bool

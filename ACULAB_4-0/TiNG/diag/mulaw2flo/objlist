@@ -1,0 +1,3 @@
+libutil	mulaw.o
+.	mulaw2flo.o
+libutil	floio.o

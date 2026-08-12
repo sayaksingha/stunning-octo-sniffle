@@ -1,0 +1,463 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>ASSP packet format</title>
+</head>
+<body>
+<h1>ASSP packet format</h1>
+<p>
+The packet format for <a href="assp_main.html">ASSP</a> is as follows.
+<p>
+Each packet contains a fixed header followed by options. The fixed
+header consists of fields which are required in a sufficiently large
+proportion of packets. This serves two purposes: it makes the encoding
+if these values smaller and it allows hosts to access them faster by
+ensuring that they are always in the same place.
+
+<h2>Fixed Packet fields</h2>
+<p>
+Fixed fields are sent most significant octet first.
+Here are the packet fields (with sizes in bits, specified in the order
+they appear in a packet):
+<dl>
+<dt>CID (32)
+<dd>
+Connection ID. This extends the functionality of source and destination
+ports.
+
+<dt>SEQ (32)
+<dd>
+Sequence number. The sequence number advances whenever a packet is
+created and sent which contains a sequenced option or data. Such a
+packet is called a sequenced packet. Others are called unsequenced packets.
+When sending non-sequenced packets, the sequence number used is the same
+as for the last packet created and sent. (This means that if a receiver
+sees a new SEQ value in an unsequenced packet it knows that a sequenced
+packet has been lost or will arrive shortly).
+
+<dt>ACK (32)
+<dd>
+Acknowledgement number. This acknowledges packets which have SEQ fields
+up to but not including this value.
+
+<dt>TXTS (32)
+<dd>
+Transmit timestamp. When sending a packet this field is set to the
+current time. The time is expressed as the number of ticks since a base
+time. The base time is chosen at random when the connection is being
+established. Ticks are arbitrary fixed units of time, normally
+microseconds as this provides a reasonable balance between the two
+conflicting uses for this field: measurement of RTT and protection
+against bogus frames. To measure RTT, we want a clock which ticks very
+fast, since the precision of the measurenment is limited by the
+precision of the timestamps. However, to protect against bogus packets,
+the time should tick slowly, so that at any given time as few values as
+possible are valid.
+
+<dt>REFTS (32)
+<dd>
+The TXTS field of a received packet. When sending a packet which is an
+isolated reply to an incoming packet (for example, the USECOOKIE reply
+to GETCOOKIE, or a RST reply to an alien packet), this field is set
+to the TXTS field of the incoming packet. In this case its purpose
+is to link the reply to the packet which caused it. When sending packets
+which are just a general part of the traffic on a connection, this field
+is set to the TXTS of the most recently received packet for that
+connection. In this case its purpose is to enable the remote ASSP
+implementation to compute an accurate RTT for the connection.
+Note that REFTS is not set from the RCV.MAXTXTS value when a packet is
+sent because that would exclude out-of-sequence packets, skewing the
+RTT calculation which would end up being computed for the earliest
+packet of a group which were re-ordered.
+
+<dt>ECE (1)
+<dd>
+Indicates that the CE bit was observed to be set. (As in RFC 3168).
+
+<dt>CWR (1)
+<dd>
+Indicates that the ECE bit has been seen in the opposite direction.
+(As in RFC 3168).
+
+<dt>NS (1)
+<dd>
+Nonce sum. Proves that the congestion control bits are being handled
+correctly. (As in draft RFC).
+
+<dt>Reserved (13)
+<dd>
+Currently unused header bits. On transmission these must be sent as
+zero. On reception they must be ignored. This allows future extensions
+to use them with consistent and predictable interaction with
+unextended implementations.
+
+</dl>
+<p>
+See the <a href="gen/assp_simp.png">diagram of assp packet fields</a>
+for how a packet looks with no options.
+
+<h2>Options</h2>
+<p>
+After the fixed header fields, there are options. Options are normally
+encoded as a sequence of 16-bit values, each of which is sent
+more-significant octet first.
+
+<h3>Option types</h3>
+<p>
+Options can be classified into four groups, based on two independent
+criteria. The first divides options into two classes:
+<ul>
+	<li>Critical options
+	<li>Non-critical options
+</ul>
+<p>
+A <em>critical option</em> is one which must be understood to
+implement the protocol. This type of option modifies the meaning of a
+standard field. For example, such an option might provide extra bits to
+extend the sequence number field. If a non-critical option is ignored
+the protocol will still work, merely losing the feature that the option
+implements. For example, if an MD5 checksum option is ignored the
+protocol works but without the ability to verify the sender of the
+packets.
+<p>
+The other basis for classification is:
+<ul>
+	<li>Sequenced options
+	<li>Non-sequenced options
+</ul>
+<p>
+A <em>sequenced option</em> must be handled in sequence with the data.
+An example of this is the urgent option. <em>Non-sequenced
+options</em> are handled when the packet is first examined. An example
+of this is the MD5 checksum option. Since it protects the whole
+packet, it must be checked before any fields (such as the sequence
+number or acknowledgement number) are believed.
+
+<h3>Encoding of options</h3>
+<p>
+Some options can be quite long. In particular, selective
+acknowledgement may occasionally need to construct long lists of
+options. Therefore it seems useful to allow options over 255 bytes
+long. It is also important to ensure that future options can be added
+without causing interoperability problems with existing
+implementations. Ideally no negotiation would be required for new
+options. Therefore the option code should indicate whether it is for a
+critical or non-critical option, and every option should have a length
+field. To guard against implementation bugs whereby a zero length
+field causes an infinite loop, it seems a good idea to use a length of
+zero to mark the end of the options. The encoding of options therefore
+consists of the following:
+<p>
+A sixteen bit length field. If this is zero, there are no more
+options and the next octet is the first octet of user data. Otherwise,
+the option contains this number of 16-bit words (not including the length
+field). The next word is the option code. The option code indicates by
+its most significant bit whether or not the option is critical (1) or
+non-critical (0). As a convenience to implementations, all sequenced
+options have the next bit (bit 14) set and all non-sequenced options
+have it clear. This makes it easy to see if the option should be skipped
+at either stage of processing. Any further words contain the value of
+the option.
+<p>
+Any option may be given with any length. The value of an option should
+be considered to consist of the specified data followed by an infinite
+number of zero bits. Any number of these zero bits may be included in
+the encoding of the option at the discretion of the transmitter. This
+ensures that all options can be padded as necessary. When an option is
+received, any unexpected extra bits must be ignored. This rule is
+intended to ensure that the receiver does not need to waste time
+examining padding bits. If a future extension defines a bigger variant
+of an option, it must specify that it is acceptable to ignore the
+extension and that zero bits in the extension signify the same behaviour
+as no extension. Where an extension would not have this property, a new
+option must be defined instead of extending an existing one.
+A consequence of this rule is that an option which encodes an integer
+must send it least significant word first (so that the more significant
+bits are those not sent).
+<p>
+The option code <code>0</code> is reserved to represent no operation,
+allowing it to be used for overwriting unwanted options.
+<p>
+The minimum size of an option is 32 bits (a 16-bit length word of
+<code>1</code> and a 16-bit option code).
+<p>
+When a packet is re-transmitted, all sequenced options must be the
+same in the re-transmitted packet as they were in the original.
+Non-sequenced options may be arbitrarily changed.
+<p>
+An option may appear at most once in a packet. Where there are several
+values to be carried, the option's data should be defined to be a list
+of values. For example, take the hypothetical new option RECEND which
+allows the data to be divided into records. Suppose it is included in a
+packet when the packet's data includes the last octet in a record and
+the option's value is the number of octets of the record in this packet.
+For example, sending a 1000 octet record in two packets of 512 octets
+and 488 octets, only the second packet would have the RECEND option
+whose value would be 488. If a packet carries the ends of two records
+(in our example, suppose the next record is 8 octets and included in the
+second packet to bring its data up to 496 octets) then instead of
+carrying two RECEND options in a packet we would have one option which
+carries two values as a list (488 and 8 in this example).
+<p>
+See the <a href="gen/assp_opt.png">diagram of assp packet fields with
+options</a> for how a packet looks with options.
+<p>
+Note that if there is no data the zero length word (which normally marks
+the end of the options and the beginning of user data) is still present.
+
+<h3>Processing of options</h3>
+<p>
+On transmission, all non-sequenced options must preceed any
+sequenced options. This allows the receiver to process options more
+efficiently. When initially considering a packet, it processes
+non-sequenced options until it either runs out of options or finds a
+sequenced option. Then it updates the length of the first option in the
+saved packet to pretend that it is as big as all the non-sequenced
+options. So when it later needs to process sequenced options it only
+ever sees one non-sequenced option to be skipped. If it sees a second
+non-sequenced option it knows the packet is ill-formed, though it has
+already been acknowledged, so it should forcibly close the connection
+with a RST.
+
+
+<h3>Defined Options</h3>
+<p>
+<dl>
+<dt>UNOP option (non-crit, non-seq)
+<dd>
+No option. Used for padding.
+
+<dt>SNOP option (non-crit, seq)
+<dd>
+No option. Used for padding.
+
+<dt>SYN option (crit, seq)
+<dd>
+Indicates the start of a new connection. This option carries no data.
+Packets which have this option are often called 'SYN packets'.
+
+<dt>FIN option (crit, seq)
+<dd>
+Indicates the connection is closing. This option carries no data.
+Packets which have this option are often called 'FIN packets'.
+
+<dt>RST option (crit, non-seq)
+<dd>
+Reports an error. The data in this option reports the nature of the
+error. The first 16-bit word is a code representing the error.
+Subsequent data indicates further details. The RST option is used with
+either a FASTACK or an ACKLESS option. To avoid infinite packet loops,
+any RST which is sent in response to another RST must be ACKLESS.
+Packets which have this option are often called 'RST packets'.
+
+<dt>URGENT option (non-crit, seq)
+<dd>
+Indicates the presence of urgent data. The option data is an integer
+which indicates the location of the urgent data. It is the number of
+octets of non-urgent data in this packet which occur before the first
+urgent octet.
+
+<dt>MSS option (non-crit, non-seq)
+<dd>
+Maximum segment size. Indicates the maximum amount of user data that can
+be received in any packet. The option data is an integer indicating
+the size in octets. If this option is not used the maximum segment size
+is 512 octets.
+
+<dt>PUSH option (crit, seq)
+<dd>
+Indicates that data already sent must be processed without waiting for
+more data, as the sender may be waiting for a reply before generating
+more data.
+
+<dt>MD5SIG option (non-crit, non-seq)
+<dd>
+MD5 signature. Validates the packet. The option data is the packet
+signature.
+
+<dt>SHA1SIG option (non-crit, non-seq)
+<dd>
+SHA-1 signature. Validates the packet. The option data is the packet
+signature.
+
+<dt>SHA256SIG option (non-crit, non-seq)
+<dd>
+SHA-256 signature. Validates the packet. The option data is the packet
+signature.
+
+<dt>WTR/DNS option (non-crit, non-seq)
+<dd>
+Selective acknowledgement and flow control. "Willing To Receive" and
+"Do Not Send". A list of numbers of packets alternating between the
+number that should be sent and the number that should not be sent.
+The option data consists of a number of 16-bit words. Each is
+interpreted as two values. The more significant octet is WTR, and the
+less significant octet is DNS. They are interpreted as follows:
+<pre>
+	p = ACK		// fixed field in header
+	while there is another word {
+		WTR/DNS = next word
+		packets p..p+WTR may be sent
+		p += WTR
+		packets p..p+DNS must not be sent
+		p += DNS
+	}
+</pre>
+<p>
+Although this field may be necessary in a large proportion of packets,
+it cannot be a fixed header field as it varies in length. If a fixed
+header field were reserved for a prefix of this field it might result
+in a small saving in average packet size at the expense of a much
+greater likelihood of bugs in the handling of the option.
+<p>
+If a packet does not include this option, it is interpreted as if it
+had the same meaning (NB: not value) as the latest WTR/DNS option except
+that a number of packets equal to the number of freshly acknowledged
+packets is considered to have been marked WTR. These extra packets are
+those immediately following the last WTR/DNS list (i.e. starting at the
+final value that <code>p</code> has in the above pseudo-code).
+For example, if we receive two packets:
+<pre>
+	ACK=5, WTR=3, DNS=4
+	ACK=7, no WTR/DNS option
+</pre>
+<p>
+then the first packet permits sending packets 5, 6, and 7 and forbids
+sending of packets 8, 9, 10, and 11, so the second packet forbids
+sending 5 and 6 (because they are now fully acked), permits 7 (DNS status
+not changed), forbids sending 8, 9, 10, 11, (DNS status unchanged)
+and permits 12, and 13 (rule extending WTR) and is therefore the same as
+receiving:
+<pre>
+	ACK=7, WTR=1, DNS=4, WTR=2, DNS=0
+</pre>
+<p>
+This rule is intended to permit the omission of the WTR/DNS option in
+most packets. However note that since ACK packets are not
+retransmitted when lost, the WTR/DNS option should only be omitted
+when it can be determined that it is not necessary. For example, if we
+expanded the window and received the next packet, then we know that
+our last WTR option has been received and we can start omitting it
+until the next out of sequence packet has to be acknowledged.
+<p>
+Although this option is classed as non-critical (because a sender
+could assume a fixed window of one packet) it is sufficiently
+important that all normal implementations must use it. The only
+implementations which are permitted to omit it are those which must be
+absolutely minimal, such as bootstrap loaders and they should assume a
+fixed value of WTR=1.
+<p>
+Note that, although this option is used to implement selective
+acknowledgement, packets listed as DNS have not necessarily been
+received, and even where they have, the receiver is entitled to
+discard them and require them to be re-transmitted (though, obviously,
+it should attempt to avoid this whenever possible to avoid wasting
+bandwidth). In normal operation, a receiver indicates DNS for out of
+sequence packets received, and advances WTR when local buffer space
+becomes available. If local buffer space is reduced, sequence numbers
+previously marked WTR may be changed to DNS. When this is done for
+sequence numbers not already received this may cause a bogus RTT
+sample to be used by the sender. This arises because normally after
+sending a packet, its appearance in the DNS set is an indication that
+it arrived, so the arrival of the first DNS set which contains a
+packet can be used to measure the RTT for that packet. However if the
+remote side added that sequence number to the DNS set for local
+reasons, the packet may still be in transit, leading to a false,
+underestimated RTT value. It also incorrectly reduces the sender's
+idea of the flightsize, possibly resulting in an extra packet being
+sent. Consequently, a receiver should not routinely re-classify from
+WTR to DNS except as needed for selective acknowledgement.
+
+<dt>FASTACK (crit, non-seq)
+<dd>
+The sender wants this packet to be acknowledged as quickly as possible.
+This is typically because the sender considers it to contain
+time-critical data and wants to know what needs to be re-transmitted
+to allow it to be processed. However this option may also be present
+in a packet which carries no data, forcing the receiver to send a
+current ACK. This can be used by a sender to probe for flow-control
+status. It is also used with RST to verify that a connection has been
+closed when it is being aborted. A packet responding to this option
+should include the latest WTR/DNS list even if it appears unnecessary.
+This option carries no data.
+<p>
+Note that when a packet is re-transmitted this option may be added or
+removed - it is not a feature of the data being carried.
+
+<dt>ACKLESS (crit, non-seq)
+<dd>
+The sender does not expect this packet to be acknowledged. This is
+typically because the sender knows that a higher level protocol will
+cause a reply to be generated. The reception of a data packet with
+this option should not cause an ACK packet to be sent, however it must be
+acknowledged in the normal way when there is some other reason to send
+a packet. This option carries no data.
+<p>
+This option must not be present in a packet which has FASTACK.
+<p>
+In principle this option may be added or removed if a packet is
+re-transmitted, but this may not be useful.
+
+<dt>GETCOOKIE (crit, non-seq)
+<dd>
+Requests a cookie. Only used during establishment of a connection.
+This option should be bigger than the cookie returned (i.e. the sender
+should pad it with explicit zero bits). This is to prevent spoofed
+packets being used to amplify the attacker's bandwidth. For example, if
+the attacker spoofs a packet from A to B, we don't want this to cause B
+to send a bigger packet to A since this would allow an attacker to
+attack A more effectively than by sending directly to A. The cookie
+returned must depend on both the sender and a timer to avoid attacks
+which replay cookies and attacks which acquire a cookie legitimately and
+then use it to spoof connections from other hosts.
+
+<dt>USECOOKIE (crit, non-seq)
+<dd>
+Supplies a cookie to be used when connecting to the sender. The option
+data is the cookie.
+
+<dt>COOKIE (crit, non-seq)
+<dd>
+Presents a cookie obtained previously. Only used during establishment of
+a connection to validate the packet carrying the SYN. The option data is
+the same data as appeared in a USECOOKIE option in the reverse direction.
+
+<dt>KEYCODE (non-crit, non-seq)
+<dd>
+Carries the key code which validates the client. The key code is a
+cryptographically secure transformation of the cookie which authenticates
+the client. For example, it might be the cookie encrypted with the client's
+private key. If no authentication is in use, this option is missing or
+has all zero bits.
+
+<dt>RESYNC (crit, non-seq)
+<dd>
+Only occurs in conjunction with USECOOKIE. It is used when a GETCOOKIE
+is received with unacceptable SEQ, ACK, TXTS, or REFTS fields. It
+contains the values of these fields that must be used in the first
+SYN packet transmitted. The fields are formatted as they would be
+in a packet header.
+
+<dt>HIGHTIME (non-crit, non-seq)
+<dd>
+Used to pass higher bits of the time used in the <code>TXTS</code> field.
+It contains as many bits as the sender considers necessary. Higher bits,
+which are not sent, are zero. Assuming that <code>TXTS</code> counts
+microseconds, sixteen bits extends the maximum duration representable by
+<code>TXTS</code> to nearly nine years, which is often sufficient.
+Thirty-two bits extends it to over half a million years, which is likely
+to be sufficient for most purposes. This means that the timestamp used
+for <code>TXTS</code> starts out at 32 bits, but can be expanded during
+the connection by sending HIGHTIME options. This option is not always
+included. When a packet is received without this option, the receiver
+must assume that the value that would have been used is the same as that
+which applies to the packet received with the most recent TXTS value.
+<p>
+When a packet is sent, it is mandatory to include this option except
+where the sender can prove it is unnecessary. It is unnecessary if
+the option would carry the same value as applied to the last packet
+whose <code>TXTS</code> value was received in an incoming
+<code>REFTS</code> field. It is unnecessary in a GETCOOKIE, USECOOKIE,
+or SYN packet only if its value is zero.
+
+</dl>

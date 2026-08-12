@@ -1,0 +1,3 @@
+Raw data receiver. This is used to run a protocols directly
+on a digital bearer channel (in contrast to speech and modems
+which encode the data as sounds).

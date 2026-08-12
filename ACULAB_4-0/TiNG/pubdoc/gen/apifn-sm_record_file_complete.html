@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody high level FILE play/record: API: sm_record_file_complete</title>
+</head>
+<body>
+<h1>Prosody high level FILE play/record: API: sm_record_file_complete</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_record_file_complete(<a href="../apitype.html#type-SM_FILE_RECORD_PARMS">SM_FILE_RECORD_PARMS</a> *<a href="#field-file_parms">file_parms</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-file_parms">file_parms</a>
+<dd>
+A pointer to a structure passed into
+<a href="apifn-sm_record_file_start.html">sm_record_file_start()</a>
+to start recording that has not yet indicated that it has
+finished.
+</dl>
+<h2>Description</h2>
+<p>
+Transfers all remaining data from speech processing module to
+file for previously initiated record. This call may block during
+execution while it waits for buffered data to become available
+on the speech processing module.
+<p>
+Note that this function assigns an event to the channel and
+removes it again when the replay finishes. If the channel
+previously had an event assigned, that assignment may have
+been lost (this depends on the operating system as events
+work differently on different operating systems).
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error<li>ERR_SM_NO_RESOURCES - could not allocate record event</ul>
+<hr>
+<p>This function is part of the <a href="../highapi_playrec.html">Prosody high level FILE play/record API</a>.
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="TiNG.css">
+<title>Prosody data communications Encodings: none</title>
+</head>
+<body>
+<h1>Prosody data communications Encodings: none</h1>
+<p>
+This setting is used when protocol specific octet data is required.
+<p>
+<h2>API function behaviour</h2>
+<p>
+This should be read in conjunction with the generic data communications
+documentation.
+
+<h3><a href="gen/apifn-smdc_channel_config.html">smdc_channel_config()</a></h3>
+<p>
+	You must use <code>#include "smdc_none.h"</code> to get the
+	appropriate declarations.
+<p>
+	The encoding type is <code>kSMDCConfigEncodingNone</code>.
+<p>
+	The	encoding_config_data pointer should be null (0) and the
+	encoding_config_length should be zero.
+
+<h3><a href="gen/apifn-smdc_rx_data.html">smdc_rx_data()</a></h3>
+<p>
+	Data in the receive buffer appears in octets.
+	The format of the data is protocol specific.
+
+<h3><a href="gen/apifn-smdc_tx_data.html">smdc_tx_data()</a></h3>
+<p>
+	Only octets can be transmitted. The format of the data is
+	protocol specific.
+</body>

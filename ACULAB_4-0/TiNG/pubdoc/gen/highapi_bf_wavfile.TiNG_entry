@@ -1,0 +1,6 @@
+sm_replay_wav_bf_start	iPcPBPPt
+sm_replay_wav_bf_close	iPBPPt
+sm_record_wav_bf_start	iPcPBCPt
+sm_record_wav_bf_close	iPBCPt
+sm_record_wav_bf_trim_close	iPBCPtUi
+sm_replay_wav_bf_get_type	iPcPi

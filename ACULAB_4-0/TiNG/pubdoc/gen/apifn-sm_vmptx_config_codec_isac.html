@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmptx_config_codec_isac</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmptx_config_codec_isac</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmptx_config_codec_isac(struct sm_vmptx_codec_isac_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmptx_codec_isac_parms {
+	<a href="../apitype.html#type-tSMVMPtxId">tSMVMPtxId</a> <a href="#field-vmptx">vmptx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-partner">partner</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-channel_associated_mode">channel_associated_mode</a>;			/* in */
+} SM_VMPTX_CODEC_ISAC_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures a VMP[tx] to use the iSAC codec for encoding data.
+<p>
+An iSAC codec can automatically adapt its transmitter to network
+conditions using information derived from the corresponding receiver.
+When
+<a class=pref href="#field-partner">partner</a>
+is set to a VMP[rx] already configured for the iSAC codec and
+<a class=pref href="#field-channel_associated_mode">channel_associated_mode</a>
+is non zero this transmitter will be automatically adjusted based
+on the data seen by that receiver. Otherwise,
+<a href="apifn-sm_vmptx_config_isac_rate.html">sm_vmptx_config_isac_rate()</a>
+is used to configure the rate.
+<p>
+The
+<a class=pref href="#field-partner">partner</a>
+field may be <code>kSMNullVMPrxId</code>. However, channel counts
+may be improved by partnering.
+<p>
+This requires the module
+<a href="softmodindex.html#isac">isac</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmptx">vmptx</a><dd>The VMP[tx] to which to add the codec
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type identifer to use with this codec (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13). Supplying a value of
+<code>-1</code> will remove any payload type configuration from the 
+codec preventing its use.
+
+<dt><a name="field-partner">partner</a><dd>The VMP[rx] which is already running the iSAC codec
+
+<dt><a name="field-channel_associated_mode">channel_associated_mode</a><dd>Sets whether the transmitter automatically adjusts to network conditions 
+based on the data seen by the partner receiver.
+
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

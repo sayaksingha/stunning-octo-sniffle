@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>BFILE library: bfopenhandle() - buffered file setup for Windows HANDLEs</title>
+</head>
+<body>
+<h1>BFILE library: bfopenhandle() - buffered file setup for Windows HANDLEs</h1>
+<h2>Name</h2>
+<p>
+bfopenhandle() - buffered file setup for Windows HANDLEs
+
+<h2>Synopsis</h2>
+<p>
+<pre>
+#include "bfile.h"
+#include "libutil/WINNT/bfhandle.h"
+
+int bfopenhandle(BFILE *<a name="bfp">bfp</a>,
+	HANDLE <a name="handle">h</a>);
+</pre>
+
+<h2>Decription</h2>
+<p>
+The <code>bfopenhandle()</code> function makes a <code>BFILE</code> object
+refer to an open file by calling
+<a href="bfile_bfsetup.html">bfsetup()</a> with appropriate parameters.
+<a href="#handle">h</a> is an open Windows HANDLE to the file.
+<p>
+The BFILE object must not have previously been successfully associated
+with a file or other representation (i.e. none of
+<code>bfopenhandle()</code>,
+<a href="bfile_bfopen.html">bfopen()</a>,
+and <a href="bfile_bfsetup.html">bfsetup()</a>
+can have been used unless they indicated failure). If
+<code>bfopenhandle()</code> fails, it leaves the <code>BFILE</code>
+object unchanged (so this error isn't 'sticky' and will not be
+reported by the next call to
+<a href="bfile_bferror.html">bferror()</a>).
+
+<h2>Return value</h2>
+<p>
+Returns <code>0</code> if successful, or an <code>errno</code> value otherwise.
+
+<h2>See also</h2>
+<p>
+<a href="bfile_ctor.html">bfile(), bfile_dtor()</a>,
+<a href="bfile_bfsetup.html">bfsetup()</a>,
+<a href="bfile_bfread.html">bfread()</a>,
+<a href="bfile_bfwrite.html">bfwrite()</a>,
+<a href="bfile_bferror.html">bferror()</a>.
+
+<hr>
+<p>
+This function is part of the <a href="bfile.html">BFILE library</a>.
+</body>
+</html>

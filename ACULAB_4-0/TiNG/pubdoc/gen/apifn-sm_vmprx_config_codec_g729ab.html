@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- Automatically generated (from m1504.) - DO NOT EDIT! -->
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<link rel=stylesheet type="text/css" href="../api.css">
+
+<title>Prosody RTP processing: API: sm_vmprx_config_codec_g729ab</title>
+</head>
+<body>
+<h1>Prosody RTP processing: API: sm_vmprx_config_codec_g729ab</h1>
+<h2>Prototype Definition</h2>
+<p class="prototype">
+int sm_vmprx_config_codec_g729ab(struct sm_vmprx_codec_g729ab_parms *<a href="#field-codecp">codecp</a>)
+<p>
+<h2>Parameters</h2>
+<dl>
+<dt><a name="field-codecp">*codecp</a>
+<dd>
+a structure of the following type:
+<pre>
+typedef struct sm_vmprx_codec_g729ab_parms {
+	<a href="../apitype.html#type-tSMVMPrxId">tSMVMPrxId</a> <a href="#field-vmprx">vmprx</a>;					/* in */
+	<a href="../apitype.html#type-tSM_INT">tSM_INT</a> <a href="#field-payload_type">payload_type</a>;					/* in */
+	<a href="apifn-sm_vmprx_config_codec_alaw.html#enum-kSMPLCMode">enum kSMPLCMode</a> <a href="#field-plc_mode">plc_mode</a>;				/* in */
+} SM_VMPRX_CODEC_G729AB_PARMS;
+</pre>
+</dl>
+<h2>Description</h2>
+<p>
+Configures an G.729 AB codec to the VMP[rx] setting the payload type 
+mapping to
+<a class=pref href="#field-payload_type">payload_type</a>.
+<p>
+It is possible to change the payload type mapping of a codec whilst a
+VMP[rx] remains valid by specifying a new payload type mapping for a
+given codec. This supersedes any previous mappings that were in effect
+for that codec.
+<p>
+If the call completes successfully, RTP packets arriving at the VMP[rx]
+with a payload type that matches a mapped type will be decoded using 
+this codec.
+<p>
+If the codec is given the payload type <code>-1</code> the codec is no
+longer valid for this RTP session, unless it is subsequently 
+reconfigured.
+<p>
+This requires the module
+<a href="softmodindex.html#g729ab">g729ab</a>
+to have been downloaded.
+<h2>Fields</h2>
+
+<dl>
+<dt><a name="field-vmprx">vmprx</a><dd>The VMP[rx] to which to add the codec
+
+<dt><a name="field-payload_type">payload_type</a><dd>The payload type identifer to use with this codec (see
+<a href="http://www.ietf.org/rfc/rfc3550.txt">IETF RFC 3550</a>
+section 13). Supplying a value of
+<code>-1</code> will remove any payload type configuration from the 
+codec preventing its use.
+
+<dt><a name="field-plc_mode">plc_mode</a><dd>Enables or disables PLC (packet loss concealment) as appropriate for the codec.
+Note the codec implementation may not allow PLC to be disabled.
+
+One of these values:
+<dl>
+<dt><a name="field-kSMPLCModeDisabled">kSMPLCModeDisabled</a>
+<dd>PLC Disabled
+
+<dt><a name="field-kSMPLCModeEnabled">kSMPLCModeEnabled</a>
+<dd>PLC Enabled
+
+</dl>
+</dl>
+<h2>Returns</h2>
+<p>0
+ if call completed successfully, otherwise a <a href="error.html">standard error</a> such as:
+<ul>
+<li>ERR_SM_DEVERR - device error</ul>
+<hr>
+<p>This function is part of the <a href="../prosrtpapi.html">Prosody RTP processing API</a>.
+</body>
+</html>

@@ -1,0 +1,5 @@
+Conferencing. This is required if you want to start a
+standard conference (which is done using
+<a href="apifn-sm_conf_prim_start.html">sm_conf_prim_start()</a>).
+If this module has not been downloaded, any attempt to start
+such a conference will produce an error.
